@@ -450,11 +450,13 @@
 
   /** Cria o XI inicial com base na formação */
   function buildDefaultXI(players, formation) {
+    // Evita escalar jogadores lesionados (PARTE 7)
+    const available = (players || []).filter(p => !(typeof p.injuryWeeks === 'number' && p.injuryWeeks > 0));
     const byPos = {
-      GK: players.filter((p) => p.pos === "GK").sort((a, b) => b.overall - a.overall),
-      DEF: players.filter((p) => p.pos === "DEF").sort((a, b) => b.overall - a.overall),
-      MID: players.filter((p) => p.pos === "MID").sort((a, b) => b.overall - a.overall),
-      ATT: players.filter((p) => p.pos === "ATT").sort((a, b) => b.overall - a.overall)
+      GK: available.filter((p) => p.pos === "GK").sort((a, b) => b.overall - a.overall),
+      DEF: available.filter((p) => p.pos === "DEF").sort((a, b) => b.overall - a.overall),
+      MID: available.filter((p) => p.pos === "MID").sort((a, b) => b.overall - a.overall),
+      ATT: available.filter((p) => p.pos === "ATT").sort((a, b) => b.overall - a.overall)
     };
     const need = formation === "4-4-2"
       ? { GK: 1, DEF: 4, MID: 4, ATT: 2 }
@@ -501,7 +503,140 @@
     if (!save.transfers.filterPos) save.transfers.filterPos = 'ALL';
     if (!Array.isArray(save.transfers.bought)) save.transfers.bought = [];
 
+    // Mundo persistente (forma/moral/fadiga) - base para IA e realismo
+    ensureWorld(save);
+
     return save;
+  }
+
+  // -----------------------------
+  // REALISMO / IA (PARTE 7)
+  // Sistema provisório, porém removível no final.
+  // -----------------------------
+
+  function ensureWorld(save) {
+    if (!save.world || typeof save.world !== 'object') {
+      save.world = { clubs: {}, config: { fatigueRecoveryPerRound: 6 } };
+    }
+    if (!save.world.clubs || typeof save.world.clubs !== 'object') {
+      save.world.clubs = {};
+    }
+    const clubs = state.packData?.clubs?.clubs || [];
+    for (const c of clubs) {
+      if (!save.world.clubs[c.id]) {
+        save.world.clubs[c.id] = {
+          id: c.id,
+          formPts: [],   // últimos 5 resultados (0/1/3)
+          morale: 0,     // -5..+5
+          fatigue: 0,    // 0..100 (clube, proxy de elenco)
+          lastUpdated: nowIso()
+        };
+      }
+    }
+  }
+
+  function getClubState(save, clubId) {
+    ensureWorld(save);
+    return save.world.clubs[clubId] || null;
+  }
+
+  function clamp01(n) { return Math.max(0, Math.min(1, n)); }
+
+  function recoverFatigueForAllClubs(save) {
+    ensureWorld(save);
+    const rec = Number(save.world?.config?.fatigueRecoveryPerRound ?? 6);
+    for (const st of Object.values(save.world.clubs)) {
+      st.fatigue = clampInt(Math.max(0, (st.fatigue || 0) - rec), 0, 100);
+      st.lastUpdated = nowIso();
+    }
+
+    // Recuperação do elenco do usuário + redução de lesão
+    if (Array.isArray(save.squad?.players)) {
+      for (const p of save.squad.players) {
+        if (typeof p.fatigue !== 'number') p.fatigue = randInt(0, 20);
+        p.fatigue = clampInt(p.fatigue - 8, 0, 100);
+        if (typeof p.injuryWeeks === 'number' && p.injuryWeeks > 0) {
+          p.injuryWeeks = Math.max(0, p.injuryWeeks - 1);
+        }
+      }
+    }
+  }
+
+  function pushFormPts(st, pts) {
+    st.formPts = Array.isArray(st.formPts) ? st.formPts : [];
+    st.formPts.push(pts);
+    while (st.formPts.length > 5) st.formPts.shift();
+  }
+
+  function formBonus(st) {
+    const arr = Array.isArray(st.formPts) ? st.formPts : [];
+    if (!arr.length) return 0;
+    const avg = arr.reduce((s, x) => s + x, 0) / arr.length; // 0..3
+    // normaliza para -1..+1 e escala para ~ -2.5..+2.5 de overall
+    const norm = (avg - 1) / 2;
+    return clampFloat(norm * 2.5, -2.5, 2.5);
+  }
+
+  function fatiguePenalty(st) {
+    const f = clampInt(st.fatigue || 0, 0, 100);
+    // penaliza mais depois de 55
+    const p = Math.max(0, (f - 55) / 45);
+    return p * 4.0; // até -4 de overall
+  }
+
+  function updateClubAfterMatch(save, homeId, awayId, hg, ag, context) {
+    const home = getClubState(save, homeId);
+    const away = getClubState(save, awayId);
+    if (!home || !away) return;
+
+    const homePts = hg > ag ? 3 : (hg === ag ? 1 : 0);
+    const awayPts = ag > hg ? 3 : (hg === ag ? 1 : 0);
+    pushFormPts(home, homePts);
+    pushFormPts(away, awayPts);
+
+    // moral simples
+    home.morale = clampInt((home.morale || 0) + (homePts === 3 ? 1 : homePts === 1 ? 0 : -1), -5, 5);
+    away.morale = clampInt((away.morale || 0) + (awayPts === 3 ? 1 : awayPts === 1 ? 0 : -1), -5, 5);
+
+    // fadiga do clube (proxy de elenco)
+    const base = context === 'continental' ? 12 : context === 'cup' ? 10 : 8;
+    home.fatigue = clampInt((home.fatigue || 0) + base, 0, 100);
+    away.fatigue = clampInt((away.fatigue || 0) + base, 0, 100);
+    home.lastUpdated = nowIso();
+    away.lastUpdated = nowIso();
+
+    // efeitos no elenco do usuário (fadiga + lesões + forma por resultado)
+    const myClub = save.career?.clubId;
+    if (myClub && (homeId === myClub || awayId === myClub) && Array.isArray(save.squad?.players)) {
+      const won = (myClub === homeId && hg > ag) || (myClub === awayId && ag > hg);
+      const draw = hg === ag;
+      const deltaForm = won ? 0.6 : draw ? 0.15 : -0.5;
+      const xi = Array.isArray(save.tactics?.startingXI) ? new Set(save.tactics.startingXI) : new Set();
+      for (const p of save.squad.players) {
+        const played = xi.has(p.id);
+        if (!played) continue;
+        if (typeof p.fatigue !== 'number') p.fatigue = randInt(0, 20);
+        p.fatigue = clampInt(p.fatigue + base + randInt(-2, 3), 0, 100);
+        p.form = Math.round(clampFloat((p.form || 0) + deltaForm + (Math.random() * 0.2 - 0.1), -5, 5) * 10) / 10;
+
+        // chance simples de lesão: cresce com fadiga
+        const risk = clamp01((p.fatigue - 55) / 60);
+        if (!p.injuryWeeks && Math.random() < (0.006 + risk * 0.03)) {
+          p.injuryWeeks = randInt(1, 6); // semanas/rodadas
+        }
+      }
+
+      // Se houver lesionados no XI, reconstroi XI automaticamente (sem interromper fluxo)
+      if (Array.isArray(save.tactics?.startingXI)) {
+        const hasInjuredInXI = save.tactics.startingXI.some(pid => {
+          const pp = save.squad.players.find(x => x.id === pid);
+          return pp && pp.injuryWeeks > 0;
+        });
+        if (hasInjuredInXI) {
+          save.tactics.startingXI = buildDefaultXI(save.squad.players, save.tactics.formation);
+        }
+      }
+    }
   }
 
   /** Calcula o overall médio do XI */
@@ -1411,13 +1546,26 @@
   function teamStrength(clubId, save) {
     const club = getClub(clubId);
     let base = Number(club?.overall || 60);
-    // Usa forma real apenas para o clube do usuário (para manter leve)
+
+    // Bônus/penalidades de mundo persistente (para TODOS os clubes)
+    const st = getClubState(save, clubId);
+    if (st) {
+      base += formBonus(st);
+      base -= fatiguePenalty(st);
+      base += clampFloat((st.morale || 0) * 0.35, -2, 2);
+    }
+
+    // Ajuste fino usando jogadores do usuário (forma + fadiga individuais)
     if (clubId === save.career.clubId && Array.isArray(save.squad?.players)) {
       const formAvg = save.squad.players.reduce((s, p) => s + (p.form || 0), 0) / Math.max(1, save.squad.players.length);
-      base += formAvg;
+      const fatAvg = save.squad.players.reduce((s, p) => s + (p.fatigue || 0), 0) / Math.max(1, save.squad.players.length);
+      base += clampFloat(formAvg * 0.6, -3, 3);
+      base -= clampFloat(Math.max(0, (fatAvg - 55)) / 20, 0, 3.5);
     } else {
-      base += (Math.random() * 2 - 1); // pequena variação
+      // Pequena variação para evitar determinismo
+      base += (Math.random() * 1.6 - 0.8);
     }
+
     return base;
   }
 
@@ -1425,13 +1573,19 @@
     // Simulação mais realista (Poisson) com vantagem de mando e força relativa
     const h = teamStrength(homeId, save);
     const a = teamStrength(awayId, save);
-    const advantage = 1.6; // mando de campo
+    const advantage = 1.35; // mando de campo (calibrado p/ placares mais realistas)
     const diff = (h + advantage) - a;
 
     // converte diferença de força em expectativa de gols
-    const base = 1.25;
-    const lamHome = clampFloat(base + (diff / 18), 0.2, 3.2);
-    const lamAway = clampFloat(base - (diff / 22), 0.2, 3.0);
+    // Média alvo ~2.3 gols/jogo (liga). Ajustável via save.world.config
+    const base = Number(save.world?.config?.goalsBasePerTeam ?? 1.12);
+    let lamHome = clampFloat(base + (diff / 20), 0.15, 3.0);
+    let lamAway = clampFloat(base - (diff / 24), 0.15, 2.9);
+
+    // Dampener para evitar excesso de 5x4/6x5 em sequência
+    const damp = Number(save.world?.config?.highScoreDampener ?? 0.92);
+    if (lamHome > 2.3) lamHome = 2.3 + (lamHome - 2.3) * damp;
+    if (lamAway > 2.3) lamAway = 2.3 + (lamAway - 2.3) * damp;
 
     const hg = clampInt(poisson(lamHome), 0, 7);
     const ag = clampInt(poisson(lamAway), 0, 7);
@@ -2248,6 +2402,10 @@
           if (!save) return;
           ensureSystems(save);
           ensureSeason(save);
+
+          // (PARTE 7) Recuperação de fadiga / contagem de lesões antes da rodada
+          recoverFatigueForAllClubs(save);
+
           const r = save.season.currentRound;
           const rounds = save.season.rounds || [];
           if (r >= rounds.length) return;
@@ -2261,6 +2419,9 @@
             m.xgH = sim.lamHome;
             m.xgA = sim.lamAway;
             applyResultToTable(save.season.table, m.homeId, m.awayId, m.hg, m.ag);
+
+            // (PARTE 7) Atualiza forma/moral/fadiga + efeitos no elenco
+            updateClubAfterMatch(save, m.homeId, m.awayId, m.hg, m.ag, 'league');
           });
 
 
@@ -2273,6 +2434,9 @@
               const simB = simulateMatch(mm.homeId, mm.awayId, save);
               mm.hg = simB.hg; mm.ag = simB.ag; mm.played = true;
               applyResultToTable(b.table, mm.homeId, mm.awayId, mm.hg, mm.ag);
+
+              // (PARTE 7) Atualiza mundo também na Série B
+              updateClubAfterMatch(save, mm.homeId, mm.awayId, mm.hg, mm.ag, 'league');
             });
             b.currentRound += 1;
           }
@@ -2288,6 +2452,9 @@
             if (!cm || cm.played) return;
             const simC = simulateMatch(cm.homeId, cm.awayId, save);
             cm.hg = simC.hg; cm.ag = simC.ag; cm.played = true;
+
+            // (PARTE 7) Efeitos de copa (mais fadiga)
+            updateClubAfterMatch(save, cm.homeId, cm.awayId, cm.hg, cm.ag, 'cup');
 
             // desempate simples em pênaltis se empatar
             if (cm.hg === cm.ag) {
@@ -2320,6 +2487,9 @@
             if (!gm || gm.played) return;
             const simG = simulateMatch(gm.homeId, gm.awayId, save);
             gm.hg = simG.hg; gm.ag = simG.ag; gm.played = true;
+
+            // (PARTE 7) Efeitos continentais (mais fadiga)
+            updateClubAfterMatch(save, gm.homeId, gm.awayId, gm.hg, gm.ag, 'continental');
             extraResults.push({ ...gm });
 
             const c = save.season.ext?.continental;
