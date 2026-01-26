@@ -1,0 +1,68 @@
+{
+  "leagues": [
+    {
+      "id": "BRA_SERIE_A",
+      "name": "Campeonato Brasileiro Série A",
+      "country": "Brasil",
+      "tier": 1,
+      "clubs": [
+        "ACG",
+        "AMA",
+        "AME",
+        "AMG",
+        "ATC",
+        "AVA",
+        "BAH",
+        "BFS",
+        "BOT",
+        "CAP",
+        "CEA",
+        "CFC",
+        "CHA",
+        "COR",
+        "CRB",
+        "CRI",
+        "CRU",
+        "CUI",
+        "FER",
+        "FLA"
+      ]
+    },
+    {
+      "id": "BRA_SERIE_B",
+      "name": "Campeonato Brasileiro Série B",
+      "country": "Brasil",
+      "tier": 2,
+      "clubs": [
+        "FLU",
+        "FOR",
+        "GRE",
+        "INT",
+        "JUV",
+        "MIR",
+        "NOV",
+        "OPE",
+        "PAL",
+        "PAY",
+        "RBB",
+        "REM",
+        "SAN",
+        "SAO",
+        "SPT",
+        "VAS",
+        "VIT",
+        "VNO",
+        "VOL",
+        "santos"
+      ]
+    }
+  ],
+  "cups": [
+    {
+      "id": "BRA_COPA_DO_BRASIL",
+      "name": "Copa do Brasil",
+      "country": "Brasil",
+      "type": "cup"
+    }
+  ]
+}

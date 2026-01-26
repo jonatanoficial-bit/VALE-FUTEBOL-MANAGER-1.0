@@ -1,0 +1,317 @@
+{
+  "leagues": [
+    {
+      "id": "BRA_SERIE_A",
+      "name": "Campeonato Brasileiro Série A",
+      "region": "South America",
+      "country": "Brasil",
+      "tier": 1,
+      "type": "league",
+      "teams": 20,
+      "season": "2025_2026",
+      "rules": {
+        "pointsWin": 3,
+        "pointsDraw": 1,
+        "pointsLoss": 0,
+        "tiebreakers": ["points", "wins", "goalDiff", "goalsFor", "headToHead", "fairPlay"],
+        "relegation": { "toLeagueId": "BRA_SERIE_B", "spots": 4 },
+        "continentalQualification": {
+          "CONM_LIB": { "type": "Libertadores", "spots": 6 },
+          "CONM_SUD": { "type": "Sul-Americana", "spots": 6 }
+        }
+      }
+    },
+    {
+      "id": "BRA_SERIE_B",
+      "name": "Campeonato Brasileiro Série B",
+      "region": "South America",
+      "country": "Brasil",
+      "tier": 2,
+      "type": "league",
+      "teams": 20,
+      "season": "2025_2026",
+      "rules": {
+        "pointsWin": 3,
+        "pointsDraw": 1,
+        "pointsLoss": 0,
+        "tiebreakers": ["points", "wins", "goalDiff", "goalsFor"],
+        "promotion": { "toLeagueId": "BRA_SERIE_A", "spots": 4 },
+        "relegation": { "toLeagueId": "BRA_SERIE_C", "spots": 4 }
+      }
+    },
+    {
+      "id": "BRA_SERIE_C",
+      "name": "Campeonato Brasileiro Série C (placeholder)",
+      "region": "South America",
+      "country": "Brasil",
+      "tier": 3,
+      "type": "league",
+      "teams": 20,
+      "season": "2025_2026",
+      "rules": {
+        "promotion": { "toLeagueId": "BRA_SERIE_B", "spots": 4 }
+      }
+    },
+    {
+      "id": "ARG_PRIMERA",
+      "name": "Argentina Primera División",
+      "region": "South America",
+      "country": "Argentina",
+      "tier": 1,
+      "type": "league",
+      "teams": 28,
+      "season": "2025_2026",
+      "rules": {
+        "pointsWin": 3,
+        "pointsDraw": 1,
+        "pointsLoss": 0,
+        "tiebreakers": ["points", "goalDiff", "goalsFor"]
+      }
+    },
+    {
+      "id": "URU_PRIMERA",
+      "name": "Uruguai Primera División",
+      "region": "South America",
+      "country": "Uruguai",
+      "tier": 1,
+      "type": "league",
+      "teams": 16,
+      "season": "2025_2026",
+      "rules": {
+        "pointsWin": 3,
+        "pointsDraw": 1,
+        "pointsLoss": 0,
+        "tiebreakers": ["points", "goalDiff", "goalsFor"]
+      }
+    },
+    {
+      "id": "CHI_PRIMERA",
+      "name": "Chile Primera División",
+      "region": "South America",
+      "country": "Chile",
+      "tier": 1,
+      "type": "league",
+      "teams": 16,
+      "season": "2025_2026",
+      "rules": {
+        "pointsWin": 3,
+        "pointsDraw": 1,
+        "pointsLoss": 0,
+        "tiebreakers": ["points", "goalDiff", "goalsFor"]
+      }
+    },
+    {
+      "id": "ENG_PREMIER",
+      "name": "Premier League",
+      "region": "Europe",
+      "country": "Inglaterra",
+      "tier": 1,
+      "type": "league",
+      "teams": 20,
+      "season": "2025_2026",
+      "rules": {
+        "pointsWin": 3,
+        "pointsDraw": 1,
+        "pointsLoss": 0,
+        "tiebreakers": ["points", "goalDiff", "goalsFor"]
+      }
+    },
+    {
+      "id": "ESP_LALIGA",
+      "name": "LaLiga",
+      "region": "Europe",
+      "country": "Espanha",
+      "tier": 1,
+      "type": "league",
+      "teams": 20,
+      "season": "2025_2026",
+      "rules": {
+        "pointsWin": 3,
+        "pointsDraw": 1,
+        "pointsLoss": 0,
+        "tiebreakers": ["points", "goalDiff", "goalsFor"]
+      }
+    },
+    {
+      "id": "ITA_SERIEA",
+      "name": "Serie A (Itália)",
+      "region": "Europe",
+      "country": "Itália",
+      "tier": 1,
+      "type": "league",
+      "teams": 20,
+      "season": "2025_2026",
+      "rules": {
+        "pointsWin": 3,
+        "pointsDraw": 1,
+        "pointsLoss": 0,
+        "tiebreakers": ["points", "goalDiff", "goalsFor"]
+      }
+    },
+    {
+      "id": "GER_BUNDES",
+      "name": "Bundesliga",
+      "region": "Europe",
+      "country": "Alemanha",
+      "tier": 1,
+      "type": "league",
+      "teams": 18,
+      "season": "2025_2026",
+      "rules": {
+        "pointsWin": 3,
+        "pointsDraw": 1,
+        "pointsLoss": 0,
+        "tiebreakers": ["points", "goalDiff", "goalsFor"]
+      }
+    },
+    {
+      "id": "FRA_LIGUE1",
+      "name": "Ligue 1",
+      "region": "Europe",
+      "country": "França",
+      "tier": 1,
+      "type": "league",
+      "teams": 18,
+      "season": "2025_2026",
+      "rules": {
+        "pointsWin": 3,
+        "pointsDraw": 1,
+        "pointsLoss": 0,
+        "tiebreakers": ["points", "goalDiff", "goalsFor"]
+      }
+    }
+  ],
+  "cups": [
+    {
+      "id": "BRA_CDB",
+      "name": "Copa do Brasil",
+      "region": "South America",
+      "country": "Brasil",
+      "type": "cup",
+      "season": "2025_2026",
+      "format": "knockout",
+      "teams": 92,
+      "rules": {
+        "twoLegsFromRound": "R3",
+        "finalTwoLegs": false,
+        "note": "MVP: eliminatória simples."
+      },
+      "qualification": {
+        "winnerTo": ["CONM_LIB"],
+        "note": "Campeão vai para a Libertadores."
+      }
+    },
+    {
+      "id": "CONM_LIB",
+      "name": "CONMEBOL Libertadores",
+      "region": "South America",
+      "type": "continental",
+      "season": "2025_2026",
+      "format": "groups+knockout",
+      "teams": 32,
+      "rules": {
+        "groups": 8,
+        "teamsPerGroup": 4,
+        "advanceFromGroups": 16,
+        "knockoutTwoLegsUntilFinal": true,
+        "finalSingleMatch": true
+      },
+      "qualification": {
+        "fromLeagues": [
+          { "leagueId": "BRA_SERIE_A", "spots": 6 },
+          { "leagueId": "ARG_PRIMERA", "spots": 5 },
+          { "leagueId": "URU_PRIMERA", "spots": 2 },
+          { "leagueId": "CHI_PRIMERA", "spots": 3 }
+        ],
+        "note": "Estrutura pronta; expandir com mais países e spots."
+      }
+    },
+    {
+      "id": "CONM_SUD",
+      "name": "CONMEBOL Sul-Americana",
+      "region": "South America",
+      "type": "continental",
+      "season": "2025_2026",
+      "format": "groups+knockout",
+      "teams": 32,
+      "rules": {
+        "groups": 8,
+        "teamsPerGroup": 4,
+        "advanceFromGroups": 16
+      },
+      "qualification": {
+        "fromLeagues": [
+          { "leagueId": "BRA_SERIE_A", "spots": 6 },
+          { "leagueId": "ARG_PRIMERA", "spots": 6 },
+          { "leagueId": "URU_PRIMERA", "spots": 3 },
+          { "leagueId": "CHI_PRIMERA", "spots": 4 }
+        ],
+        "note": "Estrutura base, pode expandir."
+      }
+    },
+    {
+      "id": "UEFA_UCL",
+      "name": "UEFA Champions League",
+      "region": "Europe",
+      "type": "continental",
+      "season": "2025_2026",
+      "format": "league+knockout",
+      "teams": 36,
+      "rules": {
+        "note": "Formato moderno (liga única) como placeholder.",
+        "knockoutTeams": 16,
+        "finalSingleMatch": true
+      },
+      "qualification": {
+        "fromLeagues": [
+          { "leagueId": "ENG_PREMIER", "spots": 4 },
+          { "leagueId": "ESP_LALIGA", "spots": 4 },
+          { "leagueId": "ITA_SERIEA", "spots": 4 },
+          { "leagueId": "GER_BUNDES", "spots": 4 },
+          { "leagueId": "FRA_LIGUE1", "spots": 3 }
+        ],
+        "note": "Estrutura principal para clubes europeus."
+      }
+    },
+    {
+      "id": "FIFA_CWC",
+      "name": "Mundial de Clubes (FIFA Club World Cup)",
+      "region": "World",
+      "type": "world",
+      "season": "2025_2026",
+      "format": "knockout",
+      "teams": 8,
+      "rules": {
+        "note": "MVP: 8 times em mata-mata."
+      },
+      "qualification": {
+        "byChampions": [
+          { "competitionId": "CONM_LIB", "slot": "CONMEBOL_Champion" },
+          { "competitionId": "UEFA_UCL", "slot": "UEFA_Champion" }
+        ],
+        "note": "Placeholder: incluir campeões de outras confederações."
+      }
+    },
+    {
+      "id": "INTERCLUBES",
+      "name": "Interclubes (Libertadores x Champions)",
+      "region": "World",
+      "type": "supercup",
+      "season": "2025_2026",
+      "format": "single_match",
+      "teams": 2,
+      "rules": {
+        "note": "Campeão da Libertadores contra campeão da Champions League."
+      },
+      "qualification": {
+        "teamsFrom": [
+          { "competitionId": "CONM_LIB", "role": "winner" },
+          { "competitionId": "UEFA_UCL", "role": "winner" }
+        ]
+      }
+    }
+  ],
+  "meta": {
+    "note": "IDs de liga devem corresponder aos arquivos de clubes. Esta estrutura é flexível para expansão."
+  }
+}

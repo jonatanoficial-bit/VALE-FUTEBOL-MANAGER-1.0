@@ -1,0 +1,103 @@
+{
+  "leagues": [
+    {
+      "id": "BRA_SERIE_A",
+      "name": "Brasil - Série A",
+      "country": "BR",
+      "level": 1,
+      "teams": 20
+    },
+    {
+      "id": "BRA_SERIE_B",
+      "name": "Brasil - Série B",
+      "country": "BR",
+      "level": 2,
+      "teams": 20
+    },
+    {
+      "id": "ENG_PREMIER",
+      "name": "Inglaterra - Premier League",
+      "country": "EN",
+      "level": 1,
+      "teams": 20
+    },
+    {
+      "id": "ESP_LALIGA",
+      "name": "Espanha - LaLiga",
+      "country": "ES",
+      "level": 1,
+      "teams": 20
+    },
+    {
+      "id": "GER_BUNDES",
+      "name": "Alemanha - Bundesliga",
+      "country": "DE",
+      "level": 1,
+      "teams": 18
+    },
+    {
+      "id": "ITA_SERIE_A",
+      "name": "Itália - Serie A",
+      "country": "IT",
+      "level": 1,
+      "teams": 20
+    },
+    {
+      "id": "FRA_LIGUE_1",
+      "name": "França - Ligue 1",
+      "country": "FR",
+      "level": 1,
+      "teams": 18
+    },
+    {
+      "id": "POR_LIGA",
+      "name": "Portugal - Liga Portugal",
+      "country": "PT",
+      "level": 1,
+      "teams": 18
+    }
+  ],
+  "cups": [
+    {
+      "id": "BRA_COPA_BRASIL",
+      "name": "Copa do Brasil",
+      "country": "BR",
+      "type": "cup",
+      "legs": "single",
+      "participantsFrom": [
+        "BRA_SERIE_A",
+        "BRA_SERIE_B"
+      ]
+    },
+    {
+      "id": "CONMEBOL_LIB",
+      "name": "CONMEBOL Libertadores",
+      "country": "CONMEBOL",
+      "type": "continental"
+    },
+    {
+      "id": "CONMEBOL_SUD",
+      "name": "CONMEBOL Sul-Americana",
+      "country": "CONMEBOL",
+      "type": "continental"
+    },
+    {
+      "id": "UEFA_CL",
+      "name": "UEFA Champions League",
+      "country": "UEFA",
+      "type": "continental"
+    },
+    {
+      "id": "UEFA_EL",
+      "name": "UEFA Europa League",
+      "country": "UEFA",
+      "type": "continental"
+    },
+    {
+      "id": "UEFA_ECL",
+      "name": "UEFA Conference League",
+      "country": "UEFA",
+      "type": "continental"
+    }
+  ]
+}

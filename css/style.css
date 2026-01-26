@@ -1,0 +1,8 @@
+
+body{margin:0;font-family:Arial;background:#0b0f14;color:#e7eef8}
+button{padding:10px 16px;border-radius:12px;border:none;cursor:pointer}
+.card{background:#101824;padding:20px;border-radius:16px;margin:20px}
+.green{background:#22c55e;color:#000}
+.list{display:flex;flex-direction:column;gap:10px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.logo{width:32px;height:32px;object-fit:contain}

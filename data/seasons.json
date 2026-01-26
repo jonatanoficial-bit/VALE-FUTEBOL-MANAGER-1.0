@@ -1,0 +1,87 @@
+{
+  "meta": {
+    "version": "1.0.0"
+  },
+  "templates": [
+    {
+      "id": "TEMPLATE_BRA_2025",
+      "country": "BRA",
+      "recommendedCalendar": [
+        {
+          "phase": "PRE_SEASON",
+          "weeks": 3
+        },
+        {
+          "phase": "STATE_CHAMPIONSHIPS",
+          "enabledBy": "ENABLE_STATE_CHAMPIONSHIPS_BR",
+          "weeks": 10
+        },
+        {
+          "phase": "NATIONAL_LEAGUE",
+          "competitionId": "BRA_SERIE_A",
+          "weeks": 38
+        },
+        {
+          "phase": "NATIONAL_CUP",
+          "competitionId": "BRA_COPA_DO_BRASIL",
+          "weeks": 12
+        },
+        {
+          "phase": "CONTINENTAL",
+          "competitionIds": [
+            "LIBERTADORES",
+            "SUDAMERICANA"
+          ],
+          "weeks": 20
+        },
+        {
+          "phase": "FINALS_SUPERCUPS",
+          "weeks": 2
+        },
+        {
+          "phase": "SEASON_END",
+          "weeks": 1
+        }
+      ]
+    },
+    {
+      "id": "TEMPLATE_UEFA_2025",
+      "country": "UEFA",
+      "recommendedCalendar": [
+        {
+          "phase": "PRE_SEASON",
+          "weeks": 4
+        },
+        {
+          "phase": "NATIONAL_LEAGUE",
+          "weeks": 34
+        },
+        {
+          "phase": "NATIONAL_CUP",
+          "weeks": 10
+        },
+        {
+          "phase": "UEFA_LEAGUE_PHASE",
+          "competitionIds": [
+            "UCL",
+            "UEL",
+            "UECL"
+          ],
+          "weeks": 10
+        },
+        {
+          "phase": "UEFA_KO",
+          "weeks": 12
+        },
+        {
+          "phase": "FINALS_SUPERCUPS",
+          "weeks": 2
+        },
+        {
+          "phase": "SEASON_END",
+          "weeks": 1
+        }
+      ]
+    }
+  ]
+}

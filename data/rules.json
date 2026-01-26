@@ -1,0 +1,318 @@
+{
+  "meta": {
+    "name": "Vale Futebol Manager 2026 - Regras (Base 2025/26)",
+    "version": "1.0.0",
+    "notes": "Somente dados (JSON). Não altera telas/código. Preparado para ativação futura no motor do jogo."
+  },
+  "universal": {
+    "leaguePoints": { "win": 3, "draw": 1, "loss": 0 },
+    "tiebreakersDefault": [
+      "points",
+      "wins",
+      "goalDifference",
+      "goalsFor",
+      "headToHead",
+      "fairPlay",
+      "drawLots"
+    ],
+    "knockout": {
+      "twoLegsDefault": true,
+      "awayGoalsRule": false,
+      "extraTime": true,
+      "penalties": true
+    },
+    "drawRules": {
+      "seededIfAvailable": true,
+      "countryProtection": false
+    }
+  },
+  "parameters": {
+    "ENABLE_STATE_CHAMPIONSHIPS_BR": false,
+    "BRAZIL_LIBERTADORES_SLOTS_BY_LEAGUE": 4,
+    "BRAZIL_SUDAMERICANA_BASE_SLOTS_BY_LEAGUE": 6,
+    "BRAZIL_RELEGATION_SPOTS_A": 4,
+    "BRAZIL_PROMOTION_SPOTS_B": 4,
+    "BRAZIL_CUP_EXTRA_SLOTS": { "libertadores": 1, "sudamericana": 0 },
+
+    "ARGENTINA_RELEGATION_MODE": "PROMEDIO",
+
+    "UEFA_EXTRA_CHAMPIONS_LEAGUE_SLOT_BY_COEFFICIENT": true,
+
+    "INTERCONTINENTAL_MODE": "CLASSIC",
+    "CLUB_WORLD_CUP_ENABLED": true,
+    "CLUB_WORLD_CUP_QUADRENNIAL_ENABLED": true
+  },
+  "countries": {
+    "BRA": {
+      "name": "Brasil",
+      "leagues": {
+        "BRA_SERIE_A": {
+          "clubs": 20,
+          "rounds": 38,
+          "type": "double_round_robin",
+          "relegation": { "count": 4, "toLeagueId": "BRA_SERIE_B" },
+          "promotionFrom": { "leagueId": "BRA_SERIE_B", "count": 4 },
+          "tiebreakers": [
+            "points",
+            "wins",
+            "goalDifference",
+            "goalsFor",
+            "headToHead",
+            "fairPlay",
+            "drawLots"
+          ]
+        },
+        "BRA_SERIE_B": {
+          "clubs": 20,
+          "rounds": 38,
+          "type": "double_round_robin",
+          "promotion": { "count": 4, "toLeagueId": "BRA_SERIE_A" },
+          "relegation": { "count": 4, "toLeagueId": "BRA_SERIE_C" },
+          "tiebreakers": [
+            "points",
+            "wins",
+            "goalDifference",
+            "goalsFor",
+            "headToHead",
+            "fairPlay",
+            "drawLots"
+          ]
+        }
+      },
+      "cups": {
+        "BRA_COPA_DO_BRASIL": {
+          "type": "knockout",
+          "legs": "two_legs_until_semis",
+          "final": { "legs": 2 },
+          "extraTime": true,
+          "penalties": true,
+          "qualificationRewards": {
+            "libertadores": { "type": "direct_group_stage", "count": 1 }
+          }
+        }
+      },
+      "continentalQualification": {
+        "libertadores": {
+          "fromLeague": {
+            "leagueId": "BRA_SERIE_A",
+            "positions": [1, 2, 3, 4]
+          },
+          "additional": [
+            { "source": "BRA_COPA_DO_BRASIL", "slot": "direct_group_stage", "count": 1 },
+            { "source": "LIBERTADORES", "slot": "holder_slot", "count": 1 },
+            { "source": "SUDAMERICANA", "slot": "holder_slot", "count": 1 }
+          ]
+        },
+        "sudamericana": {
+          "fromLeague": {
+            "leagueId": "BRA_SERIE_A",
+            "positions": [5, 6, 7, 8, 9, 10]
+          }
+        }
+      }
+    },
+
+    "ARG": {
+      "name": "Argentina",
+      "leagueSystem": {
+        "mode": "ANNUAL_TABLE",
+        "notes": "Formato 2025 varia. Para o jogo: usar Tabla Anual (soma de fases) para vagas e rebaixamento (alto nível)."
+      },
+      "leagues": {
+        "ARG_PRIMERA": {
+          "clubs": 28,
+          "type": "two_phase_or_league",
+          "annualTable": true,
+          "tiebreakers": ["points", "goalDifference", "goalsFor", "headToHead", "drawLots"]
+        }
+      },
+      "cups": {
+        "ARG_COPA_ARGENTINA": {
+          "type": "knockout",
+          "legs": "single_match",
+          "neutralVenuePossible": true,
+          "extraTime": true,
+          "penalties": true
+        }
+      },
+      "relegation": {
+        "mode": "PROMEDIO",
+        "seasonsConsidered": 3,
+        "relegatedCount": 2,
+        "notes": "Se não houver histórico, usa temporada atual. Se houver, calcula média de pontos por jogo nas últimas N temporadas."
+      },
+      "continentalQualification": {
+        "libertadores": {
+          "fromAnnualTable": { "positions": [1, 2, 3, 4] },
+          "cupWinnerExtra": { "cupId": "ARG_COPA_ARGENTINA", "slot": "direct", "count": 1 }
+        },
+        "sudamericana": {
+          "fromAnnualTable": { "positions": [5, 6, 7, 8, 9, 10] }
+        }
+      }
+    },
+
+    "ESP": {
+      "name": "Espanha",
+      "leagues": {
+        "ESP_LALIGA": {
+          "clubs": 20,
+          "rounds": 38,
+          "relegation": { "count": 3, "toLeagueId": "ESP_SEGUNDA" },
+          "promotionFrom": { "leagueId": "ESP_SEGUNDA", "count": 3 },
+          "tiebreakers": ["points", "headToHead", "goalDifference", "goalsFor", "drawLots"]
+        }
+      },
+      "cups": {
+        "ESP_COPA_DEL_REY": {
+          "type": "knockout",
+          "legs": "single_match_except_semis",
+          "semis": { "legs": 2 },
+          "final": { "legs": 1 }
+        },
+        "ESP_SUPERCOPA": { "type": "final_four", "legs": "single_match" }
+      },
+      "continentalQualification": {
+        "uefa_champions": { "fromLeague": { "leagueId": "ESP_LALIGA", "positions": [1, 2, 3, 4] } },
+        "uefa_europa": {
+          "fromLeague": { "leagueId": "ESP_LALIGA", "positions": [5] },
+          "cupWinnerExtra": { "cupId": "ESP_COPA_DEL_REY", "slot": "europa", "count": 1 }
+        },
+        "uefa_conference": { "fromLeague": { "leagueId": "ESP_LALIGA", "positions": [6] } }
+      }
+    },
+
+    "ENG": {
+      "name": "Inglaterra",
+      "leagues": {
+        "ENG_PREMIER": {
+          "clubs": 20,
+          "rounds": 38,
+          "relegation": { "count": 3, "toLeagueId": "ENG_CHAMP" },
+          "promotionFrom": { "leagueId": "ENG_CHAMP", "count": 3 }
+        }
+      },
+      "cups": {
+        "ENG_FA_CUP": { "type": "knockout", "legs": "single_match", "replays": false },
+        "ENG_EFL_CUP": { "type": "knockout", "legs": "single_match" }
+      },
+      "continentalQualification": {
+        "uefa_champions": { "fromLeague": { "leagueId": "ENG_PREMIER", "positions": [1, 2, 3, 4] } },
+        "uefa_europa": {
+          "fromLeague": { "leagueId": "ENG_PREMIER", "positions": [5] },
+          "cupWinnerExtra": [{ "cupId": "ENG_FA_CUP", "slot": "europa", "count": 1 }]
+        },
+        "uefa_conference": { "fromLeague": { "leagueId": "ENG_PREMIER", "positions": [6] } }
+      }
+    },
+
+    "ITA": {
+      "name": "Itália",
+      "leagues": {
+        "ITA_SERIE_A": {
+          "clubs": 20,
+          "rounds": 38,
+          "relegation": { "count": 3, "toLeagueId": "ITA_SERIE_B" },
+          "promotionFrom": { "leagueId": "ITA_SERIE_B", "count": 3 }
+        }
+      },
+      "cups": {
+        "ITA_COPPA_ITALIA": {
+          "type": "knockout",
+          "legs": "single_match",
+          "semis": { "legs": 2 },
+          "final": { "legs": 1 }
+        },
+        "ITA_SUPERCOPPA": { "type": "mini_tournament", "legs": "single_match" }
+      },
+      "continentalQualification": {
+        "uefa_champions": { "fromLeague": { "leagueId": "ITA_SERIE_A", "positions": [1, 2, 3, 4] } },
+        "uefa_europa": {
+          "fromLeague": { "leagueId": "ITA_SERIE_A", "positions": [5] },
+          "cupWinnerExtra": { "cupId": "ITA_COPPA_ITALIA", "slot": "europa", "count": 1 }
+        },
+        "uefa_conference": { "fromLeague": { "leagueId": "ITA_SERIE_A", "positions": [6] } }
+      }
+    },
+
+    "DEU": {
+      "name": "Alemanha",
+      "leagues": {
+        "DEU_BUNDESLIGA": {
+          "clubs": 18,
+          "rounds": 34,
+          "relegation": { "count": 2, "toLeagueId": "DEU_2BUND" },
+          "playoffRelegation": { "positions": [16], "type": "two_legs" },
+          "promotionFrom": { "leagueId": "DEU_2BUND", "count": 2 },
+          "promotionPlayoff": { "position": 3, "type": "two_legs" }
+        }
+      },
+      "cups": {
+        "DEU_DFB_POKAL": { "type": "knockout", "legs": "single_match" },
+        "DEU_SUPERCUP": { "type": "supercup", "legs": "single_match" }
+      },
+      "continentalQualification": {
+        "uefa_champions": { "fromLeague": { "leagueId": "DEU_BUNDESLIGA", "positions": [1, 2, 3, 4] } },
+        "uefa_europa": {
+          "fromLeague": { "leagueId": "DEU_BUNDESLIGA", "positions": [5] },
+          "cupWinnerExtra": { "cupId": "DEU_DFB_POKAL", "slot": "europa", "count": 1 }
+        },
+        "uefa_conference": { "fromLeague": { "leagueId": "DEU_BUNDESLIGA", "positions": [6] } }
+      }
+    },
+
+    "FRA": {
+      "name": "França",
+      "leagues": {
+        "FRA_LIGUE1": {
+          "clubs": 18,
+          "rounds": 34,
+          "relegation": { "count": 2, "toLeagueId": "FRA_LIGUE2" },
+          "playoffRelegation": { "positions": [16], "type": "playoff" },
+          "promotionFrom": { "leagueId": "FRA_LIGUE2", "count": 2 },
+          "promotionPlayoff": { "positions": [3, 4, 5], "type": "playoff" }
+        }
+      },
+      "cups": {
+        "FRA_COUPE_DE_FRANCE": { "type": "knockout", "legs": "single_match" },
+        "FRA_TROPHEE_DES_CHAMPIONS": { "type": "supercup", "legs": "single_match" }
+      },
+      "continentalQualification": {
+        "uefa_champions": { "fromLeague": { "leagueId": "FRA_LIGUE1", "positions": [1, 2, 3] } },
+        "uefa_europa": {
+          "fromLeague": { "leagueId": "FRA_LIGUE1", "positions": [4] },
+          "cupWinnerExtra": { "cupId": "FRA_COUPE_DE_FRANCE", "slot": "europa", "count": 1 }
+        },
+        "uefa_conference": { "fromLeague": { "leagueId": "FRA_LIGUE1", "positions": [5] } }
+      }
+    },
+
+    "PRT": {
+      "name": "Portugal",
+      "leagues": {
+        "PRT_LIGA": {
+          "clubs": 18,
+          "rounds": 34,
+          "relegation": { "count": 2, "toLeagueId": "PRT_LIGA2" },
+          "promotionFrom": { "leagueId": "PRT_LIGA2", "count": 2 },
+          "playoffRelegation": { "positions": [16], "type": "two_legs" }
+        }
+      },
+      "cups": {
+        "PRT_TACA_DE_PORTUGAL": { "type": "knockout", "legs": "single_match" },
+        "PRT_TACA_DA_LIGA": {
+          "type": "group_plus_knockout",
+          "notes": "Simplificar: grupos curtos + mata-mata."
+        }
+      },
+      "continentalQualification": {
+        "uefa_champions": { "fromLeague": { "leagueId": "PRT_LIGA", "positions": [1, 2] } },
+        "uefa_europa": {
+          "fromLeague": { "leagueId": "PRT_LIGA", "positions": [3] },
+          "cupWinnerExtra": { "cupId": "PRT_TACA_DE_PORTUGAL", "slot": "europa", "count": 1 }
+        },
+        "uefa_conference": { "fromLeague": { "leagueId": "PRT_LIGA", "positions": [4] } }
+      }
+    }
+  }
+}

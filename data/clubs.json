@@ -1,0 +1,1236 @@
+{
+  "clubs": [
+    {
+      "id": "BRAA_FLA",
+      "name": "Flamengo",
+      "short": "FLA",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 79,
+      "budget": 145000000
+    },
+    {
+      "id": "BRAA_PAL",
+      "name": "Palmeiras",
+      "short": "PAL",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 78,
+      "budget": 140000000
+    },
+    {
+      "id": "BRAA_CAM",
+      "name": "Atlético-MG",
+      "short": "CAM",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 77,
+      "budget": 135000000
+    },
+    {
+      "id": "BRAA_COR",
+      "name": "Corinthians",
+      "short": "COR",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 76,
+      "budget": 130000000
+    },
+    {
+      "id": "BRAA_SAO",
+      "name": "São Paulo",
+      "short": "SAO",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 75,
+      "budget": 125000000
+    },
+    {
+      "id": "BRAA_SAN",
+      "name": "Santos",
+      "short": "SAN",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 74,
+      "budget": 120000000
+    },
+    {
+      "id": "BRAA_FLU",
+      "name": "Fluminense",
+      "short": "FLU",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 73,
+      "budget": 115000000
+    },
+    {
+      "id": "BRAA_GRE",
+      "name": "Grêmio",
+      "short": "GRE",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 72,
+      "budget": 110000000
+    },
+    {
+      "id": "BRAA_INT",
+      "name": "Internacional",
+      "short": "INT",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 71,
+      "budget": 105000000
+    },
+    {
+      "id": "BRAA_BOT",
+      "name": "Botafogo",
+      "short": "BOT",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 70,
+      "budget": 100000000
+    },
+    {
+      "id": "BRAA_CRU",
+      "name": "Cruzeiro",
+      "short": "CRU",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 69,
+      "budget": 95000000
+    },
+    {
+      "id": "BRAA_VAS",
+      "name": "Vasco",
+      "short": "VAS",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 68,
+      "budget": 90000000
+    },
+    {
+      "id": "BRAA_BAH",
+      "name": "Bahia",
+      "short": "BAH",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 67,
+      "budget": 85000000
+    },
+    {
+      "id": "BRAA_FOR",
+      "name": "Fortaleza",
+      "short": "FOR",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 66,
+      "budget": 80000000
+    },
+    {
+      "id": "BRAA_CEA",
+      "name": "Ceará",
+      "short": "CEA",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 65,
+      "budget": 75000000
+    },
+    {
+      "id": "BRAA_CAP",
+      "name": "Athletico-PR",
+      "short": "CAP",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 64,
+      "budget": 70000000
+    },
+    {
+      "id": "BRAA_RBB",
+      "name": "RB Bragantino",
+      "short": "RBB",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 63,
+      "budget": 65000000
+    },
+    {
+      "id": "BRAA_GOI",
+      "name": "Goiás",
+      "short": "GOI",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 62,
+      "budget": 60000000
+    },
+    {
+      "id": "BRAA_CUI",
+      "name": "Cuiabá",
+      "short": "CUI",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 61,
+      "budget": 55000000
+    },
+    {
+      "id": "BRAA_VIT",
+      "name": "Vitória",
+      "short": "VIT",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 60,
+      "budget": 50000000
+    },
+    {
+      "id": "BRAB_AVA",
+      "name": "Avaí",
+      "short": "AVA",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 79,
+      "budget": 145000000
+    },
+    {
+      "id": "BRAB_CHA",
+      "name": "Chapecoense",
+      "short": "CHA",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 78,
+      "budget": 140000000
+    },
+    {
+      "id": "BRAB_CRI",
+      "name": "Criciúma",
+      "short": "CRI",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 77,
+      "budget": 135000000
+    },
+    {
+      "id": "BRAB_CFC",
+      "name": "Coritiba",
+      "short": "CFC",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 76,
+      "budget": 130000000
+    },
+    {
+      "id": "BRAB_GUA",
+      "name": "Guarani",
+      "short": "GUA",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 75,
+      "budget": 125000000
+    },
+    {
+      "id": "BRAB_JUV",
+      "name": "Juventude",
+      "short": "JUV",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 74,
+      "budget": 120000000
+    },
+    {
+      "id": "BRAB_LON",
+      "name": "Londrina",
+      "short": "LON",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 73,
+      "budget": 115000000
+    },
+    {
+      "id": "BRAB_MIR",
+      "name": "Mirassol",
+      "short": "MIR",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 72,
+      "budget": 110000000
+    },
+    {
+      "id": "BRAB_NOV",
+      "name": "Novorizontino",
+      "short": "NOV",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 71,
+      "budget": 105000000
+    },
+    {
+      "id": "BRAB_OPE",
+      "name": "Operário-PR",
+      "short": "OPE",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 70,
+      "budget": 100000000
+    },
+    {
+      "id": "BRAB_PAY",
+      "name": "Paysandu",
+      "short": "PAY",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 69,
+      "budget": 95000000
+    },
+    {
+      "id": "BRAB_PON",
+      "name": "Ponte Preta",
+      "short": "PON",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 68,
+      "budget": 90000000
+    },
+    {
+      "id": "BRAB_REM",
+      "name": "Remo",
+      "short": "REM",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 67,
+      "budget": 85000000
+    },
+    {
+      "id": "BRAB_SAM",
+      "name": "Sampaio Corrêa",
+      "short": "SAM",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 66,
+      "budget": 80000000
+    },
+    {
+      "id": "BRAB_SPO",
+      "name": "Sport",
+      "short": "SPO",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 65,
+      "budget": 75000000
+    },
+    {
+      "id": "BRAB_VIL",
+      "name": "Vila Nova",
+      "short": "VIL",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 64,
+      "budget": 70000000
+    },
+    {
+      "id": "BRAB_ABC",
+      "name": "ABC",
+      "short": "ABC",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 63,
+      "budget": 65000000
+    },
+    {
+      "id": "BRAB_AME",
+      "name": "América-MG",
+      "short": "AME",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 62,
+      "budget": 60000000
+    },
+    {
+      "id": "BRAB_CSA",
+      "name": "CSA",
+      "short": "CSA",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 61,
+      "budget": 55000000
+    },
+    {
+      "id": "BRAB_ITU",
+      "name": "Ituano",
+      "short": "ITU",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 60,
+      "budget": 50000000
+    },
+    {
+      "id": "EPL_MCI",
+      "name": "Manchester City",
+      "short": "MCI",
+      "leagueId": "ENG_PREMIER",
+      "overall": 79,
+      "budget": 145000000
+    },
+    {
+      "id": "EPL_ARS",
+      "name": "Arsenal",
+      "short": "ARS",
+      "leagueId": "ENG_PREMIER",
+      "overall": 78,
+      "budget": 140000000
+    },
+    {
+      "id": "EPL_LIV",
+      "name": "Liverpool",
+      "short": "LIV",
+      "leagueId": "ENG_PREMIER",
+      "overall": 77,
+      "budget": 135000000
+    },
+    {
+      "id": "EPL_CHE",
+      "name": "Chelsea",
+      "short": "CHE",
+      "leagueId": "ENG_PREMIER",
+      "overall": 76,
+      "budget": 130000000
+    },
+    {
+      "id": "EPL_MUN",
+      "name": "Manchester United",
+      "short": "MUN",
+      "leagueId": "ENG_PREMIER",
+      "overall": 75,
+      "budget": 125000000
+    },
+    {
+      "id": "EPL_TOT",
+      "name": "Tottenham",
+      "short": "TOT",
+      "leagueId": "ENG_PREMIER",
+      "overall": 74,
+      "budget": 120000000
+    },
+    {
+      "id": "EPL_NEW",
+      "name": "Newcastle",
+      "short": "NEW",
+      "leagueId": "ENG_PREMIER",
+      "overall": 73,
+      "budget": 115000000
+    },
+    {
+      "id": "EPL_AVL",
+      "name": "Aston Villa",
+      "short": "AVL",
+      "leagueId": "ENG_PREMIER",
+      "overall": 72,
+      "budget": 110000000
+    },
+    {
+      "id": "EPL_WHU",
+      "name": "West Ham",
+      "short": "WHU",
+      "leagueId": "ENG_PREMIER",
+      "overall": 71,
+      "budget": 105000000
+    },
+    {
+      "id": "EPL_BHA",
+      "name": "Brighton",
+      "short": "BHA",
+      "leagueId": "ENG_PREMIER",
+      "overall": 70,
+      "budget": 100000000
+    },
+    {
+      "id": "EPL_EVE",
+      "name": "Everton",
+      "short": "EVE",
+      "leagueId": "ENG_PREMIER",
+      "overall": 69,
+      "budget": 95000000
+    },
+    {
+      "id": "EPL_FUL",
+      "name": "Fulham",
+      "short": "FUL",
+      "leagueId": "ENG_PREMIER",
+      "overall": 68,
+      "budget": 90000000
+    },
+    {
+      "id": "EPL_CRY",
+      "name": "Crystal Palace",
+      "short": "CRY",
+      "leagueId": "ENG_PREMIER",
+      "overall": 67,
+      "budget": 85000000
+    },
+    {
+      "id": "EPL_BRE",
+      "name": "Brentford",
+      "short": "BRE",
+      "leagueId": "ENG_PREMIER",
+      "overall": 66,
+      "budget": 80000000
+    },
+    {
+      "id": "EPL_WOL",
+      "name": "Wolves",
+      "short": "WOL",
+      "leagueId": "ENG_PREMIER",
+      "overall": 65,
+      "budget": 75000000
+    },
+    {
+      "id": "EPL_NFO",
+      "name": "Nottingham Forest",
+      "short": "NFO",
+      "leagueId": "ENG_PREMIER",
+      "overall": 64,
+      "budget": 70000000
+    },
+    {
+      "id": "EPL_BOU",
+      "name": "Bournemouth",
+      "short": "BOU",
+      "leagueId": "ENG_PREMIER",
+      "overall": 63,
+      "budget": 65000000
+    },
+    {
+      "id": "EPL_SOU",
+      "name": "Southampton",
+      "short": "SOU",
+      "leagueId": "ENG_PREMIER",
+      "overall": 62,
+      "budget": 60000000
+    },
+    {
+      "id": "EPL_LEI",
+      "name": "Leicester City",
+      "short": "LEI",
+      "leagueId": "ENG_PREMIER",
+      "overall": 61,
+      "budget": 55000000
+    },
+    {
+      "id": "EPL_IPS",
+      "name": "Ipswich Town",
+      "short": "IPS",
+      "leagueId": "ENG_PREMIER",
+      "overall": 60,
+      "budget": 50000000
+    },
+    {
+      "id": "ESP_RMA",
+      "name": "Real Madrid",
+      "short": "RMA",
+      "leagueId": "ESP_LALIGA",
+      "overall": 79,
+      "budget": 145000000
+    },
+    {
+      "id": "ESP_FCB",
+      "name": "Barcelona",
+      "short": "FCB",
+      "leagueId": "ESP_LALIGA",
+      "overall": 78,
+      "budget": 140000000
+    },
+    {
+      "id": "ESP_ATM",
+      "name": "Atlético de Madrid",
+      "short": "ATM",
+      "leagueId": "ESP_LALIGA",
+      "overall": 77,
+      "budget": 135000000
+    },
+    {
+      "id": "ESP_SEV",
+      "name": "Sevilla",
+      "short": "SEV",
+      "leagueId": "ESP_LALIGA",
+      "overall": 76,
+      "budget": 130000000
+    },
+    {
+      "id": "ESP_VAL",
+      "name": "Valencia",
+      "short": "VAL",
+      "leagueId": "ESP_LALIGA",
+      "overall": 75,
+      "budget": 125000000
+    },
+    {
+      "id": "ESP_VIL",
+      "name": "Villarreal",
+      "short": "VIL",
+      "leagueId": "ESP_LALIGA",
+      "overall": 74,
+      "budget": 120000000
+    },
+    {
+      "id": "ESP_BET",
+      "name": "Real Betis",
+      "short": "BET",
+      "leagueId": "ESP_LALIGA",
+      "overall": 73,
+      "budget": 115000000
+    },
+    {
+      "id": "ESP_RSO",
+      "name": "Real Sociedad",
+      "short": "RSO",
+      "leagueId": "ESP_LALIGA",
+      "overall": 72,
+      "budget": 110000000
+    },
+    {
+      "id": "ESP_ATH",
+      "name": "Athletic Club",
+      "short": "ATH",
+      "leagueId": "ESP_LALIGA",
+      "overall": 71,
+      "budget": 105000000
+    },
+    {
+      "id": "ESP_GIR",
+      "name": "Girona",
+      "short": "GIR",
+      "leagueId": "ESP_LALIGA",
+      "overall": 70,
+      "budget": 100000000
+    },
+    {
+      "id": "ESP_CEL",
+      "name": "Celta",
+      "short": "CEL",
+      "leagueId": "ESP_LALIGA",
+      "overall": 69,
+      "budget": 95000000
+    },
+    {
+      "id": "ESP_GET",
+      "name": "Getafe",
+      "short": "GET",
+      "leagueId": "ESP_LALIGA",
+      "overall": 68,
+      "budget": 90000000
+    },
+    {
+      "id": "ESP_OSA",
+      "name": "Osasuna",
+      "short": "OSA",
+      "leagueId": "ESP_LALIGA",
+      "overall": 67,
+      "budget": 85000000
+    },
+    {
+      "id": "ESP_ALA",
+      "name": "Alavés",
+      "short": "ALA",
+      "leagueId": "ESP_LALIGA",
+      "overall": 66,
+      "budget": 80000000
+    },
+    {
+      "id": "ESP_RAY",
+      "name": "Rayo Vallecano",
+      "short": "RAY",
+      "leagueId": "ESP_LALIGA",
+      "overall": 65,
+      "budget": 75000000
+    },
+    {
+      "id": "ESP_MLL",
+      "name": "Mallorca",
+      "short": "MLL",
+      "leagueId": "ESP_LALIGA",
+      "overall": 64,
+      "budget": 70000000
+    },
+    {
+      "id": "ESP_UDL",
+      "name": "Las Palmas",
+      "short": "UDL",
+      "leagueId": "ESP_LALIGA",
+      "overall": 63,
+      "budget": 65000000
+    },
+    {
+      "id": "ESP_GRA",
+      "name": "Granada",
+      "short": "GRA",
+      "leagueId": "ESP_LALIGA",
+      "overall": 62,
+      "budget": 60000000
+    },
+    {
+      "id": "ESP_ESP",
+      "name": "Espanyol",
+      "short": "ESP",
+      "leagueId": "ESP_LALIGA",
+      "overall": 61,
+      "budget": 55000000
+    },
+    {
+      "id": "ESP_LEG",
+      "name": "Leganés",
+      "short": "LEG",
+      "leagueId": "ESP_LALIGA",
+      "overall": 60,
+      "budget": 50000000
+    },
+    {
+      "id": "GER_BAY",
+      "name": "Bayern",
+      "short": "BAY",
+      "leagueId": "GER_BUNDES",
+      "overall": 77,
+      "budget": 135000000
+    },
+    {
+      "id": "GER_BVB",
+      "name": "Dortmund",
+      "short": "BVB",
+      "leagueId": "GER_BUNDES",
+      "overall": 76,
+      "budget": 130000000
+    },
+    {
+      "id": "GER_RBL",
+      "name": "RB Leipzig",
+      "short": "RBL",
+      "leagueId": "GER_BUNDES",
+      "overall": 75,
+      "budget": 125000000
+    },
+    {
+      "id": "GER_LEV",
+      "name": "Leverkusen",
+      "short": "LEV",
+      "leagueId": "GER_BUNDES",
+      "overall": 74,
+      "budget": 120000000
+    },
+    {
+      "id": "GER_SGE",
+      "name": "Frankfurt",
+      "short": "SGE",
+      "leagueId": "GER_BUNDES",
+      "overall": 73,
+      "budget": 115000000
+    },
+    {
+      "id": "GER_BMG",
+      "name": "Gladbach",
+      "short": "BMG",
+      "leagueId": "GER_BUNDES",
+      "overall": 72,
+      "budget": 110000000
+    },
+    {
+      "id": "GER_VFB",
+      "name": "Stuttgart",
+      "short": "VFB",
+      "leagueId": "GER_BUNDES",
+      "overall": 71,
+      "budget": 105000000
+    },
+    {
+      "id": "GER_WOB",
+      "name": "Wolfsburg",
+      "short": "WOB",
+      "leagueId": "GER_BUNDES",
+      "overall": 70,
+      "budget": 100000000
+    },
+    {
+      "id": "GER_SCF",
+      "name": "Freiburg",
+      "short": "SCF",
+      "leagueId": "GER_BUNDES",
+      "overall": 69,
+      "budget": 95000000
+    },
+    {
+      "id": "GER_SVW",
+      "name": "Werder Bremen",
+      "short": "SVW",
+      "leagueId": "GER_BUNDES",
+      "overall": 68,
+      "budget": 90000000
+    },
+    {
+      "id": "GER_TSG",
+      "name": "Hoffenheim",
+      "short": "TSG",
+      "leagueId": "GER_BUNDES",
+      "overall": 67,
+      "budget": 85000000
+    },
+    {
+      "id": "GER_FCU",
+      "name": "Union Berlin",
+      "short": "FCU",
+      "leagueId": "GER_BUNDES",
+      "overall": 66,
+      "budget": 80000000
+    },
+    {
+      "id": "GER_FCA",
+      "name": "Augsburg",
+      "short": "FCA",
+      "leagueId": "GER_BUNDES",
+      "overall": 65,
+      "budget": 75000000
+    },
+    {
+      "id": "GER_FSV",
+      "name": "Mainz",
+      "short": "FSV",
+      "leagueId": "GER_BUNDES",
+      "overall": 64,
+      "budget": 70000000
+    },
+    {
+      "id": "GER_BOC",
+      "name": "Bochum",
+      "short": "BOC",
+      "leagueId": "GER_BUNDES",
+      "overall": 63,
+      "budget": 65000000
+    },
+    {
+      "id": "GER_KOE",
+      "name": "Köln",
+      "short": "KOE",
+      "leagueId": "GER_BUNDES",
+      "overall": 62,
+      "budget": 60000000
+    },
+    {
+      "id": "GER_HSV",
+      "name": "Hamburg",
+      "short": "HSV",
+      "leagueId": "GER_BUNDES",
+      "overall": 61,
+      "budget": 55000000
+    },
+    {
+      "id": "GER_PAU",
+      "name": "St. Pauli",
+      "short": "PAU",
+      "leagueId": "GER_BUNDES",
+      "overall": 60,
+      "budget": 50000000
+    },
+    {
+      "id": "ITA_INT",
+      "name": "Inter",
+      "short": "INT",
+      "leagueId": "ITA_SERIE_A",
+      "overall": 79,
+      "budget": 145000000
+    },
+    {
+      "id": "ITA_MIL",
+      "name": "Milan",
+      "short": "MIL",
+      "leagueId": "ITA_SERIE_A",
+      "overall": 78,
+      "budget": 140000000
+    },
+    {
+      "id": "ITA_JUV",
+      "name": "Juventus",
+      "short": "JUV",
+      "leagueId": "ITA_SERIE_A",
+      "overall": 77,
+      "budget": 135000000
+    },
+    {
+      "id": "ITA_NAP",
+      "name": "Napoli",
+      "short": "NAP",
+      "leagueId": "ITA_SERIE_A",
+      "overall": 76,
+      "budget": 130000000
+    },
+    {
+      "id": "ITA_ROM",
+      "name": "Roma",
+      "short": "ROM",
+      "leagueId": "ITA_SERIE_A",
+      "overall": 75,
+      "budget": 125000000
+    },
+    {
+      "id": "ITA_LAZ",
+      "name": "Lazio",
+      "short": "LAZ",
+      "leagueId": "ITA_SERIE_A",
+      "overall": 74,
+      "budget": 120000000
+    },
+    {
+      "id": "ITA_ATA",
+      "name": "Atalanta",
+      "short": "ATA",
+      "leagueId": "ITA_SERIE_A",
+      "overall": 73,
+      "budget": 115000000
+    },
+    {
+      "id": "ITA_FIO",
+      "name": "Fiorentina",
+      "short": "FIO",
+      "leagueId": "ITA_SERIE_A",
+      "overall": 72,
+      "budget": 110000000
+    },
+    {
+      "id": "ITA_BOL",
+      "name": "Bologna",
+      "short": "BOL",
+      "leagueId": "ITA_SERIE_A",
+      "overall": 71,
+      "budget": 105000000
+    },
+    {
+      "id": "ITA_TOR",
+      "name": "Torino",
+      "short": "TOR",
+      "leagueId": "ITA_SERIE_A",
+      "overall": 70,
+      "budget": 100000000
+    },
+    {
+      "id": "ITA_UDI",
+      "name": "Udinese",
+      "short": "UDI",
+      "leagueId": "ITA_SERIE_A",
+      "overall": 69,
+      "budget": 95000000
+    },
+    {
+      "id": "ITA_GEN",
+      "name": "Genoa",
+      "short": "GEN",
+      "leagueId": "ITA_SERIE_A",
+      "overall": 68,
+      "budget": 90000000
+    },
+    {
+      "id": "ITA_SAM",
+      "name": "Sampdoria",
+      "short": "SAM",
+      "leagueId": "ITA_SERIE_A",
+      "overall": 67,
+      "budget": 85000000
+    },
+    {
+      "id": "ITA_PAR",
+      "name": "Parma",
+      "short": "PAR",
+      "leagueId": "ITA_SERIE_A",
+      "overall": 66,
+      "budget": 80000000
+    },
+    {
+      "id": "ITA_SAS",
+      "name": "Sassuolo",
+      "short": "SAS",
+      "leagueId": "ITA_SERIE_A",
+      "overall": 65,
+      "budget": 75000000
+    },
+    {
+      "id": "ITA_LEC",
+      "name": "Lecce",
+      "short": "LEC",
+      "leagueId": "ITA_SERIE_A",
+      "overall": 64,
+      "budget": 70000000
+    },
+    {
+      "id": "ITA_CAG",
+      "name": "Cagliari",
+      "short": "CAG",
+      "leagueId": "ITA_SERIE_A",
+      "overall": 63,
+      "budget": 65000000
+    },
+    {
+      "id": "ITA_EMP",
+      "name": "Empoli",
+      "short": "EMP",
+      "leagueId": "ITA_SERIE_A",
+      "overall": 62,
+      "budget": 60000000
+    },
+    {
+      "id": "ITA_VER",
+      "name": "Verona",
+      "short": "VER",
+      "leagueId": "ITA_SERIE_A",
+      "overall": 61,
+      "budget": 55000000
+    },
+    {
+      "id": "ITA_MON",
+      "name": "Monza",
+      "short": "MON",
+      "leagueId": "ITA_SERIE_A",
+      "overall": 60,
+      "budget": 50000000
+    },
+    {
+      "id": "FRA_PSG",
+      "name": "PSG",
+      "short": "PSG",
+      "leagueId": "FRA_LIGUE_1",
+      "overall": 77,
+      "budget": 135000000
+    },
+    {
+      "id": "FRA_MAR",
+      "name": "Marseille",
+      "short": "MAR",
+      "leagueId": "FRA_LIGUE_1",
+      "overall": 76,
+      "budget": 130000000
+    },
+    {
+      "id": "FRA_LYO",
+      "name": "Lyon",
+      "short": "LYO",
+      "leagueId": "FRA_LIGUE_1",
+      "overall": 75,
+      "budget": 125000000
+    },
+    {
+      "id": "FRA_MON",
+      "name": "Monaco",
+      "short": "MON",
+      "leagueId": "FRA_LIGUE_1",
+      "overall": 74,
+      "budget": 120000000
+    },
+    {
+      "id": "FRA_LIL",
+      "name": "Lille",
+      "short": "LIL",
+      "leagueId": "FRA_LIGUE_1",
+      "overall": 73,
+      "budget": 115000000
+    },
+    {
+      "id": "FRA_REN",
+      "name": "Rennes",
+      "short": "REN",
+      "leagueId": "FRA_LIGUE_1",
+      "overall": 72,
+      "budget": 110000000
+    },
+    {
+      "id": "FRA_NIC",
+      "name": "Nice",
+      "short": "NIC",
+      "leagueId": "FRA_LIGUE_1",
+      "overall": 71,
+      "budget": 105000000
+    },
+    {
+      "id": "FRA_LEN",
+      "name": "Lens",
+      "short": "LEN",
+      "leagueId": "FRA_LIGUE_1",
+      "overall": 70,
+      "budget": 100000000
+    },
+    {
+      "id": "FRA_NAN",
+      "name": "Nantes",
+      "short": "NAN",
+      "leagueId": "FRA_LIGUE_1",
+      "overall": 69,
+      "budget": 95000000
+    },
+    {
+      "id": "FRA_STR",
+      "name": "Strasbourg",
+      "short": "STR",
+      "leagueId": "FRA_LIGUE_1",
+      "overall": 68,
+      "budget": 90000000
+    },
+    {
+      "id": "FRA_BRE",
+      "name": "Brest",
+      "short": "BRE",
+      "leagueId": "FRA_LIGUE_1",
+      "overall": 67,
+      "budget": 85000000
+    },
+    {
+      "id": "FRA_MPL",
+      "name": "Montpellier",
+      "short": "MPL",
+      "leagueId": "FRA_LIGUE_1",
+      "overall": 66,
+      "budget": 80000000
+    },
+    {
+      "id": "FRA_REI",
+      "name": "Reims",
+      "short": "REI",
+      "leagueId": "FRA_LIGUE_1",
+      "overall": 65,
+      "budget": 75000000
+    },
+    {
+      "id": "FRA_TOU",
+      "name": "Toulouse",
+      "short": "TOU",
+      "leagueId": "FRA_LIGUE_1",
+      "overall": 64,
+      "budget": 70000000
+    },
+    {
+      "id": "FRA_MET",
+      "name": "Metz",
+      "short": "MET",
+      "leagueId": "FRA_LIGUE_1",
+      "overall": 63,
+      "budget": 65000000
+    },
+    {
+      "id": "FRA_HAC",
+      "name": "Le Havre",
+      "short": "HAC",
+      "leagueId": "FRA_LIGUE_1",
+      "overall": 62,
+      "budget": 60000000
+    },
+    {
+      "id": "FRA_ANG",
+      "name": "Angers",
+      "short": "ANG",
+      "leagueId": "FRA_LIGUE_1",
+      "overall": 61,
+      "budget": 55000000
+    },
+    {
+      "id": "FRA_AUX",
+      "name": "Auxerre",
+      "short": "AUX",
+      "leagueId": "FRA_LIGUE_1",
+      "overall": 60,
+      "budget": 50000000
+    },
+    {
+      "id": "POR_BEN",
+      "name": "Benfica",
+      "short": "BEN",
+      "leagueId": "POR_LIGA",
+      "overall": 77,
+      "budget": 135000000
+    },
+    {
+      "id": "POR_POR",
+      "name": "Porto",
+      "short": "POR",
+      "leagueId": "POR_LIGA",
+      "overall": 76,
+      "budget": 130000000
+    },
+    {
+      "id": "POR_SPO",
+      "name": "Sporting",
+      "short": "SPO",
+      "leagueId": "POR_LIGA",
+      "overall": 75,
+      "budget": 125000000
+    },
+    {
+      "id": "POR_BRA",
+      "name": "Braga",
+      "short": "BRA",
+      "leagueId": "POR_LIGA",
+      "overall": 74,
+      "budget": 120000000
+    },
+    {
+      "id": "POR_VSC",
+      "name": "Vitória SC",
+      "short": "VSC",
+      "leagueId": "POR_LIGA",
+      "overall": 73,
+      "budget": 115000000
+    },
+    {
+      "id": "POR_BOA",
+      "name": "Boavista",
+      "short": "BOA",
+      "leagueId": "POR_LIGA",
+      "overall": 72,
+      "budget": 110000000
+    },
+    {
+      "id": "POR_FAM",
+      "name": "Famalicão",
+      "short": "FAM",
+      "leagueId": "POR_LIGA",
+      "overall": 71,
+      "budget": 105000000
+    },
+    {
+      "id": "POR_VIZ",
+      "name": "Vizela",
+      "short": "VIZ",
+      "leagueId": "POR_LIGA",
+      "overall": 70,
+      "budget": 100000000
+    },
+    {
+      "id": "POR_GIL",
+      "name": "Gil Vicente",
+      "short": "GIL",
+      "leagueId": "POR_LIGA",
+      "overall": 69,
+      "budget": 95000000
+    },
+    {
+      "id": "POR_MOR",
+      "name": "Moreirense",
+      "short": "MOR",
+      "leagueId": "POR_LIGA",
+      "overall": 68,
+      "budget": 90000000
+    },
+    {
+      "id": "POR_EST",
+      "name": "Estoril",
+      "short": "EST",
+      "leagueId": "POR_LIGA",
+      "overall": 67,
+      "budget": 85000000
+    },
+    {
+      "id": "POR_CAS",
+      "name": "Casa Pia",
+      "short": "CAS",
+      "leagueId": "POR_LIGA",
+      "overall": 66,
+      "budget": 80000000
+    },
+    {
+      "id": "POR_ARO",
+      "name": "Arouca",
+      "short": "ARO",
+      "leagueId": "POR_LIGA",
+      "overall": 65,
+      "budget": 75000000
+    },
+    {
+      "id": "POR_RAV",
+      "name": "Rio Ave",
+      "short": "RAV",
+      "leagueId": "POR_LIGA",
+      "overall": 64,
+      "budget": 70000000
+    },
+    {
+      "id": "POR_CHA",
+      "name": "Chaves",
+      "short": "CHA",
+      "leagueId": "POR_LIGA",
+      "overall": 63,
+      "budget": 65000000
+    },
+    {
+      "id": "POR_FAR",
+      "name": "Farense",
+      "short": "FAR",
+      "leagueId": "POR_LIGA",
+      "overall": 62,
+      "budget": 60000000
+    },
+    {
+      "id": "POR_NAC",
+      "name": "Nacional",
+      "short": "NAC",
+      "leagueId": "POR_LIGA",
+      "overall": 61,
+      "budget": 55000000
+    },
+    {
+      "id": "POR_SCL",
+      "name": "Santa Clara",
+      "short": "SCL",
+      "leagueId": "POR_LIGA",
+      "overall": 60,
+      "budget": 50000000
+    }
+  ]
+}

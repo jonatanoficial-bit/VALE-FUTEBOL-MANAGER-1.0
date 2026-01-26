@@ -1,0 +1,12 @@
+{
+  "id": "base_2025",
+  "name": "Base 2025/2026",
+  "version": "1.0.0",
+  "files": {
+    "clubs": "./data/base_2025/clubs.json",
+    "competitions": "./data/base_2025/competitions.json",
+    "rules": "./data/base_2025/rules.json",
+    "seasons": "./data/base_2025/seasons.json",
+    "players": "./data/base_2025/players.json"
+  }
+}

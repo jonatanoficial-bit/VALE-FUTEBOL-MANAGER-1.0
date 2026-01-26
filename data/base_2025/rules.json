@@ -1,0 +1,107 @@
+{
+  "gameRules": {
+    "version": "1.0.0",
+    "defaultSeasonId": "2025_2026",
+    "currency": "BRL",
+    "match": {
+      "minutes": 90,
+      "homeAdvantage": 0.08,
+      "formImpact": 0.12,
+      "randomness": 0.18,
+      "goalsCap": 7,
+      "notes": "Parâmetros utilizados na simulação de partidas (fase posterior)."
+    }
+  },
+  "standingsRules": {
+    "pointsWin": 3,
+    "pointsDraw": 1,
+    "pointsLoss": 0,
+    "tiebreakers": ["points", "wins", "goalDiff", "goalsFor", "headToHead", "fairPlay"]
+  },
+  "brazil": {
+    "BRA_SERIE_A": {
+      "relegationSpots": 4,
+      "promotesTo": null,
+      "qualifications": {
+        "libertadoresSpots": 6,
+        "sudamericanaSpots": 6
+      },
+      "notes": "A Série A classifica 6 equipes para a Libertadores e 6 para a Sul-Americana."
+    },
+    "BRA_SERIE_B": {
+      "promotionSpots": 4,
+      "relegationSpots": 4,
+      "promotesTo": "BRA_SERIE_A",
+      "relegatesTo": "BRA_SERIE_C",
+      "notes": "Série B promove 4 e rebaixa 4 clubes."
+    },
+    "BRA_SERIE_C": {
+      "promotionSpots": 4,
+      "promotesTo": "BRA_SERIE_B"
+    },
+    "BRA_CDB": {
+      "winnerQualifiesTo": ["CONM_LIB"],
+      "notes": "Campeão da Copa do Brasil obtém vaga na Libertadores."
+    }
+  },
+  "continental": {
+    "CONM_LIB": {
+      "teams": 32,
+      "format": "groups+knockout",
+      "winnerQualifiesTo": ["FIFA_CWC", "INTERCLUBES"],
+      "notes": "O vencedor vai ao Mundial de Clubes e disputa a Interclubes."
+    },
+    "CONM_SUD": {
+      "teams": 32,
+      "format": "groups+knockout",
+      "winnerQualifiesTo": []
+    },
+    "UEFA_UCL": {
+      "teams": 36,
+      "format": "league+knockout",
+      "winnerQualifiesTo": ["FIFA_CWC", "INTERCLUBES"],
+      "notes": "Campeão disputa o Mundial e a Interclubes."
+    }
+  },
+  "world": {
+    "FIFA_CWC": {
+      "teams": 8,
+      "format": "knockout",
+      "notes": "Torneio curto com 8 clubes (modelo inicial)."
+    },
+    "INTERCLUBES": {
+      "teams": 2,
+      "format": "single_match",
+      "notes": "Partida única entre campeão da Libertadores e campeão da Champions League."
+    }
+  },
+  "economy": {
+    "defaultStartingCashIfMissing": 50000000,
+    "weeklyCosts": {
+      "staff": 800000,
+      "maintenance": 450000
+    },
+    "prizeMoney": {
+      "BRA_SERIE_A": {
+        "champion": 35000000,
+        "libertadoresQualification": 8000000,
+        "sudamericanaQualification": 4000000
+      },
+      "BRA_CDB": { "winner": 25000000 },
+      "CONM_LIB": { "winner": 45000000 },
+      "UEFA_UCL": { "winner": 60000000 },
+      "FIFA_CWC": { "winner": 30000000 },
+      "INTERCLUBES": { "winner": 15000000 }
+    },
+    "notes": "Valores aproximados para recompensa."
+  },
+  "parameters": {
+    "ENABLE_STATE_CHAMPIONSHIPS_BR": false,
+    "BRAZIL_LIBERTADORES_SLOTS_BY_LEAGUE": 6,
+    "BRAZIL_CUP_EXTRA_SLOTS": 1,
+    "UEFA_EXTRA_CHAMPIONS_LEAGUE_SLOT_BY_COEFFICIENT": false,
+    "INTERCONTINENTAL_MODE": "CLASSIC",
+    "CLUB_WORLD_CUP_ENABLED": true,
+    "notes": "Parâmetros configuráveis para o desenvolvedor. Você pode ajustar esses valores sem quebrar as regras principais."
+  }
+}

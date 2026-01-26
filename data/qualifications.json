@@ -1,0 +1,66 @@
+{
+  "meta": {
+    "version": "1.0.0"
+  },
+  "mapping": [
+    {
+      "competition": "BRA_SERIE_A",
+      "nextSeasonEffects": {
+        "champion": {
+          "title": "Campeão Brasileiro"
+        },
+        "relegation": {
+          "positions": [
+            17,
+            18,
+            19,
+            20
+          ],
+          "toLeague": "BRA_SERIE_B"
+        },
+        "continental": {
+          "libertadores": {
+            "positions": [
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "sudamericana": {
+            "positions": [
+              5,
+              6,
+              7,
+              8,
+              9,
+              10
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "brazil": {
+    "serieA": {
+      "libertadores": {
+        "from": 1,
+        "to": 6
+      },
+      "sudamericana": {
+        "from": 7,
+        "to": 12
+      },
+      "relegation": {
+        "from": 17,
+        "to": 20
+      }
+    },
+    "serieB": {
+      "promotion": {
+        "from": 1,
+        "to": 4
+      }
+    }
+  }
+}

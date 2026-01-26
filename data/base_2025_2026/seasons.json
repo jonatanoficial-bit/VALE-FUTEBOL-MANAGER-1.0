@@ -1,0 +1,14 @@
+{
+  "seasons": [
+    {
+      "id": "2025_2026",
+      "name": "Temporada 2025/2026",
+      "default": true,
+      "competitions": [
+        "BRA_SERIE_A",
+        "BRA_SERIE_B",
+        "BRA_COPA_DO_BRASIL"
+      ]
+    }
+  ]
+}

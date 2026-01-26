@@ -1,0 +1,526 @@
+{
+  "clubs": [
+    {
+      "id": "flamengo",
+      "name": "Flamengo",
+      "short": "FLA",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 78,
+      "budget": 180000000
+    },
+    {
+      "id": "palmeiras",
+      "name": "Palmeiras",
+      "short": "PAL",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 77,
+      "budget": 170000000
+    },
+    {
+      "id": "atletico_mg",
+      "name": "Atlético Mineiro",
+      "short": "CAM",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 76,
+      "budget": 150000000
+    },
+    {
+      "id": "corinthians",
+      "name": "Corinthians",
+      "short": "COR",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 74,
+      "budget": 140000000
+    },
+    {
+      "id": "sao_paulo",
+      "name": "São Paulo",
+      "short": "SAO",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 74,
+      "budget": 135000000
+    },
+    {
+      "id": "internacional",
+      "name": "Internacional",
+      "short": "INT",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 74,
+      "budget": 130000000
+    },
+    {
+      "id": "gremio",
+      "name": "Grêmio",
+      "short": "GRE",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 73,
+      "budget": 125000000
+    },
+    {
+      "id": "fluminense",
+      "name": "Fluminense",
+      "short": "FLU",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 73,
+      "budget": 120000000
+    },
+    {
+      "id": "botafogo",
+      "name": "Botafogo",
+      "short": "BOT",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 72,
+      "budget": 115000000
+    },
+    {
+      "id": "vasco",
+      "name": "Vasco da Gama",
+      "short": "VAS",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 71,
+      "budget": 110000000
+    },
+    {
+      "id": "athletico_pr",
+      "name": "Athletico Paranaense",
+      "short": "CAP",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 72,
+      "budget": 112000000
+    },
+    {
+      "id": "cruzeiro",
+      "name": "Cruzeiro",
+      "short": "CRU",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 72,
+      "budget": 118000000
+    },
+    {
+      "id": "bahia",
+      "name": "Bahia",
+      "short": "BAH",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 71,
+      "budget": 105000000
+    },
+    {
+      "id": "fortaleza",
+      "name": "Fortaleza",
+      "short": "FOR",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 71,
+      "budget": 103000000
+    },
+    {
+      "id": "bragantino",
+      "name": "RB Bragantino",
+      "short": "RBB",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 71,
+      "budget": 100000000
+    },
+    {
+      "id": "cuiaba",
+      "name": "Cuiabá",
+      "short": "CUI",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 69,
+      "budget": 80000000
+    },
+    {
+      "id": "juventude",
+      "name": "Juventude",
+      "short": "JUV",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 68,
+      "budget": 65000000
+    },
+    {
+      "id": "vitoria",
+      "name": "Vitória",
+      "short": "VIT",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 68,
+      "budget": 60000000
+    },
+    {
+      "id": "criciuma",
+      "name": "Criciúma",
+      "short": "CRI",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 67,
+      "budget": 55000000
+    },
+    {
+      "id": "santos",
+      "name": "Santos",
+      "short": "SAN",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 72,
+      "budget": 120000000
+    },
+    {
+      "id": "america_mg",
+      "name": "América-MG",
+      "short": "AME",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 70,
+      "budget": 75000000
+    },
+    {
+      "id": "atletico_go",
+      "name": "Atlético-GO",
+      "short": "ACG",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 69,
+      "budget": 65000000
+    },
+    {
+      "id": "avai",
+      "name": "Avaí",
+      "short": "AVA",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 67,
+      "budget": 45000000
+    },
+    {
+      "id": "botafogo_sp",
+      "name": "Botafogo-SP",
+      "short": "BSP",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 66,
+      "budget": 42000000
+    },
+    {
+      "id": "chapecoense",
+      "name": "Chapecoense",
+      "short": "CHA",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 67,
+      "budget": 47000000
+    },
+    {
+      "id": "coritiba",
+      "name": "Coritiba",
+      "short": "CFC",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 69,
+      "budget": 70000000
+    },
+    {
+      "id": "crb",
+      "name": "CRB",
+      "short": "CRB",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 66,
+      "budget": 42000000
+    },
+    {
+      "id": "csa",
+      "name": "CSA",
+      "short": "CSA",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 65,
+      "budget": 38000000
+    },
+    {
+      "id": "ceara",
+      "name": "Ceará",
+      "short": "CEA",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 69,
+      "budget": 72000000
+    },
+    {
+      "id": "goias",
+      "name": "Goiás",
+      "short": "GOI",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 69,
+      "budget": 70000000
+    },
+    {
+      "id": "guarani",
+      "name": "Guarani",
+      "short": "GUA",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 66,
+      "budget": 42000000
+    },
+    {
+      "id": "ituano",
+      "name": "Ituano",
+      "short": "ITU",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 65,
+      "budget": 36000000
+    },
+    {
+      "id": "londrina",
+      "name": "Londrina",
+      "short": "LON",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 65,
+      "budget": 35000000
+    },
+    {
+      "id": "mirassol",
+      "name": "Mirassol",
+      "short": "MIR",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 66,
+      "budget": 42000000
+    },
+    {
+      "id": "novorizontino",
+      "name": "Novorizontino",
+      "short": "NOV",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 66,
+      "budget": 42000000
+    },
+    {
+      "id": "paysandu",
+      "name": "Paysandu",
+      "short": "PAY",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 66,
+      "budget": 42000000
+    },
+    {
+      "id": "ponte_preta",
+      "name": "Ponte Preta",
+      "short": "PON",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 66,
+      "budget": 42000000
+    },
+    {
+      "id": "sampaio_correa",
+      "name": "Sampaio Corrêa",
+      "short": "SAM",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 65,
+      "budget": 36000000
+    },
+    {
+      "id": "sport",
+      "name": "Sport",
+      "short": "SPO",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 69,
+      "budget": 72000000
+    },
+    {
+      "id": "vila_nova",
+      "name": "Vila Nova",
+      "short": "VNO",
+      "country": "Brasil",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 66,
+      "budget": 42000000
+    },
+    {
+      "id": "river_plate",
+      "name": "River Plate",
+      "short": "RIV",
+      "country": "Argentina",
+      "leagueId": "ARG_PRIMERA",
+      "overall": 76,
+      "budget": 160000000
+    },
+    {
+      "id": "boca_juniors",
+      "name": "Boca Juniors",
+      "short": "BOC",
+      "country": "Argentina",
+      "leagueId": "ARG_PRIMERA",
+      "overall": 75,
+      "budget": 155000000
+    },
+    {
+      "id": "penarol",
+      "name": "Peñarol",
+      "short": "PEN",
+      "country": "Uruguai",
+      "leagueId": "URU_PRIMERA",
+      "overall": 72,
+      "budget": 90000000
+    },
+    {
+      "id": "nacional_uru",
+      "name": "Nacional",
+      "short": "NAC",
+      "country": "Uruguai",
+      "leagueId": "URU_PRIMERA",
+      "overall": 72,
+      "budget": 88000000
+    },
+    {
+      "id": "colo_colo",
+      "name": "Colo-Colo",
+      "short": "COL",
+      "country": "Chile",
+      "leagueId": "CHI_PRIMERA",
+      "overall": 71,
+      "budget": 85000000
+    },
+    {
+      "id": "real_madrid",
+      "name": "Real Madrid",
+      "short": "RMA",
+      "country": "Espanha",
+      "leagueId": "ESP_LALIGA",
+      "overall": 86,
+      "budget": 400000000
+    },
+    {
+      "id": "barcelona",
+      "name": "Barcelona",
+      "short": "FCB",
+      "country": "Espanha",
+      "leagueId": "ESP_LALIGA",
+      "overall": 84,
+      "budget": 380000000
+    },
+    {
+      "id": "atletico_madrid",
+      "name": "Atlético Madrid",
+      "short": "ATM",
+      "country": "Espanha",
+      "leagueId": "ESP_LALIGA",
+      "overall": 83,
+      "budget": 300000000
+    },
+    {
+      "id": "man_city",
+      "name": "Manchester City",
+      "short": "MCI",
+      "country": "Inglaterra",
+      "leagueId": "ENG_PREMIER",
+      "overall": 87,
+      "budget": 420000000
+    },
+    {
+      "id": "man_united",
+      "name": "Manchester United",
+      "short": "MUN",
+      "country": "Inglaterra",
+      "leagueId": "ENG_PREMIER",
+      "overall": 83,
+      "budget": 350000000
+    },
+    {
+      "id": "liverpool",
+      "name": "Liverpool",
+      "short": "LIV",
+      "country": "Inglaterra",
+      "leagueId": "ENG_PREMIER",
+      "overall": 84,
+      "budget": 360000000
+    },
+    {
+      "id": "chelsea",
+      "name": "Chelsea",
+      "short": "CHE",
+      "country": "Inglaterra",
+      "leagueId": "ENG_PREMIER",
+      "overall": 82,
+      "budget": 330000000
+    },
+    {
+      "id": "bayern",
+      "name": "Bayern de Munique",
+      "short": "BAY",
+      "country": "Alemanha",
+      "leagueId": "GER_BUNDES",
+      "overall": 85,
+      "budget": 390000000
+    },
+    {
+      "id": "dortmund",
+      "name": "Borussia Dortmund",
+      "short": "BVB",
+      "country": "Alemanha",
+      "leagueId": "GER_BUNDES",
+      "overall": 82,
+      "budget": 300000000
+    },
+    {
+      "id": "psg",
+      "name": "Paris Saint-Germain",
+      "short": "PSG",
+      "country": "França",
+      "leagueId": "FRA_LIGUE1",
+      "overall": 85,
+      "budget": 380000000
+    },
+    {
+      "id": "juventus",
+      "name": "Juventus",
+      "short": "JUV",
+      "country": "Itália",
+      "leagueId": "ITA_SERIEA",
+      "overall": 83,
+      "budget": 310000000
+    },
+    {
+      "id": "milan",
+      "name": "Milan",
+      "short": "MIL",
+      "country": "Itália",
+      "leagueId": "ITA_SERIEA",
+      "overall": 82,
+      "budget": 290000000
+    },
+    {
+      "id": "inter",
+      "name": "Internazionale",
+      "short": "INT",
+      "country": "Itália",
+      "leagueId": "ITA_SERIEA",
+      "overall": 83,
+      "budget": 300000000
+    }
+  ]
+}

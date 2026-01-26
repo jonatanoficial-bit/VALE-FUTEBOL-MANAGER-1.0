@@ -1,0 +1,324 @@
+{
+  "clubs": [
+    {
+      "id": "ACG",
+      "name": "ACG",
+      "short": "ACG",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 72,
+      "budget": 32000000
+    },
+    {
+      "id": "AMA",
+      "name": "AMA",
+      "short": "AMA",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 66,
+      "budget": 47000000
+    },
+    {
+      "id": "AME",
+      "name": "AME",
+      "short": "AME",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 75,
+      "budget": 12000000
+    },
+    {
+      "id": "AMG",
+      "name": "AMG",
+      "short": "AMG",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 80,
+      "budget": 35000000
+    },
+    {
+      "id": "ATC",
+      "name": "ATC",
+      "short": "ATC",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 82,
+      "budget": 55000000
+    },
+    {
+      "id": "AVA",
+      "name": "AVA",
+      "short": "AVA",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 79,
+      "budget": 11000000
+    },
+    {
+      "id": "BAH",
+      "name": "BAH",
+      "short": "BAH",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 79,
+      "budget": 26000000
+    },
+    {
+      "id": "BFS",
+      "name": "BFS",
+      "short": "BFS",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 74,
+      "budget": 22000000
+    },
+    {
+      "id": "BOT",
+      "name": "BOT",
+      "short": "BOT",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 66,
+      "budget": 14000000
+    },
+    {
+      "id": "CAP",
+      "name": "CAP",
+      "short": "CAP",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 82,
+      "budget": 58000000
+    },
+    {
+      "id": "CEA",
+      "name": "CEA",
+      "short": "CEA",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 76,
+      "budget": 35000000
+    },
+    {
+      "id": "CFC",
+      "name": "CFC",
+      "short": "CFC",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 75,
+      "budget": 13000000
+    },
+    {
+      "id": "CHA",
+      "name": "CHA",
+      "short": "CHA",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 75,
+      "budget": 46000000
+    },
+    {
+      "id": "COR",
+      "name": "COR",
+      "short": "COR",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 69,
+      "budget": 25000000
+    },
+    {
+      "id": "CRB",
+      "name": "CRB",
+      "short": "CRB",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 76,
+      "budget": 28000000
+    },
+    {
+      "id": "CRI",
+      "name": "CRI",
+      "short": "CRI",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 78,
+      "budget": 15000000
+    },
+    {
+      "id": "CRU",
+      "name": "CRU",
+      "short": "CRU",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 71,
+      "budget": 37000000
+    },
+    {
+      "id": "CUI",
+      "name": "CUI",
+      "short": "CUI",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 75,
+      "budget": 26000000
+    },
+    {
+      "id": "FER",
+      "name": "FER",
+      "short": "FER",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 65,
+      "budget": 14000000
+    },
+    {
+      "id": "FLA",
+      "name": "FLA",
+      "short": "FLA",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 77,
+      "budget": 49000000
+    },
+    {
+      "id": "FLU",
+      "name": "FLU",
+      "short": "FLU",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 70,
+      "budget": 19000000
+    },
+    {
+      "id": "FOR",
+      "name": "FOR",
+      "short": "FOR",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 73,
+      "budget": 51000000
+    },
+    {
+      "id": "GRE",
+      "name": "GRE",
+      "short": "GRE",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 76,
+      "budget": 11000000
+    },
+    {
+      "id": "INT",
+      "name": "INT",
+      "short": "INT",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 73,
+      "budget": 49000000
+    },
+    {
+      "id": "JUV",
+      "name": "JUV",
+      "short": "JUV",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 67,
+      "budget": 16000000
+    },
+    {
+      "id": "MIR",
+      "name": "MIR",
+      "short": "MIR",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 77,
+      "budget": 14000000
+    },
+    {
+      "id": "NOV",
+      "name": "NOV",
+      "short": "NOV",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 68,
+      "budget": 18000000
+    },
+    {
+      "id": "OPE",
+      "name": "OPE",
+      "short": "OPE",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 66,
+      "budget": 41000000
+    },
+    {
+      "id": "PAL",
+      "name": "PAL",
+      "short": "PAL",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 70,
+      "budget": 35000000
+    },
+    {
+      "id": "PAY",
+      "name": "PAY",
+      "short": "PAY",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 75,
+      "budget": 11000000
+    },
+    {
+      "id": "RBB",
+      "name": "RBB",
+      "short": "RBB",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 72,
+      "budget": 42000000
+    },
+    {
+      "id": "REM",
+      "name": "REM",
+      "short": "REM",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 69,
+      "budget": 9000000
+    },
+    {
+      "id": "SAN",
+      "name": "SAN",
+      "short": "SAN",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 69,
+      "budget": 47000000
+    },
+    {
+      "id": "SAO",
+      "name": "SAO",
+      "short": "SAO",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 78,
+      "budget": 8000000
+    },
+    {
+      "id": "SPT",
+      "name": "SPT",
+      "short": "SPT",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 77,
+      "budget": 34000000
+    },
+    {
+      "id": "VAS",
+      "name": "VAS",
+      "short": "VAS",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 72,
+      "budget": 41000000
+    },
+    {
+      "id": "VIT",
+      "name": "VIT",
+      "short": "VIT",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 81,
+      "budget": 30000000
+    },
+    {
+      "id": "VNO",
+      "name": "VNO",
+      "short": "VNO",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 65,
+      "budget": 56000000
+    },
+    {
+      "id": "VOL",
+      "name": "VOL",
+      "short": "VOL",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 79,
+      "budget": 49000000
+    },
+    {
+      "id": "santos",
+      "name": "santos",
+      "short": "santos",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 75,
+      "budget": 54000000
+    }
+  ]
+}

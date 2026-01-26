@@ -1,0 +1,19 @@
+{
+  "leagueRules": {
+    "pointsWin": 3,
+    "pointsDraw": 1,
+    "pointsLoss": 0,
+    "tieBreakers": [
+      "points",
+      "gd",
+      "gf",
+      "wins"
+    ]
+  },
+  "brazil": {
+    "relegationFromSerieA": 4,
+    "promotionFromSerieB": 4,
+    "libertadoresSlots": 6,
+    "sudamericanaSlots": 6
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "seasons": [
+    {
+      "id": "2025_2026",
+      "name": "Temporada 2025/2026",
+      "startDate": "2025-01-15",
+      "endDate": "2025-12-15",
+      "default": true,
+      "leagues": [
+        {
+          "leagueId": "BRA_SERIE_A",
+          "rounds": 38,
+          "teams": 20,
+          "relegationSpots": 4,
+          "qualifiesTo": {
+            "CONM_LIB": 6,
+            "CONM_SUD": 6
+          }
+        },
+        {
+          "leagueId": "BRA_SERIE_B",
+          "rounds": 38,
+          "teams": 20,
+          "promotionSpots": 4,
+          "relegationSpots": 4
+        },
+        {
+          "leagueId": "ARG_PRIMERA",
+          "rounds": 27,
+          "teams": 28
+        },
+        {
+          "leagueId": "URU_PRIMERA",
+          "rounds": 30,
+          "teams": 16
+        },
+        {
+          "leagueId": "CHI_PRIMERA",
+          "rounds": 30,
+          "teams": 16
+        },
+        {
+          "leagueId": "ENG_PREMIER",
+          "rounds": 38,
+          "teams": 20,
+          "qualifiesTo": { "UEFA_UCL": 4 }
+        },
+        {
+          "leagueId": "ESP_LALIGA",
+          "rounds": 38,
+          "teams": 20,
+          "qualifiesTo": { "UEFA_UCL": 4 }
+        },
+        {
+          "leagueId": "ITA_SERIEA",
+          "rounds": 38,
+          "teams": 20,
+          "qualifiesTo": { "UEFA_UCL": 4 }
+        },
+        {
+          "leagueId": "GER_BUNDES",
+          "rounds": 34,
+          "teams": 18,
+          "qualifiesTo": { "UEFA_UCL": 4 }
+        },
+        {
+          "leagueId": "FRA_LIGUE1",
+          "rounds": 34,
+          "teams": 18,
+          "qualifiesTo": { "UEFA_UCL": 3 }
+        }
+      ],
+      "cups": [
+        {
+          "competitionId": "BRA_CDB",
+          "startRound": "R1",
+          "endRound": "FINAL",
+          "teams": 92,
+          "winnerQualifiesTo": ["CONM_LIB"]
+        },
+        {
+          "competitionId": "CONM_LIB",
+          "groups": 8,
+          "teamsPerGroup": 4,
+          "knockoutTeams": 16,
+          "winnerQualifiesTo": ["FIFA_CWC", "INTERCLUBES"]
+        },
+        {
+          "competitionId": "CONM_SUD",
+          "groups": 8,
+          "teamsPerGroup": 4,
+          "knockoutTeams": 16
+        },
+        {
+          "competitionId": "UEFA_UCL",
+          "teams": 36,
+          "knockoutTeams": 16,
+          "winnerQualifiesTo": ["FIFA_CWC", "INTERCLUBES"]
+        },
+        {
+          "competitionId": "FIFA_CWC",
+          "teams": 8,
+          "format": "knockout"
+        },
+        {
+          "competitionId": "INTERCLUBES",
+          "teams": 2,
+          "format": "single_match",
+          "note": "Encontro de campeões da Libertadores e Champions."
+        }
+      ],
+      "calendar": {
+        "leagueMatchdays": "weekly",
+        "cupMidweek": true,
+        "continentalMidweek": true,
+        "internationalBreaks": [
+          { "name": "Data FIFA Março", "weeks": [10] },
+          { "name": "Data FIFA Junho", "weeks": [23] },
+          { "name": "Data FIFA Setembro", "weeks": [36] }
+        ]
+      },
+      "meta": {
+        "note": "Temporada base integrando ligas, copas e competições internacionais."
+      }
+    }
+  ]
+}

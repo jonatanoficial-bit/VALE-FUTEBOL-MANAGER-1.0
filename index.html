@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vale Futebol Manager 2026 - Premium</title>
+  <!-- Estilos principais -->
+  <link rel="stylesheet" href="./styles.css" />
+  <!-- Diagnósticos provisórios (removível no final) -->
+  <script src="./js/diagnostics.js"></script>
+</head>
+<body>
+  <!-- Tela de abertura com logo da produtora -->
+  <div class="splash" id="splash">
+    <div class="splash-logo">
+      <img src="./assets/images/vale_games_logo.png" alt="Vale Games" />
+    </div>
+  </div>
+
+  <!-- Estrutura principal da aplicação -->
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo-badge">VFM</div>
+        <div class="brand-text">
+          <div class="brand-title">Vale Futebol Manager 2026</div>
+          <div class="brand-subtitle">Carreira • Dados • Admin</div>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn btn-ghost" type="button" onclick="location.hash='#/home'">
+          Início
+        </button>
+      </div>
+    </header>
+    <main class="main">
+      <div id="view" class="view">
+        <!-- O conteúdo será renderizado dinamicamente pelo app.js -->
+      </div>
+    </main>
+    <footer class="footer">
+      <span>© Vale Games</span>
+      <span class="dot">•</span>
+      <span>Offline • LocalStorage</span>
+    </footer>
+  </div>
+
+  <!-- Lógica principal da aplicação -->
+  <script src="./app.js"></script>
+<script>
+(function(){
+  var ready = false;
+  try {
+    window.addEventListener('VFM_APP_READY', function(){ ready = true; }, { once:true });
+  } catch(e) {}
+
+  // remove splash em até 2s sempre
+  setTimeout(function(){
+    var splash = document.getElementById('splash');
+    if (splash) { splash.classList.add('hidden'); splash.style.display='none'; }
+  }, 2000);
+
+  // após 1.2s, se app.js não executou, tenta carregar fallback em ./js/app.js e mostra aviso
+  setTimeout(function(){
+    if (ready) return;
+
+    var viewEl = document.getElementById('view');
+    if (viewEl && !viewEl.innerHTML.trim()){
+      viewEl.innerHTML =
+        '<div class="card">' +
+          '<div class="card-header">' +
+            '<div><div class="card-title">Carregando...</div><div class="card-subtitle">Tentando recuperar a aplicação</div></div>' +
+            '<span class="badge">VFM</span>' +
+          '</div>' +
+          '<div class="card-body">' +
+            '<div class="notice">⚠️ O script principal não iniciou. Tentando carregar fallback...</div>' +
+            '<div class="sep"></div>' +
+            '<button class="btn btn-primary" type="button" onclick="location.reload()">Recarregar</button>' +
+          '</div>' +
+        '</div>';
+    }
+
+    var s = document.createElement('script');
+    s.src = './js/app.js';
+    s.onload = function(){ /* ok */ };
+    s.onerror = function(){
+      var v = document.getElementById('view');
+      if (v) {
+        v.innerHTML =
+          '<div class="card">' +
+            '<div class="card-header">' +
+              '<div><div class="card-title">Falha ao iniciar</div><div class="card-subtitle">Não foi possível carregar os scripts do jogo.</div></div>' +
+              '<span class="badge">VFM</span>' +
+            '</div>' +
+            '<div class="card-body">' +
+              '<div class="notice">⚠️ Verifique se os arquivos <b>app.js</b> e <b>js/app.js</b> estão publicados no mesmo diretório do <b>index.html</b>.</div>' +
+              '<div class="sep"></div>' +
+              '<button class="btn btn-primary" type="button" onclick="location.reload()">Recarregar</button>' +
+            '</div>' +
+          '</div>';
+      }
+    };
+    document.body.appendChild(s);
+  }, 1200);
+})();
+</script>
+
+</body>
+</html>

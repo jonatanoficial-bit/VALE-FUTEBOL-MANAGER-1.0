@@ -1,0 +1,11 @@
+{
+  "packs": [
+    {
+      "id": "base_2025_2026",
+      "name": "Base 2025/2026",
+      "version": "1.0.0",
+      "description": "Brasil Série A e B + Copa do Brasil (offline)",
+      "path": "./data/base_2025_2026/manifest.json"
+    }
+  ]
+}

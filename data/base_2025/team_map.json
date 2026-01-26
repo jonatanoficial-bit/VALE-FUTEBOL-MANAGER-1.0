@@ -1,0 +1,16 @@
+{
+  "footballData": {
+    "real_madrid": 86,
+    "barcelona": 81,
+    "man_city": 65,
+    "liverpool": 64,
+    "bayern": 5,
+    "psg": 524
+  },
+  "apiFootball": {
+    "flamengo": 127,
+    "palmeiras": 121,
+    "corinthians": 131,
+    "sao_paulo": 126
+  }
+}
