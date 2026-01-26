@@ -461,13 +461,245 @@
       } catch {}
       save.finance = { cash: initialCash };
     }
-    if (!save.transfers) save.transfers = { search: '', filterPos: 'ALL', bought: [] };
-    // garante que existam campos para busca, filtro e lista de jogadores comprados
-    if (typeof save.transfers.search !== 'string') save.transfers.search = '';
-    if (!save.transfers.filterPos) save.transfers.filterPos = 'ALL';
-    if (!Array.isArray(save.transfers.bought)) save.transfers.bought = [];
+    // -----------------------------
+// Transferências (Parte 5)
+// -----------------------------
+if (!save.transfers) save.transfers = {};
+// filtros de busca da tela
+if (typeof save.transfers.search !== 'string') save.transfers.search = '';
+if (!save.transfers.filterPos) save.transfers.filterPos = 'ALL';
 
-    return save;
+// lista auxiliar: jogadores já contratados via mercado "livre" (para não repetir na listagem)
+if (!Array.isArray(save.transfers.bought)) save.transfers.bought = [];
+
+// pipeline de propostas/negociações
+if (!Array.isArray(save.transfers.outbox)) save.transfers.outbox = []; // ofertas enviadas
+if (!Array.isArray(save.transfers.inbox)) save.transfers.inbox = [];   // ofertas recebidas
+if (!Array.isArray(save.transfers.log)) save.transfers.log = [];       // histórico de transferências
+
+// marcador para processamento automático por rodada
+if (typeof save.transfers.lastProcessedRound !== 'number') save.transfers.lastProcessedRound = -1;
+
+// dados econômicos do clube (provisório, removível depois)
+if (!save.finance) {
+  let initialCash = 50000000;
+  try {
+    initialCash = state.packData?.rules?.economy?.defaultStartingCashIfMissing ?? 50000000;
+  } catch {}
+  save.finance = { cash: initialCash };
+}
+
+    // =====================================================
+// TRANSFERÊNCIAS (Parte 5) — Sistema provisório, removível
+// =====================================================
+
+/**
+ * Janela de transferências baseada em rodada (provisório).
+ * - Pré-temporada: rodadas 0 a 5
+ * - Meio de temporada: rodadas 18 a 23
+ * Observação: como o calendário ainda é por "rodadas", usamos ranges fixos.
+ */
+function getTransferWindow(save) {
+  ensureSeason(save);
+  const r = Number(save.season.currentRound || 0);
+  const total = (save.season.rounds || []).length || 38;
+
+  // Se a temporada terminou, janela fechada
+  if (save.season.completed) {
+    return { open: false, label: 'Encerrada', round: r, total };
+  }
+
+  const inPre = r >= 0 && r <= 5;
+  const inMid = r >= 18 && r <= 23;
+
+  if (inPre) return { open: true, label: 'Janela (Pré-temporada)', round: r, total };
+  if (inMid) return { open: true, label: 'Janela (Meio de temporada)', round: r, total };
+  return { open: false, label: 'Janela fechada', round: r, total };
+}
+
+function uid(prefix) {
+  return `${prefix || 'id'}_${Math.random().toString(36).slice(2, 10)}_${Date.now().toString(36)}`;
+}
+
+function clamp(n, a, b) {
+  n = Number(n);
+  if (Number.isNaN(n)) return a;
+  return Math.max(a, Math.min(b, n));
+}
+
+/** Avalia uma oferta (compra) para um jogador no "mercado global" (sem clubes reais ainda) */
+function evaluateBuyOffer(player, fee, wage) {
+  const value = Number(player?.value || 0);
+  const f = Number(fee || 0);
+  // regras provisórias:
+  // - >= 90% do valor: aceita
+  // - 70% a 89%: contra-oferta em 95% do valor
+  // - < 70%: rejeita
+  if (value <= 0) return { status: 'REJECTED', reason: 'Sem valor definido' };
+
+  if (f >= value * 0.90) return { status: 'ACCEPTED' };
+  if (f >= value * 0.70) {
+    const counterFee = Math.round(value * 0.95);
+    const counterWage = Math.round(Math.max(0, Number(wage || 0)) * 1.05);
+    return { status: 'COUNTERED', counter: { fee: counterFee, wage: counterWage } };
+  }
+  return { status: 'REJECTED', reason: 'Oferta baixa' };
+}
+
+/** Cria ofertas aleatórias de IA por jogadores do usuário (provisório) */
+function maybeGenerateIncomingOffers(save) {
+  const win = getTransferWindow(save);
+  if (!win.open) return;
+
+  const squad = save.squad?.players || [];
+  if (squad.length === 0) return;
+
+  // limite de ofertas por rodada (provisório)
+  const maxOffersThisRound = 2;
+  const roll = Math.random();
+  const howMany = roll < 0.35 ? 0 : (roll < 0.80 ? 1 : 2);
+
+  let created = 0;
+  for (let i = 0; i < squad.length && created < Math.min(howMany, maxOffersThisRound); i++) {
+    const p = squad[Math.floor(Math.random() * squad.length)];
+    if (!p || !p.id) continue;
+
+    // evita spam: se já existe oferta pendente para este jogador, não cria outra
+    const already = (save.transfers?.inbox || []).some(o => o.pid === p.id && (o.status === 'PENDING' || o.status === 'COUNTERED'));
+    if (already) continue;
+
+    const value = Number(p.value || 0);
+    const fee = Math.round(value * (0.80 + Math.random() * 0.50)); // 80% a 130%
+    const wage = Math.round((Number(p.wage || 150000) * (0.90 + Math.random() * 0.35))); // provisório
+
+    const offer = {
+      id: uid('offer'),
+      type: 'IN',
+      pid: p.id,
+      playerName: p.name,
+      from: { clubName: 'Clube Europeu', clubId: 'AI_EU' }, // placeholder removível
+      to: { clubId: save.career.clubId, clubName: getClub(save.career.clubId)?.name || 'Seu clube' },
+      fee,
+      wage,
+      status: 'PENDING',
+      createdAt: nowIso(),
+      createdRound: Number(save.season.currentRound || 0),
+      expiresRound: Number(save.season.currentRound || 0) + 3
+    };
+
+    save.transfers.inbox.push(offer);
+    created++;
+  }
+}
+
+/** Processa ofertas pendentes/counter e expira ofertas */
+function processTransferPipeline(save) {
+  ensureSystems(save);
+  ensureSeason(save);
+
+  const r = Number(save.season.currentRound || 0);
+  if (save.transfers.lastProcessedRound === r) return;
+
+  // expira inbox/outbox
+  const expire = (arr) => {
+    for (const o of arr) {
+      if (!o) continue;
+      if (o.status === 'PENDING' || o.status === 'COUNTERED') {
+        if (typeof o.expiresRound === 'number' && r > o.expiresRound) {
+          o.status = 'EXPIRED';
+          o.closedAt = nowIso();
+        }
+      }
+    }
+  };
+  expire(save.transfers.outbox);
+  expire(save.transfers.inbox);
+
+  // responde algumas ofertas enviadas (simula "negociação")
+  for (const o of save.transfers.outbox) {
+    if (!o) continue;
+    if (o.status !== 'PENDING') continue;
+    // Processa resposta 1 rodada depois
+    if ((o.createdRound ?? r) >= r) continue;
+
+    const p = (state.packData?.players?.players || []).find(x => x.id === o.pid);
+    if (!p) { o.status = 'REJECTED'; o.reason = 'Jogador não encontrado'; o.closedAt = nowIso(); continue; }
+
+    const res = evaluateBuyOffer(p, o.fee, o.wage);
+    o.status = res.status;
+    if (res.status === 'COUNTERED') o.counter = res.counter;
+    if (res.status === 'REJECTED') o.reason = res.reason || 'Recusado';
+    if (res.status === 'ACCEPTED') o.closedAt = nowIso();
+  }
+
+  // IA cria ofertas recebidas para o usuário (provisório)
+  maybeGenerateIncomingOffers(save);
+
+  save.transfers.lastProcessedRound = r;
+}
+
+/** Conclui compra (após oferta aceita) */
+function finalizeBuy(save, pid, fee, wage) {
+  const p = (state.packData?.players?.players || []).find(x => x.id === pid);
+  if (!p) return { ok: false, message: 'Jogador não encontrado' };
+
+  const price = Number(fee || p.value || 0);
+  if (!save.finance) save.finance = { cash: 0 };
+  if ((save.finance.cash || 0) < price) return { ok: false, message: 'Caixa insuficiente' };
+
+  // efetiva
+  save.finance.cash = (save.finance.cash || 0) - price;
+  save.squad.players.push({ ...p, clubId: save.career.clubId, source: 'transfer', wage: Number(wage || p.wage || 0) });
+
+  if (!save.transfers.bought) save.transfers.bought = [];
+  save.transfers.bought.push(pid);
+
+  save.transfers.log.push({
+    id: uid('tr'),
+    kind: 'BUY',
+    pid,
+    playerName: p.name,
+    fee: price,
+    wage: Number(wage || 0),
+    at: nowIso(),
+    seasonId: save.season.id
+  });
+
+  return { ok: true };
+}
+
+/** Conclui venda (aceitando proposta recebida) */
+function finalizeSell(save, offerId) {
+  const offer = (save.transfers.inbox || []).find(o => o.id === offerId);
+  if (!offer) return { ok: false, message: 'Oferta não encontrada' };
+  if (offer.status !== 'PENDING' && offer.status !== 'COUNTERED') return { ok: false, message: 'Oferta inválida' };
+
+  const idx = (save.squad.players || []).findIndex(p => p.id === offer.pid);
+  if (idx < 0) return { ok: false, message: 'Jogador não está no seu elenco' };
+
+  const p = save.squad.players[idx];
+  save.squad.players.splice(idx, 1);
+
+  if (!save.finance) save.finance = { cash: 0 };
+  save.finance.cash = (save.finance.cash || 0) + Number(offer.fee || 0);
+
+  offer.status = 'ACCEPTED';
+  offer.closedAt = nowIso();
+
+  save.transfers.log.push({
+    id: uid('tr'),
+    kind: 'SELL',
+    pid: p.id,
+    playerName: p.name,
+    fee: Number(offer.fee || 0),
+    at: nowIso(),
+    seasonId: save.season.id
+  });
+
+  return { ok: true };
+}
+
+return save;
   }
 
   /** Calcula o overall médio do XI */
@@ -1361,10 +1593,19 @@
       summary: null
     };
 
-    // Parte 3: reinicia liga paralela do Brasil (A/B) na nova temporada
-    try { ensureParallelBrazilLeaguesInitialized(save); } catch (e) {}
 
-    save.meta.updatedAt = nowIso();
+// Parte 3: reinicia liga paralela do Brasil (A/B) na nova temporada
+try { ensureParallelBrazilLeaguesInitialized(save); } catch (e) {}
+
+// Parte 5: reinicia pipeline de transferências (provisório)
+if (save.transfers) {
+  save.transfers.lastProcessedRound = -1;
+  // não apagamos o histórico; apenas limpamos as caixas para a nova temporada
+  save.transfers.outbox = [];
+  save.transfers.inbox = [];
+}
+
+save.meta.updatedAt = nowIso();
   }
 
   function generateDoubleRoundRobin(teamIds) {
@@ -2090,13 +2331,22 @@ function viewFinance() {
   function viewTransfers() {
     return requireSave((save) => {
       ensureSystems(save);
+      ensureSeason(save);
+      // processa pipeline (expira/gera ofertas) sempre que abrir a tela
+      try { processTransferPipeline(save); } catch (e) {}
+
       const currency = state.packData?.rules?.gameRules?.currency || 'BRL';
       const cashStr = (save.finance?.cash || 0).toLocaleString('pt-BR', { style: 'currency', currency });
+
+      const win = getTransferWindow(save);
+      const winBadge = win.open ? `<span class="badge">✅ ${esc(win.label)}</span>` : `<span class="badge">⛔ ${esc(win.label)}</span>`;
+
       const players = state.packData?.players?.players || [];
       const ownedIds = new Set((save.squad?.players || []).map((p) => p.id));
       const bought = new Set(save.transfers?.bought || []);
       const q = save.transfers?.search || '';
       const filterPos = save.transfers?.filterPos || 'ALL';
+
       // Filtra jogadores não pertencentes ao clube nem já comprados
       const filtered = players
         .filter((p) => !ownedIds.has(p.id) && !bought.has(p.id))
@@ -2105,11 +2355,18 @@ function viewFinance() {
           if (!q.trim()) return true;
           return p.name.toLowerCase().includes(q.trim().toLowerCase());
         })
-        .sort((a, b) => b.overall - a.overall);
-      const posOpts = ['ALL', 'GK', 'DEF', 'MID', 'ATT'].map((p) => `<option value="${p}" ${p === filterPos ? 'selected' : ''}>${p === 'ALL' ? 'Todos' : p}</option>`).join('');
-      const rows = filtered.map((p) => {
-        const priceStr = (p.value || 0).toLocaleString('pt-BR', { style: 'currency', currency });
-        const affordable = (save.finance?.cash || 0) >= (p.value || 0);
+        .sort((a, b) => b.overall - a.overall)
+        .slice(0, 120); // limite para performance mobile
+
+      const posOpts = ['ALL', 'GK', 'DEF', 'MID', 'ATT']
+        .map((p) => `<option value="${p}" ${p === filterPos ? 'selected' : ''}>${p === 'ALL' ? 'Todos' : p}</option>`)
+        .join('');
+
+      const marketRows = filtered.map((p) => {
+        const price = Number(p.value || 0);
+        const priceStr = price.toLocaleString('pt-BR', { style: 'currency', currency });
+        const affordable = (save.finance?.cash || 0) >= price;
+        const open = win.open;
         return `
           <tr>
             <td>${esc(p.name)}</td>
@@ -2118,21 +2375,74 @@ function viewFinance() {
             <td class="center">${esc(p.overall)}</td>
             <td class="right">${priceStr}</td>
             <td class="center">
-              <button class="btn btn-primary" data-action="buyPlayer" data-pid="${esc(p.id)}" ${affordable ? '' : 'disabled'}>Comprar</button>
+              <button class="btn btn-primary" data-action="makeOffer" data-pid="${esc(p.id)}" ${open && affordable ? '' : 'disabled'}>Fazer oferta</button>
             </td>
           </tr>
         `;
       }).join('');
+
+      const outbox = (save.transfers?.outbox || []).slice().reverse().slice(0, 30);
+      const inbox = (save.transfers?.inbox || []).slice().reverse().slice(0, 30);
+
+      const outRows = outbox.map((o) => {
+        const feeStr = Number(o.fee || 0).toLocaleString('pt-BR', { style: 'currency', currency });
+        const st = o.status || 'PENDING';
+        const badge = st === 'ACCEPTED' ? '✅ Aceita' : st === 'COUNTERED' ? '🟠 Contra-oferta' : st === 'REJECTED' ? '⛔ Recusada' : st === 'EXPIRED' ? '⌛ Expirada' : '⏳ Pendente';
+        const counter = (st === 'COUNTERED' && o.counter) ? ` | Contra: ${(Number(o.counter.fee||0)).toLocaleString('pt-BR',{style:'currency',currency})}` : '';
+        const actions = (st === 'COUNTERED')
+          ? `<button class="btn btn-primary" data-action="acceptCounter" data-oid="${esc(o.id)}">Aceitar</button>
+             <button class="btn btn-ghost" data-action="rejectOfferOut" data-oid="${esc(o.id)}">Recusar</button>`
+          : (st === 'PENDING')
+            ? `<button class="btn btn-ghost" data-action="cancelOfferOut" data-oid="${esc(o.id)}">Cancelar</button>`
+            : '';
+        return `
+          <tr>
+            <td>${esc(o.playerName || '')}</td>
+            <td class="center">${badge}</td>
+            <td class="right">${feeStr}${counter}</td>
+            <td class="center">${actions || '<span class="mini">—</span>'}</td>
+          </tr>
+        `;
+      }).join('');
+
+      const inRows = inbox.map((o) => {
+        const feeStr = Number(o.fee || 0).toLocaleString('pt-BR', { style: 'currency', currency });
+        const st = o.status || 'PENDING';
+        const badge = st === 'ACCEPTED' ? '✅ Aceita' : st === 'COUNTERED' ? '🟠 Contra-oferta' : st === 'REJECTED' ? '⛔ Recusada' : st === 'EXPIRED' ? '⌛ Expirada' : '⏳ Pendente';
+        const actions = (st === 'PENDING' || st === 'COUNTERED')
+          ? `<button class="btn btn-primary" data-action="acceptOfferIn" data-oid="${esc(o.id)}">Aceitar</button>
+             <button class="btn btn-ghost" data-action="rejectOfferIn" data-oid="${esc(o.id)}">Recusar</button>`
+          : '';
+        return `
+          <tr>
+            <td>${esc(o.playerName || '')}</td>
+            <td class="center">${esc(o.from?.clubName || 'Clube')}</td>
+            <td class="center">${badge}</td>
+            <td class="right">${feeStr}</td>
+            <td class="center">${actions || '<span class="mini">—</span>'}</td>
+          </tr>
+        `;
+      }).join('');
+
+      const log = (save.transfers?.log || []).slice().reverse().slice(0, 30).map((t) => {
+        const feeStr = Number(t.fee || 0).toLocaleString('pt-BR', { style: 'currency', currency });
+        const kind = t.kind === 'SELL' ? 'Venda' : 'Compra';
+        return `<tr><td>${esc(kind)}</td><td>${esc(t.playerName||'')}</td><td class="right">${feeStr}</td><td class="mini">${esc(t.at||'')}</td></tr>`;
+      }).join('');
+
       return `
         <div class="card">
           <div class="card-header">
             <div>
               <div class="card-title">Mercado de Transferências</div>
-              <div class="card-subtitle">Filtre e compre jogadores</div>
+              <div class="card-subtitle">Propostas, contra-ofertas e ofertas recebidas (Parte 5)</div>
             </div>
             <span class="badge">Caixa: ${cashStr}</span>
           </div>
           <div class="card-body">
+            <div class="notice">Status da janela: ${winBadge}</div>
+            <div class="sep"></div>
+
             <div class="grid">
               <div class="col-6">
                 <div class="label">Buscar jogador</div>
@@ -2143,11 +2453,35 @@ function viewFinance() {
                 <select class="input" data-action="transferFilterPos">${posOpts}</select>
               </div>
             </div>
+
             <div class="sep"></div>
+            <div class="label">Jogadores disponíveis (mercado global)</div>
             <table class="table">
               <thead><tr><th>Nome</th><th class="center">Pos</th><th class="center">Idade</th><th class="center">OVR</th><th class="right">Valor</th><th class="center">Ação</th></tr></thead>
-              <tbody>${rows || `<tr><td colspan="6" class="mini">Nenhum jogador encontrado.</td></tr>`}</tbody>
+              <tbody>${marketRows || `<tr><td colspan="6" class="mini">Nenhum jogador encontrado.</td></tr>`}</tbody>
             </table>
+
+            <div class="sep"></div>
+            <div class="label">Minhas ofertas (enviadas)</div>
+            <table class="table">
+              <thead><tr><th>Jogador</th><th class="center">Status</th><th class="right">Oferta</th><th class="center">Ações</th></tr></thead>
+              <tbody>${outRows || `<tr><td colspan="4" class="mini">Nenhuma oferta enviada.</td></tr>`}</tbody>
+            </table>
+
+            <div class="sep"></div>
+            <div class="label">Ofertas recebidas (por seus jogadores)</div>
+            <table class="table">
+              <thead><tr><th>Jogador</th><th class="center">De</th><th class="center">Status</th><th class="right">Valor</th><th class="center">Ações</th></tr></thead>
+              <tbody>${inRows || `<tr><td colspan="5" class="mini">Nenhuma oferta recebida.</td></tr>`}</tbody>
+            </table>
+
+            <div class="sep"></div>
+            <div class="label">Histórico recente</div>
+            <table class="table">
+              <thead><tr><th>Tipo</th><th>Jogador</th><th class="right">Valor</th><th>Data</th></tr></thead>
+              <tbody>${log || `<tr><td colspan="4" class="mini">Sem histórico ainda.</td></tr>`}</tbody>
+            </table>
+
             <div class="sep"></div>
             <button class="btn btn-primary" data-go="/hub">Voltar</button>
           </div>
@@ -2482,51 +2816,195 @@ function viewFinance() {
         });
       }
 
-      // --- Transferências
-      if (action === 'transferSearchInput') {
-        el.addEventListener('input', () => {
-          const save = activeSave();
-          if (!save) return;
-          ensureSystems(save);
-          save.transfers.search = el.value || '';
-          save.meta.updatedAt = nowIso();
-          writeSlot(state.settings.activeSlotId, save);
-          route();
-        });
-      }
-      if (action === 'transferFilterPos') {
-        el.addEventListener('change', () => {
-          const save = activeSave();
-          if (!save) return;
-          ensureSystems(save);
-          save.transfers.filterPos = el.value || 'ALL';
-          save.meta.updatedAt = nowIso();
-          writeSlot(state.settings.activeSlotId, save);
-          route();
-        });
-      }
-      if (action === 'buyPlayer') {
-        el.addEventListener('click', () => {
-          const save = activeSave();
-          if (!save) return;
-          ensureSystems(save);
-          const pid = el.getAttribute('data-pid');
-          const p = (state.packData?.players?.players || []).find(x => x.id === pid);
-          if (!p) return;
-          const price = Number(p.value || 0);
-          if (!save.finance) save.finance = { cash: 0 };
-          if ((save.finance.cash || 0) < price) return;
-          save.finance.cash = (save.finance.cash || 0) - price;
-          save.squad.players.push({ ...p, clubId: save.career.clubId, source: 'transfer' });
-          if (!save.transfers.bought) save.transfers.bought = [];
-          save.transfers.bought.push(pid);
-          save.meta.updatedAt = nowIso();
-          writeSlot(state.settings.activeSlotId, save);
-          route();
-        });
-      }
+      
+// --- Transferências (Parte 5)
+if (action === 'transferSearchInput') {
+  el.addEventListener('input', () => {
+    const save = activeSave();
+    if (!save) return;
+    ensureSystems(save);
+    save.transfers.search = el.value || '';
+    save.meta.updatedAt = nowIso();
+    writeSlot(state.settings.activeSlotId, save);
+    route();
+  });
+}
+if (action === 'transferFilterPos') {
+  el.addEventListener('change', () => {
+    const save = activeSave();
+    if (!save) return;
+    ensureSystems(save);
+    save.transfers.filterPos = el.value || 'ALL';
+    save.meta.updatedAt = nowIso();
+    writeSlot(state.settings.activeSlotId, save);
+    route();
+  });
+}
 
-      // --- Jogos
+if (action === 'makeOffer') {
+  el.addEventListener('click', () => {
+    const save = activeSave();
+    if (!save) return;
+    ensureSystems(save);
+    ensureSeason(save);
+
+    const win = getTransferWindow(save);
+    if (!win.open) {
+      alert('Janela de transferências fechada. Aguarde a próxima janela.');
+      return;
+    }
+
+    const pid = el.getAttribute('data-pid');
+    const p = (state.packData?.players?.players || []).find(x => x.id === pid);
+    if (!p) return;
+
+    const value = Number(p.value || 0);
+    const currency = state.packData?.rules?.gameRules?.currency || 'BRL';
+    const valueStr = value.toLocaleString('pt-BR', { style: 'currency', currency });
+
+    const fee = Number(prompt(`Oferta pelo jogador ${p.name}
+Valor estimado: ${valueStr}
+
+Digite a oferta (apenas número):`, String(value)));
+    if (!Number.isFinite(fee) || fee <= 0) return;
+
+    if (!save.finance) save.finance = { cash: 0 };
+    if ((save.finance.cash || 0) < fee) {
+      alert('Caixa insuficiente para esta oferta.');
+      return;
+    }
+
+    const wage = Number(prompt(`Salário mensal proposto (apenas número).
+Dica: use 100000 - 500000`, String(p.wage || 150000)));
+    const safeWage = Number.isFinite(wage) && wage >= 0 ? wage : 0;
+
+    const offer = {
+      id: uid('offer'),
+      type: 'OUT',
+      pid,
+      playerName: p.name,
+      fee: Math.round(fee),
+      wage: Math.round(safeWage),
+      status: 'PENDING',
+      createdAt: nowIso(),
+      createdRound: Number(save.season.currentRound || 0),
+      expiresRound: Number(save.season.currentRound || 0) + 3
+    };
+
+    save.transfers.outbox.push(offer);
+    save.meta.updatedAt = nowIso();
+    writeSlot(state.settings.activeSlotId, save);
+    route();
+  });
+}
+
+if (action === 'cancelOfferOut') {
+  el.addEventListener('click', () => {
+    const save = activeSave();
+    if (!save) return;
+    ensureSystems(save);
+    const oid = el.getAttribute('data-oid');
+    const o = (save.transfers.outbox || []).find(x => x.id === oid);
+    if (!o) return;
+    if (o.status !== 'PENDING') return;
+    o.status = 'CANCELLED';
+    o.closedAt = nowIso();
+    save.meta.updatedAt = nowIso();
+    writeSlot(state.settings.activeSlotId, save);
+    route();
+  });
+}
+
+if (action === 'acceptCounter') {
+  el.addEventListener('click', () => {
+    const save = activeSave();
+    if (!save) return;
+    ensureSystems(save);
+    ensureSeason(save);
+
+    const oid = el.getAttribute('data-oid');
+    const o = (save.transfers.outbox || []).find(x => x.id === oid);
+    if (!o || o.status !== 'COUNTERED' || !o.counter) return;
+
+    const fee = Number(o.counter.fee || 0);
+    const wage = Number(o.counter.wage || 0);
+
+    const res = finalizeBuy(save, o.pid, fee, wage);
+    if (!res.ok) {
+      alert(res.message || 'Não foi possível concluir a compra.');
+      return;
+    }
+
+    o.status = 'ACCEPTED';
+    o.closedAt = nowIso();
+    save.meta.updatedAt = nowIso();
+    writeSlot(state.settings.activeSlotId, save);
+    route();
+  });
+}
+
+if (action === 'rejectOfferOut') {
+  el.addEventListener('click', () => {
+    const save = activeSave();
+    if (!save) return;
+    ensureSystems(save);
+    const oid = el.getAttribute('data-oid');
+    const o = (save.transfers.outbox || []).find(x => x.id === oid);
+    if (!o) return;
+    if (o.status !== 'COUNTERED') return;
+    o.status = 'REJECTED';
+    o.reason = 'Recusado pelo clube';
+    o.closedAt = nowIso();
+    save.meta.updatedAt = nowIso();
+    writeSlot(state.settings.activeSlotId, save);
+    route();
+  });
+}
+
+if (action === 'acceptOfferIn') {
+  el.addEventListener('click', () => {
+    const save = activeSave();
+    if (!save) return;
+    ensureSystems(save);
+    ensureSeason(save);
+
+    const win = getTransferWindow(save);
+    if (!win.open) {
+      alert('Janela fechada. Não é possível vender agora.');
+      return;
+    }
+
+    const oid = el.getAttribute('data-oid');
+    const res = finalizeSell(save, oid);
+    if (!res.ok) {
+      alert(res.message || 'Não foi possível concluir a venda.');
+      return;
+    }
+
+    save.meta.updatedAt = nowIso();
+    writeSlot(state.settings.activeSlotId, save);
+    route();
+  });
+}
+
+if (action === 'rejectOfferIn') {
+  el.addEventListener('click', () => {
+    const save = activeSave();
+    if (!save) return;
+    ensureSystems(save);
+    const oid = el.getAttribute('data-oid');
+    const o = (save.transfers.inbox || []).find(x => x.id === oid);
+    if (!o) return;
+    if (o.status !== 'PENDING' && o.status !== 'COUNTERED') return;
+    o.status = 'REJECTED';
+    o.closedAt = nowIso();
+    save.meta.updatedAt = nowIso();
+    writeSlot(state.settings.activeSlotId, save);
+    route();
+  });
+}
+
+// --- Jogos
       if (action === 'playNextRound') {
         el.addEventListener('click', () => {
           const save = activeSave();
@@ -2572,6 +3050,9 @@ function viewFinance() {
           save.finance.cash = Math.max(0, (save.finance.cash || 0) + sponsorIncome - weeklyCost);
 
           save.season.currentRound += 1;
+
+          // Processa transferências (expira ofertas, gera propostas da IA etc.)
+          try { processTransferPipeline(save); } catch (e) {}
 
           // Se acabou a última rodada, fecha a temporada e gera resumo
           finalizeSeasonIfNeeded(save);
