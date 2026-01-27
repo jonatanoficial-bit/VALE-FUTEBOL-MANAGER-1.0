@@ -1775,7 +1775,7 @@ save.meta.updatedAt = nowIso();
     return p.name || p.playerName || 'Jogador';
   }
 
-  function buildMatchStats(homeId, awayId, sim){
+  function buildMatchStats(homeId, awayId, sim, save){
     // Estatísticas simples mas críveis, derivadas do "ritmo" do jogo (lamHome/lamAway)
     const baseShotsH = clamp(Math.round(sim.lamHome * 9 + rnd(3, 7)), 4, 22);
     const baseShotsA = clamp(Math.round(sim.lamAway * 9 + rnd(3, 7)), 4, 22);
@@ -1786,9 +1786,9 @@ save.meta.updatedAt = nowIso();
     const cornersH = clamp(Math.round(baseShotsH * rnd(.12,.25)), 1, 11);
     const cornersA = clamp(Math.round(baseShotsA * rnd(.12,.25)), 1, 11);
 
-    // posse baseada na força relativa
-    const sh = clubStrength(homeId, state.packData);
-    const sa = clubStrength(awayId, state.packData);
+    // posse baseada na força relativa (usa a mesma função do simulador principal)
+    const sh = teamStrength(homeId, save);
+    const sa = teamStrength(awayId, save);
     let possH = 50;
     if (sh + sa > 0) possH = 50 + (sh - sa) / (sh + sa) * 14;
     possH = clamp(Math.round(possH + rnd(-4, 4)), 35, 65);
@@ -1871,7 +1871,7 @@ save.meta.updatedAt = nowIso();
     const pre = matches.map(m => {
       if (m.played) return { ...m, sim:null, stats:null, timeline:[] };
       const sim = simulateMatch(m.homeId, m.awayId, save);
-      const stats = buildMatchStats(m.homeId, m.awayId, sim);
+      const stats = buildMatchStats(m.homeId, m.awayId, sim, save);
       const timeline = (m.homeId===userMatch.homeId && m.awayId===userMatch.awayId)
         ? buildTimelineForMatch(m.homeId, m.awayId, sim.hg, sim.ag)
         : [];
