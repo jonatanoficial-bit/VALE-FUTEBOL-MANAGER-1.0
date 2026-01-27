@@ -2231,10 +2231,15 @@ save.meta.updatedAt = nowIso();
         const pos = idx + 1;
         const zone = zoneInfoForPosition(save.season.leagueId, pos);
         const zonePill = zone ? `<span class="pill ${zone.cls}" title="${esc(zone.label)}">${esc(zone.label)}</span>` : '';
-        const mark = t.id === save.career.clubId ? ' style="outline:1px solid rgba(34,197,94,.45)"' : '';
-        const trClass = zone ? ` class="${zone.cls}"` : '';
+        const isUser = t.id === save.career.clubId;
+        const isLeader = pos === 1;
+        const classes = [];
+        if (zone?.cls) classes.push(zone.cls);
+        if (isUser) classes.push('is-user');
+        if (isLeader) classes.push('is-leader');
+        const trClass = classes.length ? ` class="${classes.join(' ')}"` : '';
         return `
-          <tr${trClass}${mark}>
+          <tr${trClass}>
             <td style="display:flex; align-items:center; gap:10px;">
               <span>${pos}</span>
               ${zonePill}
@@ -2269,11 +2274,20 @@ save.meta.updatedAt = nowIso();
             <span class="badge">Rodada ${save.season.currentRound+1}</span>
           </div>
           <div class="card-body">
-            <div class="notice">Zonas: <span class="pill zone-lib">LIB</span> <span class="pill zone-sula">SULA</span> <span class="pill zone-up">SUBE</span> <span class="pill zone-z4">Z4</span> • Agora: Libertadores e Sul-Americana (provisório) • Veja em <b>Continental</b>.</div>
+            <div class="zone-legend">
+              <div class="zone-legend-left">
+                <span class="pill zone-lib" title="Classificação Libertadores">🏆 LIB</span>
+                <span class="pill zone-sula" title="Classificação Sul-Americana">🥈 SULA</span>
+                <span class="pill zone-up" title="Acesso">⬆️ SUBE</span>
+                <span class="pill zone-z4" title="Rebaixamento">⬇️ Z4</span>
+              </div>
+              <div class="zone-legend-right">Dica: seu clube fica destacado como <span class="pill pill-mini">VOCÊ</span>.</div>
+            </div>
             <div style="height:10px"></div>
             <button class="btn btn-primary" data-go="/continentals">Continental (LIB/SULA)</button>
             <div class="sep"></div>
-            <table class="table">
+            <div class="table-wrap">
+            <table class="table table-standings">
               <thead>
                 <tr>
                   <th>#</th><th>Clube</th><th class="right">J</th><th class="right">V</th><th class="right">E</th><th class="right">D</th>
@@ -2282,6 +2296,7 @@ save.meta.updatedAt = nowIso();
               </thead>
               <tbody>${tableHtml}</tbody>
             </table>
+            </div>
             <div class="sep"></div>
             <div class="row">
               <button class="btn btn-primary" data-go="/matches">Voltar aos Jogos</button>
