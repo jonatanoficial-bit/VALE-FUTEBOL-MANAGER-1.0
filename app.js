@@ -929,7 +929,7 @@ return save;
           <div class="item">
             <div class="item-left" style="display:flex; gap:12px; align-items:center;">
               <div class="club-logo">
-                <img src=\"${esc(logoClubUrl(c.id))}\" alt=\"${esc(c.name)}\" onerror=\"this.onerror=null;this.src='./assets/club_placeholder.svg';\"> 
+                <img src=\"${esc(logoClubUrl(c.id))}\" alt=\"${esc(c.name)}\" onerror=\"this.onerror=null;this.src='assets/club_placeholder.svg';\"> 
               </div>
               <div style="min-width:0;">
                 <div class="item-title">${esc(c.name)}</div>
@@ -1765,19 +1765,18 @@ save.meta.updatedAt = nowIso();
   }
 
   function logoClubUrl(clubId){
-    if(!clubId) return './assets/club_placeholder.svg';
-    return `./assets/logos/${clubId}.png`;
+    // IMPORTANT: use relative paths without './' so GitHub Pages subpaths + hash routing don't break
+    if(!clubId) return 'assets/club_placeholder.svg';
+    return `assets/logos/${clubId}.png`;
   }
-
-
-  function clubLogoHtml(clubId, size = 34) {
+function clubLogoHtml(clubId, size = 34) {
   const c = clubId ? getClub(clubId) : null;
   const s = Number(size) || 34;
   const alt = esc(c?.name || clubId || 'Clube');
   const src = esc(logoClubUrl(clubId));
   return `
     <div class="club-logo" style="width:${s}px;height:${s}px;border-radius:14px;">
-      <img src="${src}" alt="${alt}" onerror="this.onerror=null;this.src='./assets/club_placeholder.svg';">
+      <img src="${src}" alt="${alt}" onerror="this.onerror=null;this.src='assets/club_placeholder.svg';">
     </div>
   `;
 }
@@ -2421,7 +2420,33 @@ save.season.lastRoundPlayed = roundIndex;
         if (cont.europa) pushUnique(uel, pickLeagueQualifiers(save, lid, cont.europa.from, cont.europa.to));
       }
 
-      const strengthOf = (clubId) => {
+      
+      // Fallback: se as tabelas das ligas ainda não existem (início da temporada),
+      // garantimos participantes pegando os melhores por força em cada liga.
+      function topByStrengthFromLeague(lid, n){
+        const clubs = (state.packData?.clubs?.clubs || []).filter(c => c.leagueId === lid).map(c => c.id);
+        return rankByStrength(clubs).slice(0, n);
+      }
+
+      // UEFA ligas principais (e PT como bônus) – garante UCL/UEL mesmo no round 1
+      const UEFA_LIDS = ['ENG_PREMIER','ESP_LALIGA','ITA_SERIE_A','GER_BUNDES','FRA_LIGUE_1','POR_LIGA'];
+      if (ucl.length < 8) {
+        for (const lid of UEFA_LIDS) pushUnique(ucl, topByStrengthFromLeague(lid, 4));
+      }
+      if (uel.length < 8) {
+        for (const lid of UEFA_LIDS) pushUnique(uel, topByStrengthFromLeague(lid, 6));
+      }
+
+      // CONMEBOL (fora BR): garante LIB/SULA mesmo no round 1
+      const CONM_LIDS = ['ARG_PRIMERA','URU_PRIMERA','CHI_PRIMERA','COL_PRIMERA','ECU_LIGA','VEN_LIGA','BOL_LIGA'];
+      if (lib.length < 16) {
+        for (const lid of CONM_LIDS) pushUnique(lib, topByStrengthFromLeague(lid, 4));
+      }
+      if (sula.length < 8) {
+        for (const lid of CONM_LIDS) pushUnique(sula, topByStrengthFromLeague(lid, 6));
+      }
+
+const strengthOf = (clubId) => {
         try { return teamStrength(clubId, save); } catch (e) { return 60; }
       };
       const rankByStrength = (ids) => (ids || []).slice().filter(Boolean).sort((a,b) => strengthOf(b) - strengthOf(a));
@@ -2792,8 +2817,7 @@ save.season.lastRoundPlayed = roundIndex;
       const timeline = buildTimelineForMatch(m.homeId, m.awayId, sim, save);
       playedMatches.push({ homeId: m.homeId, awayId: m.awayId, hg: sim.hg, ag: sim.ag, winnerId: m.winnerId, stats, timeline });
       winners.push(m.winnerId);
-      playedMatches.push({ homeId: m.homeId, awayId: m.awayId, hg: m.hg, ag: m.ag, winnerId: m.winnerId, round: round.name });
-    }
+      }
 
     // prepara próximo round
     if (winners.length === 1) {
@@ -4481,13 +4505,13 @@ if (action === 'rejectOfferIn') {
           <div class="vfmComp">${esc(compLabel)} • Matchday</div>
           <div class="vfmLine">
             <div class="vfmTeam">
-              <img src="${esc(logoClubUrl(focus.homeId))}" onerror="this.onerror=null;this.src='./assets/club_placeholder.svg';" />
+              <img src="${esc(logoClubUrl(focus.homeId))}" onerror="this.onerror=null;this.src='assets/club_placeholder.svg';" />
               <div class="vfmName">${esc(home?.name || focus.homeId)}</div>
             </div>
             <div class="vfmScore">${focus.hg}–${focus.ag}</div>
             <div class="vfmTeam" style="justify-content:flex-end">
               <div class="vfmName" style="text-align:right">${esc(away?.name || focus.awayId)}</div>
-              <img src="${esc(logoClubUrl(focus.awayId))}" onerror="this.onerror=null;this.src='./assets/club_placeholder.svg';" />
+              <img src="${esc(logoClubUrl(focus.awayId))}" onerror="this.onerror=null;this.src='assets/club_placeholder.svg';" />
             </div>
           </div>
         </div>
