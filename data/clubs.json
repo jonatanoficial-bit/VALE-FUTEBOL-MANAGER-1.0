@@ -1231,6 +1231,1126 @@
       "leagueId": "POR_LIGA",
       "overall": 60,
       "budget": 50000000
+    },
+    {
+      "id": "ARG_BOC",
+      "name": "Boca Juniors",
+      "short": "BOC",
+      "leagueId": "ARG_PRIMERA",
+      "overall": 74,
+      "budget": 60000000
+    },
+    {
+      "id": "ARG_RIV",
+      "name": "River Plate",
+      "short": "RIV",
+      "leagueId": "ARG_PRIMERA",
+      "overall": 75,
+      "budget": 65000000
+    },
+    {
+      "id": "ARG_RAC",
+      "name": "Racing Club",
+      "short": "RAC",
+      "leagueId": "ARG_PRIMERA",
+      "overall": 71,
+      "budget": 35000000
+    },
+    {
+      "id": "ARG_IND",
+      "name": "Independiente",
+      "short": "IND",
+      "leagueId": "ARG_PRIMERA",
+      "overall": 70,
+      "budget": 32000000
+    },
+    {
+      "id": "ARG_SLO",
+      "name": "San Lorenzo",
+      "short": "SLO",
+      "leagueId": "ARG_PRIMERA",
+      "overall": 69,
+      "budget": 28000000
+    },
+    {
+      "id": "ARG_VEL",
+      "name": "Vélez Sarsfield",
+      "short": "VEL",
+      "leagueId": "ARG_PRIMERA",
+      "overall": 69,
+      "budget": 26000000
+    },
+    {
+      "id": "ARG_EST",
+      "name": "Estudiantes",
+      "short": "EST",
+      "leagueId": "ARG_PRIMERA",
+      "overall": 69,
+      "budget": 26000000
+    },
+    {
+      "id": "ARG_LAN",
+      "name": "Lanús",
+      "short": "LAN",
+      "leagueId": "ARG_PRIMERA",
+      "overall": 68,
+      "budget": 24000000
+    },
+    {
+      "id": "ARG_ROS",
+      "name": "Rosario Central",
+      "short": "ROS",
+      "leagueId": "ARG_PRIMERA",
+      "overall": 68,
+      "budget": 23000000
+    },
+    {
+      "id": "ARG_NOB",
+      "name": "Newell's Old Boys",
+      "short": "NOB",
+      "leagueId": "ARG_PRIMERA",
+      "overall": 67,
+      "budget": 22000000
+    },
+    {
+      "id": "ARG_HUR",
+      "name": "Huracán",
+      "short": "HUR",
+      "leagueId": "ARG_PRIMERA",
+      "overall": 67,
+      "budget": 20000000
+    },
+    {
+      "id": "ARG_TAL",
+      "name": "Talleres",
+      "short": "TAL",
+      "leagueId": "ARG_PRIMERA",
+      "overall": 68,
+      "budget": 24000000
+    },
+    {
+      "id": "ARG_GIM",
+      "name": "Gimnasia LP",
+      "short": "GIM",
+      "leagueId": "ARG_PRIMERA",
+      "overall": 66,
+      "budget": 17000000
+    },
+    {
+      "id": "ARG_ARG",
+      "name": "Argentinos Juniors",
+      "short": "AJO",
+      "leagueId": "ARG_PRIMERA",
+      "overall": 67,
+      "budget": 20000000
+    },
+    {
+      "id": "ARG_BAN",
+      "name": "Banfield",
+      "short": "BAN",
+      "leagueId": "ARG_PRIMERA",
+      "overall": 66,
+      "budget": 17000000
+    },
+    {
+      "id": "ARG_COL",
+      "name": "Colón",
+      "short": "COL",
+      "leagueId": "ARG_PRIMERA",
+      "overall": 66,
+      "budget": 17000000
+    },
+    {
+      "id": "ARG_UNI",
+      "name": "Unión",
+      "short": "UNI",
+      "leagueId": "ARG_PRIMERA",
+      "overall": 66,
+      "budget": 17000000
+    },
+    {
+      "id": "ARG_ATU",
+      "name": "Atlético Tucumán",
+      "short": "ATU",
+      "leagueId": "ARG_PRIMERA",
+      "overall": 66,
+      "budget": 17000000
+    },
+    {
+      "id": "ARG_CEN",
+      "name": "Central Córdoba",
+      "short": "CCO",
+      "leagueId": "ARG_PRIMERA",
+      "overall": 65,
+      "budget": 15000000
+    },
+    {
+      "id": "ARG_GOD",
+      "name": "Godoy Cruz",
+      "short": "GOD",
+      "leagueId": "ARG_PRIMERA",
+      "overall": 66,
+      "budget": 17000000
+    },
+    {
+      "id": "URU_NAC",
+      "name": "Nacional",
+      "short": "NAC",
+      "leagueId": "URU_PRIMERA",
+      "overall": 70,
+      "budget": 25000000
+    },
+    {
+      "id": "URU_PEN",
+      "name": "Peñarol",
+      "short": "PEN",
+      "leagueId": "URU_PRIMERA",
+      "overall": 70,
+      "budget": 25000000
+    },
+    {
+      "id": "URU_DEF",
+      "name": "Defensor Sporting",
+      "short": "DEF",
+      "leagueId": "URU_PRIMERA",
+      "overall": 66,
+      "budget": 14000000
+    },
+    {
+      "id": "URU_DAN",
+      "name": "Danubio",
+      "short": "DAN",
+      "leagueId": "URU_PRIMERA",
+      "overall": 66,
+      "budget": 14000000
+    },
+    {
+      "id": "URU_LIV",
+      "name": "Liverpool (URU)",
+      "short": "LIV",
+      "leagueId": "URU_PRIMERA",
+      "overall": 66,
+      "budget": 14000000
+    },
+    {
+      "id": "URU_WAN",
+      "name": "Wanderers",
+      "short": "WAN",
+      "leagueId": "URU_PRIMERA",
+      "overall": 65,
+      "budget": 12000000
+    },
+    {
+      "id": "URU_CER",
+      "name": "Cerro",
+      "short": "CER",
+      "leagueId": "URU_PRIMERA",
+      "overall": 64,
+      "budget": 11000000
+    },
+    {
+      "id": "URU_CIT",
+      "name": "City Torque",
+      "short": "TOR",
+      "leagueId": "URU_PRIMERA",
+      "overall": 65,
+      "budget": 12000000
+    },
+    {
+      "id": "URU_RIV",
+      "name": "River Plate (URU)",
+      "short": "RIV",
+      "leagueId": "URU_PRIMERA",
+      "overall": 64,
+      "budget": 11000000
+    },
+    {
+      "id": "URU_PLA",
+      "name": "Plaza Colonia",
+      "short": "PLA",
+      "leagueId": "URU_PRIMERA",
+      "overall": 64,
+      "budget": 11000000
+    },
+    {
+      "id": "URU_BOS",
+      "name": "Boston River",
+      "short": "BOS",
+      "leagueId": "URU_PRIMERA",
+      "overall": 64,
+      "budget": 11000000
+    },
+    {
+      "id": "URU_FEN",
+      "name": "Fénix",
+      "short": "FEN",
+      "leagueId": "URU_PRIMERA",
+      "overall": 63,
+      "budget": 10000000
+    },
+    {
+      "id": "URU_CRI",
+      "name": "Cerro Largo",
+      "short": "CLG",
+      "leagueId": "URU_PRIMERA",
+      "overall": 63,
+      "budget": 10000000
+    },
+    {
+      "id": "URU_PRO",
+      "name": "Progreso",
+      "short": "PRO",
+      "leagueId": "URU_PRIMERA",
+      "overall": 63,
+      "budget": 10000000
+    },
+    {
+      "id": "URU_RAM",
+      "name": "Rampla Juniors",
+      "short": "RAM",
+      "leagueId": "URU_PRIMERA",
+      "overall": 62,
+      "budget": 9000000
+    },
+    {
+      "id": "URU_RAC",
+      "name": "Racing (URU)",
+      "short": "RAC",
+      "leagueId": "URU_PRIMERA",
+      "overall": 63,
+      "budget": 10000000
+    },
+    {
+      "id": "URU_JUV",
+      "name": "Juventud",
+      "short": "JUV",
+      "leagueId": "URU_PRIMERA",
+      "overall": 62,
+      "budget": 9000000
+    },
+    {
+      "id": "URU_SUD",
+      "name": "Sud América",
+      "short": "SUD",
+      "leagueId": "URU_PRIMERA",
+      "overall": 62,
+      "budget": 9000000
+    },
+    {
+      "id": "URU_ALB",
+      "name": "Albion",
+      "short": "ALB",
+      "leagueId": "URU_PRIMERA",
+      "overall": 62,
+      "budget": 9000000
+    },
+    {
+      "id": "URU_LAU",
+      "name": "La Luz",
+      "short": "LAU",
+      "leagueId": "URU_PRIMERA",
+      "overall": 62,
+      "budget": 9000000
+    },
+    {
+      "id": "CHI_COL",
+      "name": "Colo-Colo",
+      "short": "COL",
+      "leagueId": "CHI_PRIMERA",
+      "overall": 69,
+      "budget": 22000000
+    },
+    {
+      "id": "CHI_UCH",
+      "name": "Universidad de Chile",
+      "short": "UCH",
+      "leagueId": "CHI_PRIMERA",
+      "overall": 68,
+      "budget": 20000000
+    },
+    {
+      "id": "CHI_UCA",
+      "name": "Universidad Católica",
+      "short": "UCA",
+      "leagueId": "CHI_PRIMERA",
+      "overall": 68,
+      "budget": 20000000
+    },
+    {
+      "id": "CHI_EVE",
+      "name": "Everton",
+      "short": "EVE",
+      "leagueId": "CHI_PRIMERA",
+      "overall": 66,
+      "budget": 14000000
+    },
+    {
+      "id": "CHI_UNE",
+      "name": "Unión Española",
+      "short": "UNE",
+      "leagueId": "CHI_PRIMERA",
+      "overall": 66,
+      "budget": 14000000
+    },
+    {
+      "id": "CHI_HUA",
+      "name": "Huachipato",
+      "short": "HUA",
+      "leagueId": "CHI_PRIMERA",
+      "overall": 66,
+      "budget": 14000000
+    },
+    {
+      "id": "CHI_OHI",
+      "name": "O'Higgins",
+      "short": "OHI",
+      "leagueId": "CHI_PRIMERA",
+      "overall": 65,
+      "budget": 12000000
+    },
+    {
+      "id": "CHI_PAL",
+      "name": "Palestino",
+      "short": "PAL",
+      "leagueId": "CHI_PRIMERA",
+      "overall": 65,
+      "budget": 12000000
+    },
+    {
+      "id": "CHI_AUD",
+      "name": "Audax Italiano",
+      "short": "AUD",
+      "leagueId": "CHI_PRIMERA",
+      "overall": 65,
+      "budget": 12000000
+    },
+    {
+      "id": "CHI_COB",
+      "name": "Cobresal",
+      "short": "COB",
+      "leagueId": "CHI_PRIMERA",
+      "overall": 64,
+      "budget": 11000000
+    },
+    {
+      "id": "CHI_CUR",
+      "name": "Curicó Unido",
+      "short": "CUR",
+      "leagueId": "CHI_PRIMERA",
+      "overall": 63,
+      "budget": 10000000
+    },
+    {
+      "id": "CHI_NUB",
+      "name": "Ñublense",
+      "short": "NUB",
+      "leagueId": "CHI_PRIMERA",
+      "overall": 64,
+      "budget": 11000000
+    },
+    {
+      "id": "CHI_COQ",
+      "name": "Coquimbo Unido",
+      "short": "COQ",
+      "leagueId": "CHI_PRIMERA",
+      "overall": 63,
+      "budget": 10000000
+    },
+    {
+      "id": "CHI_IQU",
+      "name": "Deportes Iquique",
+      "short": "IQU",
+      "leagueId": "CHI_PRIMERA",
+      "overall": 62,
+      "budget": 9000000
+    },
+    {
+      "id": "CHI_ANT",
+      "name": "Deportes Antofagasta",
+      "short": "ANT",
+      "leagueId": "CHI_PRIMERA",
+      "overall": 62,
+      "budget": 9000000
+    },
+    {
+      "id": "CHI_MAG",
+      "name": "Magallanes",
+      "short": "MAG",
+      "leagueId": "CHI_PRIMERA",
+      "overall": 62,
+      "budget": 9000000
+    },
+    {
+      "id": "CHI_UCO",
+      "name": "Universidad de Concepción",
+      "short": "UCO",
+      "leagueId": "CHI_PRIMERA",
+      "overall": 62,
+      "budget": 9000000
+    },
+    {
+      "id": "CHI_SAN",
+      "name": "Santiago Wanderers",
+      "short": "SAW",
+      "leagueId": "CHI_PRIMERA",
+      "overall": 62,
+      "budget": 9000000
+    },
+    {
+      "id": "CHI_HIG",
+      "name": "Huachipato II",
+      "short": "HII",
+      "leagueId": "CHI_PRIMERA",
+      "overall": 61,
+      "budget": 8000000
+    },
+    {
+      "id": "CHI_COP",
+      "name": "Deportes Copiapó",
+      "short": "COP",
+      "leagueId": "CHI_PRIMERA",
+      "overall": 62,
+      "budget": 9000000
+    },
+    {
+      "id": "COL_NAC",
+      "name": "Atlético Nacional",
+      "short": "NAC",
+      "leagueId": "COL_PRIMERA",
+      "overall": 69,
+      "budget": 22000000
+    },
+    {
+      "id": "COL_MIL",
+      "name": "Millonarios",
+      "short": "MIL",
+      "leagueId": "COL_PRIMERA",
+      "overall": 68,
+      "budget": 20000000
+    },
+    {
+      "id": "COL_JUN",
+      "name": "Junior",
+      "short": "JUN",
+      "leagueId": "COL_PRIMERA",
+      "overall": 67,
+      "budget": 18000000
+    },
+    {
+      "id": "COL_AMC",
+      "name": "América de Cali",
+      "short": "AMC",
+      "leagueId": "COL_PRIMERA",
+      "overall": 67,
+      "budget": 18000000
+    },
+    {
+      "id": "COL_IND",
+      "name": "Independiente Medellín",
+      "short": "DIM",
+      "leagueId": "COL_PRIMERA",
+      "overall": 66,
+      "budget": 16000000
+    },
+    {
+      "id": "COL_SFE",
+      "name": "Santa Fe",
+      "short": "SFE",
+      "leagueId": "COL_PRIMERA",
+      "overall": 66,
+      "budget": 16000000
+    },
+    {
+      "id": "COL_CAL",
+      "name": "Deportivo Cali",
+      "short": "CAL",
+      "leagueId": "COL_PRIMERA",
+      "overall": 66,
+      "budget": 16000000
+    },
+    {
+      "id": "COL_TOL",
+      "name": "Tolima",
+      "short": "TOL",
+      "leagueId": "COL_PRIMERA",
+      "overall": 66,
+      "budget": 16000000
+    },
+    {
+      "id": "COL_ATL",
+      "name": "Atlético Bucaramanga",
+      "short": "BUC",
+      "leagueId": "COL_PRIMERA",
+      "overall": 64,
+      "budget": 12000000
+    },
+    {
+      "id": "COL_PET",
+      "name": "Pereira",
+      "short": "PER",
+      "leagueId": "COL_PRIMERA",
+      "overall": 64,
+      "budget": 12000000
+    },
+    {
+      "id": "COL_ONC",
+      "name": "Once Caldas",
+      "short": "ONC",
+      "leagueId": "COL_PRIMERA",
+      "overall": 64,
+      "budget": 12000000
+    },
+    {
+      "id": "COL_EQD",
+      "name": "La Equidad",
+      "short": "EQU",
+      "leagueId": "COL_PRIMERA",
+      "overall": 63,
+      "budget": 11000000
+    },
+    {
+      "id": "COL_PAT",
+      "name": "Patriotas",
+      "short": "PAT",
+      "leagueId": "COL_PRIMERA",
+      "overall": 62,
+      "budget": 10000000
+    },
+    {
+      "id": "COL_ALI",
+      "name": "Alianza Petrolera",
+      "short": "ALI",
+      "leagueId": "COL_PRIMERA",
+      "overall": 62,
+      "budget": 10000000
+    },
+    {
+      "id": "COL_ENV",
+      "name": "Envigado",
+      "short": "ENV",
+      "leagueId": "COL_PRIMERA",
+      "overall": 62,
+      "budget": 10000000
+    },
+    {
+      "id": "COL_PAS",
+      "name": "Pasto",
+      "short": "PAS",
+      "leagueId": "COL_PRIMERA",
+      "overall": 62,
+      "budget": 10000000
+    },
+    {
+      "id": "COL_JAG",
+      "name": "Jaguares",
+      "short": "JAG",
+      "leagueId": "COL_PRIMERA",
+      "overall": 61,
+      "budget": 9000000
+    },
+    {
+      "id": "COL_HUI",
+      "name": "Huila",
+      "short": "HUI",
+      "leagueId": "COL_PRIMERA",
+      "overall": 61,
+      "budget": 9000000
+    },
+    {
+      "id": "COL_CUC",
+      "name": "Cúcuta",
+      "short": "CUC",
+      "leagueId": "COL_PRIMERA",
+      "overall": 61,
+      "budget": 9000000
+    },
+    {
+      "id": "COL_BOY",
+      "name": "Boyacá Chicó",
+      "short": "BOY",
+      "leagueId": "COL_PRIMERA",
+      "overall": 61,
+      "budget": 9000000
+    },
+    {
+      "id": "VEN_TAC",
+      "name": "Táchira",
+      "short": "TAC",
+      "leagueId": "VEN_PRIMERA",
+      "overall": 64,
+      "budget": 11000000
+    },
+    {
+      "id": "VEN_CAR",
+      "name": "Caracas",
+      "short": "CAR",
+      "leagueId": "VEN_PRIMERA",
+      "overall": 64,
+      "budget": 11000000
+    },
+    {
+      "id": "VEN_MIN",
+      "name": "Mineros",
+      "short": "MIN",
+      "leagueId": "VEN_PRIMERA",
+      "overall": 61,
+      "budget": 9000000
+    },
+    {
+      "id": "VEN_ZUL",
+      "name": "Zulia",
+      "short": "ZUL",
+      "leagueId": "VEN_PRIMERA",
+      "overall": 61,
+      "budget": 9000000
+    },
+    {
+      "id": "VEN_EST",
+      "name": "Estudiantes de Mérida",
+      "short": "EST",
+      "leagueId": "VEN_PRIMERA",
+      "overall": 61,
+      "budget": 9000000
+    },
+    {
+      "id": "VEN_DEP",
+      "name": "Deportivo Lara",
+      "short": "LAR",
+      "leagueId": "VEN_PRIMERA",
+      "overall": 61,
+      "budget": 9000000
+    },
+    {
+      "id": "VEN_MET",
+      "name": "Metropolitanos",
+      "short": "MET",
+      "leagueId": "VEN_PRIMERA",
+      "overall": 62,
+      "budget": 10000000
+    },
+    {
+      "id": "VEN_MON",
+      "name": "Monagas",
+      "short": "MON",
+      "leagueId": "VEN_PRIMERA",
+      "overall": 62,
+      "budget": 10000000
+    },
+    {
+      "id": "VEN_ARA",
+      "name": "Aragua",
+      "short": "ARA",
+      "leagueId": "VEN_PRIMERA",
+      "overall": 60,
+      "budget": 8000000
+    },
+    {
+      "id": "VEN_POR",
+      "name": "Portuguesa (VEN)",
+      "short": "POR",
+      "leagueId": "VEN_PRIMERA",
+      "overall": 60,
+      "budget": 8000000
+    },
+    {
+      "id": "VEN_LLV",
+      "name": "La Guaira",
+      "short": "LGA",
+      "leagueId": "VEN_PRIMERA",
+      "overall": 62,
+      "budget": 10000000
+    },
+    {
+      "id": "VEN_RAY",
+      "name": "Rayo Zuliano",
+      "short": "RZU",
+      "leagueId": "VEN_PRIMERA",
+      "overall": 60,
+      "budget": 8000000
+    },
+    {
+      "id": "VEN_ANG",
+      "name": "Angostura",
+      "short": "ANG",
+      "leagueId": "VEN_PRIMERA",
+      "overall": 60,
+      "budget": 8000000
+    },
+    {
+      "id": "VEN_HER",
+      "name": "Hermanos Colmenarez",
+      "short": "HCO",
+      "leagueId": "VEN_PRIMERA",
+      "overall": 60,
+      "budget": 8000000
+    },
+    {
+      "id": "VEN_ZAM",
+      "name": "Zamora",
+      "short": "ZAM",
+      "leagueId": "VEN_PRIMERA",
+      "overall": 60,
+      "budget": 8000000
+    },
+    {
+      "id": "VEN_ACA",
+      "name": "Academia Puerto Cabello",
+      "short": "APC",
+      "leagueId": "VEN_PRIMERA",
+      "overall": 61,
+      "budget": 9000000
+    },
+    {
+      "id": "VEN_CAN",
+      "name": "Carabobo",
+      "short": "CBO",
+      "leagueId": "VEN_PRIMERA",
+      "overall": 61,
+      "budget": 9000000
+    },
+    {
+      "id": "VEN_INT",
+      "name": "Inter de Barinas",
+      "short": "IBA",
+      "leagueId": "VEN_PRIMERA",
+      "overall": 60,
+      "budget": 8000000
+    },
+    {
+      "id": "VEN_UCV",
+      "name": "UCV FC",
+      "short": "UCV",
+      "leagueId": "VEN_PRIMERA",
+      "overall": 60,
+      "budget": 8000000
+    },
+    {
+      "id": "VEN_RJO",
+      "name": "Rangers de Joao",
+      "short": "RJO",
+      "leagueId": "VEN_PRIMERA",
+      "overall": 60,
+      "budget": 8000000
+    },
+    {
+      "id": "BOL_BOL",
+      "name": "Bolívar",
+      "short": "BOL",
+      "leagueId": "BOL_PRIMERA",
+      "overall": 65,
+      "budget": 12000000
+    },
+    {
+      "id": "BOL_STR",
+      "name": "The Strongest",
+      "short": "STR",
+      "leagueId": "BOL_PRIMERA",
+      "overall": 65,
+      "budget": 12000000
+    },
+    {
+      "id": "BOL_WIL",
+      "name": "Wilstermann",
+      "short": "WIL",
+      "leagueId": "BOL_PRIMERA",
+      "overall": 62,
+      "budget": 10000000
+    },
+    {
+      "id": "BOL_BLO",
+      "name": "Blooming",
+      "short": "BLO",
+      "leagueId": "BOL_PRIMERA",
+      "overall": 62,
+      "budget": 10000000
+    },
+    {
+      "id": "BOL_ORI",
+      "name": "Oriente Petrolero",
+      "short": "ORI",
+      "leagueId": "BOL_PRIMERA",
+      "overall": 62,
+      "budget": 10000000
+    },
+    {
+      "id": "BOL_NAC",
+      "name": "Nacional Potosí",
+      "short": "NAP",
+      "leagueId": "BOL_PRIMERA",
+      "overall": 61,
+      "budget": 9000000
+    },
+    {
+      "id": "BOL_GUA",
+      "name": "Guabirá",
+      "short": "GUA",
+      "leagueId": "BOL_PRIMERA",
+      "overall": 60,
+      "budget": 8000000
+    },
+    {
+      "id": "BOL_AUR",
+      "name": "Aurora",
+      "short": "AUR",
+      "leagueId": "BOL_PRIMERA",
+      "overall": 60,
+      "budget": 8000000
+    },
+    {
+      "id": "BOL_TOM",
+      "name": "Tomayapo",
+      "short": "TOM",
+      "leagueId": "BOL_PRIMERA",
+      "overall": 60,
+      "budget": 8000000
+    },
+    {
+      "id": "BOL_PET",
+      "name": "Petrolero",
+      "short": "PET",
+      "leagueId": "BOL_PRIMERA",
+      "overall": 60,
+      "budget": 8000000
+    },
+    {
+      "id": "BOL_REAL",
+      "name": "Real Santa Cruz",
+      "short": "RSC",
+      "leagueId": "BOL_PRIMERA",
+      "overall": 60,
+      "budget": 8000000
+    },
+    {
+      "id": "BOL_SAN",
+      "name": "San José",
+      "short": "SJO",
+      "leagueId": "BOL_PRIMERA",
+      "overall": 60,
+      "budget": 8000000
+    },
+    {
+      "id": "BOL_PAL",
+      "name": "Palmaflor",
+      "short": "PAL",
+      "leagueId": "BOL_PRIMERA",
+      "overall": 60,
+      "budget": 8000000
+    },
+    {
+      "id": "BOL_ROY",
+      "name": "Royal Pari",
+      "short": "ROY",
+      "leagueId": "BOL_PRIMERA",
+      "overall": 60,
+      "budget": 8000000
+    },
+    {
+      "id": "BOL_IND",
+      "name": "Independiente Petrolero",
+      "short": "INP",
+      "leagueId": "BOL_PRIMERA",
+      "overall": 61,
+      "budget": 9000000
+    },
+    {
+      "id": "BOL_UNI",
+      "name": "Universitario de Vinto",
+      "short": "UVT",
+      "leagueId": "BOL_PRIMERA",
+      "overall": 60,
+      "budget": 8000000
+    },
+    {
+      "id": "BOL_BER",
+      "name": "Bermejo",
+      "short": "BER",
+      "leagueId": "BOL_PRIMERA",
+      "overall": 59,
+      "budget": 7000000
+    },
+    {
+      "id": "BOL_ALW",
+      "name": "Always Ready",
+      "short": "ALR",
+      "leagueId": "BOL_PRIMERA",
+      "overall": 62,
+      "budget": 10000000
+    },
+    {
+      "id": "BOL_LAP",
+      "name": "La Paz FC",
+      "short": "LPZ",
+      "leagueId": "BOL_PRIMERA",
+      "overall": 59,
+      "budget": 7000000
+    },
+    {
+      "id": "BOL_CIC",
+      "name": "Ciclón",
+      "short": "CIC",
+      "leagueId": "BOL_PRIMERA",
+      "overall": 59,
+      "budget": 7000000
+    },
+    {
+      "id": "ECU_LDU",
+      "name": "LDU Quito",
+      "short": "LDU",
+      "leagueId": "ECU_LIGAPRO",
+      "overall": 66,
+      "budget": 14000000
+    },
+    {
+      "id": "ECU_BAR",
+      "name": "Barcelona SC",
+      "short": "BAR",
+      "leagueId": "ECU_LIGAPRO",
+      "overall": 66,
+      "budget": 14000000
+    },
+    {
+      "id": "ECU_EME",
+      "name": "Emelec",
+      "short": "EME",
+      "leagueId": "ECU_LIGAPRO",
+      "overall": 65,
+      "budget": 12000000
+    },
+    {
+      "id": "ECU_IND",
+      "name": "Independiente del Valle",
+      "short": "IDV",
+      "leagueId": "ECU_LIGAPRO",
+      "overall": 67,
+      "budget": 16000000
+    },
+    {
+      "id": "ECU_AUC",
+      "name": "Aucas",
+      "short": "AUC",
+      "leagueId": "ECU_LIGAPRO",
+      "overall": 63,
+      "budget": 10000000
+    },
+    {
+      "id": "ECU_OLM",
+      "name": "Olmedo",
+      "short": "OLM",
+      "leagueId": "ECU_LIGAPRO",
+      "overall": 60,
+      "budget": 8000000
+    },
+    {
+      "id": "ECU_MUS",
+      "name": "Mushuc Runa",
+      "short": "MUS",
+      "leagueId": "ECU_LIGAPRO",
+      "overall": 60,
+      "budget": 8000000
+    },
+    {
+      "id": "ECU_MAC",
+      "name": "Macará",
+      "short": "MAC",
+      "leagueId": "ECU_LIGAPRO",
+      "overall": 60,
+      "budget": 8000000
+    },
+    {
+      "id": "ECU_DCU",
+      "name": "Deportivo Cuenca",
+      "short": "DCU",
+      "leagueId": "ECU_LIGAPRO",
+      "overall": 61,
+      "budget": 9000000
+    },
+    {
+      "id": "ECU_ORN",
+      "name": "Orense",
+      "short": "ORN",
+      "leagueId": "ECU_LIGAPRO",
+      "overall": 60,
+      "budget": 8000000
+    },
+    {
+      "id": "ECU_CSF",
+      "name": "CS Emelec B",
+      "short": "CSB",
+      "leagueId": "ECU_LIGAPRO",
+      "overall": 59,
+      "budget": 7000000
+    },
+    {
+      "id": "ECU_DEL",
+      "name": "Delfín",
+      "short": "DEL",
+      "leagueId": "ECU_LIGAPRO",
+      "overall": 61,
+      "budget": 9000000
+    },
+    {
+      "id": "ECU_GUA",
+      "name": "Guayaquil City",
+      "short": "GYC",
+      "leagueId": "ECU_LIGAPRO",
+      "overall": 60,
+      "budget": 8000000
+    },
+    {
+      "id": "ECU_CAT",
+      "name": "Catania",
+      "short": "CAT",
+      "leagueId": "ECU_LIGAPRO",
+      "overall": 59,
+      "budget": 7000000
+    },
+    {
+      "id": "ECU_UNI",
+      "name": "Universidad Católica (ECU)",
+      "short": "UCE",
+      "leagueId": "ECU_LIGAPRO",
+      "overall": 62,
+      "budget": 10000000
+    },
+    {
+      "id": "ECU_CUM",
+      "name": "Cumbayá",
+      "short": "CUM",
+      "leagueId": "ECU_LIGAPRO",
+      "overall": 59,
+      "budget": 7000000
+    },
+    {
+      "id": "ECU_TEC",
+      "name": "Tecnico Universitario",
+      "short": "TEC",
+      "leagueId": "ECU_LIGAPRO",
+      "overall": 60,
+      "budget": 8000000
+    },
+    {
+      "id": "ECU_LIB",
+      "name": "Libertad FC",
+      "short": "LIB",
+      "leagueId": "ECU_LIGAPRO",
+      "overall": 59,
+      "budget": 7000000
+    },
+    {
+      "id": "ECU_MNT",
+      "name": "Manta",
+      "short": "MNT",
+      "leagueId": "ECU_LIGAPRO",
+      "overall": 59,
+      "budget": 7000000
+    },
+    {
+      "id": "ECU_9OC",
+      "name": "9 de Octubre",
+      "short": "9OC",
+      "leagueId": "ECU_LIGAPRO",
+      "overall": 59,
+      "budget": 7000000
     }
   ]
 }

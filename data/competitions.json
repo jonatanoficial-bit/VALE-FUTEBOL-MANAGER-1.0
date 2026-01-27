@@ -55,6 +55,62 @@
       "country": "PT",
       "level": 1,
       "teams": 18
+    },
+    {
+      "id": "ARG_PRIMERA",
+      "name": "Argentina - Primera División",
+      "country": "AR",
+      "level": 1,
+      "teams": 20,
+      "confed": "CONMEBOL"
+    },
+    {
+      "id": "URU_PRIMERA",
+      "name": "Uruguai - Primera División",
+      "country": "UY",
+      "level": 1,
+      "teams": 20,
+      "confed": "CONMEBOL"
+    },
+    {
+      "id": "CHI_PRIMERA",
+      "name": "Chile - Primera División",
+      "country": "CL",
+      "level": 1,
+      "teams": 20,
+      "confed": "CONMEBOL"
+    },
+    {
+      "id": "COL_PRIMERA",
+      "name": "Colômbia - Primera A",
+      "country": "CO",
+      "level": 1,
+      "teams": 20,
+      "confed": "CONMEBOL"
+    },
+    {
+      "id": "VEN_PRIMERA",
+      "name": "Venezuela - Primera División",
+      "country": "VE",
+      "level": 1,
+      "teams": 20,
+      "confed": "CONMEBOL"
+    },
+    {
+      "id": "BOL_PRIMERA",
+      "name": "Bolívia - División Profesional",
+      "country": "BO",
+      "level": 1,
+      "teams": 20,
+      "confed": "CONMEBOL"
+    },
+    {
+      "id": "ECU_LIGAPRO",
+      "name": "Equador - LigaPro",
+      "country": "EC",
+      "level": 1,
+      "teams": 20,
+      "confed": "CONMEBOL"
     }
   ],
   "cups": [

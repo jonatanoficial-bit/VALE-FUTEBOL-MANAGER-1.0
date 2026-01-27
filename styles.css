@@ -507,11 +507,15 @@ body {
 /* --- Zonas de classificação/rebaixamento (Parte 2) --- */
 .pill.zone-lib { border-color: rgba(220,181,102,.45); background: rgba(220,181,102,.12); }
 .pill.zone-sula { border-color: rgba(245,158,11,.45); background: rgba(245,158,11,.10); }
+.pill.zone-ucl { border-color: rgba(59,130,246,.45); background: rgba(59,130,246,.10); }
+.pill.zone-uel { border-color: rgba(168,85,247,.45); background: rgba(168,85,247,.10); }
 .pill.zone-up { border-color: rgba(34,197,94,.45); background: rgba(34,197,94,.10); }
 .pill.zone-z4 { border-color: rgba(239,68,68,.45); background: rgba(239,68,68,.10); }
 
 .table tr.zone-lib td { box-shadow: inset 4px 0 0 rgba(220,181,102,.75); }
 .table tr.zone-sula td { box-shadow: inset 4px 0 0 rgba(245,158,11,.75); }
+.table tr.zone-ucl td { box-shadow: inset 4px 0 0 rgba(59,130,246,.75); }
+.table tr.zone-uel td { box-shadow: inset 4px 0 0 rgba(168,85,247,.75); }
 .table tr.zone-up td { box-shadow: inset 4px 0 0 rgba(34,197,94,.75); }
 .table tr.zone-z4 td { box-shadow: inset 4px 0 0 rgba(239,68,68,.75); }
 

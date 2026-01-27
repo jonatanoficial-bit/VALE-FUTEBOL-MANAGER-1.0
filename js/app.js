@@ -1276,6 +1276,7 @@ return save;
 
     // Parte 3: inicia liga paralela (Brasil A/B) para termos classificação real ao longo do ano
     try { ensureParallelBrazilLeaguesInitialized(save); } catch (e) {}
+    try { ensureParallelWorldLeaguesInitialized(save); } catch (e) {}
   }
 
   // -----------------------------
@@ -1342,60 +1343,97 @@ return save;
       applyBrazilPromotionRelegation(save);
     }
 
-    return true;
-
-    // Parte 4: gera torneios continentais (provisório)
+    // Finaliza tabelas das ligas paralelas do mundo (B1) e gera torneios continentais (B1.1)
+    try { ensureParallelWorldLeaguesFinalized(save); } catch (e) {}
     try { generateContinentalCompetitionsForSeason(save); } catch (e) {}
 
     return true;
+
   }
 
   // -----------------------------
   // Promoção/Rebaixamento + Zonas (Parte 2)
   // -----------------------------
 
-  function getBrazilZonesForLeague(leagueId) {
+  function getZonesForLeague(leagueId) {
     const q = state.packData?.qualifications || {};
     const br = q.brazil || {};
-    if (leagueId === 'BRA_SERIE_A') return br.serieA || null;
-    if (leagueId === 'BRA_SERIE_B') return br.serieB || null;
-    return null;
+
+    // Brasil (compatibilidade)
+    if (leagueId === 'BRA_SERIE_A') return { kind: 'BR_A', ...(br.serieA || {}) };
+    if (leagueId === 'BRA_SERIE_B') return { kind: 'BR_B', ...(br.serieB || {}) };
+
+    // Mundo (UEFA/CONMEBOL etc.)
+    const w = q.world || {};
+    const z = w[leagueId] || null;
+    if (!z) return null;
+    return { kind: 'WORLD', ...z };
   }
 
   function zoneInfoForPosition(leagueId, position) {
-    const zones = getBrazilZonesForLeague(leagueId);
+    const zones = getZonesForLeague(leagueId);
     if (!zones) return null;
 
-    // Série A
+    // Série A Brasil
     if (leagueId === 'BRA_SERIE_A') {
-      if (position >= zones.libertadores?.from && position <= zones.libertadores?.to) {
-        return { key: 'lib', label: 'LIB', cls: 'zone-lib' };
-      }
-      if (position >= zones.sudamericana?.from && position <= zones.sudamericana?.to) {
-        return { key: 'sula', label: 'SULA', cls: 'zone-sula' };
-      }
-      if (position >= zones.relegation?.from && position <= zones.relegation?.to) {
-        return { key: 'z4', label: 'Z4', cls: 'zone-z4' };
-      }
+      if (position >= zones.libertadores?.from && position <= zones.libertadores?.to) return { key: 'lib', label: 'LIB', cls: 'zone-lib', title: 'Libertadores' };
+      if (position >= zones.sudamericana?.from && position <= zones.sudamericana?.to) return { key: 'sula', label: 'SULA', cls: 'zone-sula', title: 'Sul-Americana' };
+      if (position >= zones.relegation?.from && position <= zones.relegation?.to) return { key: 'z4', label: 'Z4', cls: 'zone-z4', title: 'Rebaixamento' };
+      return null;
     }
 
-    // Série B
+    // Série B Brasil
     if (leagueId === 'BRA_SERIE_B') {
-      if (position >= zones.promotion?.from && position <= zones.promotion?.to) {
-        return { key: 'up', label: 'SUBE', cls: 'zone-up' };
-      }
-      // Rebaixamento da B (default: 17-20, se não existir no JSON)
+      if (position >= zones.promotion?.from && position <= zones.promotion?.to) return { key: 'up', label: 'SUBE', cls: 'zone-up', title: 'Acesso' };
       const relFrom = zones.relegation?.from ?? 17;
       const relTo = zones.relegation?.to ?? 20;
-      if (position >= relFrom && position <= relTo) {
-        return { key: 'z4', label: 'Z4', cls: 'zone-z4' };
-      }
+      if (position >= relFrom && position <= relTo) return { key: 'z4', label: 'Z4', cls: 'zone-z4', title: 'Rebaixamento' };
+      return null;
     }
+
+    // Mundo (configurável via qualifications.json)
+    const cont = zones.continental || {};
+    if (cont.libertadores && position >= cont.libertadores.from && position <= cont.libertadores.to) return { key: 'lib', label: 'LIB', cls: 'zone-lib', title: 'Libertadores' };
+    if (cont.sudamericana && position >= cont.sudamericana.from && position <= cont.sudamericana.to) return { key: 'sula', label: 'SULA', cls: 'zone-sula', title: 'Sul-Americana' };
+    if (cont.champions && position >= cont.champions.from && position <= cont.champions.to) return { key: 'ucl', label: 'UCL', cls: 'zone-ucl', title: 'UEFA Champions League' };
+    if (cont.europa && position >= cont.europa.from && position <= cont.europa.to) return { key: 'uel', label: 'UEL', cls: 'zone-uel', title: 'UEFA Europa League' };
+
+    const rel = zones.relegation || {};
+    if (rel.from && rel.to && position >= rel.from && position <= rel.to) return { key: 'z4', label: 'Z4', cls: 'zone-z4', title: 'Rebaixamento' };
 
     return null;
   }
 
-  function ensureLeagueTableStore(save) {
+  function zoneLegendHtml(leagueId) {
+    const zones = getZonesForLeague(leagueId);
+    if (!zones) return '';
+
+    const pills = [];
+    const cont = zones.continental || {};
+
+    // CONMEBOL
+    if (leagueId === 'BRA_SERIE_A' || cont.libertadores) pills.push(`<span class="pill zone-lib" title="Libertadores">🏆 LIB</span>`);
+    if (leagueId === 'BRA_SERIE_A' || cont.sudamericana) pills.push(`<span class="pill zone-sula" title="Sul-Americana">🥈 SULA</span>`);
+
+    // UEFA
+    if (cont.champions) pills.push(`<span class="pill zone-ucl" title="UEFA Champions League">⭐ UCL</span>`);
+    if (cont.europa) pills.push(`<span class="pill zone-uel" title="UEFA Europa League">🏅 UEL</span>`);
+
+    // Acesso (Série B)
+    if (leagueId === 'BRA_SERIE_B' && zones.promotion) pills.push(`<span class="pill zone-up" title="Acesso">⬆️ SUBE</span>`);
+
+    // Rebaixamento
+    if ((zones.relegation && zones.relegation.from) || leagueId === 'BRA_SERIE_A') pills.push(`<span class="pill zone-z4" title="Rebaixamento">⬇️ Z4</span>`);
+
+    return `
+      <div class="zone-legend">
+        <div class="zone-legend-left">${pills.join(' ')}</div>
+        <div class="zone-legend-right">Dica: seu clube fica destacado como <span class="pill pill-mini">VOCÊ</span>.</div>
+      </div>
+    `;
+  }
+
+function ensureLeagueTableStore(save) {
     if (!save.progress) save.progress = {};
     if (!save.progress.leagueTables) save.progress.leagueTables = {};
     const sid = save.season?.id || 'unknown';
@@ -1596,6 +1634,7 @@ return save;
 
 // Parte 3: reinicia liga paralela do Brasil (A/B) na nova temporada
 try { ensureParallelBrazilLeaguesInitialized(save); } catch (e) {}
+    try { ensureParallelWorldLeaguesInitialized(save); } catch (e) {}
 
 // Parte 5: reinicia pipeline de transferências (provisório)
 if (save.transfers) {
@@ -2071,7 +2110,11 @@ save.meta.updatedAt = nowIso();
         }
       } catch (e) {}
 
-      save.season.lastRoundPlayed = roundIndex;
+      
+
+      // Simula TODAS as outras ligas do mundo em paralelo (B1)
+      try { simulateParallelWorldLeaguesRound(save, roundIndex); } catch (e) {}
+save.season.lastRoundPlayed = roundIndex;
       save.season.lastResults = (matchesNow || []).map(m => ({ ...m }));
 
       // economia semanal
@@ -2230,7 +2273,7 @@ save.meta.updatedAt = nowIso();
       const tableHtml = rows.map((t, idx) => {
         const pos = idx + 1;
         const zone = zoneInfoForPosition(save.season.leagueId, pos);
-        const zonePill = zone ? `<span class="pill ${zone.cls}" title="${esc(zone.label)}">${esc(zone.label)}</span>` : '';
+        const zonePill = zone ? `<span class="pill ${zone.cls}" title="${esc(zone.title || zone.label)}">${esc(zone.label)}</span>` : '';
         const isUser = t.id === save.career.clubId;
         const isLeader = pos === 1;
         const classes = [];
@@ -2248,6 +2291,7 @@ save.meta.updatedAt = nowIso();
               <div class="club-cell">
                 ${clubLogoHtml(t.id, 26)}
                 <span class="club-name">${esc(t.name)}</span>
+                ${isUser ? '<span class="pill pill-mini" title="Seu clube">VOCÊ</span>' : ''}
               </div>
             </td>
             <td class="right">${t.P}</td>
@@ -2274,17 +2318,9 @@ save.meta.updatedAt = nowIso();
             <span class="badge">Rodada ${save.season.currentRound+1}</span>
           </div>
           <div class="card-body">
-            <div class="zone-legend">
-              <div class="zone-legend-left">
-                <span class="pill zone-lib" title="Classificação Libertadores">🏆 LIB</span>
-                <span class="pill zone-sula" title="Classificação Sul-Americana">🥈 SULA</span>
-                <span class="pill zone-up" title="Acesso">⬆️ SUBE</span>
-                <span class="pill zone-z4" title="Rebaixamento">⬇️ Z4</span>
-              </div>
-              <div class="zone-legend-right">Dica: seu clube fica destacado como <span class="pill pill-mini">VOCÊ</span>.</div>
-            </div>
+            ${zoneLegendHtml(save.season.leagueId)}
             <div style="height:10px"></div>
-            <button class="btn btn-primary" data-go="/continentals">Continental (LIB/SULA)</button>
+            <button class="btn btn-primary" data-go="/continentals">Continental</button>
             <div class="sep"></div>
             <div class="table-wrap">
             <table class="table table-standings">
@@ -2364,7 +2400,177 @@ save.meta.updatedAt = nowIso();
     return { id, name, format: 'KO', size, participants: seeded, rounds, championId, championName: getClub(championId)?.name || championId };
   }
 
-  function pickBrazilQualifiers(save, leagueId, from, to) {
+  
+  function pushConcat(arr, ...lists) {
+    const out = Array.isArray(arr) ? arr : [];
+    for (const l of lists) for (const x of (l || [])) if (x && !out.includes(x)) out.push(x);
+    return out;
+  }
+
+  function buildGroupTable(teamIds) {
+    const table = {};
+    for (const id of teamIds) table[id] = { id, P:0, W:0, D:0, L:0, GF:0, GA:0, GD:0, Pts:0 };
+    return table;
+  }
+
+  function applyGroupResult(table, homeId, awayId, hg, ag) {
+    const h = table[homeId]; const a = table[awayId];
+    if (!h || !a) return;
+    h.P++; a.P++;
+    h.GF += hg; h.GA += ag; h.GD = h.GF - h.GA;
+    a.GF += ag; a.GA += hg; a.GD = a.GF - a.GA;
+    if (hg > ag) { h.W++; a.L++; h.Pts += 3; }
+    else if (hg < ag) { a.W++; h.L++; a.Pts += 3; }
+    else { h.D++; a.D++; h.Pts += 1; a.Pts += 1; }
+  }
+
+  function sortMiniTable(rows) {
+    return (rows || []).slice().sort((x,y) => (y.Pts - x.Pts) || (y.GD - x.GD) || (y.GF - x.GF) || String(x.id).localeCompare(String(y.id)));
+  }
+
+  function buildLibertadoresGroupsAndKO(save, id, name, participants32) {
+    // Provisório avançado: 8 grupos de 4, turno único (6 jogos por grupo), depois mata-mata 16
+    const teams = (participants32 || []).slice(0, 32);
+    const ranked = teams.slice().sort((a,b) => {
+      try { return teamStrength(b, save) - teamStrength(a, save); } catch { return 0; }
+    });
+
+    // Seeds: distribui para equilibrar grupos
+    const groups = [];
+    const groupNames = ['A','B','C','D','E','F','G','H'];
+    const pots = [[],[],[],[]];
+    for (let i=0;i<ranked.length;i++) pots[Math.floor(i/8)].push(ranked[i]);
+
+    for (let gi=0; gi<8; gi++) {
+      const gTeams = [pots[0][gi], pots[1][gi], pots[2][gi], pots[3][gi]].filter(Boolean);
+      groups.push({ name: `Grupo ${groupNames[gi]}`, teams: gTeams, matches: [], table: [] });
+    }
+
+    // Gera jogos (turno único) e simula
+    for (const g of groups) {
+      const ids = g.teams.slice();
+      const table = buildGroupTable(ids);
+      const fixtures = [];
+      for (let i=0;i<ids.length;i++){
+        for (let j=i+1;j<ids.length;j++){
+          // manda/visita alternado pelo índice para variar
+          const homeId = ((i+j)%2===0) ? ids[i] : ids[j];
+          const awayId = ((i+j)%2===0) ? ids[j] : ids[i];
+          fixtures.push({ homeId, awayId });
+        }
+      }
+      // Embaralha um pouco
+      for (let k=fixtures.length-1;k>0;k--){ const r=Math.floor(Math.random()*(k+1)); [fixtures[k],fixtures[r]]=[fixtures[r],fixtures[k]]; }
+
+      let minuteBase = 12;
+      for (const fx of fixtures) {
+        const sim = simulateMatch(fx.homeId, fx.awayId, save);
+        applyGroupResult(table, fx.homeId, fx.awayId, sim.hg, sim.ag);
+        g.matches.push({ minute: minuteBase, homeId: fx.homeId, awayId: fx.awayId, hg: sim.hg, ag: sim.ag });
+        minuteBase += 12;
+      }
+      g.table = sortMiniTable(Object.values(table));
+    }
+
+    // Classificados: top 2 de cada grupo
+    const qualified = [];
+    for (const g of groups) {
+      if (g.table[0]?.id) qualified.push(g.table[0].id);
+      if (g.table[1]?.id) qualified.push(g.table[1].id);
+    }
+
+    const ko = buildKnockoutTournament(save, `${id}_KO`, `${name} • Mata-mata`, qualified.slice(0,16));
+    return {
+      id, name,
+      format: 'GROUPS+KO',
+      size: 32,
+      groups,
+      knockout: ko,
+      championId: ko.championId,
+      championName: ko.championName
+    };
+  }
+
+  function buildLeaguePhaseAndKO(save, id, name, participants24) {
+    // Provisório avançado: fase de liga (24) com 8 rodadas, depois mata-mata 16
+    const teams = (participants24 || []).slice(0, 24);
+    const rounds = [];
+    const played = {}; // key "a|b"
+    const mk = (a,b)=> a<b ? `${a}|${b}` : `${b}|${a}`;
+
+    function canPair(a,b){ return a!==b && !played[mk(a,b)]; }
+    function mark(a,b){ played[mk(a,b)] = true; }
+
+    // Tenta criar 8 rodadas sem repetição
+    const table = {};
+    for (const idc of teams) table[idc] = { id:idc, P:0,W:0,D:0,L:0,GF:0,GA:0,GD:0,Pts:0 };
+
+    for (let r=1; r<=8; r++) {
+      let attempt = 0;
+      let order = teams.slice();
+      let matches = null;
+
+      while (attempt < 200 && !matches) {
+        // shuffle
+        for (let i=order.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [order[i],order[j]]=[order[j],order[i]]; }
+
+        const used = new Set();
+        const m = [];
+        for (let i=0;i<order.length;i++){
+          const a = order[i];
+          if (used.has(a)) continue;
+          for (let j=i+1;j<order.length;j++){
+            const b = order[j];
+            if (used.has(b)) continue;
+            if (!canPair(a,b)) continue;
+            used.add(a); used.add(b);
+            // alterna mando
+            const homeId = (r%2===0) ? a : b;
+            const awayId = (r%2===0) ? b : a;
+            m.push({ homeId, awayId });
+            break;
+          }
+        }
+        if (m.length === 12) matches = m;
+        attempt++;
+      }
+
+      // fallback: permite repetição se necessário (não quebra)
+      if (!matches) {
+        const order2 = teams.slice();
+        for (let i=order2.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [order2[i],order2[j]]=[order2[j],order2[i]]; }
+        matches = [];
+        for (let i=0;i<order2.length;i+=2){
+          matches.push({ homeId: order2[i], awayId: order2[i+1] });
+        }
+      }
+
+      const simMatches = matches.map(fx => {
+        const sim = simulateMatch(fx.homeId, fx.awayId, save);
+        // marca repetição
+        mark(fx.homeId, fx.awayId);
+        applyGroupResult(table, fx.homeId, fx.awayId, sim.hg, sim.ag);
+        return { homeId: fx.homeId, awayId: fx.awayId, hg: sim.hg, ag: sim.ag };
+      });
+
+      rounds.push({ name: `Rodada ${r}`, matches: simMatches });
+    }
+
+    const leagueTable = sortMiniTable(Object.values(table));
+    const qualified = leagueTable.slice(0, 16).map(r => r.id);
+    const ko = buildKnockoutTournament(save, `${id}_KO`, `${name} • Mata-mata`, qualified);
+
+    return {
+      id, name,
+      format: 'LEAGUE+KO',
+      size: 24,
+      leaguePhase: { rounds, table: leagueTable },
+      knockout: ko,
+      championId: ko.championId,
+      championName: ko.championName
+    };
+  }
+function pickBrazilQualifiers(save, leagueId, from, to) {
     const store = ensureLeagueTableStore(save);
     const rows = store[leagueId] || (save.season?.leagueId === leagueId
       ? sortTableRows(Object.values(save.season.table || {}))
@@ -2377,43 +2583,130 @@ save.meta.updatedAt = nowIso();
     return out;
   }
 
-  function generateContinentalCompetitionsForSeason(save) {
-    // Executa no fim da temporada (provisório: simula tudo de uma vez)
-    const store = ensureContinentalStore(save);
-    if (store.generatedAt === save.season?.completedAt) return;
 
-    // Qualificação Brasil (Série A)
-    const lib = pickBrazilQualifiers(save, 'BRA_SERIE_A', 1, 6);
-    const sula = pickBrazilQualifiers(save, 'BRA_SERIE_A', 7, 12);
-
-    store.libertadores = buildKnockoutTournament(save, 'CONMEBOL_LIB', 'CONMEBOL Libertadores', lib);
-    store.sudamericana = buildKnockoutTournament(save, 'CONMEBOL_SUD', 'CONMEBOL Sul-Americana', sula);
-
-    // Placeholders UEFA (quando ligas europeias forem integradas)
-    store.uefa = store.uefa || {
-      champions: { id: 'UEFA_CL', name: 'UEFA Champions League', status: 'placeholder' },
-      europa: { id: 'UEFA_EL', name: 'UEFA Europa League', status: 'placeholder' },
-      conference: { id: 'UEFA_ECL', name: 'UEFA Conference League', status: 'placeholder' }
-    };
-
-    store.generatedAt = save.season?.completedAt || nowIso();
+  function pickLeagueQualifiers(save, leagueId, from, to) {
+    // Mesmo método usado no Brasil, agora genérico para qualquer liga
+    const store = ensureLeagueTableStore(save);
+    const rows = store[leagueId] || (save.season?.leagueId === leagueId
+      ? sortTableRows(Object.values(save.season.table || {}))
+      : simulateLeagueSeason(save, leagueId));
+    const out = [];
+    for (let p = from; p <= to; p++) {
+      const id = rows[p - 1]?.id;
+      if (id) out.push(id);
+    }
+    return out;
   }
 
-  function renderTournamentCard(t) {
-    if (!t) return '';
-    const champ = t.championId ? `${clubLogoHtml(t.championId, 34)} <b>${esc(t.championName || '')}</b>` : `<span class="badge">Indefinido</span>`;
-    const roundsHtml = (t.rounds || []).map(r => {
+    function generateContinentalCompetitionsForSeason(save) {
+    // B1.1: geração global com regras configuráveis (qualifications.json) + formatos avançados (provisórios):
+    // - CONMEBOL Libertadores: fase de grupos (32) + mata-mata (16)
+    // - UEFA Champions League: fase de liga (24) + mata-mata (16)
+    const store = ensureContinentalStore(save);
+    if (store.generatedAt === save.season?.completedAt && store.version === 'B1.1') return;
+
+    // Garante tabelas das outras ligas
+    try { ensureParallelWorldLeaguesFinalized(save); } catch (e) {}
+
+    const leagues = state.packData?.competitions?.leagues || [];
+    const ucl = [];
+    const uel = [];
+    const lib = [];
+    const sula = [];
+
+    function pushUnique(arr, ids) {
+      for (const id of (ids || [])) {
+        if (!id) continue;
+        if (!arr.includes(id)) arr.push(id);
+      }
+    }
+
+    // Coleta classificados de todas as ligas de 1ª divisão
+    for (const lg of leagues) {
+      const lid = lg?.id;
+      if (!lid) continue;
+      if (Number(lg.level || 1) !== 1) continue;
+
+      const zones = getZonesForLeague(lid) || {};
+      const cont = zones.continental || {};
+
+      // CONMEBOL
+      if (lid === 'BRA_SERIE_A') {
+        pushUnique(lib, pickBrazilQualifiers(save, 'BRA_SERIE_A', 1, 6));
+        pushUnique(sula, pickBrazilQualifiers(save, 'BRA_SERIE_A', 7, 12));
+      } else if (cont.libertadores) {
+        pushUnique(lib, pickLeagueQualifiers(save, lid, cont.libertadores.from, cont.libertadores.to));
+        if (cont.sudamericana) pushUnique(sula, pickLeagueQualifiers(save, lid, cont.sudamericana.from, cont.sudamericana.to));
+      }
+
+      // UEFA
+      if (cont.champions) pushUnique(ucl, pickLeagueQualifiers(save, lid, cont.champions.from, cont.champions.to));
+      if (cont.europa) pushUnique(uel, pickLeagueQualifiers(save, lid, cont.europa.from, cont.europa.to));
+    }
+
+    // Ranking por força (para quando houver "excesso" de classificados)
+    const strengthOf = (clubId) => {
+      try { return teamStrength(clubId, save); } catch (e) { return 60; }
+    };
+    const rankByStrength = (ids) => (ids || []).slice().sort((a, b) => strengthOf(b) - strengthOf(a));
+
+    // Tamanhos (MVP avançado)
+    const UCL_LEAGUE_SIZE = 24;
+    const UEL_KO_SIZE = 16;
+    const LIB_GROUP_SIZE = 32;
+    const SULA_KO_SIZE = 16;
+
+    // UEFA: Champions (liga 24) e Europa (KO 16)
+    const uclRanked = rankByStrength(ucl);
+    const ucl24 = uclRanked.slice(0, UCL_LEAGUE_SIZE);
+    const uclOverflow = uclRanked.slice(UCL_LEAGUE_SIZE);
+
+    const uelPool = rankByStrength(pushConcat([], uclOverflow, uel));
+    const uel16 = uelPool.slice(0, UEL_KO_SIZE);
+
+    // CONMEBOL: Libertadores (grupos 32) e Sul-Americana (KO 16)
+    const libRanked = rankByStrength(lib);
+    const lib32 = libRanked.slice(0, LIB_GROUP_SIZE);
+    const libOverflow = libRanked.slice(LIB_GROUP_SIZE);
+
+    const sulaPool = rankByStrength(pushConcat([], libOverflow, sula));
+    const sula16 = sulaPool.slice(0, SULA_KO_SIZE);
+
+    // Construção dos torneios
+    if (lib32.length >= 16) store.libertadores = buildLibertadoresGroupsAndKO(save, 'CONMEBOL_LIB', 'CONMEBOL Libertadores', lib32);
+    else store.libertadores = store.libertadores || { id: 'CONMEBOL_LIB', name: 'CONMEBOL Libertadores', status: 'placeholder' };
+
+    if (sula16.length >= 8) store.sudamericana = buildKnockoutTournament(save, 'CONMEBOL_SUD', 'CONMEBOL Sul-Americana', sula16);
+    else store.sudamericana = store.sudamericana || { id: 'CONMEBOL_SUD', name: 'CONMEBOL Sul-Americana', status: 'placeholder' };
+
+    store.uefa = store.uefa || {};
+    if (ucl24.length >= 16) store.uefa.champions = buildLeaguePhaseAndKO(save, 'UEFA_CL', 'UEFA Champions League', ucl24);
+    else store.uefa.champions = store.uefa.champions || { id: 'UEFA_CL', name: 'UEFA Champions League', status: 'placeholder' };
+
+    if (uel16.length >= 8) store.uefa.europa = buildKnockoutTournament(save, 'UEFA_EL', 'UEFA Europa League', uel16);
+    else store.uefa.europa = store.uefa.europa || { id: 'UEFA_EL', name: 'UEFA Europa League', status: 'placeholder' };
+
+    store.uefa.conference = store.uefa.conference || { id: 'UEFA_ECL', name: 'UEFA Conference League', status: 'placeholder' };
+
+    store.generatedAt = save.season?.completedAt || nowIso();
+    store.version = 'B1.1';
+  }
+
+  
+  function renderKnockoutRoundsHtml(t) {
+    if (!t || !Array.isArray(t.rounds)) return '<div class="notice">Ainda não foi gerado.</div>';
+    return (t.rounds || []).map(r => {
       const matches = (r.matches || []).map(m => {
         const h = getClub(m.homeId); const a = getClub(m.awayId);
         return `
           <div class="item">
             <div class="item-left" style="display:flex; gap:10px; align-items:center;">
-              ${clubLogoHtml(m.homeId, 28)}
+              ${clubLogoHtml(m.homeId, 26)}
               <div style="min-width:0;">
                 <div class="item-title">${esc(h?.short || h?.name || m.homeId)} <span class="small">vs</span> ${esc(a?.short || a?.name || m.awayId)}</div>
                 <div class="item-sub">${esc(r.name)} • Vencedor: ${esc(getClub(m.winnerId)?.short || getClub(m.winnerId)?.name || m.winnerId)}</div>
               </div>
-              ${clubLogoHtml(m.awayId, 28)}
+              ${clubLogoHtml(m.awayId, 26)}
             </div>
             <div class="item-right" style="align-items:center;">
               <b>${m.hg} x ${m.ag}</b>
@@ -2423,22 +2716,139 @@ save.meta.updatedAt = nowIso();
       }).join('');
       return `<div class="sep"></div><div class="label">${esc(r.name)}</div><div class="list">${matches}</div>`;
     }).join('');
+  }
+
+  function renderMiniTableBlock(rows, opts = {}) {
+    const topBold = opts.topBold ?? 0;
+    const limit = opts.limit ?? rows.length;
+    const show = (rows || []).slice(0, limit);
+    const items = show.map((r, i) => {
+      const c = getClub(r.id);
+      const name = esc(c?.short || c?.name || r.id);
+      const bold = (i < topBold) ? 'font-weight:700;' : '';
+      return `
+        <div class="item">
+          <div class="item-left" style="display:flex; gap:8px; align-items:center; ${bold}">
+            <span class="badge">${i+1}</span>
+            ${clubLogoHtml(r.id, 22)}
+            <span>${name}</span>
+          </div>
+          <div class="item-right">
+            <span class="small">Pts</span> <b>${r.Pts}</b>
+            <span class="small">GD</span> <b>${r.GD}</b>
+          </div>
+        </div>
+      `;
+    }).join('');
+    return `<div class="list">${items}</div>`;
+  }
+
+  function renderTournamentCard(t) {
+    if (!t) return '';
+    const champ = t.championId ? `${clubLogoHtml(t.championId, 34)} <b>${esc(t.championName || '')}</b>` : `<span class="badge">Indefinido</span>`;
+
+    // KO simples (compatibilidade)
+    if (!t.format || t.format === 'KO') {
+      return `
+        <div class="card" style="margin-bottom:12px;">
+          <div class="card-header">
+            <div>
+              <div class="card-title">${esc(t.name)}</div>
+              <div class="card-subtitle">Formato: mata-mata (${t.size} clubes)</div>
+            </div>
+            <span class="badge">Campeão</span>
+          </div>
+          <div class="card-body">
+            <div class="row" style="align-items:center; gap:10px;">${champ}</div>
+            ${renderKnockoutRoundsHtml(t)}
+          </div>
+        </div>
+      `;
+    }
+
+    // Libertadores: Grupos + KO
+    if (t.format === 'GROUPS+KO') {
+      const groupsHtml = (t.groups || []).map(g => {
+        const title = `<div class="label">${esc(g.name)}</div>`;
+        const table = renderMiniTableBlock(g.table || [], { topBold: 2, limit: 4 });
+        return `<div class="sep"></div>${title}${table}`;
+      }).join('');
+
+      return `
+        <div class="card" style="margin-bottom:12px;">
+          <div class="card-header">
+            <div>
+              <div class="card-title">${esc(t.name)}</div>
+              <div class="card-subtitle">Formato provisório avançado: grupos (32) + mata-mata (16)</div>
+            </div>
+            <span class="badge">Campeão</span>
+          </div>
+          <div class="card-body">
+            <div class="row" style="align-items:center; gap:10px;">${champ}</div>
+            <details style="margin-top:10px;">
+              <summary class="btn">Ver fase de grupos</summary>
+              <div class="sep"></div>
+              ${groupsHtml || '<div class="notice">Sem dados de grupos.</div>'}
+            </details>
+            <details style="margin-top:10px;">
+              <summary class="btn btn-primary">Ver mata-mata</summary>
+              ${renderKnockoutRoundsHtml(t.knockout)}
+            </details>
+          </div>
+        </div>
+      `;
+    }
+
+    // Champions: Liga + KO
+    if (t.format === 'LEAGUE+KO') {
+      const lt = t.leaguePhase?.table || [];
+      const rounds = t.leaguePhase?.rounds || [];
+      const top8 = renderMiniTableBlock(lt, { topBold: 8, limit: 8 });
+      const roundsInfo = `<div class="mini">Rodadas simuladas: ${rounds.length}</div>`;
+
+      return `
+        <div class="card" style="margin-bottom:12px;">
+          <div class="card-header">
+            <div>
+              <div class="card-title">${esc(t.name)}</div>
+              <div class="card-subtitle">Formato provisório avançado: fase de liga (24) + mata-mata (16)</div>
+            </div>
+            <span class="badge">Campeão</span>
+          </div>
+          <div class="card-body">
+            <div class="row" style="align-items:center; gap:10px;">${champ}</div>
+            <div class="sep"></div>
+            <div class="label">Top 8 (fase de liga)</div>
+            ${top8}
+            ${roundsInfo}
+            <details style="margin-top:10px;">
+              <summary class="btn">Ver tabela completa (fase de liga)</summary>
+              ${renderMiniTableBlock(lt, { topBold: 16, limit: lt.length })}
+            </details>
+            <details style="margin-top:10px;">
+              <summary class="btn btn-primary">Ver mata-mata</summary>
+              ${renderKnockoutRoundsHtml(t.knockout)}
+            </details>
+          </div>
+        </div>
+      `;
+    }
+
+    // fallback
     return `
       <div class="card" style="margin-bottom:12px;">
         <div class="card-header">
           <div>
             <div class="card-title">${esc(t.name)}</div>
-            <div class="card-subtitle">Formato provisório: mata-mata (${t.size} clubes)</div>
+            <div class="card-subtitle">Formato: ${esc(t.format || 'desconhecido')}</div>
           </div>
-          <span class="badge">Campeão</span>
         </div>
-        <div class="card-body">
-          <div class="row" style="align-items:center; gap:10px;">${champ}</div>
-          ${roundsHtml || '<div class="notice">Ainda não foi gerado.</div>'}
-        </div>
+        <div class="card-body">${champ}</div>
       </div>
     `;
   }
+
+
 
   function viewContinentals() {
     return requireSave((save) => {
@@ -2450,25 +2860,42 @@ save.meta.updatedAt = nowIso();
 
       let info = '';
       if (save.season.completed) {
-        generateContinentalCompetitionsForSeason(save);
-        info = `<div class="notice success">Torneios continentais gerados para a temporada ${esc(sid)} (provisório).</div>`;
+        // Gera/atualiza ao final
+        try { generateContinentalCompetitionsForSeason(save); } catch (e) {}
+        info = `<div class="notice success">Torneios continentais gerados para a temporada ${esc(sid)}.</div>`;
       } else {
+        // Projeção apenas da sua liga atual (evita confusão)
         const rows = sortTableRows(Object.values(save.season.table || {}));
-        const lib = rows.slice(0, 6).map(r => r.id);
-        const sula = rows.slice(6, 12).map(r => r.id);
-        contStore.projection = { at: nowIso(), libertadores: lib, sudamericana: sula };
-        const projLine = (arr) => arr.map(id => `${clubLogoHtml(id, 22)} ${esc(getClub(id)?.short || getClub(id)?.name || id)}`).join('<br>');
+        const lid = save.season.leagueId;
+        const zones = getZonesForLeague(lid) || {};
+        const cont = zones.continental || {};
+        const pickRange = (from,to) => rows.slice(from-1, to).map(r => r.id);
+
+        const proj = { at: nowIso(), leagueId: lid };
+        if (lid === 'BRA_SERIE_A') {
+          proj.libertadores = pickRange(1, 6);
+          proj.sudamericana = pickRange(7, 12);
+        } else {
+          if (cont.libertadores) proj.libertadores = pickRange(cont.libertadores.from, cont.libertadores.to);
+          if (cont.sudamericana) proj.sudamericana = pickRange(cont.sudamericana.from, cont.sudamericana.to);
+          if (cont.champions) proj.champions = pickRange(cont.champions.from, cont.champions.to);
+          if (cont.europa) proj.europa = pickRange(cont.europa.from, cont.europa.to);
+        }
+        contStore.projection = proj;
+
+        const projLine = (arr) => (arr || []).map(id => `${clubLogoHtml(id, 22)} ${esc(getClub(id)?.short || getClub(id)?.name || id)}`).join('<br>') || '<span class="mini">—</span>';
+
         info = `
           <div class="notice">Temporada em andamento. A classificação continental será confirmada no fim do campeonato.</div>
           <div class="sep"></div>
           <div class="grid">
             <div class="col-6">
-              <div class="label">Projeção Libertadores (1º-6º)</div>
-              <div class="small">${projLine(lib)}</div>
+              <div class="label">Projeção (sua liga) • Libertadores / Champions</div>
+              <div class="small">${projLine(proj.libertadores || proj.champions)}</div>
             </div>
             <div class="col-6">
-              <div class="label">Projeção Sul-Americana (7º-12º)</div>
-              <div class="small">${projLine(sula)}</div>
+              <div class="label">Projeção (sua liga) • Sul-Americana / Europa</div>
+              <div class="small">${projLine(proj.sudamericana || proj.europa)}</div>
             </div>
           </div>
         `;
@@ -2477,20 +2904,8 @@ save.meta.updatedAt = nowIso();
       const libCard = contStore.libertadores ? renderTournamentCard(contStore.libertadores) : '';
       const sudCard = contStore.sudamericana ? renderTournamentCard(contStore.sudamericana) : '';
 
-      const uefaCard = `
-        <div class="card">
-          <div class="card-header">
-            <div>
-              <div class="card-title">UEFA (Em breve)</div>
-              <div class="card-subtitle">Champions • Europa • Conference</div>
-            </div>
-            <span class="badge">Placeholder</span>
-          </div>
-          <div class="card-body">
-            <div class="notice">As competições UEFA serão ativadas quando as ligas europeias estiverem integradas em uma etapa futura.</div>
-          </div>
-        </div>
-      `;
+      const uclCard = contStore.uefa?.champions ? renderTournamentCard(contStore.uefa.champions) : '';
+      const uelCard = contStore.uefa?.europa ? renderTournamentCard(contStore.uefa.europa) : '';
 
       writeSlot(state.settings.activeSlotId, save);
 
@@ -2499,29 +2914,38 @@ save.meta.updatedAt = nowIso();
           <div class="card-header">
             <div>
               <div class="card-title">Continental</div>
-              <div class="card-subtitle">Libertadores e Sul-Americana (provisório) • ${esc(sid)}</div>
+              <div class="card-subtitle">CONMEBOL • UEFA • ${esc(sid)}</div>
             </div>
             <span class="badge">${save.season.completed ? 'Concluído' : 'Em andamento'}</span>
           </div>
           <div class="card-body">
             ${info}
             <div class="sep"></div>
+
+            <div class="label">CONMEBOL</div>
             ${libCard}
             ${sudCard}
-            ${uefaCard}
+
+            <div class="sep"></div>
+            <div class="label">UEFA</div>
+            ${uclCard}
+            ${uelCard}
+
             <div class="sep"></div>
             <div class="row">
               <button class="btn btn-primary" data-go="/competitions">Voltar</button>
               <button class="btn" data-go="/matches">Jogos</button>
               <button class="btn" data-go="/hub">HUB</button>
             </div>
+
             <div class="sep"></div>
-            <div class="mini">Observação: este módulo é provisório e será substituído pelo calendário real (fase de grupos + mata-mata) quando o sistema multi-ligas estiver completo.</div>
+            <div class="mini">Obs.: formatos avançados provisórios (fase de grupos / fase de liga) para dar sensação AAA. Depois podemos migrar para formatos 100% reais (Libertadores completa e Champions 36 clubes).</div>
           </div>
         </div>
       `;
     });
   }
+
 
 function viewFinance() {
     return requireSave((save) => {
