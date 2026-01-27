@@ -953,6 +953,8 @@ return save;
             <span class="badge">Passo 2/3</span>
           </div>
           <div class="card-body">
+            <div class="notice">📱 No celular: toque em <b>Escolher</b> e você avança automaticamente.</div>
+            <div class="sep"></div>
             <div class="grid">
               <div class="col-6">
                 <div class="label">Liga</div>
@@ -967,11 +969,9 @@ return save;
             <div class="list">
               ${list || `<div class='notice'>Nenhum clube encontrado.</div>`}
             </div>
-            ${chosen ? `<div class="sep"></div><div class="notice">Clube selecionado: <b>${esc(chosen.name)}</b></div>` : ''}
             <div class="sep"></div>
             <div class="row">
               <button class="btn" data-go="/career-create">Voltar</button>
-              <button class="btn btn-primary" data-action="confirmClub" ${chosen ? '' : 'disabled'}>Continuar</button>
             </div>
           </div>
         </div>
@@ -2659,7 +2659,8 @@ function viewFinance() {
           save.meta.updatedAt = nowIso();
           save.meta.summary = `Carreira • ${getClub(clubId)?.name || 'Clube'}`;
           writeSlot(state.settings.activeSlotId, save);
-          route();
+          // UX: escolher o clube já deve avançar (evita o botão "Continuar" e o scroll no celular)
+          location.hash = '/tutorial';
         });
       }
       if (action === 'confirmClub') {
