@@ -272,5 +272,61 @@
         "to": 20
       }
     }
+  },
+  "continentalAllocations": {
+    "uefa": {
+      "champions": {
+        "size": 24,
+        "assocSlots": {
+          "EN": 4,
+          "ES": 4,
+          "IT": 4,
+          "DE": 4,
+          "FR": 3,
+          "PT": 2
+        },
+        "wildcards": 3
+      },
+      "europa": {
+        "size": 16,
+        "assocSlots": {
+          "EN": 2,
+          "ES": 2,
+          "IT": 2,
+          "DE": 2,
+          "FR": 2,
+          "PT": 2
+        },
+        "wildcards": 4
+      }
+    },
+    "conmebol": {
+      "libertadores": {
+        "size": 32,
+        "assocSlots": {
+          "BR": 8,
+          "AR": 6,
+          "UY": 4,
+          "CL": 4,
+          "CO": 4,
+          "EC": 4,
+          "VE": 1,
+          "BO": 1
+        },
+        "wildcards": 0
+      },
+      "sudamericana": {
+        "size": 16,
+        "assocSlots": {
+          "BR": 4,
+          "AR": 4,
+          "UY": 2,
+          "CL": 2,
+          "CO": 2,
+          "EC": 2
+        },
+        "wildcards": 0
+      }
+    }
   }
 }
