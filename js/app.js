@@ -929,7 +929,7 @@ return save;
           <div class="item">
             <div class="item-left" style="display:flex; gap:12px; align-items:center;">
               <div class="club-logo">
-                <img src="./assets/logos/${esc(c.id)}.png" alt="${esc(c.name)}" onerror="this.remove(); this.parentElement.innerHTML='<div class=\'club-fallback\'>${esc(initials)}</div>'"> 
+                <img src=\"${esc(logoClubUrl(c.id))}\" alt=\"${esc(c.name)}\" onerror=\"this.onerror=null;this.src='./assets/club_placeholder.svg';\"> 
               </div>
               <div style="min-width:0;">
                 <div class="item-title">${esc(c.name)}</div>
@@ -1764,18 +1764,23 @@ save.meta.updatedAt = nowIso();
     return s.slice(0, 3).toUpperCase();
   }
 
-  function clubLogoHtml(clubId, size = 34) {
-    const c = getClub(clubId);
-    const initials = clubInitials(c);
-    const s = Number(size) || 34;
-    // ... try PNG -> SVG -> fallback initials
-    return `
-      <div class="club-logo" style="width:${s}px;height:${s}px;border-radius:14px;">
-        <img src="./assets/logos/${esc(clubId)}.png" alt="${esc(c?.name || clubId)}"
-          onerror="if(!this.dataset.svgTried){this.dataset.svgTried='1';this.src='./assets/logos/${esc(clubId)}.svg';return;} this.remove(); this.parentElement.innerHTML='<div class=\"club-fallback\">${esc(initials)}</div>';">
-      </div>
-    `;
+  function logoClubUrl(clubId){
+    if(!clubId) return './assets/club_placeholder.svg';
+    return `./assets/logos/${clubId}.png`;
   }
+
+
+  function clubLogoHtml(clubId, size = 34) {
+  const c = clubId ? getClub(clubId) : null;
+  const s = Number(size) || 34;
+  const alt = esc(c?.name || clubId || 'Clube');
+  const src = esc(logoClubUrl(clubId));
+  return `
+    <div class="club-logo" style="width:${s}px;height:${s}px;border-radius:14px;">
+      <img src="${src}" alt="${alt}" onerror="this.onerror=null;this.src='./assets/club_placeholder.svg';">
+    </div>
+  `;
+}
 
   function applyResultToTable(table, homeId, awayId, hg, ag) {
     const home = table[homeId];
@@ -4476,13 +4481,13 @@ if (action === 'rejectOfferIn') {
           <div class="vfmComp">${esc(compLabel)} • Matchday</div>
           <div class="vfmLine">
             <div class="vfmTeam">
-              <img src="${esc(logoClubUrl(focus.homeId))}" onerror="this.onerror=null;this.src='assets/club_placeholder.png';" />
+              <img src="${esc(logoClubUrl(focus.homeId))}" onerror="this.onerror=null;this.src='./assets/club_placeholder.svg';" />
               <div class="vfmName">${esc(home?.name || focus.homeId)}</div>
             </div>
             <div class="vfmScore">${focus.hg}–${focus.ag}</div>
             <div class="vfmTeam" style="justify-content:flex-end">
               <div class="vfmName" style="text-align:right">${esc(away?.name || focus.awayId)}</div>
-              <img src="${esc(logoClubUrl(focus.awayId))}" onerror="this.onerror=null;this.src='assets/club_placeholder.png';" />
+              <img src="${esc(logoClubUrl(focus.awayId))}" onerror="this.onerror=null;this.src='./assets/club_placeholder.svg';" />
             </div>
           </div>
         </div>
