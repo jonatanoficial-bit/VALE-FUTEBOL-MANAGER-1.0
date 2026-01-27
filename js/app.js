@@ -2692,7 +2692,9 @@ save.season.lastRoundPlayed = roundIndex;
           const sim = simulateMatch(fx.homeId, fx.awayId, save);
           applyGroupResult(g.tableObj, fx.homeId, fx.awayId, sim.hg, sim.ag);
           g.played.push({ matchday: md+1, homeId: fx.homeId, awayId: fx.awayId, hg: sim.hg, ag: sim.ag });
-          playedMatches.push({ comp: 'LIB', homeId: fx.homeId, awayId: fx.awayId, hg: sim.hg, ag: sim.ag });
+          const stats = buildMatchStats(fx.homeId, fx.awayId, sim, save);
+          const timeline = buildTimelineForMatch(fx.homeId, fx.awayId, sim, save);
+          playedMatches.push({ comp: 'LIB', homeId: fx.homeId, awayId: fx.awayId, hg: sim.hg, ag: sim.ag, stats, timeline });
         }
         g.table = sortMiniTable(Object.values(g.tableObj));
       }
@@ -2726,7 +2728,9 @@ save.season.lastRoundPlayed = roundIndex;
           const sim = simulateMatch(m.homeId, m.awayId, save);
           m.played = true; m.hg = sim.hg; m.ag = sim.ag;
           applyGroupResult(ucl.leaguePhase.tableObj, m.homeId, m.awayId, sim.hg, sim.ag);
-          playedMatches.push({ comp: 'UCL', homeId: m.homeId, awayId: m.awayId, hg: sim.hg, ag: sim.ag });
+          const stats = buildMatchStats(m.homeId, m.awayId, sim, save);
+          const timeline = buildTimelineForMatch(m.homeId, m.awayId, sim, save);
+          playedMatches.push({ comp: 'UCL', homeId: m.homeId, awayId: m.awayId, hg: sim.hg, ag: sim.ag, stats, timeline });
         }
         ucl.leaguePhase.table = sortMiniTable(Object.values(ucl.leaguePhase.tableObj));
       }
@@ -2779,6 +2783,9 @@ save.season.lastRoundPlayed = roundIndex;
       m.played = true;
       m.hg = sim.hg; m.ag = sim.ag;
       m.winnerId = (sim.hg > sim.ag) ? m.homeId : (sim.hg < sim.ag ? m.awayId : (Math.random() < 0.5 ? m.homeId : m.awayId));
+      const stats = buildMatchStats(m.homeId, m.awayId, sim, save);
+      const timeline = buildTimelineForMatch(m.homeId, m.awayId, sim, save);
+      playedMatches.push({ homeId: m.homeId, awayId: m.awayId, hg: sim.hg, ag: sim.ag, winnerId: m.winnerId, stats, timeline });
       winners.push(m.winnerId);
       playedMatches.push({ homeId: m.homeId, awayId: m.awayId, hg: m.hg, ag: m.ag, winnerId: m.winnerId, round: round.name });
     }
@@ -3418,6 +3425,7 @@ function pickBrazilQualifiers(save, leagueId, from, to) {
           </div>
           <div style="height:10px"></div>
           <button class="btn" data-action="playContinentalMatchday">Simular matchday continental agora</button>
+          <button class="btn" data-action="openLastContinentalMatchday">Ver último matchday (narrativa)</button>
         `;
       }
 
@@ -4363,20 +4371,197 @@ if (action === 'rejectOfferIn') {
           if (!save) return;
           ensureSystems(save);
           ensureSeason(save);
+          let csum = null;
           try {
             ensureContinentalsLive(save);
-            const csum = advanceOneContinentalMatchday(save, { manual: true });
+            csum = advanceOneContinentalMatchday(save, { manual: true });
+            try {
+              if (save.season && save.season.continentalsLive) save.season.continentalsLive.lastSummary = csum;
+            } catch(e) {}
             applyContinentalEconomy(save, csum);
             writeSlot(state.settings.activeSlotId, save);
           } catch (e) {}
-          route();
+          // abre narrativa do matchday (B1.4)
+          try { openContinentalMatchdayModal(save, csum); } catch (e) { route(); }
+        });
+      }
+
+      if (action === 'openLastContinentalMatchday') {
+        el.addEventListener('click', () => {
+          const save = activeSave();
+          if (!save) return;
+          ensureSystems(save);
+          ensureSeason(save);
+          const sum = save.season?.continentalsLive?.lastSummary || null;
+          try { openContinentalMatchdayModal(save, sum); } catch (e) { route(); }
         });
       }
     });
   }
 
   /** Inicializa a aplicação */
-  async function boot() {
+  
+  // -----------------------------
+  // Continental Matchday Modal (B1.4) – Central/Narrativa
+  // -----------------------------
+  function removeContinentalModal(){
+    const ov = document.getElementById('vfmContinentalOverlay');
+    if (ov) ov.remove();
+  }
+
+  function openContinentalMatchdayModal(save, summary){
+    removeContinentalModal();
+    if (!summary || !Array.isArray(summary.playedMatches) || summary.playedMatches.length === 0) return;
+
+    const userId = save.career?.clubId;
+    const focus = (summary.userMatches && summary.userMatches[0]) ? summary.userMatches[0] : summary.playedMatches[0];
+
+    const home = getClub(focus.homeId);
+    const away = getClub(focus.awayId);
+
+    const compLabel = (focus.comp === 'LIB') ? 'CONMEBOL Libertadores'
+                    : (focus.comp === 'SUD') ? 'CONMEBOL Sul-Americana'
+                    : (focus.comp === 'UCL') ? 'UEFA Champions League'
+                    : (focus.comp === 'UEL') ? 'UEFA Europa League'
+                    : 'Continental';
+
+    const currency = state.packData?.rules?.gameRules?.currency || 'BRL';
+
+    const allResultsRows = summary.playedMatches.slice(0, 120).map(m=>{
+      const h = getClub(m.homeId); const a = getClub(m.awayId);
+      const tag = (m.comp==='LIB')?'LIB':(m.comp==='SUD')?'SULA':(m.comp==='UCL')?'UCL':(m.comp==='UEL')?'UEL':'';
+      const isUser = (m.homeId===userId || m.awayId===userId);
+      return `
+        <div class="vfmRow ${isUser?'vfmRowUser':''}">
+          <div class="vfmMiniTag">${esc(tag)}</div>
+          <div class="vfmMiniTeam">${esc(h?.short || h?.name || m.homeId)}</div>
+          <div class="vfmMiniScore">${m.hg}–${m.ag}</div>
+          <div class="vfmMiniTeam">${esc(a?.short || a?.name || m.awayId)}</div>
+        </div>
+      `;
+    }).join('');
+
+    const stats = focus.stats || {};
+    const timeline = focus.timeline || [];
+
+    const overlay = document.createElement('div');
+    overlay.id = 'vfmContinentalOverlay';
+    overlay.innerHTML = `
+      <style>
+        #vfmContinentalOverlay{ position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,.75); display:flex; align-items:center; justify-content:center; padding:10px; }
+        #vfmContinentalOverlay .vfmBox{ width:min(900px, 100%); max-height:92vh; overflow:auto; background:#0f172a; color:#fff; border-radius:16px; border:1px solid rgba(255,255,255,.12); box-shadow:0 12px 40px rgba(0,0,0,.45); }
+        #vfmContinentalOverlay .vfmHead{ padding:14px 14px 8px; border-bottom:1px solid rgba(255,255,255,.10); }
+        #vfmContinentalOverlay .vfmComp{ font-size:12px; opacity:.85; }
+        #vfmContinentalOverlay .vfmLine{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:8px; }
+        #vfmContinentalOverlay .vfmTeam{ display:flex; align-items:center; gap:10px; min-width:0; }
+        #vfmContinentalOverlay .vfmTeam img{ width:44px; height:44px; object-fit:contain; background:rgba(255,255,255,.06); border-radius:10px; padding:4px; }
+        #vfmContinentalOverlay .vfmName{ font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        #vfmContinentalOverlay .vfmScore{ font-size:34px; font-weight:900; letter-spacing:1px; }
+        #vfmContinentalOverlay .vfmBody{ padding:12px 14px; display:grid; grid-template-columns: 1.2fr .8fr; gap:12px; }
+        @media(max-width:820px){ #vfmContinentalOverlay .vfmBody{ grid-template-columns:1fr; } }
+        #vfmContinentalOverlay .vfmCard{ background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.10); border-radius:14px; padding:12px; }
+        #vfmContinentalOverlay .vfmTitle{ font-weight:800; margin-bottom:8px; }
+        #vfmContinentalOverlay .vfmLog{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; font-size:12px; line-height:1.5; }
+        #vfmContinentalOverlay .vfmRow{ display:grid; grid-template-columns: 44px 1fr 70px 1fr; gap:8px; align-items:center; padding:6px 0; border-bottom:1px dashed rgba(255,255,255,.10); }
+        #vfmContinentalOverlay .vfmRow:last-child{ border-bottom:none; }
+        #vfmContinentalOverlay .vfmRowUser{ background:rgba(34,197,94,.10); border-radius:10px; padding:8px; }
+        #vfmContinentalOverlay .vfmMiniTag{ font-weight:800; font-size:11px; opacity:.85; }
+        #vfmContinentalOverlay .vfmMiniScore{ text-align:center; font-weight:900; }
+        #vfmContinentalOverlay .vfmFooter{ padding:12px 14px; border-top:1px solid rgba(255,255,255,.10); display:flex; gap:10px; justify-content:flex-end; }
+        #vfmContinentalOverlay .btn{ cursor:pointer; }
+      </style>
+
+      <div class="vfmBox">
+        <div class="vfmHead">
+          <div class="vfmComp">${esc(compLabel)} • Matchday</div>
+          <div class="vfmLine">
+            <div class="vfmTeam">
+              <img src="${esc(logoClubUrl(focus.homeId))}" onerror="this.onerror=null;this.src='assets/club_placeholder.png';" />
+              <div class="vfmName">${esc(home?.name || focus.homeId)}</div>
+            </div>
+            <div class="vfmScore">${focus.hg}–${focus.ag}</div>
+            <div class="vfmTeam" style="justify-content:flex-end">
+              <div class="vfmName" style="text-align:right">${esc(away?.name || focus.awayId)}</div>
+              <img src="${esc(logoClubUrl(focus.awayId))}" onerror="this.onerror=null;this.src='assets/club_placeholder.png';" />
+            </div>
+          </div>
+        </div>
+
+        <div class="vfmBody">
+          <div class="vfmCard">
+            <div class="vfmTitle">Relato do jogo</div>
+            <div id="vfmContLog" class="vfmLog"></div>
+            <div style="height:10px"></div>
+            <div class="grid">
+              <div class="col-6"><div class="label">Posse</div><div><b>${(stats.possessionH ?? 50)}%</b> x <b>${(stats.possessionA ?? 50)}%</b></div></div>
+              <div class="col-6"><div class="label">Finalizações (no gol)</div><div><b>${stats.shotsH ?? 0}</b> (${stats.onH ?? 0}) x <b>${stats.shotsA ?? 0}</b> (${stats.onA ?? 0})</div></div>
+              <div class="col-6"><div class="label">Faltas</div><div><b>${stats.foulsH ?? 0}</b> x <b>${stats.foulsA ?? 0}</b></div></div>
+              <div class="col-6"><div class="label">Escanteios</div><div><b>${stats.cornersH ?? 0}</b> x <b>${stats.cornersA ?? 0}</b></div></div>
+            </div>
+          </div>
+
+          <div class="vfmCard">
+            <div class="vfmTitle">Resultados da rodada</div>
+            <div>${allResultsRows || '<div class="small">Sem jogos.</div>'}</div>
+          </div>
+        </div>
+
+        <div class="vfmFooter">
+          <button class="btn" id="vfmContSkip">Pular</button>
+          <button class="btn btn-primary" id="vfmContClose" disabled>Avançar</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+
+    const logEl = document.getElementById('vfmContLog');
+    const btnSkip = document.getElementById('vfmContSkip');
+    const btnClose = document.getElementById('vfmContClose');
+
+    let i = 0;
+    let done = false;
+    const writeLine = (t) => {
+      const div = document.createElement('div');
+      div.textContent = t;
+      logEl.appendChild(div);
+      logEl.scrollTop = logEl.scrollHeight;
+    };
+
+    function finish(){
+      if (done) return;
+      done = true;
+      btnClose.disabled = false;
+    }
+
+    function tick(){
+      if (i >= timeline.length) { finish(); return; }
+      writeLine(timeline[i].text || String(timeline[i]));
+      i += 1;
+      setTimeout(tick, rndi(220, 520));
+    }
+
+    // start
+    if (!timeline.length) {
+      writeLine("— Sem eventos detalhados —");
+      finish();
+    } else {
+      tick();
+    }
+
+    btnSkip.addEventListener('click', () => {
+      if (done) return;
+      while (i < timeline.length) { writeLine(timeline[i].text || String(timeline[i])); i += 1; }
+      finish();
+    });
+
+    btnClose.addEventListener('click', () => {
+      removeContinentalModal();
+      route();
+    });
+  }
+
+
+async function boot() {
     ensureSlots();
     await loadPacks();
     await loadPackData();
