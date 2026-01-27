@@ -41,6 +41,131 @@ body {
   color: var(--text);
 }
 
+/* =======================================================
+   VFM – Matchday Modal (A2)
+   Modal/tela de partida com emoção (mobile-first)
+   =======================================================*/
+.vfm-modal-overlay{
+  position:fixed; inset:0; z-index:9999;
+  background:rgba(0,0,0,.72);
+  display:flex; align-items:center; justify-content:center;
+  padding:16px;
+}
+
+.vfm-modal{
+  width:min(980px, 100%);
+  max-height:92vh;
+  overflow:hidden;
+  background:rgba(15,23,42,.98);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  box-shadow:0 24px 70px rgba(0,0,0,.55);
+  display:flex;
+  flex-direction:column;
+}
+
+.vfm-modal-header{
+  padding:14px 14px 10px;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:10px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.vfm-modal-title{
+  display:flex; flex-direction:column;
+  gap:2px;
+}
+
+.vfm-modal-title .t1{font-weight:800; letter-spacing:.2px;}
+.vfm-modal-title .t2{opacity:.75; font-size:12px;}
+
+.vfm-modal-body{
+  padding:12px 14px 14px;
+  overflow:auto;
+}
+
+.vfm-match-hero{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px;
+  padding:10px 10px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  background:rgba(2,6,23,.35);
+}
+
+.vfm-match-side{
+  display:flex; align-items:center; gap:10px; min-width:0;
+}
+
+.vfm-match-side .nm{font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.vfm-match-mid{
+  text-align:center;
+  display:flex; flex-direction:column; gap:2px;
+}
+.vfm-score{
+  font-size:30px; font-weight:900; letter-spacing:.5px;
+}
+.vfm-clock{font-size:12px; opacity:.8;}
+
+.vfm-grid{
+  display:grid;
+  grid-template-columns: 1.35fr .65fr;
+  gap:12px;
+  margin-top:12px;
+}
+
+@media (max-width: 820px){
+  .vfm-grid{grid-template-columns:1fr;}
+}
+
+.vfm-panel{
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  background:rgba(2,6,23,.25);
+  overflow:hidden;
+}
+
+.vfm-panel .hd{
+  padding:10px 12px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  font-weight:800;
+  display:flex; justify-content:space-between; align-items:center;
+}
+
+.vfm-timeline{
+  padding:10px 12px;
+  max-height: 44vh;
+  overflow:auto;
+  font-size:13px;
+}
+
+.vfm-timeline .ev{padding:7px 0; border-bottom:1px dashed rgba(255,255,255,.08);}
+.vfm-timeline .ev:last-child{border-bottom:none;}
+
+.vfm-stats{
+  padding:10px 12px;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+  font-size:13px;
+}
+
+.vfm-stat-row{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:10px;
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:12px;
+  padding:8px 10px;
+  background:rgba(2,6,23,.18);
+}
+
+.vfm-modal-actions{
+  display:flex; gap:10px; justify-content:flex-end;
+  padding:12px 14px;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+
+
 /* Splash screen com logo da produtora */
 .splash {
   position: fixed;

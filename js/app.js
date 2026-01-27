@@ -942,6 +942,7 @@ return save;
           </div>
         `;
       }).join("");
+      const chosen = save.career?.clubId ? getClub(save.career.clubId) : null;
       return `
         <div class="card">
           <div class="card-header">
@@ -1749,6 +1750,352 @@ save.meta.updatedAt = nowIso();
     if (hg > ag) { home.W += 1; home.Pts += 3; away.L += 1; }
     else if (hg < ag) { away.W += 1; away.Pts += 3; home.L += 1; }
     else { home.D += 1; away.D += 1; home.Pts += 1; away.Pts += 1; }
+  }
+
+  // -----------------------------
+  // Matchday Modal (A2) – emoção ao disputar rodada
+  // -----------------------------
+  function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+  function rnd(min, max){ return Math.random() * (max - min) + min; }
+  function rndi(min, max){ return Math.floor(rnd(min, max + 1)); }
+
+  function getClubPlayers(clubId){
+    const ps = state.packData?.players?.players || [];
+    return ps.filter(p => p.clubId === clubId);
+  }
+
+  function pickScorerName(clubId){
+    const ps = getClubPlayers(clubId);
+    const pref = ['ST','CF','FW','AM','CAM','LW','RW','LM','RM','CM'];
+    const cand = ps.filter(p => pref.includes((p.pos || p.position || '').toUpperCase()));
+    const pool = cand.length ? cand : ps;
+    const c = getClub(clubId);
+    if (!pool.length) return `${c?.short || c?.name || clubId} (Jogador)`;
+    const p = pool[Math.floor(Math.random() * pool.length)];
+    return p.name || p.playerName || 'Jogador';
+  }
+
+  function buildMatchStats(homeId, awayId, sim){
+    // Estatísticas simples mas críveis, derivadas do "ritmo" do jogo (lamHome/lamAway)
+    const baseShotsH = clamp(Math.round(sim.lamHome * 9 + rnd(3, 7)), 4, 22);
+    const baseShotsA = clamp(Math.round(sim.lamAway * 9 + rnd(3, 7)), 4, 22);
+    const onH = clamp(Math.round(baseShotsH * rnd(.32, .55)), 1, baseShotsH);
+    const onA = clamp(Math.round(baseShotsA * rnd(.32, .55)), 1, baseShotsA);
+    const foulsH = clamp(Math.round(rnd(8, 17)), 5, 24);
+    const foulsA = clamp(Math.round(rnd(8, 17)), 5, 24);
+    const cornersH = clamp(Math.round(baseShotsH * rnd(.12,.25)), 1, 11);
+    const cornersA = clamp(Math.round(baseShotsA * rnd(.12,.25)), 1, 11);
+
+    // posse baseada na força relativa
+    const sh = clubStrength(homeId, state.packData);
+    const sa = clubStrength(awayId, state.packData);
+    let possH = 50;
+    if (sh + sa > 0) possH = 50 + (sh - sa) / (sh + sa) * 14;
+    possH = clamp(Math.round(possH + rnd(-4, 4)), 35, 65);
+    const possA = 100 - possH;
+
+    return {
+      possH, possA,
+      shotsH: baseShotsH, shotsA: baseShotsA,
+      onH, onA,
+      foulsH, foulsA,
+      cornersH, cornersA,
+    };
+  }
+
+  function buildTimelineForMatch(homeId, awayId, hg, ag){
+    const hc = getClub(homeId);
+    const ac = getClub(awayId);
+    const homeName = hc?.short || hc?.name || homeId;
+    const awayName = ac?.short || ac?.name || awayId;
+
+    const events = [];
+    events.push({ min: 0, text: `00' ⏱️ Começa o jogo! ${homeName} x ${awayName}` });
+
+    // gols distribuídos
+    const goalMins = [];
+    for (let i=0;i<hg;i++) goalMins.push({ side:'H', min:rndi(6, 88) });
+    for (let i=0;i<ag;i++) goalMins.push({ side:'A', min:rndi(6, 88) });
+    goalMins.sort((a,b)=>a.min-b.min);
+
+    // eventos extras
+    const extraCount = rndi(5, 10);
+    const extra = [];
+    for (let i=0;i<extraCount;i++) extra.push(rndi(3, 90));
+    extra.sort((a,b)=>a-b);
+
+    const addFoul = (m)=>{
+      const side = Math.random() < .5 ? 'H' : 'A';
+      const clubId = side==='H' ? homeId : awayId;
+      const c = getClub(clubId);
+      const nm = c?.short || c?.name || clubId;
+      const isYellow = Math.random() < .35;
+      events.push({ min:m, text:`${String(m).padStart(2,'0')}' ${isYellow?'🟨':'🛑'} Falta ${isYellow?'e cartão':'marcada'} – ${nm}`});
+    };
+
+    // mistura: para cada minuto do extra, coloca um evento que não conflite com gol
+    extra.forEach(m=> addFoul(m));
+
+    goalMins.forEach((g, idx)=>{
+      const clubId = g.side==='H' ? homeId : awayId;
+      const scorer = pickScorerName(clubId);
+      const c = getClub(clubId);
+      const nm = c?.short || c?.name || clubId;
+      events.push({ min:g.min, text:`${String(g.min).padStart(2,'0')}' ⚽ GOL! ${scorer} (${nm})`});
+    });
+
+    events.push({ min: 45, text: `45' ⏸️ Intervalo` });
+    events.push({ min: 90, text: `90+${rndi(1,4)}' ⏱️ Fim de jogo` });
+
+    // ordena e remove duplicados por texto/min
+    const seen = new Set();
+    return events
+      .sort((a,b)=>a.min-b.min)
+      .filter(e=>{ const k = e.min+'|'+e.text; if(seen.has(k)) return false; seen.add(k); return true; });
+  }
+
+  function removeMatchdayModal(){
+    const ov = document.getElementById('vfmMatchdayOverlay');
+    if (ov) ov.remove();
+  }
+
+  function openMatchdayModal(save, roundIndex){
+    removeMatchdayModal();
+    const rounds = save.season.rounds || [];
+    const matches = rounds[roundIndex] || [];
+    const userId = save.career.clubId;
+    const userMatch = matches.find(m => m.homeId === userId || m.awayId === userId) || matches[0];
+    if (!userMatch) return;
+
+    // pré-simula todos os jogos da rodada, mas não aplica ainda (vamos aplicar no final)
+    const pre = matches.map(m => {
+      if (m.played) return { ...m, sim:null, stats:null, timeline:[] };
+      const sim = simulateMatch(m.homeId, m.awayId, save);
+      const stats = buildMatchStats(m.homeId, m.awayId, sim);
+      const timeline = (m.homeId===userMatch.homeId && m.awayId===userMatch.awayId)
+        ? buildTimelineForMatch(m.homeId, m.awayId, sim.hg, sim.ag)
+        : [];
+      return { ...m, sim, stats, timeline };
+    });
+
+    const main = pre.find(x => x.homeId===userMatch.homeId && x.awayId===userMatch.awayId) || pre[0];
+    const hc = getClub(main.homeId);
+    const ac = getClub(main.awayId);
+    const leagueName = (state.packData?.competitions?.leagues || []).find(l => l.id === save.season.leagueId)?.name || save.season.leagueId;
+    const totalRounds = save.season.rounds.length;
+
+    // UI base
+    const overlay = document.createElement('div');
+    overlay.id = 'vfmMatchdayOverlay';
+    overlay.className = 'vfm-modal-overlay';
+    overlay.innerHTML = `
+      <div class="vfm-modal" role="dialog" aria-modal="true">
+        <div class="vfm-modal-header">
+          <div class="vfm-modal-title">
+            <div class="t1">Disputando Rodada ${roundIndex + 1} / ${totalRounds}</div>
+            <div class="t2">${esc(leagueName)} • Simulação com narrativa</div>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <button class="btn" id="vfmBtnSkip">Pular</button>
+            <button class="btn" id="vfmBtnClose" title="Fechar">✕</button>
+          </div>
+        </div>
+        <div class="vfm-modal-body">
+          <div class="vfm-match-hero">
+            <div class="vfm-match-side">
+              ${clubLogoHtml(main.homeId, 44)}
+              <div class="nm">${esc(hc?.short || hc?.name || main.homeId)}</div>
+            </div>
+            <div class="vfm-match-mid">
+              <div class="vfm-score" id="vfmScore">0 x 0</div>
+              <div class="vfm-clock" id="vfmClock">Preparando...</div>
+            </div>
+            <div class="vfm-match-side" style="justify-content:flex-end;">
+              <div class="nm">${esc(ac?.short || ac?.name || main.awayId)}</div>
+              ${clubLogoHtml(main.awayId, 44)}
+            </div>
+          </div>
+
+          <div class="vfm-grid">
+            <div class="vfm-panel">
+              <div class="hd">Tempo real <span class="badge" id="vfmState">AO VIVO</span></div>
+              <div class="vfm-timeline" id="vfmTimeline"></div>
+            </div>
+            <div class="vfm-panel">
+              <div class="hd">Estatísticas</div>
+              <div class="vfm-stats" id="vfmStats"></div>
+              <div class="sep" style="margin:0;"></div>
+              <div style="padding:10px 12px;">
+                <button class="btn btn-primary" id="vfmBtnConfirm" disabled>Avançar</button>
+                <div class="small" style="margin-top:6px; opacity:.8;">Dica: clique em <b>Pular</b> para ver tudo instantaneamente.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+
+    const elTimeline = overlay.querySelector('#vfmTimeline');
+    const elScore = overlay.querySelector('#vfmScore');
+    const elClock = overlay.querySelector('#vfmClock');
+    const elStats = overlay.querySelector('#vfmStats');
+    const elConfirm = overlay.querySelector('#vfmBtnConfirm');
+    const elSkip = overlay.querySelector('#vfmBtnSkip');
+    const elClose = overlay.querySelector('#vfmBtnClose');
+    const elState = overlay.querySelector('#vfmState');
+
+    // Render stats (simples)
+    function statRow(label, vH, vA){
+      const l = document.createElement('div');
+      l.className = 'vfm-stat-row';
+      l.innerHTML = `<span><b>${esc(vH)}</b></span><span style="opacity:.85">${esc(label)}</span><span><b>${esc(vA)}</b></span>`;
+      return l;
+    }
+
+    const st = main.stats;
+    elStats.innerHTML = '';
+    if (st){
+      elStats.appendChild(statRow('Posse', st.possH + '%', st.possA + '%'));
+      elStats.appendChild(statRow('Finalizações', st.shotsH, st.shotsA));
+      elStats.appendChild(statRow('No gol', st.onH, st.onA));
+      elStats.appendChild(statRow('Faltas', st.foulsH, st.foulsA));
+      elStats.appendChild(statRow('Escanteios', st.cornersH, st.cornersA));
+    }
+
+    // Timeline playback
+    const tl = Array.isArray(main.timeline) && main.timeline.length ? main.timeline : buildTimelineForMatch(main.homeId, main.awayId, main.sim?.hg || 0, main.sim?.ag || 0);
+    let idx = 0;
+    let hgLive = 0, agLive = 0;
+    let done = false;
+    let timer = null;
+
+    function pushEvent(text){
+      const d = document.createElement('div');
+      d.className = 'ev';
+      d.textContent = text;
+      elTimeline.appendChild(d);
+      elTimeline.scrollTop = elTimeline.scrollHeight;
+    }
+
+    function updateScore(){
+      elScore.textContent = `${hgLive} x ${agLive}`;
+    }
+
+    function finish(){
+      if (done) return;
+      done = true;
+      if (timer) { clearTimeout(timer); timer = null; }
+      elState.textContent = 'FINAL';
+      elClock.textContent = 'Partida encerrada';
+      elConfirm.disabled = false;
+    }
+
+    function step(){
+      if (done) return;
+      if (idx >= tl.length){
+        finish();
+        return;
+      }
+      const e = tl[idx++];
+      elClock.textContent = `Minuto ${String(e.min).padStart(2,'0')}`;
+      pushEvent(e.text);
+      // Atualiza placar se evento for gol
+      if (e.text.includes('⚽')){
+        // Heurística: se contém nome do time da casa/fora
+        const homeNm = (hc?.short || hc?.name || main.homeId);
+        const awayNm = (ac?.short || ac?.name || main.awayId);
+        if (e.text.includes('(' + homeNm + ')') || e.text.includes(homeNm + ')')) hgLive++;
+        else if (e.text.includes('(' + awayNm + ')') || e.text.includes(awayNm + ')')) agLive++;
+        else {
+          // fallback: alterna
+          if (hgLive + agLive < (main.sim?.hg || 0) + (main.sim?.ag || 0)){
+            if (hgLive < (main.sim?.hg || 0)) hgLive++; else agLive++;
+          }
+        }
+        updateScore();
+      }
+      // agenda próximo
+      timer = setTimeout(step, rndi(260, 780));
+    }
+
+    function revealAll(){
+      if (timer) { clearTimeout(timer); timer = null; }
+      elTimeline.innerHTML = '';
+      hgLive = 0; agLive = 0;
+      tl.forEach(e => {
+        pushEvent(e.text);
+        if (e.text.includes('⚽')){
+          if (hgLive < (main.sim?.hg || 0)) hgLive++; else agLive++;
+        }
+      });
+      updateScore();
+      finish();
+    }
+
+    // Primeira render
+    if (main.sim){
+      elClock.textContent = 'Ao vivo...';
+      // placar final conhecido, mas revelamos gradualmente
+      updateScore();
+    }
+
+    elSkip.addEventListener('click', () => revealAll());
+    elClose.addEventListener('click', () => {
+      // Evita "sumir" no meio: pede para pular e depois avançar
+      if (!done) { revealAll(); return; }
+      removeMatchdayModal();
+    });
+
+    elConfirm.addEventListener('click', () => {
+      // aplica resultados de TODOS os jogos da rodada
+      const matchesNow = rounds[roundIndex] || [];
+      const preMap = new Map(pre.map(x => [x.homeId+'|'+x.awayId, x]));
+      matchesNow.forEach(m => {
+        if (m.played) return;
+        const key = m.homeId+'|'+m.awayId;
+        const p = preMap.get(key);
+        const sim = p?.sim || simulateMatch(m.homeId, m.awayId, save);
+        m.hg = sim.hg; m.ag = sim.ag; m.played = true;
+        m.xgH = sim.lamHome;
+        m.xgA = sim.lamAway;
+        applyResultToTable(save.season.table, m.homeId, m.awayId, m.hg, m.ag);
+      });
+
+      // Simula a liga paralela (Brasil A/B) na mesma rodada
+      try {
+        const other = otherBrazilLeague(save.season.leagueId);
+        if (other) {
+          simulateParallelRound(save, other, roundIndex);
+          snapshotParallelLeagueToTables(save, other);
+        }
+      } catch (e) {}
+
+      save.season.lastRoundPlayed = roundIndex;
+      save.season.lastResults = (matchesNow || []).map(m => ({ ...m }));
+
+      // economia semanal
+      const econ = state.packData?.rules?.economy || {};
+      let weeklyCost = 0;
+      weeklyCost += econ?.weeklyCosts?.staff || 0;
+      weeklyCost += econ?.weeklyCosts?.maintenance || 0;
+      weeklyCost += (save.staff?.hired || []).reduce((s, st) => s + (st.salary || 0), 0);
+      const sponsorIncome = save.sponsorship?.current?.weekly || 0;
+      if (!save.finance) save.finance = { cash: 0 };
+      save.finance.cash = Math.max(0, (save.finance.cash || 0) + sponsorIncome - weeklyCost);
+
+      save.season.currentRound += 1;
+      try { processTransferPipeline(save); } catch (e) {}
+      finalizeSeasonIfNeeded(save);
+
+      save.meta.updatedAt = nowIso();
+      writeSlot(state.settings.activeSlotId, save);
+      removeMatchdayModal();
+      route();
+    });
+
+    // começa a reprodução
+    step();
   }
 
   function viewMatches() {
@@ -3015,51 +3362,9 @@ if (action === 'rejectOfferIn') {
           const rounds = save.season.rounds || [];
           if (r >= rounds.length) return;
 
-          const matches = rounds[r];
-          matches.forEach(m => {
-            if (m.played) return;
-            const sim = simulateMatch(m.homeId, m.awayId, save);
-            m.hg = sim.hg; m.ag = sim.ag; m.played = true;
-            // xG simplificado para exibir no resumo
-            m.xgH = sim.lamHome;
-            m.xgA = sim.lamAway;
-            applyResultToTable(save.season.table, m.homeId, m.awayId, m.hg, m.ag);
-          });
-
-          // Parte 3: Simula a liga paralela (Brasil A/B) na mesma rodada, para termos uma tabela real no fim
-          try {
-            const other = otherBrazilLeague(save.season.leagueId);
-            if (other) {
-              simulateParallelRound(save, other, r);
-              snapshotParallelLeagueToTables(save, other);
-            }
-          } catch (e) {}
-
-          // Guarda o resumo da rodada jogada (para exibir resultados)
-          save.season.lastRoundPlayed = r;
-          save.season.lastResults = (matches || []).map(m => ({ ...m }));
-
-          // receitas/ custos semanais ao jogar uma rodada
-          const econ = state.packData?.rules?.economy || {};
-          let weeklyCost = 0;
-          weeklyCost += econ?.weeklyCosts?.staff || 0;
-          weeklyCost += econ?.weeklyCosts?.maintenance || 0;
-          weeklyCost += (save.staff?.hired || []).reduce((s, st) => s + (st.salary || 0), 0);
-          const sponsorIncome = save.sponsorship?.current?.weekly || 0;
-          if (!save.finance) save.finance = { cash: 0 };
-          save.finance.cash = Math.max(0, (save.finance.cash || 0) + sponsorIncome - weeklyCost);
-
-          save.season.currentRound += 1;
-
-          // Processa transferências (expira ofertas, gera propostas da IA etc.)
-          try { processTransferPipeline(save); } catch (e) {}
-
-          // Se acabou a última rodada, fecha a temporada e gera resumo
-          finalizeSeasonIfNeeded(save);
-
-          save.meta.updatedAt = nowIso();
-          writeSlot(state.settings.activeSlotId, save);
-          route();
+          // A2: abre modal/tela de partida com narrativa e estatísticas.
+          // O resultado só é aplicado ao confirmar no modal.
+          openMatchdayModal(save, r);
         });
       }
 
