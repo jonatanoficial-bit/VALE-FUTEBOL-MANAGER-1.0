@@ -548,3 +548,108 @@ body {
   .zone-legend{ align-items:flex-start; flex-direction:column; }
   .zone-legend-right{ width:100%; }
 }
+
+
+/* =========================
+   HUB – Cinemático (C3)
+   ========================= */
+
+.hub-hero{
+  position:relative;
+  overflow:hidden;
+  border-radius:22px;
+  padding:18px;
+  margin-bottom:14px;
+  background: radial-gradient(1200px 420px at 20% 0%, rgba(80,220,140,.18), transparent 60%),
+              radial-gradient(900px 360px at 80% 10%, rgba(120,170,255,.16), transparent 60%),
+              rgba(10,16,22,.6);
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 20px 60px rgba(0,0,0,.35);
+}
+.hub-hero .hub-hero-title{
+  font-size:18px;
+  font-weight:800;
+  letter-spacing:.3px;
+}
+.hub-hero .hub-hero-sub{
+  opacity:.9;
+  margin-top:4px;
+}
+.hub-grid{
+  display:grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap:12px;
+  margin-top:14px;
+}
+.hub-card{
+  grid-column: span 6;
+  position:relative;
+  overflow:hidden;
+  border-radius:18px;
+  min-height:120px;
+  padding:14px;
+  border:1px solid rgba(255,255,255,.09);
+  background: rgba(12,18,26,.55);
+  box-shadow:0 16px 40px rgba(0,0,0,.28);
+  cursor:pointer;
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, filter .18s ease;
+}
+.hub-card:hover{
+  transform: translateY(-2px);
+  border-color: rgba(120,255,190,.22);
+  box-shadow:0 22px 55px rgba(0,0,0,.34);
+  filter: saturate(1.05);
+}
+.hub-card:active{ transform: translateY(0px) scale(.99); }
+.hub-card .hub-bg{
+  position:absolute; inset:0;
+  background-size: cover;
+  background-position:center;
+  opacity:.22;
+  filter: blur(0px);
+}
+.hub-card .hub-overlay{
+  position:absolute; inset:0;
+  background: linear-gradient(90deg, rgba(8,12,18,.92), rgba(8,12,18,.60) 55%, rgba(8,12,18,.22));
+}
+.hub-card .hub-content{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.hub-card .hub-left{
+  display:flex; align-items:center; gap:12px;
+}
+.hub-pill{
+  width:44px; height:44px;
+  border-radius:14px;
+  display:flex; align-items:center; justify-content:center;
+  background: rgba(0,0,0,.35);
+  border:1px solid rgba(255,255,255,.10);
+  font-size:22px;
+}
+.hub-title{
+  font-weight:900;
+  letter-spacing:.2px;
+}
+.hub-desc{
+  opacity:.88;
+  font-size:12px;
+  margin-top:2px;
+}
+.hub-cta{
+  font-weight:800;
+  opacity:.9;
+  padding:8px 10px;
+  border-radius:12px;
+  background: rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.08);
+}
+@media (min-width: 900px){
+  .hub-card{ grid-column: span 4; min-height:140px; }
+}
+@media (max-width: 480px){
+  .hub-card{ grid-column: span 12; }
+}

@@ -1059,22 +1059,187 @@ return save;
               <b>${esc(sponsorName)}</b>
             </div>
             <div class="sep"></div>
-            <div class="grid">
-              <div class="col-4"><button class="btn btn-primary" data-go="/squad">Elenco</button></div>
-              <div class="col-4"><button class="btn btn-primary" data-go="/tactics">Tática</button></div>
-              <div class="col-4"><button class="btn btn-primary" data-go="/training">Treinos</button></div>
+            <div class="hub-grid">
+  <div class="hub-card" data-go="/matches">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_match.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">⚽</div>
+        <div>
+          <div class="hub-title">Partida</div>
+          <div class="hub-desc">Dispute, simule e acompanhe eventos ao vivo</div>
+        </div>
+      </div>
+      <div class="hub-cta">Abrir</div>
+    </div>
+  </div>
 
-            <div class="col-4"><button class="btn btn-primary" data-go="/matches">Jogos (Calendário)</button></div>
-            <div class="col-4"><button class="btn btn-primary" data-go="/competitions">Competições</button></div>
-            <div class="col-4"><button class="btn btn-primary" data-go="/finance">Finanças</button></div>
+  <div class="hub-card" data-go="/matches">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">🗓️</div>
+        <div>
+          <div class="hub-title">Calendário</div>
+          <div class="hub-desc">Próximos jogos, rodadas e agenda</div>
+        </div>
+      </div>
+      <div class="hub-cta">Ver</div>
+    </div>
+  </div>
 
-              <div class="col-4"><button class="btn btn-primary" data-go="/staff">Staff</button></div>
-              <div class="col-4"><button class="btn btn-primary" data-go="/sponsorship">Patrocínio</button></div>
-              <div class="col-4"><button class="btn btn-primary" data-go="/transfers">Transferências</button></div>
-              <div class="col-4"><button class="btn" data-go="/save">Salvar</button></div>
-              <div class="col-4"><button class="btn" data-go="/home">Menu</button></div>
-              <div class="col-4"><button class="btn btn-danger" data-go="/slots">Trocar Slot</button></div>
-            </div>
+  <div class="hub-card" data-go="/competitions">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_match.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">🏆</div>
+        <div>
+          <div class="hub-title">Competições</div>
+          <div class="hub-desc">Tabelas, continentais e títulos</div>
+        </div>
+      </div>
+      <div class="hub-cta">Entrar</div>
+    </div>
+  </div>
+
+  <div class="hub-card" data-go="/training">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_staff.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">🏋️</div>
+        <div>
+          <div class="hub-title">Treino</div>
+          <div class="hub-desc">Evolua o elenco e ajuste intensidade</div>
+        </div>
+      </div>
+      <div class="hub-cta">Treinar</div>
+    </div>
+  </div>
+
+  <div class="hub-card" data-go="/staff">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_staff.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">🎧</div>
+        <div>
+          <div class="hub-title">Staff</div>
+          <div class="hub-desc">Comissão técnica e funções do clube</div>
+        </div>
+      </div>
+      <div class="hub-cta">Abrir</div>
+    </div>
+  </div>
+
+  <div class="hub-card" data-go="/sponsorship">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_sponsor.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">🤝</div>
+        <div>
+          <div class="hub-title">Patrocínio</div>
+          <div class="hub-desc">Contratos, metas e bônus financeiros</div>
+        </div>
+      </div>
+      <div class="hub-cta">Negociar</div>
+    </div>
+  </div>
+
+  <div class="hub-card" data-go="/transfers">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">🔁</div>
+        <div>
+          <div class="hub-title">Mercado</div>
+          <div class="hub-desc">Compras, vendas e empréstimos</div>
+        </div>
+      </div>
+      <div class="hub-cta">Ver</div>
+    </div>
+  </div>
+
+  <div class="hub-card" data-go="/finance">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_sponsor.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">💰</div>
+        <div>
+          <div class="hub-title">Finanças</div>
+          <div class="hub-desc">Caixa, receitas, despesas e balanço</div>
+        </div>
+      </div>
+      <div class="hub-cta">Abrir</div>
+    </div>
+  </div>
+
+  <div class="hub-card" data-go="/squad">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_match.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">👥</div>
+        <div>
+          <div class="hub-title">Elenco</div>
+          <div class="hub-desc">Jogadores, status e evolução</div>
+        </div>
+      </div>
+      <div class="hub-cta">Abrir</div>
+    </div>
+  </div>
+
+  <div class="hub-card" data-go="/tactics">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_staff.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">📋</div>
+        <div>
+          <div class="hub-title">Tática</div>
+          <div class="hub-desc">Formação, estilo e instruções</div>
+        </div>
+      </div>
+      <div class="hub-cta">Editar</div>
+    </div>
+  </div>
+
+  <div class="hub-card" data-go="/save">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">💾</div>
+        <div>
+          <div class="hub-title">Salvar</div>
+          <div class="hub-desc">Guarde seu progresso</div>
+        </div>
+      </div>
+      <div class="hub-cta">Salvar</div>
+    </div>
+  </div>
+
+  <div class="hub-card" data-go="/slots">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">🔀</div>
+        <div>
+          <div class="hub-title">Slots</div>
+          <div class="hub-desc">Trocar e gerenciar saves</div>
+        </div>
+      </div>
+      <div class="hub-cta">Abrir</div>
+    </div>
+  </div>
+</div></div>
             <div class="sep"></div>
             <div class="notice">
               Gerencie todos os aspectos do seu clube: elenco, tática, treinos, staff, patrocínio e transferências.
