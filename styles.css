@@ -653,3 +653,5 @@ body {
 @media (max-width: 480px){
   .hub-card{ grid-column: span 12; }
 }
+
+.vfm-version{opacity:.7}

@@ -2585,12 +2585,6 @@ save.season.lastRoundPlayed = roundIndex;
         if (cont.europa) pushUnique(uel, pickLeagueQualifiers(save, lid, cont.europa.from, cont.europa.to));
       }
 
-
-      const strengthOf = (clubId) => {
-        try { return teamStrength(clubId, save); } catch (e) { return 60; }
-      };
-      const rankByStrength = (ids) => (ids || []).slice().filter(Boolean).sort((a,b) => strengthOf(b) - strengthOf(a));
-
       
       // Fallback: se as tabelas das ligas ainda não existem (início da temporada),
       // garantimos participantes pegando os melhores por força em cada liga.
@@ -2616,6 +2610,11 @@ save.season.lastRoundPlayed = roundIndex;
       if (sula.length < 8) {
         for (const lid of CONM_LIDS) pushUnique(sula, topByStrengthFromLeague(lid, 6));
       }
+
+const strengthOf = (clubId) => {
+        try { return teamStrength(clubId, save); } catch (e) { return 60; }
+      };
+      const rankByStrength = (ids) => (ids || []).slice().filter(Boolean).sort((a,b) => strengthOf(b) - strengthOf(a));
 
       const allocCfg = (state.packData?.qualifications?.continentalAllocations || {});
       const uefaAlloc = allocCfg.uefa || {};
@@ -3407,7 +3406,7 @@ function pickBrazilQualifiers(save, leagueId, from, to) {
     if (libN.length >= 16) store.libertadores = buildLibertadoresGroupsAndKO(save, 'CONMEBOL_LIB', 'CONMEBOL Libertadores', libN);
     else store.libertadores = store.libertadores || { id: 'CONMEBOL_LIB', name: 'CONMEBOL Libertadores', status: 'placeholder' };
 
-    if (sulaN.length >= 8) store.sudamericana = buildKnockoutTournament(save, 'CONMEBOL_SUD', 'CONMEBOL Sul-Americana', sulaN);
+    if (sula16.length >= 8) store.sudamericana = buildKnockoutTournament(save, 'CONMEBOL_SUD', 'CONMEBOL Sul-Americana', sula16);
     else store.sudamericana = store.sudamericana || { id: 'CONMEBOL_SUD', name: 'CONMEBOL Sul-Americana', status: 'placeholder' };
 
     store.uefa = store.uefa || {};

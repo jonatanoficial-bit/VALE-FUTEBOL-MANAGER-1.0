@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Vale Futebol Manager 2026 - Premium</title>
   <!-- Estilos principais -->
-  <link rel="stylesheet" href="./styles.css?v=1.10.0" />
+  <link rel="stylesheet" href="./styles.css?v=1.10.1" />
   <!-- Diagnósticos provisórios (removível no final) -->
   <script src="./js/diagnostics.js"></script>
 </head>
@@ -35,18 +35,18 @@
     </header>
     <main class="main">
       <div id="view" class="view">
-        <!-- O conteúdo será renderizado dinamicamente pelo app.js?v=1.10.0 -->
+        <!-- O conteúdo será renderizado dinamicamente pelo app.js -->
       </div>
     </main>
     <footer class="footer">
       <span>© Vale Games</span>
       <span class="dot">•</span>
-      <span>Offline • LocalStorage</span>
+      <span>Offline • LocalStorage</span><span class="dot">•</span><span class="small vfm-version">v1.10.1</span>
     </footer>
   </div>
 
   <!-- Lógica principal da aplicação -->
-  <script src="./app.js?v=1.10.0"></script>
+  <script src="./app.js?v=1.10.1"></script>
 <script>
 (function(){
   var ready = false;
@@ -60,7 +60,7 @@
     if (splash) { splash.classList.add('hidden'); splash.style.display='none'; }
   }, 2000);
 
-  // após 1.2s, se app.js?v=1.10.0 não executou, tenta carregar fallback em ./js/app.js?v=1.10.0 e mostra aviso
+  // após 1.2s, se app.js não executou, tenta carregar fallback em ./js/app.js e mostra aviso
   setTimeout(function(){
     if (ready) return;
 
@@ -81,7 +81,7 @@
     }
 
     var s = document.createElement('script');
-    s.src = './js/app.js?v=1.10.0';
+    s.src = './js/app.js';
     s.onload = function(){ /* ok */ };
     s.onerror = function(){
       var v = document.getElementById('view');
@@ -93,7 +93,7 @@
               '<span class="badge">VFM</span>' +
             '</div>' +
             '<div class="card-body">' +
-              '<div class="notice">⚠️ Verifique se os arquivos <b>app.js?v=1.10.0</b> e <b>js/app.js?v=1.10.0</b> estão publicados no mesmo diretório do <b>index.html</b>.</div>' +
+              '<div class="notice">⚠️ Verifique se os arquivos <b>app.js</b> e <b>js/app.js</b> estão publicados no mesmo diretório do <b>index.html</b>.</div>' +
               '<div class="sep"></div>' +
               '<button class="btn btn-primary" type="button" onclick="location.reload()">Recarregar</button>' +
             '</div>' +
