@@ -2585,6 +2585,12 @@ save.season.lastRoundPlayed = roundIndex;
         if (cont.europa) pushUnique(uel, pickLeagueQualifiers(save, lid, cont.europa.from, cont.europa.to));
       }
 
+
+      const strengthOf = (clubId) => {
+        try { return teamStrength(clubId, save); } catch (e) { return 60; }
+      };
+      const rankByStrength = (ids) => (ids || []).slice().filter(Boolean).sort((a,b) => strengthOf(b) - strengthOf(a));
+
       
       // Fallback: se as tabelas das ligas ainda não existem (início da temporada),
       // garantimos participantes pegando os melhores por força em cada liga.
@@ -2610,11 +2616,6 @@ save.season.lastRoundPlayed = roundIndex;
       if (sula.length < 8) {
         for (const lid of CONM_LIDS) pushUnique(sula, topByStrengthFromLeague(lid, 6));
       }
-
-const strengthOf = (clubId) => {
-        try { return teamStrength(clubId, save); } catch (e) { return 60; }
-      };
-      const rankByStrength = (ids) => (ids || []).slice().filter(Boolean).sort((a,b) => strengthOf(b) - strengthOf(a));
 
       const allocCfg = (state.packData?.qualifications?.continentalAllocations || {});
       const uefaAlloc = allocCfg.uefa || {};
@@ -3403,17 +3404,17 @@ function pickBrazilQualifiers(save, leagueId, from, to) {
 
     // Construção dos torneios
 
-    if (lib32.length >= 16) store.libertadores = buildLibertadoresGroupsAndKO(save, 'CONMEBOL_LIB', 'CONMEBOL Libertadores', lib32);
+    if (libN.length >= 16) store.libertadores = buildLibertadoresGroupsAndKO(save, 'CONMEBOL_LIB', 'CONMEBOL Libertadores', libN);
     else store.libertadores = store.libertadores || { id: 'CONMEBOL_LIB', name: 'CONMEBOL Libertadores', status: 'placeholder' };
 
-    if (sula16.length >= 8) store.sudamericana = buildKnockoutTournament(save, 'CONMEBOL_SUD', 'CONMEBOL Sul-Americana', sula16);
+    if (sulaN.length >= 8) store.sudamericana = buildKnockoutTournament(save, 'CONMEBOL_SUD', 'CONMEBOL Sul-Americana', sulaN);
     else store.sudamericana = store.sudamericana || { id: 'CONMEBOL_SUD', name: 'CONMEBOL Sul-Americana', status: 'placeholder' };
 
     store.uefa = store.uefa || {};
-    if (ucl24.length >= 16) store.uefa.champions = buildLeaguePhaseAndKO(save, 'UEFA_CL', 'UEFA Champions League', ucl24);
+    if (uclN.length >= 16) store.uefa.champions = buildLeaguePhaseAndKO(save, 'UEFA_CL', 'UEFA Champions League', uclN);
     else store.uefa.champions = store.uefa.champions || { id: 'UEFA_CL', name: 'UEFA Champions League', status: 'placeholder' };
 
-    if (uel16.length >= 8) store.uefa.europa = buildKnockoutTournament(save, 'UEFA_EL', 'UEFA Europa League', uel16);
+    if (uelN.length >= 8) store.uefa.europa = buildKnockoutTournament(save, 'UEFA_EL', 'UEFA Europa League', uelN);
     else store.uefa.europa = store.uefa.europa || { id: 'UEFA_EL', name: 'UEFA Europa League', status: 'placeholder' };
 
     store.uefa.conference = store.uefa.conference || { id: 'UEFA_ECL', name: 'UEFA Conference League', status: 'placeholder' };
