@@ -3497,18 +3497,18 @@ function pickBrazilQualifiers(save, leagueId, from, to) {
     }
 
     // Tamanhos (provisório avançado)
-    const UCL_LEAGUE_SIZE = Number(uefaAlloc?.champions?.size || 24);
-    const UEL_KO_SIZE = Number(uefaAlloc?.europa?.size || 16);
+    const UCL_GROUP_SIZE = Number(uefaAlloc?.champions?.size || 32);
+    const UEL_GROUP_SIZE = Number(uefaAlloc?.europa?.size || 32);
     const LIB_GROUP_SIZE = Number(conmebolAlloc?.libertadores?.size || 32);
-    const SULA_KO_SIZE = Number(conmebolAlloc?.sudamericana?.size || 16);
+    const SULA_GROUP_SIZE = Number(conmebolAlloc?.sudamericana?.size || 32);
 
     // UEFA: Champions (liga) e Europa (KO)
-    const uclPick = selectWithAllocation(ucl, uefaAlloc?.champions || {}, UCL_LEAGUE_SIZE);
+    const uclPick = selectWithAllocation(ucl, uefaAlloc?.champions || {}, UCL_GROUP_SIZE);
     const uclN = uclPick.selected;
     const uclOverflow = uclPick.overflow;
 
     const uelPoolAll = pushConcat([], uclOverflow, uel);
-    const uelPick = selectWithAllocation(uelPoolAll, uefaAlloc?.europa || {}, UEL_KO_SIZE);
+    const uelPick = selectWithAllocation(uelPoolAll, uefaAlloc?.europa || {}, UEL_GROUP_SIZE);
     const uelN = uelPick.selected;
 
     // CONMEBOL: Libertadores (grupos) e Sul-Americana (KO)
@@ -3517,28 +3517,49 @@ function pickBrazilQualifiers(save, leagueId, from, to) {
     const libOverflow = libPick.overflow;
 
     const sulaPoolAll = pushConcat([], libOverflow, sula);
-    const sulaPick = selectWithAllocation(sulaPoolAll, conmebolAlloc?.sudamericana || {}, SULA_KO_SIZE);
+    const sulaPick = selectWithAllocation(sulaPoolAll, conmebolAlloc?.sudamericana || {}, SULA_GROUP_SIZE);
     const sulaN = sulaPick.selected;
+
+    // Fallback: garante tamanhos mínimos para não ficar sem times (usa clubes mais fortes do pack)
+    const allClubIds = Object.keys(state.packData?.clubs || {});
+    function fillToSize(arr, size, used) {
+      const a = (arr || []).filter(Boolean);
+      const u = new Set([...(used||[]), ...a]);
+      if (a.length >= size) return a.slice(0, size);
+      const candidates = allClubIds.filter(id => id && !u.has(id));
+      const fill = rankByStrength(candidates).slice(0, size - a.length);
+      return a.concat(fill);
+    }
+
+    const usedInitial = [];
+    const uclN32 = fillToSize(uclN, 32, usedInitial);
+    usedInitial.push(...uclN32);
+    const uelN32 = fillToSize(uelN, 32, usedInitial);
+    usedInitial.push(...uelN32);
+    const libN32 = fillToSize(libN, 32, usedInitial);
+    usedInitial.push(...libN32);
+    const sulaN32 = fillToSize(sulaN, 32, usedInitial);
+
 
     // Construção dos torneios
 
-    if (libN.length >= 16) store.libertadores = buildLibertadoresGroupsAndKO(save, 'CONMEBOL_LIB', 'CONMEBOL Libertadores', libN);
+    if (libN32.length >= 32) store.libertadores = buildLibertadoresGroupsAndKO(save, 'CONMEBOL_LIB', 'CONMEBOL Libertadores', libN32);
     else store.libertadores = store.libertadores || { id: 'CONMEBOL_LIB', name: 'CONMEBOL Libertadores', status: 'placeholder' };
 
-    if (sula16.length >= 8) store.sudamericana = buildKnockoutTournament(save, 'CONMEBOL_SUD', 'CONMEBOL Sul-Americana', sula16);
+    if (sulaN32.length >= 32) store.sudamericana = buildLibertadoresGroupsAndKO(save, 'CONMEBOL_SUD', 'CONMEBOL Sul-Americana', sulaN32);
     else store.sudamericana = store.sudamericana || { id: 'CONMEBOL_SUD', name: 'CONMEBOL Sul-Americana', status: 'placeholder' };
 
     store.uefa = store.uefa || {};
-    if (uclN.length >= 16) store.uefa.champions = buildLeaguePhaseAndKO(save, 'UEFA_CL', 'UEFA Champions League', uclN);
+    if (uclN32.length >= 32) store.uefa.champions = buildLibertadoresGroupsAndKO(save, 'UEFA_CL', 'UEFA Champions League', uclN32);
     else store.uefa.champions = store.uefa.champions || { id: 'UEFA_CL', name: 'UEFA Champions League', status: 'placeholder' };
 
-    if (uelN.length >= 8) store.uefa.europa = buildKnockoutTournament(save, 'UEFA_EL', 'UEFA Europa League', uelN);
+    if (uelN32.length >= 32) store.uefa.europa = buildLibertadoresGroupsAndKO(save, 'UEFA_EL', 'UEFA Europa League', uelN32);
     else store.uefa.europa = store.uefa.europa || { id: 'UEFA_EL', name: 'UEFA Europa League', status: 'placeholder' };
 
     store.uefa.conference = store.uefa.conference || { id: 'UEFA_ECL', name: 'UEFA Conference League', status: 'placeholder' };
 
     store.generatedAt = save.season?.completedAt || nowIso();
-    store.version = 'B1.1';
+    store.version = 'B1.1G';
   }
 
   
