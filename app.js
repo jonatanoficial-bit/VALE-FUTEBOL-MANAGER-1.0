@@ -290,6 +290,16 @@
     ensureSlots();
     const hash = location.hash.replace("#", "");
     const path = hash || "/home";
+
+    // Classes de rota para fundos/cenário (somente menus + lobby)
+    // Não interfere em partidas/tabelas.
+    try {
+      document.body.classList.remove('route-menu','route-hub');
+      const isMenu = (path === '/home' || path === '/dlc' || path === '/slots' || path === '/career-create' || path === '/club-pick' || path === '/tutorial');
+      if (isMenu) document.body.classList.add('route-menu');
+      if (path === '/hub') document.body.classList.add('route-hub');
+    } catch(e) {}
+
     const view = routes[path] || viewHome;
     const html = view();
     // Renderiza no container e vincula eventos
@@ -2585,7 +2595,12 @@ save.season.lastRoundPlayed = roundIndex;
         if (cont.europa) pushUnique(uel, pickLeagueQualifiers(save, lid, cont.europa.from, cont.europa.to));
       }
 
-      
+      // Helpers de força (precisam existir ANTES do fallback)
+      const strengthOf = (clubId) => {
+        try { return teamStrength(clubId, save); } catch (e) { return 60; }
+      };
+      const rankByStrength = (ids) => (ids || []).slice().filter(Boolean).sort((a,b) => strengthOf(b) - strengthOf(a));
+
       // Fallback: se as tabelas das ligas ainda não existem (início da temporada),
       // garantimos participantes pegando os melhores por força em cada liga.
       function topByStrengthFromLeague(lid, n){
@@ -2611,10 +2626,7 @@ save.season.lastRoundPlayed = roundIndex;
         for (const lid of CONM_LIDS) pushUnique(sula, topByStrengthFromLeague(lid, 6));
       }
 
-const strengthOf = (clubId) => {
-        try { return teamStrength(clubId, save); } catch (e) { return 60; }
-      };
-      const rankByStrength = (ids) => (ids || []).slice().filter(Boolean).sort((a,b) => strengthOf(b) - strengthOf(a));
+      // (strengthOf / rankByStrength movidos para cima)
 
       const allocCfg = (state.packData?.qualifications?.continentalAllocations || {});
       const uefaAlloc = allocCfg.uefa || {};

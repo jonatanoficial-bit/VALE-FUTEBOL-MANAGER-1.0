@@ -655,3 +655,36 @@ body {
 }
 
 .vfm-version{opacity:.7}
+
+/* =============================
+   Cinematic backgrounds (ONLY menu + lobby)
+   - Não altera jogabilidade
+   - Ativado via classes no <body>
+   ============================= */
+
+body.route-menu{
+  background: url("./assets/backgrounds/bg_menu.png") no-repeat center center fixed;
+  background-size: cover;
+}
+
+body.route-hub{
+  background: url("./assets/backgrounds/bg_lobby.png") no-repeat center center fixed;
+  background-size: cover;
+}
+
+/* Overlay suave para legibilidade */
+body.route-menu #app::before,
+body.route-hub #app::before{
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,.45), rgba(0,0,0,.70));
+  pointer-events: none;
+  z-index: 0;
+}
+
+body.route-menu #app,
+body.route-hub #app{
+  position: relative;
+  z-index: 1;
+}
