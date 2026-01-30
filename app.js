@@ -2626,7 +2626,7 @@ save.season.lastRoundPlayed = roundIndex;
       }
 
       // CONMEBOL (fora BR): garante LIB/SULA mesmo no round 1
-      const CONM_LIDS = ['ARG_PRIMERA','URU_PRIMERA','CHI_PRIMERA','COL_PRIMERA','ECU_LIGA','VEN_LIGA','BOL_LIGA'];
+      const CONM_LIDS = ['ARG_PRIMERA','URU_PRIMERA','CHI_PRIMERA','COL_PRIMERA','ECU_LIGAPRO','VEN_PRIMERA','BOL_PRIMERA'];
       if (lib.length < 16) {
         for (const lid of CONM_LIDS) pushUnique(lib, topByStrengthFromLeague(lid, 4));
       }
@@ -2714,7 +2714,7 @@ save.season.lastRoundPlayed = roundIndex;
         },
         uefa: {
           champions: initChampionsLive(save, 'UEFA_CL', 'UEFA Champions League', uclSel),
-          europa: initKnockoutLive(save, 'UEFA_EL', 'UEFA Europa League', uelSel)
+          europa: initEuropaLive(save, 'UEFA_EL', 'UEFA Europa League', uelSel)
         }
       };
 
@@ -2827,6 +2827,84 @@ save.season.lastRoundPlayed = roundIndex;
       stage: 'LEAGUE',
       roundIndex: 0,
       leaguePhase: { rounds, tableObj, table: sortMiniTable(Object.values(tableObj)) },
+      knockout: null,
+      championId: null,
+      championName: null
+    };
+  }
+
+
+  // Europa League: fase de liga (16) + mata-mata (8)
+  function initEuropaLive(save, id, name, participants16) {
+    const teams = (participants16 || []).slice(0, 16);
+    if (teams.length < 8) return { id, name, format: 'LEAGUE+KO', status: 'placeholder' };
+
+    const ROUNDS = 6;
+    const rounds = [];
+    const played = {};
+    const mk = (a, b) => (a < b ? (a + '|' + b) : (b + '|' + a));
+    const canPair = (a, b) => (a !== b && !played[mk(a, b)]);
+    const mark = (a, b) => { played[mk(a, b)] = true; };
+
+    const tableObj = {};
+    for (const cid of teams) tableObj[cid] = { id: cid, P: 0, W: 0, D: 0, L: 0, GF: 0, GA: 0, GD: 0, Pts: 0 };
+
+    for (let r = 1; r <= ROUNDS; r++) {
+      let attempt = 0;
+      let order = teams.slice();
+      let matches = null;
+      while (attempt < 200 && !matches) {
+        for (let i = order.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const tmp = order[i];
+          order[i] = order[j];
+          order[j] = tmp;
+        }
+        const used = new Set();
+        const m = [];
+        for (let i = 0; i < order.length; i++) {
+          const a = order[i];
+          if (used.has(a)) continue;
+          for (let j = i + 1; j < order.length; j++) {
+            const b = order[j];
+            if (used.has(b)) continue;
+            if (!canPair(a, b)) continue;
+            used.add(a);
+            used.add(b);
+            const homeId = (r % 2 === 0) ? a : b;
+            const awayId = (r % 2 === 0) ? b : a;
+            m.push({ homeId: homeId, awayId: awayId, played: false, hg: null, ag: null });
+            mark(homeId, awayId);
+            break;
+          }
+        }
+        if (m.length === 8) matches = m;
+        attempt++;
+      }
+      if (!matches) {
+        const order2 = teams.slice();
+        for (let i = order2.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const tmp = order2[i];
+          order2[i] = order2[j];
+          order2[j] = tmp;
+        }
+        matches = [];
+        for (let i = 0; i < order2.length; i += 2) {
+          matches.push({ homeId: order2[i], awayId: order2[i + 1], played: false, hg: null, ag: null });
+        }
+      }
+      rounds.push({ name: 'Rodada ' + r, matches: matches });
+    }
+
+    return {
+      id: id,
+      name: name,
+      format: 'LEAGUE+KO',
+      size: 16,
+      stage: 'LEAGUE',
+      roundIndex: 0,
+      leaguePhase: { rounds: rounds, tableObj: tableObj, table: sortMiniTable(Object.values(tableObj)) },
       knockout: null,
       championId: null,
       championName: null
@@ -2964,13 +3042,40 @@ save.season.lastRoundPlayed = roundIndex;
       }
     }
 
-    // Europa League (KO)
-    if (uel && uel.format === 'KO') {
+    // Europa League - fase de liga -> depois KO (ou KO simples, compat)
+    if (uel && uel.format === "LEAGUE+KO" && uel.stage === "LEAGUE") {
+      const ri = uel.roundIndex || 0;
+      const rnd = uel.leaguePhase && uel.leaguePhase.rounds ? uel.leaguePhase.rounds[ri] : null;
+      if (rnd) {
+        for (const m of (rnd.matches || [])) {
+          if (m.played) continue;
+          const sim = simulateMatch(m.homeId, m.awayId, save);
+          m.played = true; m.hg = sim.hg; m.ag = sim.ag;
+          applyGroupResult(uel.leaguePhase.tableObj, m.homeId, m.awayId, sim.hg, sim.ag);
+          const stats = buildMatchStats(m.homeId, m.awayId, sim, save);
+          const timeline = buildTimelineForMatch(m.homeId, m.awayId, sim, save);
+          playedMatches.push({ comp: "UEL", homeId: m.homeId, awayId: m.awayId, hg: sim.hg, ag: sim.ag, stats, timeline });
+        }
+        uel.leaguePhase.table = sortMiniTable(Object.values(uel.leaguePhase.tableObj));
+      }
+      uel.roundIndex = ri + 1;
+      if (uel.roundIndex >= 6) {
+        const qualified = (uel.leaguePhase.table || []).slice(0, 8).map(r => r.id);
+        uel.knockout = initKnockoutLive(save, uel.id + "_KO", uel.name + " • Mata-mata", qualified);
+        uel.stage = "KO";
+      }
+    } else if (uel && uel.format === "LEAGUE+KO" && uel.stage === "KO" && uel.knockout) {
+      const res = playKnockoutRound(save, uel.knockout);
+      playedMatches.push(...(res.playedMatches || []).map(m => ({ ...m, comp: "UEL" })));
+      if (uel.knockout.championId) {
+        uel.championId = uel.knockout.championId;
+        uel.championName = uel.knockout.championName;
+      }
+    } else if (uel && uel.format === "KO") {
       const res = playKnockoutRound(save, uel);
-      playedMatches.push(...(res.playedMatches || []).map(m => ({ ...m, comp: 'UEL' })));
+      playedMatches.push(...(res.playedMatches || []).map(m => ({ ...m, comp: "UEL" })));
     }
 
-    // Sul-Americana (KO)
     if (sud && sud.format === 'KO') {
       const res = playKnockoutRound(save, sud);
       playedMatches.push(...(res.playedMatches || []).map(m => ({ ...m, comp: 'SUD' })));
@@ -3604,14 +3709,14 @@ function pickBrazilQualifiers(save, leagueId, from, to) {
       const lt = t.leaguePhase?.table || [];
       const rounds = t.leaguePhase?.rounds || [];
       const top8 = renderMiniTableBlock(lt, { topBold: 8, limit: 8 });
-      const roundsInfo = `<div class="mini">Rodadas simuladas: ${rounds.length}</div>`;
+      const roundsInfo = `<div class="mini">Rodadas simuladas: ${t.roundIndex || 0}</div>`;
 
       return `
         <div class="card" style="margin-bottom:12px;">
           <div class="card-header">
             <div>
               <div class="card-title">${esc(t.name)}</div>
-              <div class="card-subtitle">Formato provisório avançado: fase de liga (24) + mata-mata (16)</div>
+              <div class="card-subtitle">Formato provisório avançado: fase de liga (${t.size || 24}) + mata-mata (${(t.size || 24) >= 24 ? 16 : 8})</div>
             </div>
             <span class="badge">Campeão</span>
           </div>
