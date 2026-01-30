@@ -371,7 +371,15 @@
         if (found) return found;
       }
     } catch {}
-    return state.packData?.clubs?.clubs.find((c) => c.id === id) || null;
+    const fromPack = state.packData?.clubs?.clubs.find((c) => c.id === id) || null;
+    if (fromPack) return fromPack;
+
+    // Fallback: se o ID não existe no pacote (ex.: ligas novas sem clubes definidos),
+    // retornamos um "clube virtual" para não quebrar a UI (tabelas/continentais).
+    if (!id) return null;
+    const sid = String(id);
+    const short = sid.replace(/[^A-Z0-9]/gi, '').slice(-3).toUpperCase() || sid.slice(0,3).toUpperCase();
+    return { id: sid, name: sid, short, leagueId: 'UNKNOWN', overall: 60, budget: 0, __virtual: true };
   }
 
   /** Gera aleatoriamente um elenco para um clube (MVP) */
@@ -3040,17 +3048,35 @@ save.season.lastRoundPlayed = roundIndex;
   function buildKnockoutTournament(save, id, name, participants) {
     // Garante potência de 2 (8/16) com byes se necessário
     const teams = (participants || []).filter(Boolean);
+
+    // Segurança: nunca permitir KO com IDs undefined.
+    // Se o pacote não tiver clubes suficientes (ou estiver carregando parcialmente),
+    // completamos com o pool global e, em último caso, reduzimos o tamanho do chaveamento.
+    const allIds = (((save.world?.clubs) || (state.packData?.clubs?.clubs) || [])
+      .map(c => c?.id)
+      .filter(Boolean));
     let size = 2;
     while (size < teams.length) size *= 2;
     size = Math.max(8, Math.min(16, size)); // provisório: 8 a 16
 
     while (teams.length < size) {
       // completa com clubes restantes aleatórios do Brasil
-      const all = ((save.world?.clubs) || (state.packData?.clubs?.clubs) || []).map(c => c.id);
-      const pool = all.filter(x => !teams.includes(x));
+      const pool = (allIds || []).filter(x => x && !teams.includes(x));
       if (!pool.length) break;
       teams.push(pool[Math.floor(Math.random() * pool.length)]);
     }
+
+    // Se ainda assim não conseguimos completar, reduz o size para evitar pares faltando
+    // (ex.: current[i+1] undefined).
+    if (teams.length < 2) {
+      // cria 2 placeholders estáveis
+      teams.push('TBD_A', 'TBD_B');
+    }
+    // recalcula o size para o que de fato temos (mínimo 2, máximo 16)
+    let safeSize = 2;
+    while (safeSize * 2 <= teams.length && safeSize < 16) safeSize *= 2;
+    safeSize = Math.max(2, Math.min(16, safeSize));
+    size = Math.max(8, Math.min(16, safeSize));
 
     const seeded = teams.slice(0, size);
 
@@ -3062,7 +3088,12 @@ save.season.lastRoundPlayed = roundIndex;
       const matches = [];
       for (let i = 0; i < current.length; i += 2) {
         const homeId = current[i];
-        const awayId = current[i + 1];
+        let awayId = current[i + 1];
+        if (!awayId) {
+          // tenta pegar alguém do pool global que não seja o mandante
+          const pool = (allIds || []).filter(x => x && x !== homeId);
+          awayId = pool.length ? pool[Math.floor(Math.random() * pool.length)] : 'TBD_B';
+        }
         const sim = simulateMatch(homeId, awayId, save);
         const winnerId = (sim.hg > sim.ag) ? homeId : (sim.hg < sim.ag ? awayId : (Math.random() < 0.5 ? homeId : awayId));
         matches.push({ homeId, awayId, hg: sim.hg, ag: sim.ag, winnerId });
@@ -3324,6 +3355,29 @@ function pickBrazilQualifiers(save, leagueId, from, to) {
       if (cont.europa) pushUnique(uel, pickLeagueQualifiers(save, lid, cont.europa.from, cont.europa.to));
     }
 
+    // Fallback UEFA: se o pacote ainda não tiver zonas configuradas para alguma liga europeia
+    // (ou se o usuário ainda não simulou as ligas paralelas), garantimos um pool mínimo
+    // para Champions/Europa usando os clubes das ligas europeias disponíveis no pack.
+    // Isso evita torneios vazios/sem nomes.
+    const allClubs = (((save.world?.clubs) || (state.packData?.clubs?.clubs) || []) || []);
+    const UEFA_COUNTRIES = new Set(['EN','ES','DE','IT','FR','PT']);
+    const uefaLeagueIds = new Set(
+      (leagues || []).filter(lg => UEFA_COUNTRIES.has(lg?.country)).map(lg => lg.id)
+    );
+    const uefaPool = allClubs
+      .filter(c => c?.id && (uefaLeagueIds.has(c.leagueId) || UEFA_COUNTRIES.has((leagues || []).find(lg => lg.id === c.leagueId)?.country)))
+      .map(c => c.id);
+
+    // Se não vieram classificados suficientes, preenche com os mais fortes do pool UEFA
+    // (apenas adiciona, nunca remove).
+    if (uefaPool.length) {
+      // reutiliza rankByStrength mais abaixo; aqui só juntamos.
+      for (const id of uefaPool) {
+        if (ucl.length < 24 && !ucl.includes(id)) ucl.push(id);
+        else if (uel.length < 24 && !uel.includes(id)) uel.push(id);
+      }
+    }
+
 
     // Ranking por força (para desempates e preenchimento de vagas)
     const strengthOf = (clubId) => {
@@ -3418,7 +3472,9 @@ function pickBrazilQualifiers(save, leagueId, from, to) {
     if (libN.length >= 16) store.libertadores = buildLibertadoresGroupsAndKO(save, 'CONMEBOL_LIB', 'CONMEBOL Libertadores', libN);
     else store.libertadores = store.libertadores || { id: 'CONMEBOL_LIB', name: 'CONMEBOL Libertadores', status: 'placeholder' };
 
-    if (sula16.length >= 8) store.sudamericana = buildKnockoutTournament(save, 'CONMEBOL_SUD', 'CONMEBOL Sul-Americana', sula16);
+    // Sul-Americana (KO)
+    // (hotfix) variável correta é sulaN; sula16 não existia e podia interromper a geração dos continentais.
+    if (sulaN.length >= 8) store.sudamericana = buildKnockoutTournament(save, 'CONMEBOL_SUD', 'CONMEBOL Sul-Americana', sulaN);
     else store.sudamericana = store.sudamericana || { id: 'CONMEBOL_SUD', name: 'CONMEBOL Sul-Americana', status: 'placeholder' };
 
     store.uefa = store.uefa || {};
