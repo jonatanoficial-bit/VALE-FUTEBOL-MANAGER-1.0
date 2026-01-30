@@ -3386,11 +3386,18 @@ function pickBrazilQualifiers(save, leagueId, from, to) {
   }
 
     function generateContinentalCompetitionsForSeason(save) {
-    // B1.1: geração global com regras configuráveis (qualifications.json) + formatos avançados (provisórios):
-    // - CONMEBOL Libertadores: fase de grupos (32) + mata-mata (16)
-    // - UEFA Champions League: fase de liga (24) + mata-mata (16)
+    // B1.1G2: geração global com regras configuráveis (qualifications.json) + formatos clássicos de copa (GRUPOS+MATA-MATA):
+    // - CONMEBOL Libertadores: 8 grupos (32) + mata-mata (16)
+    // - CONMEBOL Sul-Americana: 8 grupos (32) + mata-mata (16)
+    // - UEFA Champions League: 8 grupos (32) + mata-mata (16)
+    // - UEFA Europa League: 8 grupos (32) + mata-mata (16)
     const store = ensureContinentalStore(save);
-    if (store.generatedAt === save.season?.completedAt && store.version === 'B1.1') return;
+
+    const CURRENT_CONT_VERSION = 'B1.1G2';
+    // evita regenerar sem necessidade, mas força migração se versões antigas (ex.: fase de liga 24) estiverem salvas
+    const sameSeason = (store.generatedAt === (save.season?.completedAt || null));
+    const alreadyOk = sameSeason && store.version === CURRENT_CONT_VERSION;
+    if (alreadyOk) return;
 
     // Garante tabelas das outras ligas
     try { ensureParallelWorldLeaguesFinalized(save); } catch (e) {}
@@ -3559,7 +3566,7 @@ function pickBrazilQualifiers(save, leagueId, from, to) {
     store.uefa.conference = store.uefa.conference || { id: 'UEFA_ECL', name: 'UEFA Conference League', status: 'placeholder' };
 
     store.generatedAt = save.season?.completedAt || nowIso();
-    store.version = 'B1.1G';
+    store.version = CURRENT_CONT_VERSION;
   }
 
   
