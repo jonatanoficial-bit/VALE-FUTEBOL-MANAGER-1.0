@@ -371,15 +371,7 @@
         if (found) return found;
       }
     } catch {}
-    const fromPack = state.packData?.clubs?.clubs.find((c) => c.id === id) || null;
-    if (fromPack) return fromPack;
-
-    // Fallback: se o ID não existe no pacote (ex.: ligas novas sem clubes definidos),
-    // retornamos um "clube virtual" para não quebrar a UI (tabelas/continentais).
-    if (!id) return null;
-    const sid = String(id);
-    const short = sid.replace(/[^A-Z0-9]/gi, '').slice(-3).toUpperCase() || sid.slice(0,3).toUpperCase();
-    return { id: sid, name: sid, short, leagueId: 'UNKNOWN', overall: 60, budget: 0, __virtual: true };
+    return state.packData?.clubs?.clubs.find((c) => c.id === id) || null;
   }
 
   /** Gera aleatoriamente um elenco para um clube (MVP) */
@@ -2626,7 +2618,7 @@ save.season.lastRoundPlayed = roundIndex;
       }
 
       // CONMEBOL (fora BR): garante LIB/SULA mesmo no round 1
-      const CONM_LIDS = ['ARG_PRIMERA','URU_PRIMERA','CHI_PRIMERA','COL_PRIMERA','ECU_LIGAPRO','VEN_PRIMERA','BOL_PRIMERA'];
+      const CONM_LIDS = ['ARG_PRIMERA','URU_PRIMERA','CHI_PRIMERA','COL_PRIMERA','ECU_LIGA','VEN_LIGA','BOL_LIGA'];
       if (lib.length < 16) {
         for (const lid of CONM_LIDS) pushUnique(lib, topByStrengthFromLeague(lid, 4));
       }
@@ -2710,10 +2702,12 @@ save.season.lastRoundPlayed = roundIndex;
       live.tournaments = {
         conmebol: {
           libertadores: initLibertadoresLive(save, 'CONMEBOL_LIB', 'CONMEBOL Libertadores', libSel),
+          // Sul-Americana também terá fase de grupos/league futuramente. Por ora, mantemos KO.
           sudamericana: initKnockoutLive(save, 'CONMEBOL_SUD', 'CONMEBOL Sul-Americana', sulaSel)
         },
         uefa: {
           champions: initChampionsLive(save, 'UEFA_CL', 'UEFA Champions League', uclSel),
+          // Europa League precisa ter fase de liga para existir "tabela" e liberar a simulação.
           europa: initEuropaLive(save, 'UEFA_EL', 'UEFA Europa League', uelSel)
         }
       };
@@ -2740,13 +2734,16 @@ save.season.lastRoundPlayed = roundIndex;
       const ids = gTeams.slice();
       const tableObj = buildGroupTable(ids);
 
-      // 3 matchdays (turno único) com 2 jogos por rodada
-      // pares fixos: (1-2,3-4), (1-3,2-4), (1-4,2-3) com mando alternado
-      const md = [
+      // 6 matchdays (ida e volta) com 2 jogos por rodada
+      // pares base: (1-2,3-4), (1-3,2-4), (1-4,2-3) e depois invertido
+      const mdBase = [
         [ { homeId: ids[0], awayId: ids[1] }, { homeId: ids[2], awayId: ids[3] } ],
         [ { homeId: ids[2], awayId: ids[0] }, { homeId: ids[1], awayId: ids[3] } ],
         [ { homeId: ids[0], awayId: ids[3] }, { homeId: ids[1], awayId: ids[2] } ]
       ].filter(r => r.every(x => x.homeId && x.awayId));
+
+      const mdReturn = mdBase.map(r => r.map(m => ({ homeId: m.awayId, awayId: m.homeId })));
+      const md = [...mdBase, ...mdReturn];
 
       groups.push({
         name: `Grupo ${groupNames[gi]}`,
@@ -2833,78 +2830,71 @@ save.season.lastRoundPlayed = roundIndex;
     };
   }
 
-
-  // Europa League: fase de liga (16) + mata-mata (8)
-  function initEuropaLive(save, id, name, participants16) {
-    const teams = (participants16 || []).slice(0, 16);
+  // Europa League: fase de liga + mata-mata (provisório, mas funcional)
+  // Mantém o mesmo tipo de estrutura da Champions para que exista tabela e
+  // para que o botão de "ver tabela" tenha conteúdo real.
+  function initEuropaLive(save, id, name, participants) {
+    // Por padrão usamos 16 clubes no pack atual (ajustável depois para 36)
+    const teams = (participants || []).slice(0, 16).filter(Boolean);
     if (teams.length < 8) return { id, name, format: 'LEAGUE+KO', status: 'placeholder' };
 
-    const ROUNDS = 6;
+    const roundsCount = 6; // 6 rodadas no modelo de teste
     const rounds = [];
     const played = {};
-    const mk = (a, b) => (a < b ? (a + '|' + b) : (b + '|' + a));
-    const canPair = (a, b) => (a !== b && !played[mk(a, b)]);
-    const mark = (a, b) => { played[mk(a, b)] = true; };
+    const mk = (a,b)=> a<b ? `${a}|${b}` : `${b}|${a}`;
+    const canPair = (a,b)=> a!==b && !played[mk(a,b)];
+    const mark = (a,b)=> { played[mk(a,b)] = true; };
 
     const tableObj = {};
-    for (const cid of teams) tableObj[cid] = { id: cid, P: 0, W: 0, D: 0, L: 0, GF: 0, GA: 0, GD: 0, Pts: 0 };
+    for (const cid of teams) tableObj[cid] = { id:cid, P:0,W:0,D:0,L:0,GF:0,GA:0,GD:0,Pts:0 };
 
-    for (let r = 1; r <= ROUNDS; r++) {
+    for (let r=1; r<=roundsCount; r++) {
       let attempt = 0;
       let order = teams.slice();
       let matches = null;
       while (attempt < 200 && !matches) {
-        for (let i = order.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          const tmp = order[i];
-          order[i] = order[j];
-          order[j] = tmp;
-        }
+        attempt++;
+        for (let i=order.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [order[i],order[j]]=[order[j],order[i]]; }
         const used = new Set();
         const m = [];
-        for (let i = 0; i < order.length; i++) {
+        for (let i=0;i<order.length;i++) {
           const a = order[i];
           if (used.has(a)) continue;
-          for (let j = i + 1; j < order.length; j++) {
+          for (let j=i+1;j<order.length;j++) {
             const b = order[j];
             if (used.has(b)) continue;
-            if (!canPair(a, b)) continue;
-            used.add(a);
-            used.add(b);
-            const homeId = (r % 2 === 0) ? a : b;
-            const awayId = (r % 2 === 0) ? b : a;
-            m.push({ homeId: homeId, awayId: awayId, played: false, hg: null, ag: null });
-            mark(homeId, awayId);
-            break;
+            if (canPair(a,b)) {
+              used.add(a); used.add(b);
+              mark(a,b);
+              // alterna mando por rodada
+              const homeId = (r % 2 === 1) ? a : b;
+              const awayId = (r % 2 === 1) ? b : a;
+              m.push({ homeId, awayId, played:false, hg:null, ag:null });
+              break;
+            }
           }
         }
-        if (m.length === 8) matches = m;
-        attempt++;
+        if (m.length === Math.floor(teams.length/2)) matches = m;
       }
+
+      // fallback: se não conseguir evitar repetição, monta aleatório
       if (!matches) {
         const order2 = teams.slice();
-        for (let i = order2.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          const tmp = order2[i];
-          order2[i] = order2[j];
-          order2[j] = tmp;
-        }
+        for (let i=order2.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [order2[i],order2[j]]=[order2[j],order2[i]]; }
         matches = [];
-        for (let i = 0; i < order2.length; i += 2) {
-          matches.push({ homeId: order2[i], awayId: order2[i + 1], played: false, hg: null, ag: null });
-        }
+        for (let i=0;i<order2.length;i+=2) matches.push({ homeId: order2[i], awayId: order2[i+1], played:false, hg:null, ag:null });
       }
-      rounds.push({ name: 'Rodada ' + r, matches: matches });
+
+      rounds.push({ name: `Rodada ${r}`, matches });
     }
 
     return {
-      id: id,
-      name: name,
+      id, name,
       format: 'LEAGUE+KO',
-      size: 16,
+      size: teams.length,
       stage: 'LEAGUE',
       roundIndex: 0,
-      leaguePhase: { rounds: rounds, tableObj: tableObj, table: sortMiniTable(Object.values(tableObj)) },
+      leaguePhase: { rounds, tableObj, table: sortMiniTable(Object.values(tableObj)) },
       knockout: null,
       championId: null,
       championName: null
@@ -2992,7 +2982,7 @@ save.season.lastRoundPlayed = roundIndex;
         g.table = sortMiniTable(Object.values(g.tableObj));
       }
       lib.matchdayIndex = md + 1;
-      if (lib.matchdayIndex >= 3) {
+      if (lib.matchdayIndex >= 6) {
         // fecha grupos -> cria KO com top2
         const qualified = [];
         for (const g of (lib.groups || [])) {
@@ -3042,10 +3032,10 @@ save.season.lastRoundPlayed = roundIndex;
       }
     }
 
-    // Europa League - fase de liga -> depois KO (ou KO simples, compat)
-    if (uel && uel.format === "LEAGUE+KO" && uel.stage === "LEAGUE") {
+    // Europa League - rodada fase de liga -> depois KO
+    if (uel && uel.format === 'LEAGUE+KO' && uel.stage === 'LEAGUE') {
       const ri = uel.roundIndex || 0;
-      const rnd = uel.leaguePhase && uel.leaguePhase.rounds ? uel.leaguePhase.rounds[ri] : null;
+      const rnd = uel.leaguePhase?.rounds?.[ri];
       if (rnd) {
         for (const m of (rnd.matches || [])) {
           if (m.played) continue;
@@ -3054,28 +3044,32 @@ save.season.lastRoundPlayed = roundIndex;
           applyGroupResult(uel.leaguePhase.tableObj, m.homeId, m.awayId, sim.hg, sim.ag);
           const stats = buildMatchStats(m.homeId, m.awayId, sim, save);
           const timeline = buildTimelineForMatch(m.homeId, m.awayId, sim, save);
-          playedMatches.push({ comp: "UEL", homeId: m.homeId, awayId: m.awayId, hg: sim.hg, ag: sim.ag, stats, timeline });
+          playedMatches.push({ comp: 'UEL', homeId: m.homeId, awayId: m.awayId, hg: sim.hg, ag: sim.ag, stats, timeline });
         }
         uel.leaguePhase.table = sortMiniTable(Object.values(uel.leaguePhase.tableObj));
       }
       uel.roundIndex = ri + 1;
-      if (uel.roundIndex >= 6) {
-        const qualified = (uel.leaguePhase.table || []).slice(0, 8).map(r => r.id);
-        uel.knockout = initKnockoutLive(save, uel.id + "_KO", uel.name + " • Mata-mata", qualified);
-        uel.stage = "KO";
+
+      // Após a última rodada, cria mata-mata com Top 8
+      if (uel.roundIndex >= (uel.leaguePhase?.rounds?.length || 0)) {
+        const qualified = (uel.leaguePhase.table || []).slice(0,8).map(r => r.id);
+        uel.knockout = initKnockoutLive(save, uel.id + '_KO', uel.name + ' • Mata-mata', qualified);
+        uel.stage = 'KO';
       }
-    } else if (uel && uel.format === "LEAGUE+KO" && uel.stage === "KO" && uel.knockout) {
+    } else if (uel && uel.format === 'LEAGUE+KO' && uel.stage === 'KO' && uel.knockout) {
       const res = playKnockoutRound(save, uel.knockout);
-      playedMatches.push(...(res.playedMatches || []).map(m => ({ ...m, comp: "UEL" })));
+      playedMatches.push(...(res.playedMatches || []).map(m => ({ ...m, comp: 'UEL' })));
       if (uel.knockout.championId) {
         uel.championId = uel.knockout.championId;
         uel.championName = uel.knockout.championName;
       }
-    } else if (uel && uel.format === "KO") {
+    } else if (uel && uel.format === 'KO') {
+      // compatibilidade antiga
       const res = playKnockoutRound(save, uel);
-      playedMatches.push(...(res.playedMatches || []).map(m => ({ ...m, comp: "UEL" })));
+      playedMatches.push(...(res.playedMatches || []).map(m => ({ ...m, comp: 'UEL' })));
     }
 
+    // Sul-Americana (KO)
     if (sud && sud.format === 'KO') {
       const res = playKnockoutRound(save, sud);
       playedMatches.push(...(res.playedMatches || []).map(m => ({ ...m, comp: 'SUD' })));
@@ -3153,35 +3147,17 @@ save.season.lastRoundPlayed = roundIndex;
   function buildKnockoutTournament(save, id, name, participants) {
     // Garante potência de 2 (8/16) com byes se necessário
     const teams = (participants || []).filter(Boolean);
-
-    // Segurança: nunca permitir KO com IDs undefined.
-    // Se o pacote não tiver clubes suficientes (ou estiver carregando parcialmente),
-    // completamos com o pool global e, em último caso, reduzimos o tamanho do chaveamento.
-    const allIds = (((save.world?.clubs) || (state.packData?.clubs?.clubs) || [])
-      .map(c => c?.id)
-      .filter(Boolean));
     let size = 2;
     while (size < teams.length) size *= 2;
     size = Math.max(8, Math.min(16, size)); // provisório: 8 a 16
 
     while (teams.length < size) {
       // completa com clubes restantes aleatórios do Brasil
-      const pool = (allIds || []).filter(x => x && !teams.includes(x));
+      const all = ((save.world?.clubs) || (state.packData?.clubs?.clubs) || []).map(c => c.id);
+      const pool = all.filter(x => !teams.includes(x));
       if (!pool.length) break;
       teams.push(pool[Math.floor(Math.random() * pool.length)]);
     }
-
-    // Se ainda assim não conseguimos completar, reduz o size para evitar pares faltando
-    // (ex.: current[i+1] undefined).
-    if (teams.length < 2) {
-      // cria 2 placeholders estáveis
-      teams.push('TBD_A', 'TBD_B');
-    }
-    // recalcula o size para o que de fato temos (mínimo 2, máximo 16)
-    let safeSize = 2;
-    while (safeSize * 2 <= teams.length && safeSize < 16) safeSize *= 2;
-    safeSize = Math.max(2, Math.min(16, safeSize));
-    size = Math.max(8, Math.min(16, safeSize));
 
     const seeded = teams.slice(0, size);
 
@@ -3193,12 +3169,7 @@ save.season.lastRoundPlayed = roundIndex;
       const matches = [];
       for (let i = 0; i < current.length; i += 2) {
         const homeId = current[i];
-        let awayId = current[i + 1];
-        if (!awayId) {
-          // tenta pegar alguém do pool global que não seja o mandante
-          const pool = (allIds || []).filter(x => x && x !== homeId);
-          awayId = pool.length ? pool[Math.floor(Math.random() * pool.length)] : 'TBD_B';
-        }
+        const awayId = current[i + 1];
         const sim = simulateMatch(homeId, awayId, save);
         const winnerId = (sim.hg > sim.ag) ? homeId : (sim.hg < sim.ag ? awayId : (Math.random() < 0.5 ? homeId : awayId));
         matches.push({ homeId, awayId, hg: sim.hg, ag: sim.ag, winnerId });
@@ -3460,29 +3431,6 @@ function pickBrazilQualifiers(save, leagueId, from, to) {
       if (cont.europa) pushUnique(uel, pickLeagueQualifiers(save, lid, cont.europa.from, cont.europa.to));
     }
 
-    // Fallback UEFA: se o pacote ainda não tiver zonas configuradas para alguma liga europeia
-    // (ou se o usuário ainda não simulou as ligas paralelas), garantimos um pool mínimo
-    // para Champions/Europa usando os clubes das ligas europeias disponíveis no pack.
-    // Isso evita torneios vazios/sem nomes.
-    const allClubs = (((save.world?.clubs) || (state.packData?.clubs?.clubs) || []) || []);
-    const UEFA_COUNTRIES = new Set(['EN','ES','DE','IT','FR','PT']);
-    const uefaLeagueIds = new Set(
-      (leagues || []).filter(lg => UEFA_COUNTRIES.has(lg?.country)).map(lg => lg.id)
-    );
-    const uefaPool = allClubs
-      .filter(c => c?.id && (uefaLeagueIds.has(c.leagueId) || UEFA_COUNTRIES.has((leagues || []).find(lg => lg.id === c.leagueId)?.country)))
-      .map(c => c.id);
-
-    // Se não vieram classificados suficientes, preenche com os mais fortes do pool UEFA
-    // (apenas adiciona, nunca remove).
-    if (uefaPool.length) {
-      // reutiliza rankByStrength mais abaixo; aqui só juntamos.
-      for (const id of uefaPool) {
-        if (ucl.length < 24 && !ucl.includes(id)) ucl.push(id);
-        else if (uel.length < 24 && !uel.includes(id)) uel.push(id);
-      }
-    }
-
 
     // Ranking por força (para desempates e preenchimento de vagas)
     const strengthOf = (clubId) => {
@@ -3577,9 +3525,7 @@ function pickBrazilQualifiers(save, leagueId, from, to) {
     if (libN.length >= 16) store.libertadores = buildLibertadoresGroupsAndKO(save, 'CONMEBOL_LIB', 'CONMEBOL Libertadores', libN);
     else store.libertadores = store.libertadores || { id: 'CONMEBOL_LIB', name: 'CONMEBOL Libertadores', status: 'placeholder' };
 
-    // Sul-Americana (KO)
-    // (hotfix) variável correta é sulaN; sula16 não existia e podia interromper a geração dos continentais.
-    if (sulaN.length >= 8) store.sudamericana = buildKnockoutTournament(save, 'CONMEBOL_SUD', 'CONMEBOL Sul-Americana', sulaN);
+    if (sula16.length >= 8) store.sudamericana = buildKnockoutTournament(save, 'CONMEBOL_SUD', 'CONMEBOL Sul-Americana', sula16);
     else store.sudamericana = store.sudamericana || { id: 'CONMEBOL_SUD', name: 'CONMEBOL Sul-Americana', status: 'placeholder' };
 
     store.uefa = store.uefa || {};
@@ -3709,14 +3655,14 @@ function pickBrazilQualifiers(save, leagueId, from, to) {
       const lt = t.leaguePhase?.table || [];
       const rounds = t.leaguePhase?.rounds || [];
       const top8 = renderMiniTableBlock(lt, { topBold: 8, limit: 8 });
-      const roundsInfo = `<div class="mini">Rodadas simuladas: ${t.roundIndex || 0}</div>`;
+      const roundsInfo = `<div class="mini">Rodadas simuladas: ${rounds.length}</div>`;
 
       return `
         <div class="card" style="margin-bottom:12px;">
           <div class="card-header">
             <div>
               <div class="card-title">${esc(t.name)}</div>
-              <div class="card-subtitle">Formato provisório avançado: fase de liga (${t.size || 24}) + mata-mata (${(t.size || 24) >= 24 ? 16 : 8})</div>
+              <div class="card-subtitle">Formato provisório avançado: fase de liga (24) + mata-mata (16)</div>
             </div>
             <span class="badge">Campeão</span>
           </div>
