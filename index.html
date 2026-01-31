@@ -1,86 +1,12 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Vale Futebol Manager 2026 - Premium</title>
-  <!-- Estilos principais -->
-  <link rel="stylesheet" href="./styles.css?v=1.11.1" />
-  <!-- Diagnósticos provisórios (removível no final) -->
-  <script src="./js/diagnostics.js"></script>
+  <meta charset="UTF-8" />
+  <title>Vale Futebol Manager 2026</title>
 </head>
 <body>
-  <!-- Tela de abertura com logo da produtora -->
-  <div class="splash" id="splash">
-    <div class="splash-logo">
-      <img src="./assets/images/vale_games_logo.png" alt="Vale Games" />
-    </div>
-  </div>
-
-  <!-- Estrutura principal da aplicação -->
-  <div class="app-shell">
-    <header class="topbar">
-      <div class="brand">
-        <div class="logo-badge">VFM</div>
-        <div class="brand-text">
-          <div class="brand-title">Vale Futebol Manager 2026</div>
-          <div class="brand-subtitle">Carreira • Dados • Admin</div>
-        </div>
-      </div>
-      <div class="topbar-actions">
-        <button class="btn btn-ghost" type="button" onclick="location.hash='#/home'">
-          Início
-        </button>
-      </div>
-    </header>
-    <main class="main">
-      <div id="view" class="view">
-        <!-- O conteúdo será renderizado dinamicamente pelo app.js -->
-      </div>
-    </main>
-    <footer class="footer">
-      <span>© Vale Games</span>
-      <span class="dot">•</span>
-      <span>Offline • LocalStorage</span><span class="dot">•</span><span class="small vfm-version">v1.11.1</span>
-    </footer>
-  </div>  <!-- Lógica principal da aplicação -->
-  <script src="./app_v1.11.1.js?v=1.11.1"></script>
-  <script>
-  (function(){
-    // remove splash em até 2s sempre
-    setTimeout(function(){
-      var splash = document.getElementById('splash');
-      if (splash) { splash.classList.add('hidden'); splash.style.display='none'; }
-    }, 2000);
-
-    // Se o app não renderizar nada após 6s, mostra aviso (SEM carregar script de novo)
-    setTimeout(function(){
-      var viewEl = document.getElementById('view');
-      if (!viewEl) return;
-      if (viewEl.innerHTML && viewEl.innerHTML.trim()) return;
-
-      viewEl.innerHTML =
-        '<div class="card">' +
-          '<div class="card-header">' +
-            '<div><div class="card-title">Falha ao iniciar</div><div class="card-subtitle">O script principal não carregou corretamente.</div></div>' +
-            '<span class="badge">VFM</span>' +
-          '</div>' +
-          '<div class="card-body">' +
-            '<div class="notice">⚠️ Tente um recarregamento forçado (Ctrl+Shift+R). Se persistir, confirme que você publicou o conteúdo do ZIP no diretório raiz do repositório.</div>' +
-            '<div class="sep"></div>' +
-            '<button class="btn btn-primary" type="button" onclick="location.reload()">Recarregar</button>' +
-          '</div>' +
-        '</div>';
-    }, 6000);
-  })();
-  </script>
-
-  <div id="build-badge" style="position:fixed;left:10px;bottom:10px;z-index:99999;
-    background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.15);color:#fff;
-    padding:6px 10px;border-radius:999px;font:12px/1.2 system-ui, -apple-system, Segoe UI, Roboto, Arial;
-    backdrop-filter: blur(8px);">
-	    build v1.11.1
-  </div>
-
+  <div id="app">Vale Futebol Manager 2026 carregado.</div>
+  <script src="app.js"></script>
 </body>
 </html>
