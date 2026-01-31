@@ -2557,6 +2557,25 @@ save.season.lastRoundPlayed = roundIndex;
 
   function ensureContinentalsLive(save) {
     if (!save || !save.season) return null;
+
+    // Auto-fix/migration: older saves can keep UEFA in a legacy placeholder format (LEAGUE+KO / empty groups).
+    // If that happens, we force regeneration for the current season.
+    const live = save.season.continentalsLive;
+    if (live && live.seasonId === save.season.id && live.tournaments) {
+        try {
+            const uefa = (live.tournaments.uefa || {});
+            const ch = (uefa.champions || {});
+            const el = (uefa.europa || {});
+            const badCh = (ch.format && ch.format !== 'GROUPS+KO') || !Array.isArray(ch.groups) || ch.groups.length === 0 || !Array.isArray(ch.teams) || ch.teams.length !== 32;
+            const badEl = (el.format && el.format !== 'GROUPS+KO') || !Array.isArray(el.groups) || el.groups.length === 0 || !Array.isArray(el.teams) || el.teams.length !== 32;
+            if (badCh || badEl) {
+                save.season.continentalsLive = null;
+            }
+        } catch (e) {
+            save.season.continentalsLive = null;
+        }
+    }
+
     if (!save.season.continentalsLive || save.season.continentalsLive.seasonId !== save.season.id) {
       const live = {
         seasonId: save.season.id,
