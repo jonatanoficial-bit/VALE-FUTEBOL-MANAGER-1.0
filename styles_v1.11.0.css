@@ -1,0 +1,690 @@
+/*
+ * Vale Futebol Manager 2026 - Premium
+ * Estilos principais da aplicação
+ *
+ * A paleta foi concebida com tons escuros e destaques em verde e dourado
+ * para um visual elegante. Componentes são construídos com bordas suaves,
+ * sombras discretas e interações com transições suaves.
+ */
+
+/* Variáveis de cor e dimensões */
+:root {
+  --bg: #0b0f14;
+  --panel: #101824;
+  --panel-alt: #0f1722;
+  --text: #e7eef8;
+  --muted: #8da1b3;
+  --line: rgba(255, 255, 255, 0.08);
+  --brand: #22c55e;
+  --accent: #dcb566;
+  --danger: #ef4444;
+  --warn: #f59e0b;
+  --radius: 16px;
+  --radius-lg: 24px;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* Reset básico */
+* {
+  box-sizing: border-box;
+}
+html, body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: var(--font);
+  background: radial-gradient(1200px 800px at 50% -200px, rgba(34, 197, 94, 0.2), transparent 60%),
+              radial-gradient(800px 500px at 80% 120%, rgba(220, 181, 102, 0.15), transparent 55%),
+              var(--bg);
+  color: var(--text);
+}
+
+/* =======================================================
+   VFM – Matchday Modal (A2)
+   Modal/tela de partida com emoção (mobile-first)
+   =======================================================*/
+.vfm-modal-overlay{
+  position:fixed; inset:0; z-index:9999;
+  background:rgba(0,0,0,.72);
+  display:flex; align-items:center; justify-content:center;
+  padding:16px;
+}
+
+.vfm-modal{
+  width:min(980px, 100%);
+  max-height:92vh;
+  overflow:hidden;
+  background:rgba(15,23,42,.98);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  box-shadow:0 24px 70px rgba(0,0,0,.55);
+  display:flex;
+  flex-direction:column;
+}
+
+.vfm-modal-header{
+  padding:14px 14px 10px;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:10px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.vfm-modal-title{
+  display:flex; flex-direction:column;
+  gap:2px;
+}
+
+.vfm-modal-title .t1{font-weight:800; letter-spacing:.2px;}
+.vfm-modal-title .t2{opacity:.75; font-size:12px;}
+
+.vfm-modal-body{
+  padding:12px 14px 14px;
+  overflow:auto;
+}
+
+.vfm-match-hero{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px;
+  padding:10px 10px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  background:rgba(2,6,23,.35);
+}
+
+.vfm-match-side{
+  display:flex; align-items:center; gap:10px; min-width:0;
+}
+
+.vfm-match-side .nm{font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.vfm-match-mid{
+  text-align:center;
+  display:flex; flex-direction:column; gap:2px;
+}
+.vfm-score{
+  font-size:30px; font-weight:900; letter-spacing:.5px;
+}
+.vfm-clock{font-size:12px; opacity:.8;}
+
+.vfm-grid{
+  display:grid;
+  grid-template-columns: 1.35fr .65fr;
+  gap:12px;
+  margin-top:12px;
+}
+
+@media (max-width: 820px){
+  .vfm-grid{grid-template-columns:1fr;}
+}
+
+.vfm-panel{
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  background:rgba(2,6,23,.25);
+  overflow:hidden;
+}
+
+.vfm-panel .hd{
+  padding:10px 12px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  font-weight:800;
+  display:flex; justify-content:space-between; align-items:center;
+}
+
+.vfm-timeline{
+  padding:10px 12px;
+  max-height: 44vh;
+  overflow:auto;
+  font-size:13px;
+}
+
+.vfm-timeline .ev{padding:7px 0; border-bottom:1px dashed rgba(255,255,255,.08);}
+.vfm-timeline .ev:last-child{border-bottom:none;}
+
+.vfm-stats{
+  padding:10px 12px;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+  font-size:13px;
+}
+
+.vfm-stat-row{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:10px;
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:12px;
+  padding:8px 10px;
+  background:rgba(2,6,23,.18);
+}
+
+.vfm-modal-actions{
+  display:flex; gap:10px; justify-content:flex-end;
+  padding:12px 14px;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+
+
+/* Splash screen com logo da produtora */
+.splash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, rgba(34, 197, 94, 0.15), rgba(0, 0, 0, 0.9));
+  z-index: 999;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+.splash.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+.splash-logo img {
+  width: 200px;
+  max-width: 80vw;
+  animation: pulse 2.5s infinite ease-in-out;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.08); opacity: 0.85; }
+}
+
+/* Estrutura da aplicação */
+.app-shell {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Topbar */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(16, 24, 36, 0.8);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.logo-badge {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--brand), var(--accent));
+  color: #0b0f14;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  box-shadow: var(--shadow);
+}
+.brand-text .brand-title {
+  font-weight: 800;
+  font-size: 15px;
+}
+.brand-text .brand-subtitle {
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 2px;
+}
+.topbar-actions .btn {
+  margin-left: 8px;
+}
+
+/* Área principal */
+.main {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+.view {
+  width: min(1000px, 100%);
+}
+
+/* Rodapé */
+.footer {
+  padding: 10px 20px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  background: rgba(16, 24, 36, 0.6);
+  backdrop-filter: blur(10px);
+}
+.dot {
+  opacity: 0.6;
+}
+
+/* Componentes básicos */
+.card {
+  background: linear-gradient(180deg, rgba(16, 24, 36, 0.92), rgba(12, 18, 28, 0.92));
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.card-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.card-title {
+  font-weight: 800;
+  font-size: 16px;
+}
+.card-subtitle {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 4px;
+}
+.card-body {
+  padding: 20px;
+}
+
+/* Grid utilitário */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 16px;
+}
+.col-12 { grid-column: span 12; }
+.col-8 { grid-column: span 8; }
+.col-6 { grid-column: span 6; }
+.col-4 { grid-column: span 4; }
+.col-3 { grid-column: span 3; }
+@media (max-width: 820px) {
+  .col-8, .col-6, .col-4, .col-3 { grid-column: span 12; }
+}
+
+/* Botões */
+.btn {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-weight: 700;
+  transition: background 0.15s ease, transform 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.08);
+}
+.btn:active {
+  transform: translateY(0);
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--brand), var(--accent));
+  color: #0b0f14;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--brand), var(--accent));
+  filter: brightness(1.05);
+}
+.btn-danger {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.35);
+}
+.btn-ghost {
+  background: transparent;
+}
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Inputs e selects */
+.input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.18);
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+.input:focus {
+  border-color: var(--brand);
+}
+.label {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* Listas e itens */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.04);
+}
+.item-title {
+  font-weight: 800;
+  font-size: 14px;
+}
+.item-sub {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 2px;
+}
+.item-left {
+  min-width: 0;
+}
+.item-right {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+/* Avisos e badges */
+.notice {
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* Tabela simples */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.03);
+}
+.table th, .table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+}
+.table th {
+  color: var(--muted);
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.04);
+}
+.table tr:last-child td {
+  border-bottom: none;
+}
+.center { text-align: center; }
+.right { text-align: right; }
+
+/* Outros utilitários */
+.sep {
+  height: 1px;
+  background: var(--line);
+  margin: 16px 0;
+}
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 600;
+}
+.club-logo{width:42px;height:42px;overflow:hidden;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);display:grid;place-items:center;}
+.club-logo img{width:100%;height:100%;object-fit:contain;display:block;}
+
+
+/* --- table logo fix --- */
+.table .club-cell{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+.table .club-cell .club-logo{
+  width:28px; height:28px;
+  border-radius:10px;
+}
+.table .club-cell .club-name{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+
+/* --- Zonas de classificação/rebaixamento (Parte 2) --- */
+.pill.zone-lib { border-color: rgba(220,181,102,.45); background: rgba(220,181,102,.12); }
+.pill.zone-sula { border-color: rgba(245,158,11,.45); background: rgba(245,158,11,.10); }
+.pill.zone-ucl { border-color: rgba(59,130,246,.45); background: rgba(59,130,246,.10); }
+.pill.zone-uel { border-color: rgba(168,85,247,.45); background: rgba(168,85,247,.10); }
+.pill.zone-up { border-color: rgba(34,197,94,.45); background: rgba(34,197,94,.10); }
+.pill.zone-z4 { border-color: rgba(239,68,68,.45); background: rgba(239,68,68,.10); }
+
+.table tr.zone-lib td { box-shadow: inset 4px 0 0 rgba(220,181,102,.75); }
+.table tr.zone-sula td { box-shadow: inset 4px 0 0 rgba(245,158,11,.75); }
+.table tr.zone-ucl td { box-shadow: inset 4px 0 0 rgba(59,130,246,.75); }
+.table tr.zone-uel td { box-shadow: inset 4px 0 0 rgba(168,85,247,.75); }
+.table tr.zone-up td { box-shadow: inset 4px 0 0 rgba(34,197,94,.75); }
+.table tr.zone-z4 td { box-shadow: inset 4px 0 0 rgba(239,68,68,.75); }
+
+/* --- Standings polish (Parte A3) --- */
+.zone-legend{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:10px 12px;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.04);
+  border-radius:14px;
+}
+.zone-legend-left{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+.zone-legend-right{ color: var(--muted); font-size: 12px; line-height: 1.2; }
+.pill.pill-mini{ padding:4px 8px; font-size:10px; opacity:.9; }
+
+.table-wrap{ overflow-x:auto; border-radius:14px; border:1px solid var(--line); }
+.table-standings{ margin:0; border:0; min-width: 720px; }
+.table-standings thead th{ position: sticky; top: 0; z-index: 2; background: rgba(10, 20, 30, .92); backdrop-filter: blur(6px); }
+
+.table-standings tbody tr:nth-child(odd){ background: rgba(255,255,255,.02); }
+.table-standings tbody tr.is-user{ background: rgba(34,197,94,.08) !important; }
+.table-standings tbody tr.is-user td{ box-shadow: inset 0 0 0 1px rgba(34,197,94,.35); }
+.table-standings tbody tr.is-leader{ background: rgba(220,181,102,.08); }
+.table-standings tbody tr.is-leader td:first-child{ font-weight:800; }
+
+@media (max-width: 720px){
+  .zone-legend{ align-items:flex-start; flex-direction:column; }
+  .zone-legend-right{ width:100%; }
+}
+
+
+/* =========================
+   HUB – Cinemático (C3)
+   ========================= */
+
+.hub-hero{
+  position:relative;
+  overflow:hidden;
+  border-radius:22px;
+  padding:18px;
+  margin-bottom:14px;
+  background: radial-gradient(1200px 420px at 20% 0%, rgba(80,220,140,.18), transparent 60%),
+              radial-gradient(900px 360px at 80% 10%, rgba(120,170,255,.16), transparent 60%),
+              rgba(10,16,22,.6);
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 20px 60px rgba(0,0,0,.35);
+}
+.hub-hero .hub-hero-title{
+  font-size:18px;
+  font-weight:800;
+  letter-spacing:.3px;
+}
+.hub-hero .hub-hero-sub{
+  opacity:.9;
+  margin-top:4px;
+}
+.hub-grid{
+  display:grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap:12px;
+  margin-top:14px;
+}
+.hub-card{
+  grid-column: span 6;
+  position:relative;
+  overflow:hidden;
+  border-radius:18px;
+  min-height:120px;
+  padding:14px;
+  border:1px solid rgba(255,255,255,.09);
+  background: rgba(12,18,26,.55);
+  box-shadow:0 16px 40px rgba(0,0,0,.28);
+  cursor:pointer;
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, filter .18s ease;
+}
+.hub-card:hover{
+  transform: translateY(-2px);
+  border-color: rgba(120,255,190,.22);
+  box-shadow:0 22px 55px rgba(0,0,0,.34);
+  filter: saturate(1.05);
+}
+.hub-card:active{ transform: translateY(0px) scale(.99); }
+.hub-card .hub-bg{
+  position:absolute; inset:0;
+  background-size: cover;
+  background-position:center;
+  opacity:.22;
+  filter: blur(0px);
+}
+.hub-card .hub-overlay{
+  position:absolute; inset:0;
+  background: linear-gradient(90deg, rgba(8,12,18,.92), rgba(8,12,18,.60) 55%, rgba(8,12,18,.22));
+}
+.hub-card .hub-content{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.hub-card .hub-left{
+  display:flex; align-items:center; gap:12px;
+}
+.hub-pill{
+  width:44px; height:44px;
+  border-radius:14px;
+  display:flex; align-items:center; justify-content:center;
+  background: rgba(0,0,0,.35);
+  border:1px solid rgba(255,255,255,.10);
+  font-size:22px;
+}
+.hub-title{
+  font-weight:900;
+  letter-spacing:.2px;
+}
+.hub-desc{
+  opacity:.88;
+  font-size:12px;
+  margin-top:2px;
+}
+.hub-cta{
+  font-weight:800;
+  opacity:.9;
+  padding:8px 10px;
+  border-radius:12px;
+  background: rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.08);
+}
+@media (min-width: 900px){
+  .hub-card{ grid-column: span 4; min-height:140px; }
+}
+@media (max-width: 480px){
+  .hub-card{ grid-column: span 12; }
+}
+
+.vfm-version{opacity:.7}
+
+/* =============================
+   Cinematic backgrounds (ONLY menu + lobby)
+   - Não altera jogabilidade
+   - Ativado via classes no <body>
+   ============================= */
+
+body.route-menu{
+  background: url("./assets/backgrounds/bg_menu.png") no-repeat center center fixed;
+  background-size: cover;
+}
+
+body.route-hub{
+  background: url("./assets/backgrounds/bg_lobby.png") no-repeat center center fixed;
+  background-size: cover;
+}
+
+/* Overlay suave para legibilidade */
+body.route-menu #app::before,
+body.route-hub #app::before{
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,.45), rgba(0,0,0,.70));
+  pointer-events: none;
+  z-index: 0;
+}
+
+body.route-menu #app,
+body.route-hub #app{
+  position: relative;
+  z-index: 1;
+}

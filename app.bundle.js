@@ -1,9 +1,3 @@
-/* VFM PATCH: prevent double-load (bundle) */
-if (window.__VFM_BUNDLE_LOADED__) {
-  console.warn("[VFM] app.bundle.js carregado novamente; ignorando.");
-} else {
-  window.__VFM_BUNDLE_LOADED__ = true;
-  (function(){
 (() => {
   "use strict";
 
@@ -2590,6 +2584,3 @@ if (window.__VFM_BUNDLE_LOADED__) {
   }
 ;
 })();
-
-  }).call(window);
-}

@@ -1,3 +1,21 @@
+/* ===== VFM build guard 1.11.0 (cache bust + safer continental regen) ===== */
+const VFM_BUILD = "1.11.0";
+try {
+  const prev = localStorage.getItem("VFM_BUILD");
+  if (prev !== VFM_BUILD) {
+    localStorage.setItem("VFM_BUILD", VFM_BUILD);
+    // only clear continental-related caches to avoid wiping user career saves
+    const kill = [];
+    for (let i=0;i<localStorage.length;i++) {
+      const k = localStorage.key(i);
+      if (!k) continue;
+      if (/continental|conmebol|uefa|champions|europa|libertadores|sulamericana/i.test(k)) kill.push(k);
+    }
+    kill.forEach(k=>localStorage.removeItem(k));
+  }
+} catch (e) {}
+/* ======================================================================== */
+
 (() => {
   "use strict";
 
@@ -2551,14 +2569,8 @@ save.season.lastRoundPlayed = roundIndex;
 
   function ensureContinentalsLive(save) {
     if (!save || !save.season) return null;
-    // Migração: se o schema mudou, regeneramos para não depender de limpar LocalStorage
-    const cur = save.season.continentalsLive;
-    if (cur && cur.seasonId === save.season.id && cur.schemaVersion === '1.11.0') {
-      return cur;
-    }
-    if (!save.season.continentalsLive || save.season.continentalsLive.seasonId !== save.season.id || (save.season.continentalsLive && save.season.continentalsLive.schemaVersion !== '1.11.0')) {
+    if (!save.season.continentalsLive || save.season.continentalsLive.seasonId !== save.season.id) {
       const live = {
-        schemaVersion: '1.11.0',
         seasonId: save.season.id,
         createdAt: nowIso(),
         nextAtRoundIndex: 1, // após a 2ª rodada doméstica (index 1)
@@ -2632,15 +2644,6 @@ save.season.lastRoundPlayed = roundIndex;
         for (const lid of CONM_LIDS) pushUnique(sula, topByStrengthFromLeague(lid, 6));
       }
 
-      // UEFA (Europa): garante UCL/UEL mesmo se zonas/qualificações estiverem incompletas
-      const UEFA_LIDS = ['ENG_PREMIER','ESP_LALIGA','ITA_SERIEA','GER_BUNDES','FRA_LIGUE1'];
-      if (ucl.length < 24) {
-        for (const lid of UEFA_LIDS) pushUnique(ucl, topByStrengthFromLeague(lid, 6));
-      }
-      if (uel.length < 16) {
-        for (const lid of UEFA_LIDS) pushUnique(uel, topByStrengthFromLeague(lid, 8));
-      }
-
       // (strengthOf / rankByStrength movidos para cima)
 
       const allocCfg = (state.packData?.qualifications?.continentalAllocations || {});
@@ -2692,10 +2695,10 @@ save.season.lastRoundPlayed = roundIndex;
         return { selected, overflow };
       }
 
-      const UCL_SIZE = Number(uefaAlloc?.champions?.size || 32);
-      const UEL_SIZE = Number(uefaAlloc?.europa?.size || 32);
+      const UCL_SIZE = Number(uefaAlloc?.champions?.size || 24);
+      const UEL_SIZE = Number(uefaAlloc?.europa?.size || 16);
       const LIB_SIZE = Number(conmebolAlloc?.libertadores?.size || 32);
-      const SULA_SIZE = Number(conmebolAlloc?.sudamericana?.size || 32);
+      const SULA_SIZE = Number(conmebolAlloc?.sudamericana?.size || 16);
 
       const uclPick = selectWithAllocation(ucl, uefaAlloc?.champions || {}, UCL_SIZE);
       const uclSel = uclPick.selected;
@@ -2717,11 +2720,274 @@ save.season.lastRoundPlayed = roundIndex;
       live.tournaments = {
         conmebol: {
           libertadores: initLibertadoresLive(save, 'CONMEBOL_LIB', 'CONMEBOL Libertadores', libSel),
+          // Sul-Americana também terá fase de grupos/league futuramente. Por ora, mantemos KO.
+          sudamericana: initKnockoutLive(save, 'CONMEBOL_SUD', 'CONMEBOL Sul-Americana', sulaSel)
+        },
+        uefa: {
+          champions: initChampionsLive(save, 'UEFA_CL', 'UEFA Champions League', uclSel),
+          // Europa League precisa ter fase de liga para existir "tabela" e liberar a simulação.
+          europa: initEuropaLive(save, 'UEFA_EL', 'UEFA Europa League', uelSel)
+        }
+      };
 
-    // CONMEBOL Sul-Americana - matchday (grupos) -> depois KO
-    if (sud && sud.format === 'GROUPS+KO' && sud.stage === 'GROUPS') {
-      const md = sud.matchdayIndex || 0;
-      for (const g of (sud.groups || [])) {
+      save.season.continentalsLive = live;
+    }
+    return save.season.continentalsLive;
+  }
+
+  function initLibertadoresLive(save, id, name, participants32) {
+    const teams = (participants32 || []).slice(0, 32);
+    if (teams.length < 16) return { id, name, format: 'GROUPS+KO', status: 'placeholder' };
+
+    const ranked = teams.slice().sort((a,b) => {
+      try { return teamStrength(b, save) - teamStrength(a, save); } catch { return 0; }
+    });
+    const groupNames = ['A','B','C','D','E','F','G','H'];
+    const pots = [[],[],[],[]];
+    for (let i=0;i<ranked.length;i++) pots[Math.floor(i/8)].push(ranked[i]);
+
+    const groups = [];
+    for (let gi=0; gi<8; gi++) {
+      const gTeams = [pots[0][gi], pots[1][gi], pots[2][gi], pots[3][gi]].filter(Boolean);
+      const ids = gTeams.slice();
+      const tableObj = buildGroupTable(ids);
+
+      // 6 matchdays (ida e volta) com 2 jogos por rodada
+      // pares base: (1-2,3-4), (1-3,2-4), (1-4,2-3) e depois invertido
+      const mdBase = [
+        [ { homeId: ids[0], awayId: ids[1] }, { homeId: ids[2], awayId: ids[3] } ],
+        [ { homeId: ids[2], awayId: ids[0] }, { homeId: ids[1], awayId: ids[3] } ],
+        [ { homeId: ids[0], awayId: ids[3] }, { homeId: ids[1], awayId: ids[2] } ]
+      ].filter(r => r.every(x => x.homeId && x.awayId));
+
+      const mdReturn = mdBase.map(r => r.map(m => ({ homeId: m.awayId, awayId: m.homeId })));
+      const md = [...mdBase, ...mdReturn];
+
+      groups.push({
+        name: `Grupo ${groupNames[gi]}`,
+        teams: ids,
+        matchdays: md,
+        played: [],
+        tableObj,
+        table: sortMiniTable(Object.values(tableObj))
+      });
+    }
+
+    return {
+      id, name,
+      format: 'GROUPS+KO',
+      size: 32,
+      stage: 'GROUPS',
+      matchdayIndex: 0,
+      groups,
+      knockout: null,
+      championId: null,
+      championName: null
+    };
+  }
+
+  function initChampionsLive(save, id, name, participants24) {
+    const teams = (participants24 || []).slice(0, 24);
+    if (teams.length < 16) return { id, name, format: 'LEAGUE+KO', status: 'placeholder' };
+
+    // Agenda 8 rodadas sem repetição (tentativa), sem simular ainda
+    const rounds = [];
+    const played = {};
+    const mk = (a,b)=> a<b ? `${a}|${b}` : `${b}|${a}`;
+    const canPair = (a,b)=> a!==b && !played[mk(a,b)];
+    const mark = (a,b)=> { played[mk(a,b)] = true; };
+
+    const tableObj = {};
+    for (const cid of teams) tableObj[cid] = { id:cid, P:0,W:0,D:0,L:0,GF:0,GA:0,GD:0,Pts:0 };
+
+    for (let r=1; r<=8; r++) {
+      let attempt = 0;
+      let order = teams.slice();
+      let matches = null;
+      while (attempt < 200 && !matches) {
+        for (let i=order.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [order[i],order[j]]=[order[j],order[i]]; }
+        const used = new Set();
+        const m = [];
+        for (let i=0;i<order.length;i++) {
+          const a = order[i];
+          if (used.has(a)) continue;
+          for (let j=i+1;j<order.length;j++) {
+            const b = order[j];
+            if (used.has(b)) continue;
+            if (!canPair(a,b)) continue;
+            used.add(a); used.add(b);
+            const homeId = (r%2===0) ? a : b;
+            const awayId = (r%2===0) ? b : a;
+            m.push({ homeId, awayId, played:false, hg:null, ag:null });
+            mark(homeId, awayId);
+            break;
+          }
+        }
+        if (m.length === 12) matches = m;
+        attempt++;
+      }
+      if (!matches) {
+        const order2 = teams.slice();
+        for (let i=order2.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [order2[i],order2[j]]=[order2[j],order2[i]]; }
+        matches = [];
+        for (let i=0;i<order2.length;i+=2) matches.push({ homeId: order2[i], awayId: order2[i+1], played:false, hg:null, ag:null });
+      }
+      rounds.push({ name: `Rodada ${r}`, matches });
+    }
+
+    return {
+      id, name,
+      format: 'LEAGUE+KO',
+      size: 24,
+      stage: 'LEAGUE',
+      roundIndex: 0,
+      leaguePhase: { rounds, tableObj, table: sortMiniTable(Object.values(tableObj)) },
+      knockout: null,
+      championId: null,
+      championName: null
+    };
+  }
+
+  // Europa League: fase de liga + mata-mata (provisório, mas funcional)
+  // Mantém o mesmo tipo de estrutura da Champions para que exista tabela e
+  // para que o botão de "ver tabela" tenha conteúdo real.
+  function initEuropaLive(save, id, name, participants) {
+    // Por padrão usamos 16 clubes no pack atual (ajustável depois para 36)
+    const teams = (participants || []).slice(0, 16).filter(Boolean);
+    if (teams.length < 8) return { id, name, format: 'LEAGUE+KO', status: 'placeholder' };
+
+    const roundsCount = 6; // 6 rodadas no modelo de teste
+    const rounds = [];
+    const played = {};
+    const mk = (a,b)=> a<b ? `${a}|${b}` : `${b}|${a}`;
+    const canPair = (a,b)=> a!==b && !played[mk(a,b)];
+    const mark = (a,b)=> { played[mk(a,b)] = true; };
+
+    const tableObj = {};
+    for (const cid of teams) tableObj[cid] = { id:cid, P:0,W:0,D:0,L:0,GF:0,GA:0,GD:0,Pts:0 };
+
+    for (let r=1; r<=roundsCount; r++) {
+      let attempt = 0;
+      let order = teams.slice();
+      let matches = null;
+      while (attempt < 200 && !matches) {
+        attempt++;
+        for (let i=order.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [order[i],order[j]]=[order[j],order[i]]; }
+        const used = new Set();
+        const m = [];
+        for (let i=0;i<order.length;i++) {
+          const a = order[i];
+          if (used.has(a)) continue;
+          for (let j=i+1;j<order.length;j++) {
+            const b = order[j];
+            if (used.has(b)) continue;
+            if (canPair(a,b)) {
+              used.add(a); used.add(b);
+              mark(a,b);
+              // alterna mando por rodada
+              const homeId = (r % 2 === 1) ? a : b;
+              const awayId = (r % 2 === 1) ? b : a;
+              m.push({ homeId, awayId, played:false, hg:null, ag:null });
+              break;
+            }
+          }
+        }
+        if (m.length === Math.floor(teams.length/2)) matches = m;
+      }
+
+      // fallback: se não conseguir evitar repetição, monta aleatório
+      if (!matches) {
+        const order2 = teams.slice();
+        for (let i=order2.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [order2[i],order2[j]]=[order2[j],order2[i]]; }
+        matches = [];
+        for (let i=0;i<order2.length;i+=2) matches.push({ homeId: order2[i], awayId: order2[i+1], played:false, hg:null, ag:null });
+      }
+
+      rounds.push({ name: `Rodada ${r}`, matches });
+    }
+
+    return {
+      id, name,
+      format: 'LEAGUE+KO',
+      size: teams.length,
+      stage: 'LEAGUE',
+      roundIndex: 0,
+      leaguePhase: { rounds, tableObj, table: sortMiniTable(Object.values(tableObj)) },
+      knockout: null,
+      championId: null,
+      championName: null
+    };
+  }
+
+  function initKnockoutLive(save, id, name, participants, opts = {}) {
+    const teams = (participants || []).filter(Boolean);
+    const strengthOf = (clubId) => { try { return teamStrength(clubId, save); } catch { return 60; } };
+    const ranked = teams.slice().sort((a,b) => strengthOf(b) - strengthOf(a));
+    let size = 2;
+    while (size < ranked.length) size *= 2;
+    size = Math.max(8, Math.min(16, size));
+    const seeded = ranked.slice(0, size);
+
+    const roundNames = (size === 16)
+      ? ['Oitavas','Quartas','Semifinal','Final']
+      : ['Quartas','Semifinal','Final'];
+
+    // Pairing estilo seeded: 1v16, 2v15...
+    const firstRound = [];
+    for (let i=0;i<size/2;i++) {
+      const homeId = seeded[i];
+      const awayId = seeded[size - 1 - i];
+      firstRound.push({ homeId, awayId, played:false, hg:null, ag:null, winnerId:null });
+    }
+
+    const rounds = roundNames.map((nm, idx) => {
+      if (idx === 0) return { name: nm, matches: firstRound };
+      return { name: nm, matches: [] };
+    });
+
+    return {
+      id, name,
+      format: 'KO',
+      size,
+      stage: 'KO',
+      roundIndex: 0,
+      participants: seeded,
+      rounds,
+      championId: null,
+      championName: null
+    };
+  }
+
+  function maybeAutoAdvanceContinentalsLive(save, domesticRoundIndex) {
+    const live = ensureContinentalsLive(save);
+    if (!live) return null;
+    if (save.season.completed) return null;
+    if (live.nextAtRoundIndex !== domesticRoundIndex) return null;
+    const summary = advanceOneContinentalMatchday(save, { manual: false });
+    live.nextAtRoundIndex += 2;
+    live.lastPlayedAtRoundIndex = domesticRoundIndex;
+    live.matchdaysPlayed += 1;
+    return summary;
+  }
+
+  function advanceOneContinentalMatchday(save, ctx = {}) {
+    const live = ensureContinentalsLive(save);
+    if (!live || !live.tournaments) return null;
+
+    const userId = save.career?.clubId;
+    const playedMatches = [];
+
+    // CONMEBOL
+    const lib = live.tournaments.conmebol?.libertadores;
+    const sud = live.tournaments.conmebol?.sudamericana;
+    // UEFA
+    const ucl = live.tournaments.uefa?.champions;
+    const uel = live.tournaments.uefa?.europa;
+
+    // Libertadores - matchday (grupos) -> depois KO
+    if (lib && lib.format === 'GROUPS+KO' && lib.stage === 'GROUPS') {
+      const md = lib.matchdayIndex || 0;
+      for (const g of (lib.groups || [])) {
         const fixtures = g.matchdays?.[md] || [];
         for (const fx of fixtures) {
           const sim = simulateMatch(fx.homeId, fx.awayId, save);
@@ -2729,56 +2995,53 @@ save.season.lastRoundPlayed = roundIndex;
           g.played.push({ matchday: md+1, homeId: fx.homeId, awayId: fx.awayId, hg: sim.hg, ag: sim.ag });
           const stats = buildMatchStats(fx.homeId, fx.awayId, sim, save);
           const timeline = buildTimelineForMatch(fx.homeId, fx.awayId, sim, save);
-          playedMatches.push({ comp: 'SUD', homeId: fx.homeId, awayId: fx.awayId, hg: sim.hg, ag: sim.ag, stats, timeline });
+          playedMatches.push({ comp: 'LIB', homeId: fx.homeId, awayId: fx.awayId, hg: sim.hg, ag: sim.ag, stats, timeline });
         }
         g.table = sortMiniTable(Object.values(g.tableObj));
       }
-      sud.matchdayIndex = md + 1;
-      if (sud.matchdayIndex >= 6) {
+      lib.matchdayIndex = md + 1;
+      if (lib.matchdayIndex >= 6) {
+        // fecha grupos -> cria KO com top2
         const qualified = [];
-        for (const g of (sud.groups || [])) {
+        for (const g of (lib.groups || [])) {
           if (g.table?.[0]?.id) qualified.push(g.table[0].id);
           if (g.table?.[1]?.id) qualified.push(g.table[1].id);
         }
-        sud.knockout = initKnockoutLive(save, sud.id + '_KO', sud.name + ' • Mata-mata', qualified.slice(0,16));
-        sud.stage = 'KO';
+        lib.knockout = initKnockoutLive(save, lib.id + '_KO', lib.name + ' • Mata-mata', qualified.slice(0,16));
+        lib.stage = 'KO';
       }
-    } else if (sud && sud.format === 'GROUPS+KO' && sud.stage === 'KO' && sud.knockout) {
-      const res = playKnockoutRound(save, sud.knockout);
-      playedMatches.push(...(res.playedMatches || []).map(m => ({ ...m, comp: 'SUD' })));
-      if (sud.knockout.championId) {
-        sud.championId = sud.knockout.championId;
-        sud.championName = sud.knockout.championName;
+    } else if (lib && lib.format === 'GROUPS+KO' && lib.stage === 'KO' && lib.knockout) {
+      const res = playKnockoutRound(save, lib.knockout);
+      playedMatches.push(...(res.playedMatches || []).map(m => ({ ...m, comp: 'LIB' })));
+      if (lib.knockout.championId) {
+        lib.championId = lib.knockout.championId;
+        lib.championName = lib.knockout.championName;
       }
     }
 
-
-    // UEFA Champions League - matchday (grupos) -> depois KO
-    if (ucl && ucl.format === 'GROUPS+KO' && ucl.stage === 'GROUPS') {
-      const md = ucl.matchdayIndex || 0;
-      for (const g of (ucl.groups || [])) {
-        const fixtures = g.matchdays?.[md] || [];
-        for (const fx of fixtures) {
-          const sim = simulateMatch(fx.homeId, fx.awayId, save);
-          applyGroupResult(g.tableObj, fx.homeId, fx.awayId, sim.hg, sim.ag);
-          g.played.push({ matchday: md+1, homeId: fx.homeId, awayId: fx.awayId, hg: sim.hg, ag: sim.ag });
-          const stats = buildMatchStats(fx.homeId, fx.awayId, sim, save);
-          const timeline = buildTimelineForMatch(fx.homeId, fx.awayId, sim, save);
-          playedMatches.push({ comp: 'UCL', homeId: fx.homeId, awayId: fx.awayId, hg: sim.hg, ag: sim.ag, stats, timeline });
+    // Champions - rodada fase de liga -> depois KO
+    if (ucl && ucl.format === 'LEAGUE+KO' && ucl.stage === 'LEAGUE') {
+      const ri = ucl.roundIndex || 0;
+      const rnd = ucl.leaguePhase?.rounds?.[ri];
+      if (rnd) {
+        for (const m of (rnd.matches || [])) {
+          if (m.played) continue;
+          const sim = simulateMatch(m.homeId, m.awayId, save);
+          m.played = true; m.hg = sim.hg; m.ag = sim.ag;
+          applyGroupResult(ucl.leaguePhase.tableObj, m.homeId, m.awayId, sim.hg, sim.ag);
+          const stats = buildMatchStats(m.homeId, m.awayId, sim, save);
+          const timeline = buildTimelineForMatch(m.homeId, m.awayId, sim, save);
+          playedMatches.push({ comp: 'UCL', homeId: m.homeId, awayId: m.awayId, hg: sim.hg, ag: sim.ag, stats, timeline });
         }
-        g.table = sortMiniTable(Object.values(g.tableObj));
+        ucl.leaguePhase.table = sortMiniTable(Object.values(ucl.leaguePhase.tableObj));
       }
-      ucl.matchdayIndex = md + 1;
-      if (ucl.matchdayIndex >= 6) {
-        const qualified = [];
-        for (const g of (ucl.groups || [])) {
-          if (g.table?.[0]?.id) qualified.push(g.table[0].id);
-          if (g.table?.[1]?.id) qualified.push(g.table[1].id);
-        }
-        ucl.knockout = initKnockoutLive(save, ucl.id + '_KO', ucl.name + ' • Mata-mata', qualified.slice(0,16));
+      ucl.roundIndex = ri + 1;
+      if (ucl.roundIndex >= 8) {
+        const qualified = (ucl.leaguePhase.table || []).slice(0,16).map(r => r.id);
+        ucl.knockout = initKnockoutLive(save, ucl.id + '_KO', ucl.name + ' • Mata-mata', qualified);
         ucl.stage = 'KO';
       }
-    } else if (ucl && ucl.format === 'GROUPS+KO' && ucl.stage === 'KO' && ucl.knockout) {
+    } else if (ucl && ucl.format === 'LEAGUE+KO' && ucl.stage === 'KO' && ucl.knockout) {
       const res = playKnockoutRound(save, ucl.knockout);
       playedMatches.push(...(res.playedMatches || []).map(m => ({ ...m, comp: 'UCL' })));
       if (ucl.knockout.championId) {
@@ -2786,7 +3049,6 @@ save.season.lastRoundPlayed = roundIndex;
         ucl.championName = ucl.knockout.championName;
       }
     }
-
 
     // Europa League - rodada fase de liga -> depois KO
     if (uel && uel.format === 'LEAGUE+KO' && uel.stage === 'LEAGUE') {
@@ -2825,40 +3087,607 @@ save.season.lastRoundPlayed = roundIndex;
       playedMatches.push(...(res.playedMatches || []).map(m => ({ ...m, comp: 'UEL' })));
     }
 
-    // CONMEBOL Sul-Americana - matchday (grupos) -> depois KO
-    if (sud && sud.format === 'GROUPS+KO' && sud.stage === 'GROUPS') {
-      const md = sud.matchdayIndex || 0;
-      for (const g of (sud.groups || [])) {
-        const fixtures = g.matchdays?.[md] || [];
-        for (const fx of fixtures) {
-          const sim = simulateMatch(fx.homeId, fx.awayId, save);
-          applyGroupResult(g.tableObj, fx.homeId, fx.awayId, sim.hg, sim.ag);
-          g.played.push({ matchday: md+1, homeId: fx.homeId, awayId: fx.awayId, hg: sim.hg, ag: sim.ag });
-          const stats = buildMatchStats(fx.homeId, fx.awayId, sim, save);
-          const timeline = buildTimelineForMatch(fx.homeId, fx.awayId, sim, save);
-          playedMatches.push({ comp: 'SUD', homeId: fx.homeId, awayId: fx.awayId, hg: sim.hg, ag: sim.ag, stats, timeline });
-        }
-        g.table = sortMiniTable(Object.values(g.tableObj));
-      }
-      sud.matchdayIndex = md + 1;
-      if (sud.matchdayIndex >= 6) {
-        const qualified = [];
-        for (const g of (sud.groups || [])) {
-          if (g.table?.[0]?.id) qualified.push(g.table[0].id);
-          if (g.table?.[1]?.id) qualified.push(g.table[1].id);
-        }
-        sud.knockout = initKnockoutLive(save, sud.id + '_KO', sud.name + ' • Mata-mata', qualified.slice(0,16));
-        sud.stage = 'KO';
-      }
-    } else if (sud && sud.format === 'GROUPS+KO' && sud.stage === 'KO' && sud.knockout) {
-      const res = playKnockoutRound(save, sud.knockout);
+    // Sul-Americana (KO)
+    if (sud && sud.format === 'KO') {
+      const res = playKnockoutRound(save, sud);
       playedMatches.push(...(res.playedMatches || []).map(m => ({ ...m, comp: 'SUD' })));
-      if (sud.knockout.championId) {
-        sud.championId = sud.knockout.championId;
-        sud.championName = sud.knockout.championName;
+    }
+
+    // resumo do usuário
+    const userMatches = playedMatches.filter(m => m.homeId === userId || m.awayId === userId);
+    return { at: nowIso(), manual: !!ctx.manual, playedMatches, userMatches };
+  }
+
+  function playKnockoutRound(save, ko) {
+    if (!ko || !Array.isArray(ko.rounds)) return { playedMatches: [] };
+    const ri = Number(ko.roundIndex || 0);
+    const round = ko.rounds[ri];
+    if (!round || !Array.isArray(round.matches) || round.matches.length === 0) {
+      // Se não tem round configurado, tenta montar próximo a partir dos vencedores
+      return { playedMatches: [] };
+    }
+
+    const playedMatches = [];
+    const winners = [];
+    for (const m of round.matches) {
+      if (m.played) { winners.push(m.winnerId); continue; }
+      const sim = simulateMatch(m.homeId, m.awayId, save);
+      m.played = true;
+      m.hg = sim.hg; m.ag = sim.ag;
+      m.winnerId = (sim.hg > sim.ag) ? m.homeId : (sim.hg < sim.ag ? m.awayId : (Math.random() < 0.5 ? m.homeId : m.awayId));
+      const stats = buildMatchStats(m.homeId, m.awayId, sim, save);
+      const timeline = buildTimelineForMatch(m.homeId, m.awayId, sim, save);
+      playedMatches.push({ homeId: m.homeId, awayId: m.awayId, hg: sim.hg, ag: sim.ag, winnerId: m.winnerId, stats, timeline });
+      winners.push(m.winnerId);
+      }
+
+    // prepara próximo round
+    if (winners.length === 1) {
+      ko.championId = winners[0];
+      ko.championName = getClub(winners[0])?.name || winners[0];
+    } else {
+      const next = ko.rounds[ri + 1];
+      if (next && Array.isArray(next.matches) && next.matches.length === 0) {
+        for (let i=0;i<winners.length;i+=2) {
+          const homeId = winners[i];
+          const awayId = winners[i+1];
+          if (homeId && awayId) next.matches.push({ homeId, awayId, played:false, hg:null, ag:null, winnerId:null });
+        }
       }
     }
 
+    ko.roundIndex = ri + 1;
+    return { playedMatches };
+  }
+
+  function applyContinentalEconomy(save, summary) {
+    if (!save || !summary) return;
+    const econ = state.packData?.rules?.economy || {};
+    const prize = econ.continentalsPrize || { win: 500000, draw: 200000, loss: 0 };
+    const currency = state.packData?.rules?.gameRules?.currency || 'BRL';
+    const userId = save.career?.clubId;
+    if (!userId) return;
+    if (!save.finance) save.finance = { cash: 0 };
+
+    let earned = 0;
+    for (const m of (summary.userMatches || [])) {
+      const userHome = m.homeId === userId;
+      const ug = userHome ? m.hg : m.ag;
+      const og = userHome ? m.ag : m.hg;
+      if (ug > og) earned += prize.win;
+      else if (ug === og) earned += prize.draw;
+      else earned += prize.loss;
+    }
+    if (earned > 0) save.finance.cash += earned;
+    summary.financeNote = earned > 0 ? `Bônus continental: ${earned.toLocaleString('pt-BR', { style:'currency', currency })}` : null;
+  }
+
+  function buildKnockoutTournament(save, id, name, participants) {
+    // Garante potência de 2 (8/16) com byes se necessário
+    const teams = (participants || []).filter(Boolean);
+    let size = 2;
+    while (size < teams.length) size *= 2;
+    size = Math.max(8, Math.min(16, size)); // provisório: 8 a 16
+
+    while (teams.length < size) {
+      // completa com clubes restantes aleatórios do Brasil
+      const all = ((save.world?.clubs) || (state.packData?.clubs?.clubs) || []).map(c => c.id);
+      const pool = all.filter(x => !teams.includes(x));
+      if (!pool.length) break;
+      teams.push(pool[Math.floor(Math.random() * pool.length)]);
+    }
+
+    const seeded = teams.slice(0, size);
+
+    const rounds = [];
+    let current = seeded.slice();
+    let roundName = size === 16 ? 'Oitavas' : 'Quartas';
+
+    while (current.length > 1) {
+      const matches = [];
+      for (let i = 0; i < current.length; i += 2) {
+        const homeId = current[i];
+        const awayId = current[i + 1];
+        const sim = simulateMatch(homeId, awayId, save);
+        const winnerId = (sim.hg > sim.ag) ? homeId : (sim.hg < sim.ag ? awayId : (Math.random() < 0.5 ? homeId : awayId));
+        matches.push({ homeId, awayId, hg: sim.hg, ag: sim.ag, winnerId });
+      }
+      rounds.push({ name: roundName, matches });
+      current = matches.map(m => m.winnerId);
+
+      if (current.length === 8) roundName = 'Quartas';
+      else if (current.length === 4) roundName = 'Semifinal';
+      else if (current.length === 2) roundName = 'Final';
+      else roundName = 'Rodada';
+    }
+
+    const championId = current[0] || null;
+    return { id, name, format: 'KO', size, participants: seeded, rounds, championId, championName: getClub(championId)?.name || championId };
+  }
+
+  
+  function pushConcat(arr, ...lists) {
+    const out = Array.isArray(arr) ? arr : [];
+    for (const l of lists) for (const x of (l || [])) if (x && !out.includes(x)) out.push(x);
+    return out;
+  }
+
+  function buildGroupTable(teamIds) {
+    const table = {};
+    for (const id of teamIds) table[id] = { id, P:0, W:0, D:0, L:0, GF:0, GA:0, GD:0, Pts:0 };
+    return table;
+  }
+
+  function applyGroupResult(table, homeId, awayId, hg, ag) {
+    const h = table[homeId]; const a = table[awayId];
+    if (!h || !a) return;
+    h.P++; a.P++;
+    h.GF += hg; h.GA += ag; h.GD = h.GF - h.GA;
+    a.GF += ag; a.GA += hg; a.GD = a.GF - a.GA;
+    if (hg > ag) { h.W++; a.L++; h.Pts += 3; }
+    else if (hg < ag) { a.W++; h.L++; a.Pts += 3; }
+    else { h.D++; a.D++; h.Pts += 1; a.Pts += 1; }
+  }
+
+  function sortMiniTable(rows) {
+    return (rows || []).slice().sort((x,y) => (y.Pts - x.Pts) || (y.GD - x.GD) || (y.GF - x.GF) || String(x.id).localeCompare(String(y.id)));
+  }
+
+  function buildLibertadoresGroupsAndKO(save, id, name, participants32) {
+    // Provisório avançado: 8 grupos de 4, turno único (6 jogos por grupo), depois mata-mata 16
+    const teams = (participants32 || []).slice(0, 32);
+    const ranked = teams.slice().sort((a,b) => {
+      try { return teamStrength(b, save) - teamStrength(a, save); } catch { return 0; }
+    });
+
+    // Seeds: distribui para equilibrar grupos
+    const groups = [];
+    const groupNames = ['A','B','C','D','E','F','G','H'];
+    const pots = [[],[],[],[]];
+    for (let i=0;i<ranked.length;i++) pots[Math.floor(i/8)].push(ranked[i]);
+
+    for (let gi=0; gi<8; gi++) {
+      const gTeams = [pots[0][gi], pots[1][gi], pots[2][gi], pots[3][gi]].filter(Boolean);
+      groups.push({ name: `Grupo ${groupNames[gi]}`, teams: gTeams, matches: [], table: [] });
+    }
+
+    // Gera jogos (turno único) e simula
+    for (const g of groups) {
+      const ids = g.teams.slice();
+      const table = buildGroupTable(ids);
+      const fixtures = [];
+      for (let i=0;i<ids.length;i++){
+        for (let j=i+1;j<ids.length;j++){
+          // manda/visita alternado pelo índice para variar
+          const homeId = ((i+j)%2===0) ? ids[i] : ids[j];
+          const awayId = ((i+j)%2===0) ? ids[j] : ids[i];
+          fixtures.push({ homeId, awayId });
+        }
+      }
+      // Embaralha um pouco
+      for (let k=fixtures.length-1;k>0;k--){ const r=Math.floor(Math.random()*(k+1)); [fixtures[k],fixtures[r]]=[fixtures[r],fixtures[k]]; }
+
+      let minuteBase = 12;
+      for (const fx of fixtures) {
+        const sim = simulateMatch(fx.homeId, fx.awayId, save);
+        applyGroupResult(table, fx.homeId, fx.awayId, sim.hg, sim.ag);
+        g.matches.push({ minute: minuteBase, homeId: fx.homeId, awayId: fx.awayId, hg: sim.hg, ag: sim.ag });
+        minuteBase += 12;
+      }
+      g.table = sortMiniTable(Object.values(table));
+    }
+
+    // Classificados: top 2 de cada grupo
+    const qualified = [];
+    for (const g of groups) {
+      if (g.table[0]?.id) qualified.push(g.table[0].id);
+      if (g.table[1]?.id) qualified.push(g.table[1].id);
+    }
+
+    const ko = buildKnockoutTournament(save, `${id}_KO`, `${name} • Mata-mata`, qualified.slice(0,16));
+    return {
+      id, name,
+      format: 'GROUPS+KO',
+      size: 32,
+      groups,
+      knockout: ko,
+      championId: ko.championId,
+      championName: ko.championName
+    };
+  }
+
+  function buildLeaguePhaseAndKO(save, id, name, participants24) {
+    // Provisório avançado: fase de liga (24) com 8 rodadas, depois mata-mata 16
+    const teams = (participants24 || []).slice(0, 24);
+    const rounds = [];
+    const played = {}; // key "a|b"
+    const mk = (a,b)=> a<b ? `${a}|${b}` : `${b}|${a}`;
+
+    function canPair(a,b){ return a!==b && !played[mk(a,b)]; }
+    function mark(a,b){ played[mk(a,b)] = true; }
+
+    // Tenta criar 8 rodadas sem repetição
+    const table = {};
+    for (const idc of teams) table[idc] = { id:idc, P:0,W:0,D:0,L:0,GF:0,GA:0,GD:0,Pts:0 };
+
+    for (let r=1; r<=8; r++) {
+      let attempt = 0;
+      let order = teams.slice();
+      let matches = null;
+
+      while (attempt < 200 && !matches) {
+        // shuffle
+        for (let i=order.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [order[i],order[j]]=[order[j],order[i]]; }
+
+        const used = new Set();
+        const m = [];
+        for (let i=0;i<order.length;i++){
+          const a = order[i];
+          if (used.has(a)) continue;
+          for (let j=i+1;j<order.length;j++){
+            const b = order[j];
+            if (used.has(b)) continue;
+            if (!canPair(a,b)) continue;
+            used.add(a); used.add(b);
+            // alterna mando
+            const homeId = (r%2===0) ? a : b;
+            const awayId = (r%2===0) ? b : a;
+            m.push({ homeId, awayId });
+            break;
+          }
+        }
+        if (m.length === 12) matches = m;
+        attempt++;
+      }
+
+      // fallback: permite repetição se necessário (não quebra)
+      if (!matches) {
+        const order2 = teams.slice();
+        for (let i=order2.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [order2[i],order2[j]]=[order2[j],order2[i]]; }
+        matches = [];
+        for (let i=0;i<order2.length;i+=2){
+          matches.push({ homeId: order2[i], awayId: order2[i+1] });
+        }
+      }
+
+      const simMatches = matches.map(fx => {
+        const sim = simulateMatch(fx.homeId, fx.awayId, save);
+        // marca repetição
+        mark(fx.homeId, fx.awayId);
+        applyGroupResult(table, fx.homeId, fx.awayId, sim.hg, sim.ag);
+        return { homeId: fx.homeId, awayId: fx.awayId, hg: sim.hg, ag: sim.ag };
+      });
+
+      rounds.push({ name: `Rodada ${r}`, matches: simMatches });
+    }
+
+    const leagueTable = sortMiniTable(Object.values(table));
+    const qualified = leagueTable.slice(0, 16).map(r => r.id);
+    const ko = buildKnockoutTournament(save, `${id}_KO`, `${name} • Mata-mata`, qualified);
+
+    return {
+      id, name,
+      format: 'LEAGUE+KO',
+      size: 24,
+      leaguePhase: { rounds, table: leagueTable },
+      knockout: ko,
+      championId: ko.championId,
+      championName: ko.championName
+    };
+  }
+function pickBrazilQualifiers(save, leagueId, from, to) {
+    const store = ensureLeagueTableStore(save);
+    const rows = store[leagueId] || (save.season?.leagueId === leagueId
+      ? sortTableRows(Object.values(save.season.table || {}))
+      : simulateLeagueSeason(save, leagueId));
+    const out = [];
+    for (let p = from; p <= to; p++) {
+      const id = rows[p - 1]?.id;
+      if (id) out.push(id);
+    }
+    return out;
+  }
+
+
+  function pickLeagueQualifiers(save, leagueId, from, to) {
+    // Mesmo método usado no Brasil, agora genérico para qualquer liga
+    const store = ensureLeagueTableStore(save);
+    const rows = store[leagueId] || (save.season?.leagueId === leagueId
+      ? sortTableRows(Object.values(save.season.table || {}))
+      : simulateLeagueSeason(save, leagueId));
+    const out = [];
+    for (let p = from; p <= to; p++) {
+      const id = rows[p - 1]?.id;
+      if (id) out.push(id);
+    }
+    return out;
+  }
+
+    function generateContinentalCompetitionsForSeason(save) {
+    // B1.1: geração global com regras configuráveis (qualifications.json) + formatos avançados (provisórios):
+    // - CONMEBOL Libertadores: fase de grupos (32) + mata-mata (16)
+    // - UEFA Champions League: fase de liga (24) + mata-mata (16)
+    const store = ensureContinentalStore(save);
+    if (store.generatedAt === save.season?.completedAt && store.version === 'B1.1') return;
+
+    // Garante tabelas das outras ligas
+    try { ensureParallelWorldLeaguesFinalized(save); } catch (e) {}
+
+    const leagues = state.packData?.competitions?.leagues || [];
+    const ucl = [];
+    const uel = [];
+    const lib = [];
+    const sula = [];
+
+    function pushUnique(arr, ids) {
+      for (const id of (ids || [])) {
+        if (!id) continue;
+        if (!arr.includes(id)) arr.push(id);
+      }
+    }
+
+    // Coleta classificados de todas as ligas de 1ª divisão
+    for (const lg of leagues) {
+      const lid = lg?.id;
+      if (!lid) continue;
+      if (Number(lg.level || 1) !== 1) continue;
+
+      const zones = getZonesForLeague(lid) || {};
+      const cont = zones.continental || {};
+
+      // CONMEBOL
+      if (lid === 'BRA_SERIE_A') {
+        pushUnique(lib, pickBrazilQualifiers(save, 'BRA_SERIE_A', 1, 6));
+        pushUnique(sula, pickBrazilQualifiers(save, 'BRA_SERIE_A', 7, 12));
+      } else if (cont.libertadores) {
+        pushUnique(lib, pickLeagueQualifiers(save, lid, cont.libertadores.from, cont.libertadores.to));
+        if (cont.sudamericana) pushUnique(sula, pickLeagueQualifiers(save, lid, cont.sudamericana.from, cont.sudamericana.to));
+      }
+
+      // UEFA
+      if (cont.champions) pushUnique(ucl, pickLeagueQualifiers(save, lid, cont.champions.from, cont.champions.to));
+      if (cont.europa) pushUnique(uel, pickLeagueQualifiers(save, lid, cont.europa.from, cont.europa.to));
+    }
+
+
+    // Ranking por força (para desempates e preenchimento de vagas)
+    const strengthOf = (clubId) => {
+      try { return teamStrength(clubId, save); } catch (e) { return 60; }
+    };
+    const rankByStrength = (ids) => (ids || []).slice().sort((a, b) => strengthOf(b) - strengthOf(a));
+
+    // B1.2: alocação configurável por país (associação) + preenchimento por força
+    const allocCfg = (state.packData?.qualifications?.continentalAllocations || {});
+    const uefaAlloc = allocCfg.uefa || {};
+    const conmebolAlloc = allocCfg.conmebol || {};
+
+    const assocOfClub = (clubId) => {
+      const c = getClub(clubId);
+      const lid = c?.leagueId;
+      const lg = (leagues || []).find(x => x.id === lid);
+      return lg?.country || '??';
+    };
+
+    function selectWithAllocation(candidateIds, alloc, totalSize) {
+      const uniq = [];
+      for (const id of (candidateIds || [])) if (id && !uniq.includes(id)) uniq.push(id);
+
+      const byAssoc = {};
+      for (const id of uniq) {
+        const a = assocOfClub(id);
+        if (!byAssoc[a]) byAssoc[a] = [];
+        byAssoc[a].push(id);
+      }
+
+      // Dentro de cada associação, preferimos os mais fortes
+      for (const a of Object.keys(byAssoc)) {
+        byAssoc[a] = rankByStrength(byAssoc[a]);
+      }
+
+      const assocSlots = alloc?.assocSlots || {};
+      const selected = [];
+      const leftovers = [];
+
+      // 1) Aloca slots fixos por associação
+      for (const a of Object.keys(assocSlots)) {
+        const n = Number(assocSlots[a] || 0);
+        const arr = byAssoc[a] || [];
+        const take = arr.slice(0, n);
+        const rest = arr.slice(n);
+        for (const id of take) if (!selected.includes(id)) selected.push(id);
+        for (const id of rest) if (!leftovers.includes(id)) leftovers.push(id);
+        delete byAssoc[a];
+      }
+
+      // 2) Tudo que sobrou de associações não listadas vai para o pool
+      for (const a of Object.keys(byAssoc)) {
+        for (const id of (byAssoc[a] || [])) if (!leftovers.includes(id)) leftovers.push(id);
+      }
+
+      // 3) Preenche vagas restantes por força
+      const need = Math.max(0, (totalSize || 0) - selected.length);
+      const fill = rankByStrength(leftovers).slice(0, need);
+      for (const id of fill) if (!selected.includes(id)) selected.push(id);
+
+      // 4) Devolve também os que não entraram (para torneios menores)
+      const notSelected = leftovers.filter(id => !selected.includes(id));
+      return { selected, overflow: notSelected };
+    }
+
+    // Tamanhos (provisório avançado)
+    const UCL_GROUP_SIZE = Number(uefaAlloc?.champions?.size || 32);
+    const UEL_GROUP_SIZE = Number(uefaAlloc?.europa?.size || 32);
+    const LIB_GROUP_SIZE = Number(conmebolAlloc?.libertadores?.size || 32);
+    const SULA_GROUP_SIZE = Number(conmebolAlloc?.sudamericana?.size || 32);
+
+    // UEFA: Champions (liga) e Europa (KO)
+    const uclPick = selectWithAllocation(ucl, uefaAlloc?.champions || {}, UCL_GROUP_SIZE);
+    const uclN = uclPick.selected;
+    const uclOverflow = uclPick.overflow;
+
+    const uelPoolAll = pushConcat([], uclOverflow, uel);
+    const uelPick = selectWithAllocation(uelPoolAll, uefaAlloc?.europa || {}, UEL_GROUP_SIZE);
+    const uelN = uelPick.selected;
+
+    // CONMEBOL: Libertadores (grupos) e Sul-Americana (KO)
+    const libPick = selectWithAllocation(lib, conmebolAlloc?.libertadores || {}, LIB_GROUP_SIZE);
+    const libN = libPick.selected;
+    const libOverflow = libPick.overflow;
+
+    const sulaPoolAll = pushConcat([], libOverflow, sula);
+    const sulaPick = selectWithAllocation(sulaPoolAll, conmebolAlloc?.sudamericana || {}, SULA_GROUP_SIZE);
+    const sulaN = sulaPick.selected;
+
+    // Fallback: garante tamanhos mínimos para não ficar sem times (usa clubes mais fortes do pack)
+    const allClubIds = Object.keys(state.packData?.clubs || {});
+    function fillToSize(arr, size, used) {
+      const a = (arr || []).filter(Boolean);
+      const u = new Set([...(used||[]), ...a]);
+      if (a.length >= size) return a.slice(0, size);
+      const candidates = allClubIds.filter(id => id && !u.has(id));
+      const fill = rankByStrength(candidates).slice(0, size - a.length);
+      return a.concat(fill);
+    }
+
+    const usedInitial = [];
+    const uclN32 = fillToSize(uclN, 32, usedInitial);
+    usedInitial.push(...uclN32);
+    const uelN32 = fillToSize(uelN, 32, usedInitial);
+    usedInitial.push(...uelN32);
+    const libN32 = fillToSize(libN, 32, usedInitial);
+    usedInitial.push(...libN32);
+    const sulaN32 = fillToSize(sulaN, 32, usedInitial);
+
+
+    // Construção dos torneios
+
+    if (libN32.length >= 32) store.libertadores = buildLibertadoresGroupsAndKO(save, 'CONMEBOL_LIB', 'CONMEBOL Libertadores', libN32);
+    else store.libertadores = store.libertadores || { id: 'CONMEBOL_LIB', name: 'CONMEBOL Libertadores', status: 'placeholder' };
+
+    if (sulaN32.length >= 32) store.sudamericana = buildLibertadoresGroupsAndKO(save, 'CONMEBOL_SUD', 'CONMEBOL Sul-Americana', sulaN32);
+    else store.sudamericana = store.sudamericana || { id: 'CONMEBOL_SUD', name: 'CONMEBOL Sul-Americana', status: 'placeholder' };
+
+    store.uefa = store.uefa || {};
+    if (uclN32.length >= 32) store.uefa.champions = buildLibertadoresGroupsAndKO(save, 'UEFA_CL', 'UEFA Champions League', uclN32);
+    else store.uefa.champions = store.uefa.champions || { id: 'UEFA_CL', name: 'UEFA Champions League', status: 'placeholder' };
+
+    if (uelN32.length >= 32) store.uefa.europa = buildLibertadoresGroupsAndKO(save, 'UEFA_EL', 'UEFA Europa League', uelN32);
+    else store.uefa.europa = store.uefa.europa || { id: 'UEFA_EL', name: 'UEFA Europa League', status: 'placeholder' };
+
+    store.uefa.conference = store.uefa.conference || { id: 'UEFA_ECL', name: 'UEFA Conference League', status: 'placeholder' };
+
+    store.generatedAt = save.season?.completedAt || nowIso();
+    store.version = 'B1.1G';
+  }
+
+  
+  function renderKnockoutRoundsHtml(t) {
+    if (!t || !Array.isArray(t.rounds)) return '<div class="notice">Ainda não foi gerado.</div>';
+    return (t.rounds || []).map(r => {
+      const matches = (r.matches || []).map(m => {
+        const h = getClub(m.homeId); const a = getClub(m.awayId);
+        const score = (m.played && Number.isFinite(m.hg) && Number.isFinite(m.ag)) ? `<b>${m.hg} x ${m.ag}</b>` : '<span class="badge">A jogar</span>';
+        const winnerLine = m.played ? `Vencedor: ${esc(getClub(m.winnerId)?.short || getClub(m.winnerId)?.name || m.winnerId)}` : 'Vencedor: —';
+        return `
+          <div class="item">
+            <div class="item-left" style="display:flex; gap:10px; align-items:center;">
+              ${clubLogoHtml(m.homeId, 26)}
+              <div style="min-width:0;">
+                <div class="item-title">${esc(h?.short || h?.name || m.homeId)} <span class="small">vs</span> ${esc(a?.short || a?.name || m.awayId)}</div>
+                <div class="item-sub">${esc(r.name)} • ${winnerLine}</div>
+              </div>
+              ${clubLogoHtml(m.awayId, 26)}
+            </div>
+            <div class="item-right" style="align-items:center;">
+              ${score}
+            </div>
+          </div>
+        `;
+      }).join('');
+      return `<div class="sep"></div><div class="label">${esc(r.name)}</div><div class="list">${matches}</div>`;
+    }).join('');
+  }
+
+  function renderMiniTableBlock(rows, opts = {}) {
+    const topBold = opts.topBold ?? 0;
+    const limit = opts.limit ?? rows.length;
+    const show = (rows || []).slice(0, limit);
+    const items = show.map((r, i) => {
+      const c = getClub(r.id);
+      const name = esc(c?.short || c?.name || r.id);
+      const bold = (i < topBold) ? 'font-weight:700;' : '';
+      return `
+        <div class="item">
+          <div class="item-left" style="display:flex; gap:8px; align-items:center; ${bold}">
+            <span class="badge">${i+1}</span>
+            ${clubLogoHtml(r.id, 22)}
+            <span>${name}</span>
+          </div>
+          <div class="item-right">
+            <span class="small">Pts</span> <b>${r.Pts}</b>
+            <span class="small">GD</span> <b>${r.GD}</b>
+          </div>
+        </div>
+      `;
+    }).join('');
+    return `<div class="list">${items}</div>`;
+  }
+
+  function renderTournamentCard(t) {
+    if (!t) return '';
+    const champ = t.championId ? `${clubLogoHtml(t.championId, 34)} <b>${esc(t.championName || '')}</b>` : `<span class="badge">Indefinido</span>`;
+
+    // KO simples (compatibilidade)
+    if (!t.format || t.format === 'KO') {
+      return `
+        <div class="card" style="margin-bottom:12px;">
+          <div class="card-header">
+            <div>
+              <div class="card-title">${esc(t.name)}</div>
+              <div class="card-subtitle">Formato: mata-mata (${t.size} clubes)</div>
+            </div>
+            <span class="badge">Campeão</span>
+          </div>
+          <div class="card-body">
+            <div class="row" style="align-items:center; gap:10px;">${champ}</div>
+            ${renderKnockoutRoundsHtml(t)}
+          </div>
+        </div>
+      `;
+    }
+
+    // Libertadores: Grupos + KO
+    if (t.format === 'GROUPS+KO') {
+      const groupsHtml = (t.groups || []).map(g => {
+        const title = `<div class="label">${esc(g.name)}</div>`;
+        const table = renderMiniTableBlock(g.table || [], { topBold: 2, limit: 4 });
+        return `<div class="sep"></div>${title}${table}`;
+      }).join('');
+
+      return `
+        <div class="card" style="margin-bottom:12px;">
+          <div class="card-header">
+            <div>
+              <div class="card-title">${esc(t.name)}</div>
+              <div class="card-subtitle">Formato provisório avançado: grupos (32) + mata-mata (16)</div>
+            </div>
+            <span class="badge">Campeão</span>
+          </div>
+          <div class="card-body">
+            <div class="row" style="align-items:center; gap:10px;">${champ}</div>
+            <details style="margin-top:10px;">
+              <summary class="btn">Ver fase de grupos</summary>
+              <div class="sep"></div>
+              ${groupsHtml || '<div class="notice">Sem dados de grupos.</div>'}
+            </details>
+            <details style="margin-top:10px;">
+              <summary class="btn btn-primary">Ver mata-mata</summary>
+              ${renderKnockoutRoundsHtml(t.knockout)}
+            </details>
+          </div>
+        </div>
+      `;
+    }
 
     // Champions: Liga + KO
     if (t.format === 'LEAGUE+KO') {
@@ -2872,18 +3701,18 @@ save.season.lastRoundPlayed = roundIndex;
           <div class="card-header">
             <div>
               <div class="card-title">${esc(t.name)}</div>
-              <div class="card-subtitle">Formato clássico: fase de grupos (32) + mata-mata (16)</div>
+              <div class="card-subtitle">Formato provisório avançado: fase de liga (24) + mata-mata (16)</div>
             </div>
             <span class="badge">Campeão</span>
           </div>
           <div class="card-body">
             <div class="row" style="align-items:center; gap:10px;">${champ}</div>
             <div class="sep"></div>
-            <div class="label">Top 2 por grupo</div>
+            <div class="label">Top 8 (fase de liga)</div>
             ${top8}
             ${roundsInfo}
             <details style="margin-top:10px;">
-              <summary class="btn">Ver fase de grupos</summary>
+              <summary class="btn">Ver tabela completa (fase de liga)</summary>
               ${renderMiniTableBlock(lt, { topBold: 16, limit: lt.length })}
             </details>
             <details style="margin-top:10px;">
