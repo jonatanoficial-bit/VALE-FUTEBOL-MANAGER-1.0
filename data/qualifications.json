@@ -64,6 +64,214 @@
     }
   },
   "world": {
+    "ENG_PREMIER": {
+      "continental": {
+        "champions": {
+          "from": 1,
+          "to": 4
+        },
+        "europa": {
+          "from": 5,
+          "to": 6
+        }
+      },
+      "relegation": {
+        "from": 18,
+        "to": 20
+      }
+    },
+    "ESP_LALIGA": {
+      "continental": {
+        "champions": {
+          "from": 1,
+          "to": 4
+        },
+        "europa": {
+          "from": 5,
+          "to": 6
+        }
+      },
+      "relegation": {
+        "from": 18,
+        "to": 20
+      }
+    },
+    "ITA_SERIE_A": {
+      "continental": {
+        "champions": {
+          "from": 1,
+          "to": 4
+        },
+        "europa": {
+          "from": 5,
+          "to": 6
+        }
+      },
+      "relegation": {
+        "from": 18,
+        "to": 20
+      }
+    },
+    "GER_BUNDES": {
+      "continental": {
+        "champions": {
+          "from": 1,
+          "to": 4
+        },
+        "europa": {
+          "from": 5,
+          "to": 6
+        }
+      },
+      "relegation": {
+        "from": 18,
+        "to": 20
+      }
+    },
+    "FRA_LIGUE_1": {
+      "continental": {
+        "champions": {
+          "from": 1,
+          "to": 4
+        },
+        "europa": {
+          "from": 5,
+          "to": 6
+        }
+      },
+      "relegation": {
+        "from": 18,
+        "to": 20
+      }
+    },
+    "POR_LIGA": {
+      "continental": {
+        "champions": {
+          "from": 1,
+          "to": 4
+        },
+        "europa": {
+          "from": 5,
+          "to": 6
+        }
+      },
+      "relegation": {
+        "from": 18,
+        "to": 20
+      }
+    },
+    "ARG_PRIMERA": {
+      "continental": {
+        "libertadores": {
+          "from": 1,
+          "to": 4
+        },
+        "sudamericana": {
+          "from": 5,
+          "to": 8
+        }
+      },
+      "relegation": {
+        "from": 18,
+        "to": 20
+      }
+    },
+    "URU_PRIMERA": {
+      "continental": {
+        "libertadores": {
+          "from": 1,
+          "to": 4
+        },
+        "sudamericana": {
+          "from": 5,
+          "to": 8
+        }
+      },
+      "relegation": {
+        "from": 18,
+        "to": 20
+      }
+    },
+    "CHI_PRIMERA": {
+      "continental": {
+        "libertadores": {
+          "from": 1,
+          "to": 4
+        },
+        "sudamericana": {
+          "from": 5,
+          "to": 8
+        }
+      },
+      "relegation": {
+        "from": 18,
+        "to": 20
+      }
+    },
+    "COL_PRIMERA": {
+      "continental": {
+        "libertadores": {
+          "from": 1,
+          "to": 4
+        },
+        "sudamericana": {
+          "from": 5,
+          "to": 8
+        }
+      },
+      "relegation": {
+        "from": 18,
+        "to": 20
+      }
+    },
+    "VEN_PRIMERA": {
+      "continental": {
+        "libertadores": {
+          "from": 1,
+          "to": 4
+        },
+        "sudamericana": {
+          "from": 5,
+          "to": 8
+        }
+      },
+      "relegation": {
+        "from": 18,
+        "to": 20
+      }
+    },
+    "BOL_PRIMERA": {
+      "continental": {
+        "libertadores": {
+          "from": 1,
+          "to": 4
+        },
+        "sudamericana": {
+          "from": 5,
+          "to": 8
+        }
+      },
+      "relegation": {
+        "from": 18,
+        "to": 20
+      }
+    },
+    "ECU_LIGAPRO": {
+      "continental": {
+        "libertadores": {
+          "from": 1,
+          "to": 4
+        },
+        "sudamericana": {
+          "from": 5,
+          "to": 8
+        }
+      },
+      "relegation": {
+        "from": 18,
+        "to": 20
+      }
+    },
     "ENG_PREM": {
       "continental": {
         "champions": {
@@ -137,134 +345,6 @@
         "europa": {
           "from": 5,
           "to": 6
-        }
-      },
-      "relegation": {
-        "from": 18,
-        "to": 20
-      }
-    },
-    "POR_LIGA": {
-      "continental": {
-        "champions": {
-          "from": 1,
-          "to": 4
-        },
-        "europa": {
-          "from": 5,
-          "to": 6
-        }
-      },
-      "relegation": {
-        "from": 18,
-        "to": 20
-      }
-    },
-    "ARG_PRIM": {
-      "continental": {
-        "libertadores": {
-          "from": 1,
-          "to": 4
-        },
-        "sudamericana": {
-          "from": 5,
-          "to": 8
-        }
-      },
-      "relegation": {
-        "from": 18,
-        "to": 20
-      }
-    },
-    "URU_PRIM": {
-      "continental": {
-        "libertadores": {
-          "from": 1,
-          "to": 4
-        },
-        "sudamericana": {
-          "from": 5,
-          "to": 8
-        }
-      },
-      "relegation": {
-        "from": 18,
-        "to": 20
-      }
-    },
-    "CHI_PRIM": {
-      "continental": {
-        "libertadores": {
-          "from": 1,
-          "to": 4
-        },
-        "sudamericana": {
-          "from": 5,
-          "to": 8
-        }
-      },
-      "relegation": {
-        "from": 18,
-        "to": 20
-      }
-    },
-    "COL_PRIM": {
-      "continental": {
-        "libertadores": {
-          "from": 1,
-          "to": 4
-        },
-        "sudamericana": {
-          "from": 5,
-          "to": 8
-        }
-      },
-      "relegation": {
-        "from": 18,
-        "to": 20
-      }
-    },
-    "VEN_PRIM": {
-      "continental": {
-        "libertadores": {
-          "from": 1,
-          "to": 4
-        },
-        "sudamericana": {
-          "from": 5,
-          "to": 8
-        }
-      },
-      "relegation": {
-        "from": 18,
-        "to": 20
-      }
-    },
-    "BOL_PRIM": {
-      "continental": {
-        "libertadores": {
-          "from": 1,
-          "to": 4
-        },
-        "sudamericana": {
-          "from": 5,
-          "to": 8
-        }
-      },
-      "relegation": {
-        "from": 18,
-        "to": 20
-      }
-    },
-    "ECU_LIG": {
-      "continental": {
-        "libertadores": {
-          "from": 1,
-          "to": 4
-        },
-        "sudamericana": {
-          "from": 5,
-          "to": 8
         }
       },
       "relegation": {

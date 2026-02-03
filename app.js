@@ -1520,68 +1520,20 @@ return save;
   // Promoção/Rebaixamento + Zonas (Parte 2)
   // -----------------------------
 
-  
-function getZonesForLeague(leagueId) {
-  const q = state.packData?.qualifications || {};
-  const br = q.brazil || {};
+  function getZonesForLeague(leagueId) {
+    const q = state.packData?.qualifications || {};
+    const br = q.brazil || {};
 
-  // Brasil (compatibilidade)
-  if (leagueId === 'BRA_SERIE_A') return { kind: 'BR_A', ...(br.serieA || {}) };
-  if (leagueId === 'BRA_SERIE_B') return { kind: 'BR_B', ...(br.serieB || {}) };
+    // Brasil (compatibilidade)
+    if (leagueId === 'BRA_SERIE_A') return { kind: 'BR_A', ...(br.serieA || {}) };
+    if (leagueId === 'BRA_SERIE_B') return { kind: 'BR_B', ...(br.serieB || {}) };
 
-  // Mundo (UEFA/CONMEBOL etc.) - por configuração (qualifications.json)
-  const w = q.world || {};
-  const z = w[leagueId] || null;
-  if (z) return { kind: 'WORLD', ...z };
-
-  // AUTO (DLC-friendly): se a liga existir no pack e não tiver regra explícita,
-  // inferimos zonas continentais por continente/país.
-  const leagues = state.packData?.competitions?.leagues || [];
-  const lg = leagues.find(x => x.id === leagueId) || null;
-  if (!lg) return null;
-
-  const country = String(lg.country || '').toLowerCase();
-
-  // Lista de países europeus (expansível; cobre DLCs como Bélgica/Escócia/Rússia)
-  const europeCountries = new Set([
-    'inglaterra','espanha','itália','italia','alemanha','frança','franca',
-    'portugal','holanda','bélgica','belgica','escócia','escocia','rússia','russia',
-    'turquia','grécia','grecia','áustria','austria','suíça','suica','ucrânia','ucrania',
-    'sérvia','servia','dinamarca','suécia','suecia','noruega','polônia','polonia',
-    'república tcheca','republica tcheca','croácia','croacia'
-  ]);
-
-  const saCountries = new Set([
-    'brasil','argentina','uruguai','chile','colômbia','colombia',
-    'venezuela','bolívia','bolivia','equador','paraguai','peru'
-  ]);
-
-  const tier = Number(lg.tier || lg.level || 1);
-
-  // UEFA: Champions 1-4, Europa 5-6 (apenas 1ª divisão)
-  if (tier === 1 && europeCountries.has(country)) {
-    return {
-      kind: 'WORLD_AUTO_UEFA',
-      continental: {
-        champions: { from: 1, to: 4 },
-        europa: { from: 5, to: 6 }
-      }
-    };
+    // Mundo (UEFA/CONMEBOL etc.)
+    const w = q.world || {};
+    const z = w[leagueId] || null;
+    if (!z) return null;
+    return { kind: 'WORLD', ...z };
   }
-
-  // CONMEBOL: Libertadores 1-4, Sudamericana 5-8 (apenas 1ª divisão)
-  if (tier === 1 && saCountries.has(country)) {
-    return {
-      kind: 'WORLD_AUTO_CONMEBOL',
-      continental: {
-        libertadores: { from: 1, to: 4 },
-        sudamericana: { from: 5, to: 8 }
-      }
-    };
-  }
-
-  return null;
-}
 
   function zoneInfoForPosition(leagueId, position) {
     const zones = getZonesForLeague(leagueId);
@@ -1671,7 +1623,7 @@ function ensureLeagueTableStore(save) {
     if (store[leagueId]) return store[leagueId];
 
     const clubs = ((save.world?.clubs) || (state.packData?.clubs?.clubs) || []).filter(c => c.leagueId === leagueId);
-    const ids = Array.from(new Set(clubs.map(c => c.id)));
+    const ids = clubs.map(c => c.id);
     const stateLeague = {
       leagueId,
       currentRound: 0,
@@ -1746,7 +1698,7 @@ function ensureLeagueTableStore(save) {
     if (store[leagueId]) return store[leagueId];
 
     const clubs = ((save.world?.clubs) || (state.packData?.clubs?.clubs) || []).filter(c => c.leagueId === leagueId);
-    const ids = Array.from(new Set(clubs.map(c => c.id)));
+    const ids = clubs.map(c => c.id);
 
     // tabela vazia no formato esperado pelo app
     const table = buildEmptyTable(clubs);
@@ -3449,15 +3401,7 @@ function pickBrazilQualifiers(save, leagueId, from, to) {
     const sulaPick = selectWithAllocation(sulaPoolAll, conmebolAlloc?.sudamericana || {}, SULA_KO_SIZE);
     const sulaN = sulaPick.selected;
 
-    
-
-// Normaliza nomes esperados por versões anteriores (evita variáveis inexistentes)
-const ucl24 = (typeof uclSel !== 'undefined') ? uclSel : [];
-const uel16 = (typeof uelSel !== 'undefined') ? uelSel : [];
-const lib32 = (typeof libSel !== 'undefined') ? libSel : [];
-const sula16 = (typeof sulaN !== 'undefined') ? sulaN : [];
-
-// Construção dos torneios
+    // Construção dos torneios
 
     if (lib32.length >= 16) store.libertadores = buildLibertadoresGroupsAndKO(save, 'CONMEBOL_LIB', 'CONMEBOL Libertadores', lib32);
     else store.libertadores = store.libertadores || { id: 'CONMEBOL_LIB', name: 'CONMEBOL Libertadores', status: 'placeholder' };

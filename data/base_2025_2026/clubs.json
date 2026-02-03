@@ -404,49 +404,37 @@
       "id": "ACG",
       "name": "ACG",
       "short": "ACG",
-      "leagueId": "BRA_SERIE_A",
+      "leagueId": "BRA_SERIE_B",
       "overall": 72,
-      "budget": 32000000
+      "budget": 32000000,
+      "displayName": "AC Goianiense GO"
     },
     {
       "id": "AMA",
       "name": "AMA",
       "short": "AMA",
-      "leagueId": "BRA_SERIE_A",
+      "leagueId": "BRA_SERIE_B",
       "overall": 66,
-      "budget": 47000000
+      "budget": 47000000,
+      "displayName": "Amazonas FC AM"
     },
     {
       "id": "AME",
       "name": "AME",
       "short": "AME",
-      "leagueId": "BRA_SERIE_A",
+      "leagueId": "BRA_SERIE_B",
       "overall": 75,
-      "budget": 12000000
-    },
-    {
-      "id": "AMG",
-      "name": "AMG",
-      "short": "AMG",
-      "leagueId": "BRA_SERIE_A",
-      "overall": 80,
-      "budget": 35000000
-    },
-    {
-      "id": "ATC",
-      "name": "ATC",
-      "short": "ATC",
-      "leagueId": "BRA_SERIE_A",
-      "overall": 82,
-      "budget": 55000000
+      "budget": 12000000,
+      "displayName": "América FC MG"
     },
     {
       "id": "AVA",
       "name": "AVA",
       "short": "AVA",
-      "leagueId": "BRA_SERIE_A",
+      "leagueId": "BRA_SERIE_B",
       "overall": 79,
-      "budget": 11000000
+      "budget": 11000000,
+      "displayName": "Avaí FC SC"
     },
     {
       "id": "BAH",
@@ -454,15 +442,8 @@
       "short": "BAH",
       "leagueId": "BRA_SERIE_A",
       "overall": 79,
-      "budget": 26000000
-    },
-    {
-      "id": "BFS",
-      "name": "BFS",
-      "short": "BFS",
-      "leagueId": "BRA_SERIE_A",
-      "overall": 74,
-      "budget": 22000000
+      "budget": 26000000,
+      "displayName": "Bahia"
     },
     {
       "id": "BOT",
@@ -470,7 +451,8 @@
       "short": "BOT",
       "leagueId": "BRA_SERIE_A",
       "overall": 66,
-      "budget": 14000000
+      "budget": 14000000,
+      "displayName": "Botafogo FR RJ"
     },
     {
       "id": "CAP",
@@ -478,7 +460,8 @@
       "short": "CAP",
       "leagueId": "BRA_SERIE_A",
       "overall": 82,
-      "budget": 58000000
+      "budget": 58000000,
+      "displayName": "CA Paranaense PR"
     },
     {
       "id": "CEA",
@@ -486,15 +469,8 @@
       "short": "CEA",
       "leagueId": "BRA_SERIE_B",
       "overall": 76,
-      "budget": 35000000
-    },
-    {
-      "id": "CFC",
-      "name": "CFC",
-      "short": "CFC",
-      "leagueId": "BRA_SERIE_A",
-      "overall": 75,
-      "budget": 13000000
+      "budget": 35000000,
+      "displayName": "Ceará"
     },
     {
       "id": "CHA",
@@ -502,7 +478,8 @@
       "short": "CHA",
       "leagueId": "BRA_SERIE_A",
       "overall": 75,
-      "budget": 46000000
+      "budget": 46000000,
+      "displayName": "Chapecoense"
     },
     {
       "id": "COR",
@@ -510,23 +487,26 @@
       "short": "COR",
       "leagueId": "BRA_SERIE_A",
       "overall": 69,
-      "budget": 25000000
+      "budget": 25000000,
+      "displayName": "Corinthians SP"
     },
     {
       "id": "CRB",
       "name": "CRB",
       "short": "CRB",
-      "leagueId": "BRA_SERIE_A",
+      "leagueId": "BRA_SERIE_B",
       "overall": 76,
-      "budget": 28000000
+      "budget": 28000000,
+      "displayName": "CR Brasil AL"
     },
     {
       "id": "CRI",
       "name": "CRI",
       "short": "CRI",
-      "leagueId": "BRA_SERIE_A",
+      "leagueId": "BRA_SERIE_B",
       "overall": 78,
-      "budget": 15000000
+      "budget": 15000000,
+      "displayName": "Criciúma"
     },
     {
       "id": "CRU",
@@ -534,23 +514,26 @@
       "short": "CRU",
       "leagueId": "BRA_SERIE_A",
       "overall": 71,
-      "budget": 37000000
+      "budget": 37000000,
+      "displayName": "Cruzeiro"
     },
     {
       "id": "CUI",
       "name": "CUI",
       "short": "CUI",
-      "leagueId": "BRA_SERIE_A",
+      "leagueId": "BRA_SERIE_B",
       "overall": 75,
-      "budget": 26000000
+      "budget": 26000000,
+      "displayName": "Cuiabá Esporte Clube MT"
     },
     {
       "id": "FER",
       "name": "FER",
       "short": "FER",
-      "leagueId": "BRA_SERIE_A",
+      "leagueId": "BRA_SERIE_B",
       "overall": 65,
-      "budget": 14000000
+      "budget": 14000000,
+      "displayName": "Ferroviária SP"
     },
     {
       "id": "FLA",
@@ -558,15 +541,17 @@
       "short": "FLA",
       "leagueId": "BRA_SERIE_A",
       "overall": 77,
-      "budget": 49000000
+      "budget": 49000000,
+      "displayName": "Flamengo"
     },
     {
       "id": "FLU",
       "name": "FLU",
       "short": "FLU",
-      "leagueId": "BRA_SERIE_B",
+      "leagueId": "BRA_SERIE_A",
       "overall": 70,
-      "budget": 19000000
+      "budget": 19000000,
+      "displayName": "Fluminense RJ"
     },
     {
       "id": "FOR",
@@ -574,23 +559,26 @@
       "short": "FOR",
       "leagueId": "BRA_SERIE_B",
       "overall": 73,
-      "budget": 51000000
+      "budget": 51000000,
+      "displayName": "Fortaleza"
     },
     {
       "id": "GRE",
       "name": "GRE",
       "short": "GRE",
-      "leagueId": "BRA_SERIE_B",
+      "leagueId": "BRA_SERIE_A",
       "overall": 76,
-      "budget": 11000000
+      "budget": 11000000,
+      "displayName": "Grêmio"
     },
     {
       "id": "INT",
       "name": "INT",
       "short": "INT",
-      "leagueId": "BRA_SERIE_B",
+      "leagueId": "BRA_SERIE_A",
       "overall": 73,
-      "budget": 49000000
+      "budget": 49000000,
+      "displayName": "Internacional RS"
     },
     {
       "id": "JUV",
@@ -598,23 +586,17 @@
       "short": "JUV",
       "leagueId": "BRA_SERIE_B",
       "overall": 67,
-      "budget": 16000000
+      "budget": 16000000,
+      "displayName": "Juventude"
     },
     {
       "id": "MIR",
       "name": "MIR",
       "short": "MIR",
-      "leagueId": "BRA_SERIE_B",
+      "leagueId": "BRA_SERIE_A",
       "overall": 77,
-      "budget": 14000000
-    },
-    {
-      "id": "NOV",
-      "name": "NOV",
-      "short": "NOV",
-      "leagueId": "BRA_SERIE_B",
-      "overall": 68,
-      "budget": 18000000
+      "budget": 14000000,
+      "displayName": "Mirassol FC"
     },
     {
       "id": "OPE",
@@ -622,15 +604,17 @@
       "short": "OPE",
       "leagueId": "BRA_SERIE_B",
       "overall": 66,
-      "budget": 41000000
+      "budget": 41000000,
+      "displayName": "Operário Ferroviário EC PR"
     },
     {
       "id": "PAL",
       "name": "PAL",
       "short": "PAL",
-      "leagueId": "BRA_SERIE_B",
+      "leagueId": "BRA_SERIE_A",
       "overall": 70,
-      "budget": 35000000
+      "budget": 35000000,
+      "displayName": "Palmeiras SP"
     },
     {
       "id": "PAY",
@@ -638,15 +622,17 @@
       "short": "PAY",
       "leagueId": "BRA_SERIE_B",
       "overall": 75,
-      "budget": 11000000
+      "budget": 11000000,
+      "displayName": "Paysandu SC PA"
     },
     {
       "id": "RBB",
       "name": "RBB",
       "short": "RBB",
-      "leagueId": "BRA_SERIE_B",
+      "leagueId": "BRA_SERIE_A",
       "overall": 72,
-      "budget": 42000000
+      "budget": 42000000,
+      "displayName": "Red Bull Bragantino SP"
     },
     {
       "id": "REM",
@@ -654,23 +640,26 @@
       "short": "REM",
       "leagueId": "BRA_SERIE_A",
       "overall": 69,
-      "budget": 9000000
+      "budget": 9000000,
+      "displayName": "Clube do Remo PA"
     },
     {
       "id": "SAN",
       "name": "SAN",
       "short": "SAN",
-      "leagueId": "BRA_SERIE_B",
+      "leagueId": "BRA_SERIE_A",
       "overall": 69,
-      "budget": 47000000
+      "budget": 47000000,
+      "displayName": "Santos FC SP"
     },
     {
       "id": "SAO",
       "name": "SAO",
       "short": "SAO",
-      "leagueId": "BRA_SERIE_B",
+      "leagueId": "BRA_SERIE_A",
       "overall": 78,
-      "budget": 8000000
+      "budget": 8000000,
+      "displayName": "São Paulo FC SP"
     },
     {
       "id": "SPT",
@@ -678,23 +667,26 @@
       "short": "SPT",
       "leagueId": "BRA_SERIE_B",
       "overall": 77,
-      "budget": 34000000
+      "budget": 34000000,
+      "displayName": "Sport"
     },
     {
       "id": "VAS",
       "name": "VAS",
       "short": "VAS",
-      "leagueId": "BRA_SERIE_B",
+      "leagueId": "BRA_SERIE_A",
       "overall": 72,
-      "budget": 41000000
+      "budget": 41000000,
+      "displayName": "Vasco Gama"
     },
     {
       "id": "VIT",
       "name": "VIT",
       "short": "VIT",
-      "leagueId": "BRA_SERIE_B",
+      "leagueId": "BRA_SERIE_A",
       "overall": 81,
-      "budget": 30000000
+      "budget": 30000000,
+      "displayName": "EC Vitória BA"
     },
     {
       "id": "VNO",
@@ -702,7 +694,8 @@
       "short": "VNO",
       "leagueId": "BRA_SERIE_B",
       "overall": 65,
-      "budget": 56000000
+      "budget": 56000000,
+      "displayName": "Vila Nova GO"
     },
     {
       "id": "VOL",
@@ -710,7 +703,8 @@
       "short": "VOL",
       "leagueId": "BRA_SERIE_B",
       "overall": 79,
-      "budget": 49000000
+      "budget": 49000000,
+      "displayName": "Volta Redonda FC RJ"
     },
     {
       "id": "CHI_ANT",
@@ -2713,12 +2707,85 @@
       "tier": 1
     },
     {
-      "id": "AMZ",
-      "name": "AMZ",
-      "short": "AMZ",
+      "id": "MIR",
+      "name": "MIR",
+      "short": "MIR",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 70,
+      "budget": 25000000,
+      "displayName": "Mirassol FC"
+    },
+    {
+      "id": "CWB",
+      "name": "CWB",
+      "short": "CWB",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 73,
+      "budget": 30000000,
+      "displayName": "Coritiba PR"
+    },
+    {
+      "id": "FLU",
+      "name": "FLU",
+      "short": "FLU",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 78,
+      "budget": 65000000,
+      "displayName": "Fluminense RJ"
+    },
+    {
+      "id": "VIT",
+      "name": "VIT",
+      "short": "VIT",
+      "leagueId": "BRA_SERIE_A",
+      "overall": 70,
+      "budget": 22000000,
+      "displayName": "EC Vitória BA"
+    },
+    {
+      "id": "GOI",
+      "name": "GOI",
+      "short": "GOI",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 71,
+      "budget": 28000000,
+      "displayName": "Goiás EC GO"
+    },
+    {
+      "id": "NVO",
+      "name": "NVO",
+      "short": "NVO",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 69,
+      "budget": 18000000,
+      "displayName": "Grêmio Novorizontino SP"
+    },
+    {
+      "id": "ATH",
+      "name": "ATH",
+      "short": "ATH",
       "leagueId": "BRA_SERIE_B",
       "overall": 66,
-      "budget": 12000000
+      "budget": 12000000,
+      "displayName": "Athletic Club SJDR MG"
+    },
+    {
+      "id": "BFC",
+      "name": "BFC",
+      "short": "BFC",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 67,
+      "budget": 14000000,
+      "displayName": "Botafogo FC SP"
+    },
+    {
+      "id": "AVA",
+      "name": "AVA",
+      "short": "AVA",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 68,
+      "budget": 16000000,
+      "displayName": "Avaí FC SC"
     }
   ]
 }
