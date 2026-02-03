@@ -60,48 +60,26 @@
     if (splash) { splash.classList.add('hidden'); splash.style.display='none'; }
   }, 2000);
 
-  // após 1.2s, se app.js não executou, tenta carregar fallback em ./js/app.js e mostra aviso
+  // Segurança: não carregue um segundo bundle (isso pode causar "piscar" e voltar UI antiga).
+  // Se o app.js demorar para iniciar, apenas mantenha a tela de carregamento e mostre um aviso.
   setTimeout(function(){
     if (ready) return;
-
     var viewEl = document.getElementById('view');
     if (viewEl && !viewEl.innerHTML.trim()){
       viewEl.innerHTML =
         '<div class="card">' +
           '<div class="card-header">' +
-            '<div><div class="card-title">Carregando...</div><div class="card-subtitle">Tentando recuperar a aplicação</div></div>' +
+            '<div><div class="card-title">Carregando...</div><div class="card-subtitle">O jogo está demorando para iniciar (GitHub Pages)</div></div>' +
             '<span class="badge">VFM</span>' +
           '</div>' +
           '<div class="card-body">' +
-            '<div class="notice">⚠️ O script principal não iniciou. Tentando carregar fallback...</div>' +
+            '<div class="notice">Se ficar preso aqui, recarregue a página (Ctrl+F5).</div>' +
             '<div class="sep"></div>' +
             '<button class="btn btn-primary" type="button" onclick="location.reload()">Recarregar</button>' +
           '</div>' +
         '</div>';
     }
-
-    var s = document.createElement('script');
-    s.src = './js/app.js';
-    s.onload = function(){ /* ok */ };
-    s.onerror = function(){
-      var v = document.getElementById('view');
-      if (v) {
-        v.innerHTML =
-          '<div class="card">' +
-            '<div class="card-header">' +
-              '<div><div class="card-title">Falha ao iniciar</div><div class="card-subtitle">Não foi possível carregar os scripts do jogo.</div></div>' +
-              '<span class="badge">VFM</span>' +
-            '</div>' +
-            '<div class="card-body">' +
-              '<div class="notice">⚠️ Verifique se os arquivos <b>app.js</b> e <b>js/app.js</b> estão publicados no mesmo diretório do <b>index.html</b>.</div>' +
-              '<div class="sep"></div>' +
-              '<button class="btn btn-primary" type="button" onclick="location.reload()">Recarregar</button>' +
-            '</div>' +
-          '</div>';
-      }
-    };
-    document.body.appendChild(s);
-  }, 1200);
+  }, 5000);
 })();
 </script>
 
