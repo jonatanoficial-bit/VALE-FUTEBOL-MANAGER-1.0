@@ -290,16 +290,6 @@
     ensureSlots();
     const hash = location.hash.replace("#", "");
     const path = hash || "/home";
-
-    // Classes de rota para fundos/cenário (somente menus + lobby)
-    // Não interfere em partidas/tabelas.
-    try {
-      document.body.classList.remove('route-menu','route-hub');
-      const isMenu = (path === '/home' || path === '/dlc' || path === '/slots' || path === '/career-create' || path === '/club-pick' || path === '/tutorial');
-      if (isMenu) document.body.classList.add('route-menu');
-      if (path === '/hub') document.body.classList.add('route-hub');
-    } catch(e) {}
-
     const view = routes[path] || viewHome;
     const html = view();
     // Renderiza no container e vincula eventos
@@ -1069,187 +1059,22 @@ return save;
               <b>${esc(sponsorName)}</b>
             </div>
             <div class="sep"></div>
-            <div class="hub-grid">
-  <div class="hub-card" data-go="/matches">
-    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_match.png')}')"></div>
-    <div class="hub-overlay"></div>
-    <div class="hub-content">
-      <div class="hub-left">
-        <div class="hub-pill">⚽</div>
-        <div>
-          <div class="hub-title">Partida</div>
-          <div class="hub-desc">Dispute, simule e acompanhe eventos ao vivo</div>
-        </div>
-      </div>
-      <div class="hub-cta">Abrir</div>
-    </div>
-  </div>
+            <div class="grid">
+              <div class="col-4"><button class="btn btn-primary" data-go="/squad">Elenco</button></div>
+              <div class="col-4"><button class="btn btn-primary" data-go="/tactics">Tática</button></div>
+              <div class="col-4"><button class="btn btn-primary" data-go="/training">Treinos</button></div>
 
-  <div class="hub-card" data-go="/matches">
-    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
-    <div class="hub-overlay"></div>
-    <div class="hub-content">
-      <div class="hub-left">
-        <div class="hub-pill">🗓️</div>
-        <div>
-          <div class="hub-title">Calendário</div>
-          <div class="hub-desc">Próximos jogos, rodadas e agenda</div>
-        </div>
-      </div>
-      <div class="hub-cta">Ver</div>
-    </div>
-  </div>
+            <div class="col-4"><button class="btn btn-primary" data-go="/matches">Jogos (Calendário)</button></div>
+            <div class="col-4"><button class="btn btn-primary" data-go="/competitions">Competições</button></div>
+            <div class="col-4"><button class="btn btn-primary" data-go="/finance">Finanças</button></div>
 
-  <div class="hub-card" data-go="/competitions">
-    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_match.png')}')"></div>
-    <div class="hub-overlay"></div>
-    <div class="hub-content">
-      <div class="hub-left">
-        <div class="hub-pill">🏆</div>
-        <div>
-          <div class="hub-title">Competições</div>
-          <div class="hub-desc">Tabelas, continentais e títulos</div>
-        </div>
-      </div>
-      <div class="hub-cta">Entrar</div>
-    </div>
-  </div>
-
-  <div class="hub-card" data-go="/training">
-    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_staff.png')}')"></div>
-    <div class="hub-overlay"></div>
-    <div class="hub-content">
-      <div class="hub-left">
-        <div class="hub-pill">🏋️</div>
-        <div>
-          <div class="hub-title">Treino</div>
-          <div class="hub-desc">Evolua o elenco e ajuste intensidade</div>
-        </div>
-      </div>
-      <div class="hub-cta">Treinar</div>
-    </div>
-  </div>
-
-  <div class="hub-card" data-go="/staff">
-    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_staff.png')}')"></div>
-    <div class="hub-overlay"></div>
-    <div class="hub-content">
-      <div class="hub-left">
-        <div class="hub-pill">🎧</div>
-        <div>
-          <div class="hub-title">Staff</div>
-          <div class="hub-desc">Comissão técnica e funções do clube</div>
-        </div>
-      </div>
-      <div class="hub-cta">Abrir</div>
-    </div>
-  </div>
-
-  <div class="hub-card" data-go="/sponsorship">
-    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_sponsor.png')}')"></div>
-    <div class="hub-overlay"></div>
-    <div class="hub-content">
-      <div class="hub-left">
-        <div class="hub-pill">🤝</div>
-        <div>
-          <div class="hub-title">Patrocínio</div>
-          <div class="hub-desc">Contratos, metas e bônus financeiros</div>
-        </div>
-      </div>
-      <div class="hub-cta">Negociar</div>
-    </div>
-  </div>
-
-  <div class="hub-card" data-go="/transfers">
-    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
-    <div class="hub-overlay"></div>
-    <div class="hub-content">
-      <div class="hub-left">
-        <div class="hub-pill">🔁</div>
-        <div>
-          <div class="hub-title">Mercado</div>
-          <div class="hub-desc">Compras, vendas e empréstimos</div>
-        </div>
-      </div>
-      <div class="hub-cta">Ver</div>
-    </div>
-  </div>
-
-  <div class="hub-card" data-go="/finance">
-    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_sponsor.png')}')"></div>
-    <div class="hub-overlay"></div>
-    <div class="hub-content">
-      <div class="hub-left">
-        <div class="hub-pill">💰</div>
-        <div>
-          <div class="hub-title">Finanças</div>
-          <div class="hub-desc">Caixa, receitas, despesas e balanço</div>
-        </div>
-      </div>
-      <div class="hub-cta">Abrir</div>
-    </div>
-  </div>
-
-  <div class="hub-card" data-go="/squad">
-    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_match.png')}')"></div>
-    <div class="hub-overlay"></div>
-    <div class="hub-content">
-      <div class="hub-left">
-        <div class="hub-pill">👥</div>
-        <div>
-          <div class="hub-title">Elenco</div>
-          <div class="hub-desc">Jogadores, status e evolução</div>
-        </div>
-      </div>
-      <div class="hub-cta">Abrir</div>
-    </div>
-  </div>
-
-  <div class="hub-card" data-go="/tactics">
-    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_staff.png')}')"></div>
-    <div class="hub-overlay"></div>
-    <div class="hub-content">
-      <div class="hub-left">
-        <div class="hub-pill">📋</div>
-        <div>
-          <div class="hub-title">Tática</div>
-          <div class="hub-desc">Formação, estilo e instruções</div>
-        </div>
-      </div>
-      <div class="hub-cta">Editar</div>
-    </div>
-  </div>
-
-  <div class="hub-card" data-go="/save">
-    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
-    <div class="hub-overlay"></div>
-    <div class="hub-content">
-      <div class="hub-left">
-        <div class="hub-pill">💾</div>
-        <div>
-          <div class="hub-title">Salvar</div>
-          <div class="hub-desc">Guarde seu progresso</div>
-        </div>
-      </div>
-      <div class="hub-cta">Salvar</div>
-    </div>
-  </div>
-
-  <div class="hub-card" data-go="/slots">
-    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
-    <div class="hub-overlay"></div>
-    <div class="hub-content">
-      <div class="hub-left">
-        <div class="hub-pill">🔀</div>
-        <div>
-          <div class="hub-title">Slots</div>
-          <div class="hub-desc">Trocar e gerenciar saves</div>
-        </div>
-      </div>
-      <div class="hub-cta">Abrir</div>
-    </div>
-  </div>
-</div></div>
+              <div class="col-4"><button class="btn btn-primary" data-go="/staff">Staff</button></div>
+              <div class="col-4"><button class="btn btn-primary" data-go="/sponsorship">Patrocínio</button></div>
+              <div class="col-4"><button class="btn btn-primary" data-go="/transfers">Transferências</button></div>
+              <div class="col-4"><button class="btn" data-go="/save">Salvar</button></div>
+              <div class="col-4"><button class="btn" data-go="/home">Menu</button></div>
+              <div class="col-4"><button class="btn btn-danger" data-go="/slots">Trocar Slot</button></div>
+            </div>
             <div class="sep"></div>
             <div class="notice">
               Gerencie todos os aspectos do seu clube: elenco, tática, treinos, staff, patrocínio e transferências.
@@ -1530,20 +1355,68 @@ return save;
   // Promoção/Rebaixamento + Zonas (Parte 2)
   // -----------------------------
 
-  function getZonesForLeague(leagueId) {
-    const q = state.packData?.qualifications || {};
-    const br = q.brazil || {};
+  
+function getZonesForLeague(leagueId) {
+  const q = state.packData?.qualifications || {};
+  const br = q.brazil || {};
 
-    // Brasil (compatibilidade)
-    if (leagueId === 'BRA_SERIE_A') return { kind: 'BR_A', ...(br.serieA || {}) };
-    if (leagueId === 'BRA_SERIE_B') return { kind: 'BR_B', ...(br.serieB || {}) };
+  // Brasil (compatibilidade)
+  if (leagueId === 'BRA_SERIE_A') return { kind: 'BR_A', ...(br.serieA || {}) };
+  if (leagueId === 'BRA_SERIE_B') return { kind: 'BR_B', ...(br.serieB || {}) };
 
-    // Mundo (UEFA/CONMEBOL etc.)
-    const w = q.world || {};
-    const z = w[leagueId] || null;
-    if (!z) return null;
-    return { kind: 'WORLD', ...z };
+  // Mundo (UEFA/CONMEBOL etc.) - por configuração (qualifications.json)
+  const w = q.world || {};
+  const z = w[leagueId] || null;
+  if (z) return { kind: 'WORLD', ...z };
+
+  // AUTO (DLC-friendly): se a liga existir no pack e não tiver regra explícita,
+  // inferimos zonas continentais por continente/país.
+  const leagues = state.packData?.competitions?.leagues || [];
+  const lg = leagues.find(x => x.id === leagueId) || null;
+  if (!lg) return null;
+
+  const country = String(lg.country || '').toLowerCase();
+
+  // Lista de países europeus (expansível; cobre DLCs como Bélgica/Escócia/Rússia)
+  const europeCountries = new Set([
+    'inglaterra','espanha','itália','italia','alemanha','frança','franca',
+    'portugal','holanda','bélgica','belgica','escócia','escocia','rússia','russia',
+    'turquia','grécia','grecia','áustria','austria','suíça','suica','ucrânia','ucrania',
+    'sérvia','servia','dinamarca','suécia','suecia','noruega','polônia','polonia',
+    'república tcheca','republica tcheca','croácia','croacia'
+  ]);
+
+  const saCountries = new Set([
+    'brasil','argentina','uruguai','chile','colômbia','colombia',
+    'venezuela','bolívia','bolivia','equador','paraguai','peru'
+  ]);
+
+  const tier = Number(lg.tier || lg.level || 1);
+
+  // UEFA: Champions 1-4, Europa 5-6 (apenas 1ª divisão)
+  if (tier === 1 && europeCountries.has(country)) {
+    return {
+      kind: 'WORLD_AUTO_UEFA',
+      continental: {
+        champions: { from: 1, to: 4 },
+        europa: { from: 5, to: 6 }
+      }
+    };
   }
+
+  // CONMEBOL: Libertadores 1-4, Sudamericana 5-8 (apenas 1ª divisão)
+  if (tier === 1 && saCountries.has(country)) {
+    return {
+      kind: 'WORLD_AUTO_CONMEBOL',
+      continental: {
+        libertadores: { from: 1, to: 4 },
+        sudamericana: { from: 5, to: 8 }
+      }
+    };
+  }
+
+  return null;
+}
 
   function zoneInfoForPosition(leagueId, position) {
     const zones = getZonesForLeague(leagueId);
@@ -1633,7 +1506,7 @@ function ensureLeagueTableStore(save) {
     if (store[leagueId]) return store[leagueId];
 
     const clubs = ((save.world?.clubs) || (state.packData?.clubs?.clubs) || []).filter(c => c.leagueId === leagueId);
-    const ids = clubs.map(c => c.id);
+    const ids = Array.from(new Set(clubs.map(c => c.id)));
     const stateLeague = {
       leagueId,
       currentRound: 0,
@@ -1708,7 +1581,7 @@ function ensureLeagueTableStore(save) {
     if (store[leagueId]) return store[leagueId];
 
     const clubs = ((save.world?.clubs) || (state.packData?.clubs?.clubs) || []).filter(c => c.leagueId === leagueId);
-    const ids = clubs.map(c => c.id);
+    const ids = Array.from(new Set(clubs.map(c => c.id)));
 
     // tabela vazia no formato esperado pelo app
     const table = buildEmptyTable(clubs);
@@ -2595,12 +2468,7 @@ save.season.lastRoundPlayed = roundIndex;
         if (cont.europa) pushUnique(uel, pickLeagueQualifiers(save, lid, cont.europa.from, cont.europa.to));
       }
 
-      // Helpers de força (precisam existir ANTES do fallback)
-      const strengthOf = (clubId) => {
-        try { return teamStrength(clubId, save); } catch (e) { return 60; }
-      };
-      const rankByStrength = (ids) => (ids || []).slice().filter(Boolean).sort((a,b) => strengthOf(b) - strengthOf(a));
-
+      
       // Fallback: se as tabelas das ligas ainda não existem (início da temporada),
       // garantimos participantes pegando os melhores por força em cada liga.
       function topByStrengthFromLeague(lid, n){
@@ -2626,7 +2494,10 @@ save.season.lastRoundPlayed = roundIndex;
         for (const lid of CONM_LIDS) pushUnique(sula, topByStrengthFromLeague(lid, 6));
       }
 
-      // (strengthOf / rankByStrength movidos para cima)
+const strengthOf = (clubId) => {
+        try { return teamStrength(clubId, save); } catch (e) { return 60; }
+      };
+      const rankByStrength = (ids) => (ids || []).slice().filter(Boolean).sort((a,b) => strengthOf(b) - strengthOf(a));
 
       const allocCfg = (state.packData?.qualifications?.continentalAllocations || {});
       const uefaAlloc = allocCfg.uefa || {};
@@ -2702,13 +2573,11 @@ save.season.lastRoundPlayed = roundIndex;
       live.tournaments = {
         conmebol: {
           libertadores: initLibertadoresLive(save, 'CONMEBOL_LIB', 'CONMEBOL Libertadores', libSel),
-          // Sul-Americana também terá fase de grupos/league futuramente. Por ora, mantemos KO.
           sudamericana: initKnockoutLive(save, 'CONMEBOL_SUD', 'CONMEBOL Sul-Americana', sulaSel)
         },
         uefa: {
           champions: initChampionsLive(save, 'UEFA_CL', 'UEFA Champions League', uclSel),
-          // Europa League precisa ter fase de liga para existir "tabela" e liberar a simulação.
-          europa: initEuropaLive(save, 'UEFA_EL', 'UEFA Europa League', uelSel)
+          europa: initKnockoutLive(save, 'UEFA_EL', 'UEFA Europa League', uelSel)
         }
       };
 
@@ -2734,16 +2603,13 @@ save.season.lastRoundPlayed = roundIndex;
       const ids = gTeams.slice();
       const tableObj = buildGroupTable(ids);
 
-      // 6 matchdays (ida e volta) com 2 jogos por rodada
-      // pares base: (1-2,3-4), (1-3,2-4), (1-4,2-3) e depois invertido
-      const mdBase = [
+      // 3 matchdays (turno único) com 2 jogos por rodada
+      // pares fixos: (1-2,3-4), (1-3,2-4), (1-4,2-3) com mando alternado
+      const md = [
         [ { homeId: ids[0], awayId: ids[1] }, { homeId: ids[2], awayId: ids[3] } ],
         [ { homeId: ids[2], awayId: ids[0] }, { homeId: ids[1], awayId: ids[3] } ],
         [ { homeId: ids[0], awayId: ids[3] }, { homeId: ids[1], awayId: ids[2] } ]
       ].filter(r => r.every(x => x.homeId && x.awayId));
-
-      const mdReturn = mdBase.map(r => r.map(m => ({ homeId: m.awayId, awayId: m.homeId })));
-      const md = [...mdBase, ...mdReturn];
 
       groups.push({
         name: `Grupo ${groupNames[gi]}`,
@@ -2821,77 +2687,6 @@ save.season.lastRoundPlayed = roundIndex;
       id, name,
       format: 'LEAGUE+KO',
       size: 24,
-      stage: 'LEAGUE',
-      roundIndex: 0,
-      leaguePhase: { rounds, tableObj, table: sortMiniTable(Object.values(tableObj)) },
-      knockout: null,
-      championId: null,
-      championName: null
-    };
-  }
-
-  // Europa League: fase de liga + mata-mata (provisório, mas funcional)
-  // Mantém o mesmo tipo de estrutura da Champions para que exista tabela e
-  // para que o botão de "ver tabela" tenha conteúdo real.
-  function initEuropaLive(save, id, name, participants) {
-    // Por padrão usamos 16 clubes no pack atual (ajustável depois para 36)
-    const teams = (participants || []).slice(0, 16).filter(Boolean);
-    if (teams.length < 8) return { id, name, format: 'LEAGUE+KO', status: 'placeholder' };
-
-    const roundsCount = 6; // 6 rodadas no modelo de teste
-    const rounds = [];
-    const played = {};
-    const mk = (a,b)=> a<b ? `${a}|${b}` : `${b}|${a}`;
-    const canPair = (a,b)=> a!==b && !played[mk(a,b)];
-    const mark = (a,b)=> { played[mk(a,b)] = true; };
-
-    const tableObj = {};
-    for (const cid of teams) tableObj[cid] = { id:cid, P:0,W:0,D:0,L:0,GF:0,GA:0,GD:0,Pts:0 };
-
-    for (let r=1; r<=roundsCount; r++) {
-      let attempt = 0;
-      let order = teams.slice();
-      let matches = null;
-      while (attempt < 200 && !matches) {
-        attempt++;
-        for (let i=order.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [order[i],order[j]]=[order[j],order[i]]; }
-        const used = new Set();
-        const m = [];
-        for (let i=0;i<order.length;i++) {
-          const a = order[i];
-          if (used.has(a)) continue;
-          for (let j=i+1;j<order.length;j++) {
-            const b = order[j];
-            if (used.has(b)) continue;
-            if (canPair(a,b)) {
-              used.add(a); used.add(b);
-              mark(a,b);
-              // alterna mando por rodada
-              const homeId = (r % 2 === 1) ? a : b;
-              const awayId = (r % 2 === 1) ? b : a;
-              m.push({ homeId, awayId, played:false, hg:null, ag:null });
-              break;
-            }
-          }
-        }
-        if (m.length === Math.floor(teams.length/2)) matches = m;
-      }
-
-      // fallback: se não conseguir evitar repetição, monta aleatório
-      if (!matches) {
-        const order2 = teams.slice();
-        for (let i=order2.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [order2[i],order2[j]]=[order2[j],order2[i]]; }
-        matches = [];
-        for (let i=0;i<order2.length;i+=2) matches.push({ homeId: order2[i], awayId: order2[i+1], played:false, hg:null, ag:null });
-      }
-
-      rounds.push({ name: `Rodada ${r}`, matches });
-    }
-
-    return {
-      id, name,
-      format: 'LEAGUE+KO',
-      size: teams.length,
       stage: 'LEAGUE',
       roundIndex: 0,
       leaguePhase: { rounds, tableObj, table: sortMiniTable(Object.values(tableObj)) },
@@ -2982,7 +2777,7 @@ save.season.lastRoundPlayed = roundIndex;
         g.table = sortMiniTable(Object.values(g.tableObj));
       }
       lib.matchdayIndex = md + 1;
-      if (lib.matchdayIndex >= 6) {
+      if (lib.matchdayIndex >= 3) {
         // fecha grupos -> cria KO com top2
         const qualified = [];
         for (const g of (lib.groups || [])) {
@@ -3032,39 +2827,8 @@ save.season.lastRoundPlayed = roundIndex;
       }
     }
 
-    // Europa League - rodada fase de liga -> depois KO
-    if (uel && uel.format === 'LEAGUE+KO' && uel.stage === 'LEAGUE') {
-      const ri = uel.roundIndex || 0;
-      const rnd = uel.leaguePhase?.rounds?.[ri];
-      if (rnd) {
-        for (const m of (rnd.matches || [])) {
-          if (m.played) continue;
-          const sim = simulateMatch(m.homeId, m.awayId, save);
-          m.played = true; m.hg = sim.hg; m.ag = sim.ag;
-          applyGroupResult(uel.leaguePhase.tableObj, m.homeId, m.awayId, sim.hg, sim.ag);
-          const stats = buildMatchStats(m.homeId, m.awayId, sim, save);
-          const timeline = buildTimelineForMatch(m.homeId, m.awayId, sim, save);
-          playedMatches.push({ comp: 'UEL', homeId: m.homeId, awayId: m.awayId, hg: sim.hg, ag: sim.ag, stats, timeline });
-        }
-        uel.leaguePhase.table = sortMiniTable(Object.values(uel.leaguePhase.tableObj));
-      }
-      uel.roundIndex = ri + 1;
-
-      // Após a última rodada, cria mata-mata com Top 8
-      if (uel.roundIndex >= (uel.leaguePhase?.rounds?.length || 0)) {
-        const qualified = (uel.leaguePhase.table || []).slice(0,8).map(r => r.id);
-        uel.knockout = initKnockoutLive(save, uel.id + '_KO', uel.name + ' • Mata-mata', qualified);
-        uel.stage = 'KO';
-      }
-    } else if (uel && uel.format === 'LEAGUE+KO' && uel.stage === 'KO' && uel.knockout) {
-      const res = playKnockoutRound(save, uel.knockout);
-      playedMatches.push(...(res.playedMatches || []).map(m => ({ ...m, comp: 'UEL' })));
-      if (uel.knockout.championId) {
-        uel.championId = uel.knockout.championId;
-        uel.championName = uel.knockout.championName;
-      }
-    } else if (uel && uel.format === 'KO') {
-      // compatibilidade antiga
+    // Europa League (KO)
+    if (uel && uel.format === 'KO') {
       const res = playKnockoutRound(save, uel);
       playedMatches.push(...(res.playedMatches || []).map(m => ({ ...m, comp: 'UEL' })));
     }
@@ -3497,18 +3261,18 @@ function pickBrazilQualifiers(save, leagueId, from, to) {
     }
 
     // Tamanhos (provisório avançado)
-    const UCL_GROUP_SIZE = Number(uefaAlloc?.champions?.size || 32);
-    const UEL_GROUP_SIZE = Number(uefaAlloc?.europa?.size || 32);
+    const UCL_LEAGUE_SIZE = Number(uefaAlloc?.champions?.size || 24);
+    const UEL_KO_SIZE = Number(uefaAlloc?.europa?.size || 16);
     const LIB_GROUP_SIZE = Number(conmebolAlloc?.libertadores?.size || 32);
-    const SULA_GROUP_SIZE = Number(conmebolAlloc?.sudamericana?.size || 32);
+    const SULA_KO_SIZE = Number(conmebolAlloc?.sudamericana?.size || 16);
 
     // UEFA: Champions (liga) e Europa (KO)
-    const uclPick = selectWithAllocation(ucl, uefaAlloc?.champions || {}, UCL_GROUP_SIZE);
+    const uclPick = selectWithAllocation(ucl, uefaAlloc?.champions || {}, UCL_LEAGUE_SIZE);
     const uclN = uclPick.selected;
     const uclOverflow = uclPick.overflow;
 
     const uelPoolAll = pushConcat([], uclOverflow, uel);
-    const uelPick = selectWithAllocation(uelPoolAll, uefaAlloc?.europa || {}, UEL_GROUP_SIZE);
+    const uelPick = selectWithAllocation(uelPoolAll, uefaAlloc?.europa || {}, UEL_KO_SIZE);
     const uelN = uelPick.selected;
 
     // CONMEBOL: Libertadores (grupos) e Sul-Americana (KO)
@@ -3517,49 +3281,36 @@ function pickBrazilQualifiers(save, leagueId, from, to) {
     const libOverflow = libPick.overflow;
 
     const sulaPoolAll = pushConcat([], libOverflow, sula);
-    const sulaPick = selectWithAllocation(sulaPoolAll, conmebolAlloc?.sudamericana || {}, SULA_GROUP_SIZE);
+    const sulaPick = selectWithAllocation(sulaPoolAll, conmebolAlloc?.sudamericana || {}, SULA_KO_SIZE);
     const sulaN = sulaPick.selected;
 
-    // Fallback: garante tamanhos mínimos para não ficar sem times (usa clubes mais fortes do pack)
-    const allClubIds = Object.keys(state.packData?.clubs || {});
-    function fillToSize(arr, size, used) {
-      const a = (arr || []).filter(Boolean);
-      const u = new Set([...(used||[]), ...a]);
-      if (a.length >= size) return a.slice(0, size);
-      const candidates = allClubIds.filter(id => id && !u.has(id));
-      const fill = rankByStrength(candidates).slice(0, size - a.length);
-      return a.concat(fill);
-    }
+    
 
-    const usedInitial = [];
-    const uclN32 = fillToSize(uclN, 32, usedInitial);
-    usedInitial.push(...uclN32);
-    const uelN32 = fillToSize(uelN, 32, usedInitial);
-    usedInitial.push(...uelN32);
-    const libN32 = fillToSize(libN, 32, usedInitial);
-    usedInitial.push(...libN32);
-    const sulaN32 = fillToSize(sulaN, 32, usedInitial);
+// Normaliza nomes esperados por versões anteriores (evita variáveis inexistentes)
+const ucl24 = (typeof uclSel !== 'undefined') ? uclSel : [];
+const uel16 = (typeof uelSel !== 'undefined') ? uelSel : [];
+const lib32 = (typeof libSel !== 'undefined') ? libSel : [];
+const sula16 = (typeof sulaN !== 'undefined') ? sulaN : [];
 
+// Construção dos torneios
 
-    // Construção dos torneios
-
-    if (libN32.length >= 32) store.libertadores = buildLibertadoresGroupsAndKO(save, 'CONMEBOL_LIB', 'CONMEBOL Libertadores', libN32);
+    if (lib32.length >= 16) store.libertadores = buildLibertadoresGroupsAndKO(save, 'CONMEBOL_LIB', 'CONMEBOL Libertadores', lib32);
     else store.libertadores = store.libertadores || { id: 'CONMEBOL_LIB', name: 'CONMEBOL Libertadores', status: 'placeholder' };
 
-    if (sulaN32.length >= 32) store.sudamericana = buildLibertadoresGroupsAndKO(save, 'CONMEBOL_SUD', 'CONMEBOL Sul-Americana', sulaN32);
+    if (sula16.length >= 8) store.sudamericana = buildKnockoutTournament(save, 'CONMEBOL_SUD', 'CONMEBOL Sul-Americana', sula16);
     else store.sudamericana = store.sudamericana || { id: 'CONMEBOL_SUD', name: 'CONMEBOL Sul-Americana', status: 'placeholder' };
 
     store.uefa = store.uefa || {};
-    if (uclN32.length >= 32) store.uefa.champions = buildLibertadoresGroupsAndKO(save, 'UEFA_CL', 'UEFA Champions League', uclN32);
+    if (ucl24.length >= 16) store.uefa.champions = buildLeaguePhaseAndKO(save, 'UEFA_CL', 'UEFA Champions League', ucl24);
     else store.uefa.champions = store.uefa.champions || { id: 'UEFA_CL', name: 'UEFA Champions League', status: 'placeholder' };
 
-    if (uelN32.length >= 32) store.uefa.europa = buildLibertadoresGroupsAndKO(save, 'UEFA_EL', 'UEFA Europa League', uelN32);
+    if (uel16.length >= 8) store.uefa.europa = buildKnockoutTournament(save, 'UEFA_EL', 'UEFA Europa League', uel16);
     else store.uefa.europa = store.uefa.europa || { id: 'UEFA_EL', name: 'UEFA Europa League', status: 'placeholder' };
 
     store.uefa.conference = store.uefa.conference || { id: 'UEFA_ECL', name: 'UEFA Conference League', status: 'placeholder' };
 
     store.generatedAt = save.season?.completedAt || nowIso();
-    store.version = 'B1.1G';
+    store.version = 'B1.1';
   }
 
   

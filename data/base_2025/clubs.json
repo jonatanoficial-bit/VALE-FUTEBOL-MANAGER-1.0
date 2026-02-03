@@ -1,7 +1,7 @@
 {
   "clubs": [
     {
-      "id": "flamengo",
+      "id": "FLAMENGO",
       "name": "Flamengo",
       "short": "FLA",
       "country": "Brasil",
@@ -10,7 +10,7 @@
       "budget": 180000000
     },
     {
-      "id": "palmeiras",
+      "id": "PALMEIRAS",
       "name": "Palmeiras",
       "short": "PAL",
       "country": "Brasil",
@@ -19,7 +19,7 @@
       "budget": 170000000
     },
     {
-      "id": "atletico_mg",
+      "id": "ATLETICO_MG",
       "name": "Atlético Mineiro",
       "short": "CAM",
       "country": "Brasil",
@@ -28,7 +28,7 @@
       "budget": 150000000
     },
     {
-      "id": "corinthians",
+      "id": "CORINTHIANS",
       "name": "Corinthians",
       "short": "COR",
       "country": "Brasil",
@@ -37,7 +37,7 @@
       "budget": 140000000
     },
     {
-      "id": "sao_paulo",
+      "id": "SAO_PAULO",
       "name": "São Paulo",
       "short": "SAO",
       "country": "Brasil",
@@ -46,7 +46,7 @@
       "budget": 135000000
     },
     {
-      "id": "internacional",
+      "id": "INTERNACIONAL",
       "name": "Internacional",
       "short": "INT",
       "country": "Brasil",
@@ -55,7 +55,7 @@
       "budget": 130000000
     },
     {
-      "id": "gremio",
+      "id": "GREMIO",
       "name": "Grêmio",
       "short": "GRE",
       "country": "Brasil",
@@ -64,7 +64,7 @@
       "budget": 125000000
     },
     {
-      "id": "fluminense",
+      "id": "FLUMINENSE",
       "name": "Fluminense",
       "short": "FLU",
       "country": "Brasil",
@@ -73,7 +73,7 @@
       "budget": 120000000
     },
     {
-      "id": "botafogo",
+      "id": "BOTAFOGO",
       "name": "Botafogo",
       "short": "BOT",
       "country": "Brasil",
@@ -82,7 +82,7 @@
       "budget": 115000000
     },
     {
-      "id": "vasco",
+      "id": "VASCO",
       "name": "Vasco da Gama",
       "short": "VAS",
       "country": "Brasil",
@@ -91,7 +91,7 @@
       "budget": 110000000
     },
     {
-      "id": "athletico_pr",
+      "id": "ATHLETICO_PR",
       "name": "Athletico Paranaense",
       "short": "CAP",
       "country": "Brasil",
@@ -100,7 +100,7 @@
       "budget": 112000000
     },
     {
-      "id": "cruzeiro",
+      "id": "CRUZEIRO",
       "name": "Cruzeiro",
       "short": "CRU",
       "country": "Brasil",
@@ -109,7 +109,7 @@
       "budget": 118000000
     },
     {
-      "id": "bahia",
+      "id": "BAHIA",
       "name": "Bahia",
       "short": "BAH",
       "country": "Brasil",
@@ -118,7 +118,7 @@
       "budget": 105000000
     },
     {
-      "id": "fortaleza",
+      "id": "FORTALEZA",
       "name": "Fortaleza",
       "short": "FOR",
       "country": "Brasil",
@@ -127,7 +127,7 @@
       "budget": 103000000
     },
     {
-      "id": "bragantino",
+      "id": "BRAGANTINO",
       "name": "RB Bragantino",
       "short": "RBB",
       "country": "Brasil",
@@ -136,7 +136,7 @@
       "budget": 100000000
     },
     {
-      "id": "cuiaba",
+      "id": "CUIABA",
       "name": "Cuiabá",
       "short": "CUI",
       "country": "Brasil",
@@ -145,7 +145,7 @@
       "budget": 80000000
     },
     {
-      "id": "juventude",
+      "id": "JUVENTUDE",
       "name": "Juventude",
       "short": "JUV",
       "country": "Brasil",
@@ -154,7 +154,7 @@
       "budget": 65000000
     },
     {
-      "id": "vitoria",
+      "id": "VITORIA",
       "name": "Vitória",
       "short": "VIT",
       "country": "Brasil",
@@ -163,7 +163,7 @@
       "budget": 60000000
     },
     {
-      "id": "criciuma",
+      "id": "CRICIUMA",
       "name": "Criciúma",
       "short": "CRI",
       "country": "Brasil",
@@ -172,16 +172,7 @@
       "budget": 55000000
     },
     {
-      "id": "santos",
-      "name": "Santos",
-      "short": "SAN",
-      "country": "Brasil",
-      "leagueId": "BRA_SERIE_A",
-      "overall": 72,
-      "budget": 120000000
-    },
-    {
-      "id": "america_mg",
+      "id": "AMERICA_MG",
       "name": "América-MG",
       "short": "AME",
       "country": "Brasil",
@@ -190,7 +181,7 @@
       "budget": 75000000
     },
     {
-      "id": "atletico_go",
+      "id": "ATLETICO_GO",
       "name": "Atlético-GO",
       "short": "ACG",
       "country": "Brasil",
@@ -199,7 +190,7 @@
       "budget": 65000000
     },
     {
-      "id": "avai",
+      "id": "AVAI",
       "name": "Avaí",
       "short": "AVA",
       "country": "Brasil",
@@ -208,7 +199,7 @@
       "budget": 45000000
     },
     {
-      "id": "botafogo_sp",
+      "id": "BOTAFOGO_SP",
       "name": "Botafogo-SP",
       "short": "BSP",
       "country": "Brasil",
@@ -217,7 +208,7 @@
       "budget": 42000000
     },
     {
-      "id": "chapecoense",
+      "id": "CHAPECOENSE",
       "name": "Chapecoense",
       "short": "CHA",
       "country": "Brasil",
@@ -226,7 +217,7 @@
       "budget": 47000000
     },
     {
-      "id": "coritiba",
+      "id": "CORITIBA",
       "name": "Coritiba",
       "short": "CFC",
       "country": "Brasil",
@@ -235,7 +226,7 @@
       "budget": 70000000
     },
     {
-      "id": "crb",
+      "id": "CRB",
       "name": "CRB",
       "short": "CRB",
       "country": "Brasil",
@@ -244,7 +235,7 @@
       "budget": 42000000
     },
     {
-      "id": "csa",
+      "id": "CSA",
       "name": "CSA",
       "short": "CSA",
       "country": "Brasil",
@@ -253,7 +244,7 @@
       "budget": 38000000
     },
     {
-      "id": "ceara",
+      "id": "CEARA",
       "name": "Ceará",
       "short": "CEA",
       "country": "Brasil",
@@ -262,7 +253,7 @@
       "budget": 72000000
     },
     {
-      "id": "goias",
+      "id": "GOIAS",
       "name": "Goiás",
       "short": "GOI",
       "country": "Brasil",
@@ -271,7 +262,7 @@
       "budget": 70000000
     },
     {
-      "id": "guarani",
+      "id": "GUARANI",
       "name": "Guarani",
       "short": "GUA",
       "country": "Brasil",
@@ -280,7 +271,7 @@
       "budget": 42000000
     },
     {
-      "id": "ituano",
+      "id": "ITUANO",
       "name": "Ituano",
       "short": "ITU",
       "country": "Brasil",
@@ -289,7 +280,7 @@
       "budget": 36000000
     },
     {
-      "id": "londrina",
+      "id": "LONDRINA",
       "name": "Londrina",
       "short": "LON",
       "country": "Brasil",
@@ -298,7 +289,7 @@
       "budget": 35000000
     },
     {
-      "id": "mirassol",
+      "id": "MIRASSOL",
       "name": "Mirassol",
       "short": "MIR",
       "country": "Brasil",
@@ -307,7 +298,7 @@
       "budget": 42000000
     },
     {
-      "id": "novorizontino",
+      "id": "NOVORIZONTINO",
       "name": "Novorizontino",
       "short": "NOV",
       "country": "Brasil",
@@ -316,7 +307,7 @@
       "budget": 42000000
     },
     {
-      "id": "paysandu",
+      "id": "PAYSANDU",
       "name": "Paysandu",
       "short": "PAY",
       "country": "Brasil",
@@ -325,7 +316,7 @@
       "budget": 42000000
     },
     {
-      "id": "ponte_preta",
+      "id": "PONTE_PRETA",
       "name": "Ponte Preta",
       "short": "PON",
       "country": "Brasil",
@@ -334,7 +325,7 @@
       "budget": 42000000
     },
     {
-      "id": "sampaio_correa",
+      "id": "SAMPAIO_CORREA",
       "name": "Sampaio Corrêa",
       "short": "SAM",
       "country": "Brasil",
@@ -343,7 +334,7 @@
       "budget": 36000000
     },
     {
-      "id": "sport",
+      "id": "SPORT",
       "name": "Sport",
       "short": "SPO",
       "country": "Brasil",
@@ -352,7 +343,7 @@
       "budget": 72000000
     },
     {
-      "id": "vila_nova",
+      "id": "VILA_NOVA",
       "name": "Vila Nova",
       "short": "VNO",
       "country": "Brasil",
@@ -361,7 +352,7 @@
       "budget": 42000000
     },
     {
-      "id": "river_plate",
+      "id": "RIVER_PLATE",
       "name": "River Plate",
       "short": "RIV",
       "country": "Argentina",
@@ -370,7 +361,7 @@
       "budget": 160000000
     },
     {
-      "id": "boca_juniors",
+      "id": "BOCA_JUNIORS",
       "name": "Boca Juniors",
       "short": "BOC",
       "country": "Argentina",
@@ -379,7 +370,7 @@
       "budget": 155000000
     },
     {
-      "id": "penarol",
+      "id": "PENAROL",
       "name": "Peñarol",
       "short": "PEN",
       "country": "Uruguai",
@@ -388,7 +379,7 @@
       "budget": 90000000
     },
     {
-      "id": "nacional_uru",
+      "id": "NACIONAL_URU",
       "name": "Nacional",
       "short": "NAC",
       "country": "Uruguai",
@@ -397,7 +388,7 @@
       "budget": 88000000
     },
     {
-      "id": "colo_colo",
+      "id": "COLO_COLO",
       "name": "Colo-Colo",
       "short": "COL",
       "country": "Chile",
@@ -406,7 +397,7 @@
       "budget": 85000000
     },
     {
-      "id": "real_madrid",
+      "id": "REAL_MADRID",
       "name": "Real Madrid",
       "short": "RMA",
       "country": "Espanha",
@@ -415,7 +406,7 @@
       "budget": 400000000
     },
     {
-      "id": "barcelona",
+      "id": "BARCELONA",
       "name": "Barcelona",
       "short": "FCB",
       "country": "Espanha",
@@ -424,7 +415,7 @@
       "budget": 380000000
     },
     {
-      "id": "atletico_madrid",
+      "id": "ATLETICO_MADRID",
       "name": "Atlético Madrid",
       "short": "ATM",
       "country": "Espanha",
@@ -433,7 +424,7 @@
       "budget": 300000000
     },
     {
-      "id": "man_city",
+      "id": "MAN_CITY",
       "name": "Manchester City",
       "short": "MCI",
       "country": "Inglaterra",
@@ -442,7 +433,7 @@
       "budget": 420000000
     },
     {
-      "id": "man_united",
+      "id": "MAN_UNITED",
       "name": "Manchester United",
       "short": "MUN",
       "country": "Inglaterra",
@@ -451,7 +442,7 @@
       "budget": 350000000
     },
     {
-      "id": "liverpool",
+      "id": "LIVERPOOL",
       "name": "Liverpool",
       "short": "LIV",
       "country": "Inglaterra",
@@ -460,7 +451,7 @@
       "budget": 360000000
     },
     {
-      "id": "chelsea",
+      "id": "CHELSEA",
       "name": "Chelsea",
       "short": "CHE",
       "country": "Inglaterra",
@@ -469,7 +460,7 @@
       "budget": 330000000
     },
     {
-      "id": "bayern",
+      "id": "BAYERN",
       "name": "Bayern de Munique",
       "short": "BAY",
       "country": "Alemanha",
@@ -478,7 +469,7 @@
       "budget": 390000000
     },
     {
-      "id": "dortmund",
+      "id": "DORTMUND",
       "name": "Borussia Dortmund",
       "short": "BVB",
       "country": "Alemanha",
@@ -487,7 +478,7 @@
       "budget": 300000000
     },
     {
-      "id": "psg",
+      "id": "PSG",
       "name": "Paris Saint-Germain",
       "short": "PSG",
       "country": "França",
@@ -496,7 +487,7 @@
       "budget": 380000000
     },
     {
-      "id": "juventus",
+      "id": "JUVENTUS",
       "name": "Juventus",
       "short": "JUV",
       "country": "Itália",
@@ -505,7 +496,7 @@
       "budget": 310000000
     },
     {
-      "id": "milan",
+      "id": "MILAN",
       "name": "Milan",
       "short": "MIL",
       "country": "Itália",
@@ -514,13 +505,21 @@
       "budget": 290000000
     },
     {
-      "id": "inter",
+      "id": "INTER",
       "name": "Internazionale",
       "short": "INT",
       "country": "Itália",
       "leagueId": "ITA_SERIEA",
       "overall": 83,
       "budget": 300000000
+    },
+    {
+      "id": "AMZ",
+      "name": "AMZ",
+      "short": "AMZ",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 66,
+      "budget": 12000000
     }
   ]
 }

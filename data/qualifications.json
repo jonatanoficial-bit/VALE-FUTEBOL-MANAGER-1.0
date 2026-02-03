@@ -64,7 +64,7 @@
     }
   },
   "world": {
-    "ENG_PREMIER": {
+    "ENG_PREM": {
       "continental": {
         "champions": {
           "from": 1,
@@ -80,7 +80,7 @@
         "to": 20
       }
     },
-    "ESP_LALIGA": {
+    "ESP_LIGA": {
       "continental": {
         "champions": {
           "from": 1,
@@ -96,7 +96,7 @@
         "to": 20
       }
     },
-    "ITA_SERIE_A": {
+    "ITA_SERIEA": {
       "continental": {
         "champions": {
           "from": 1,
@@ -112,7 +112,7 @@
         "to": 20
       }
     },
-    "GER_BUNDES": {
+    "GER_BUND": {
       "continental": {
         "champions": {
           "from": 1,
@@ -128,7 +128,7 @@
         "to": 20
       }
     },
-    "FRA_LIGUE_1": {
+    "FRA_L1": {
       "continental": {
         "champions": {
           "from": 1,
@@ -160,7 +160,7 @@
         "to": 20
       }
     },
-    "ARG_PRIMERA": {
+    "ARG_PRIM": {
       "continental": {
         "libertadores": {
           "from": 1,
@@ -176,7 +176,7 @@
         "to": 20
       }
     },
-    "URU_PRIMERA": {
+    "URU_PRIM": {
       "continental": {
         "libertadores": {
           "from": 1,
@@ -192,7 +192,7 @@
         "to": 20
       }
     },
-    "CHI_PRIMERA": {
+    "CHI_PRIM": {
       "continental": {
         "libertadores": {
           "from": 1,
@@ -208,7 +208,7 @@
         "to": 20
       }
     },
-    "COL_PRIMERA": {
+    "COL_PRIM": {
       "continental": {
         "libertadores": {
           "from": 1,
@@ -224,7 +224,7 @@
         "to": 20
       }
     },
-    "VEN_PRIMERA": {
+    "VEN_PRIM": {
       "continental": {
         "libertadores": {
           "from": 1,
@@ -240,7 +240,7 @@
         "to": 20
       }
     },
-    "BOL_PRIMERA": {
+    "BOL_PRIM": {
       "continental": {
         "libertadores": {
           "from": 1,
@@ -256,7 +256,7 @@
         "to": 20
       }
     },
-    "ECU_LIGAPRO": {
+    "ECU_LIG": {
       "continental": {
         "libertadores": {
           "from": 1,

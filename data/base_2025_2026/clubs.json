@@ -484,7 +484,7 @@
       "id": "CEA",
       "name": "CEA",
       "short": "CEA",
-      "leagueId": "BRA_SERIE_A",
+      "leagueId": "BRA_SERIE_B",
       "overall": 76,
       "budget": 35000000
     },
@@ -652,7 +652,7 @@
       "id": "REM",
       "name": "REM",
       "short": "REM",
-      "leagueId": "BRA_SERIE_B",
+      "leagueId": "BRA_SERIE_A",
       "overall": 69,
       "budget": 9000000
     },
@@ -711,14 +711,6 @@
       "leagueId": "BRA_SERIE_B",
       "overall": 79,
       "budget": 49000000
-    },
-    {
-      "id": "santos",
-      "name": "santos",
-      "short": "santos",
-      "leagueId": "BRA_SERIE_B",
-      "overall": 75,
-      "budget": 54000000
     },
     {
       "id": "CHI_ANT",
@@ -2719,6 +2711,14 @@
       "budget": 17750000,
       "country": "Venezuela",
       "tier": 1
+    },
+    {
+      "id": "AMZ",
+      "name": "AMZ",
+      "short": "AMZ",
+      "leagueId": "BRA_SERIE_B",
+      "overall": 66,
+      "budget": 12000000
     }
   ]
 }

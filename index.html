@@ -1,14 +1,11 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Vale Futebol Manager 2026 - Premium</title>
   <!-- Estilos principais -->
-  <link rel="stylesheet" href="./styles_v1.11.0.css" />
+  <link rel="stylesheet" href="./styles.css" />
   <!-- Diagnósticos provisórios (removível no final) -->
   <script src="./js/diagnostics.js"></script>
 </head>
@@ -44,12 +41,12 @@
     <footer class="footer">
       <span>© Vale Games</span>
       <span class="dot">•</span>
-      <span>Offline • LocalStorage</span><span class="dot">•</span><span class="small vfm-version">v1.10.4</span>
+      <span>Offline • LocalStorage</span>
     </footer>
   </div>
 
   <!-- Lógica principal da aplicação -->
-  <script src="./app_v1.11.0.js"></script>
+  <script src="./app.js"></script>
 <script>
 (function(){
   var ready = false;
@@ -68,9 +65,6 @@
     if (ready) return;
 
     var viewEl = document.getElementById('view');
-    // Se o app principal já renderizou algo, NÃO carregue fallback (evita sobrescrever telas)
-    if (viewEl && viewEl.innerHTML && viewEl.innerHTML.trim()) { return; }
-
     if (viewEl && !viewEl.innerHTML.trim()){
       viewEl.innerHTML =
         '<div class="card">' +
@@ -107,17 +101,9 @@
       }
     };
     document.body.appendChild(s);
-  }, 2500);
+  }, 1200);
 })();
 </script>
-
-
-  <div id="build-badge" style="position:fixed;left:10px;bottom:10px;z-index:99999;
-    background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.15);color:#fff;
-    padding:6px 10px;border-radius:999px;font:12px/1.2 system-ui, -apple-system, Segoe UI, Roboto, Arial;
-    backdrop-filter: blur(8px);">
-	    build v1.11.0
-  </div>
 
 </body>
 </html>

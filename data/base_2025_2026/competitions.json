@@ -100,7 +100,6 @@
         "BFS",
         "BOT",
         "CAP",
-        "CEA",
         "CFC",
         "CHA",
         "COR",
@@ -109,7 +108,8 @@
         "CRU",
         "CUI",
         "FER",
-        "FLA"
+        "FLA",
+        "REM"
       ]
     },
     {
@@ -129,7 +129,6 @@
         "PAL",
         "PAY",
         "RBB",
-        "REM",
         "SAN",
         "SAO",
         "SPT",
@@ -137,7 +136,8 @@
         "VIT",
         "VNO",
         "VOL",
-        "santos"
+        "CEA",
+        "AMZ"
       ]
     },
     {
