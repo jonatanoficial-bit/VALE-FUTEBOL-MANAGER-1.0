@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Vale Futebol Manager 2026 - Premium</title>
   <!-- Estilos principais -->
-  <link rel="stylesheet" href="./styles.css?v=1.12.4" />
+  <link rel="stylesheet" href="./styles.css?v=1.12.6" />
   <!-- Diagnósticos provisórios (removível no final) -->
   <script src="./js/diagnostics.js"></script>
 </head>
@@ -35,7 +35,7 @@
     </header>
     <main class="main">
       <div id="view" class="view">
-        <!-- O conteúdo será renderizado dinamicamente pelo app.js -->
+        <!-- O conteúdo será renderizado dinamicamente pelo app.js?v=1.12.6 -->
       </div>
     </main>
     <footer class="footer">
@@ -47,7 +47,7 @@
   </div>
 
   <!-- Lógica principal da aplicação -->
-  <script src="./app.js?v=1.12.4" defer></script>
+  <script src="./app.js?v=1.12.6" defer></script>
 <script>
 (function(){
   var ready = false;
@@ -62,7 +62,7 @@
   }, 2000);
 
   // Segurança: não carregue um segundo bundle (isso pode causar "piscar" e voltar UI antiga).
-  // Se o app.js demorar para iniciar, apenas mantenha a tela de carregamento e mostre um aviso.
+  // Se o app.js?v=1.12.6 demorar para iniciar, apenas mantenha a tela de carregamento e mostre um aviso.
   setTimeout(function(){
     if (ready) return;
     var viewEl = document.getElementById('view');

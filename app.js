@@ -60,10 +60,10 @@
     }
   }
 
-  const BUILD_TAG = 'v1.12.4';
+  const BUILD_TAG = 'v1.12.6';
 
   // Build exibido no canto inferior esquerdo
-  const BUILD = "v1.12.4";
+  const BUILD = "v1.12.6";
 
   /** Chaves de LocalStorage */
   const LS = {
