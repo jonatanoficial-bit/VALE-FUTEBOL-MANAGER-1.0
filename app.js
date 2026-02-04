@@ -60,10 +60,10 @@
     }
   }
 
-  const BUILD_TAG = 'v1.12.6';
+  const BUILD_TAG = 'v1.12.9';
 
   // Build exibido no canto inferior esquerdo
-  const BUILD = "v1.12.6";
+  const BUILD = "v1.12.9";
 
   /** Chaves de LocalStorage */
   const LS = {
@@ -290,11 +290,31 @@
     ,"/diagnostics": viewDiagnostics
   };
 
-  /** Navega para a rota atual conforme hash */
+  /**
+ * Aplica classe de fundo no <body> por rota.
+ * Importante: usa classes CSS com paths relativos (compatível com GitHub Pages em subpasta).
+ */
+function applyBackground(path) {
+  const b = document.body;
+  if (!b) return;
+  b.classList.remove("bg-menu", "bg-lobby", "bg-cinematic");
+
+  // Padrões: menu / lobby / cinematic
+  const MENU = new Set(["/home", "/dlc", "/slots", "/career-create", "/club-pick", "/tutorial", "/admin", "/diagnostics"]);
+  const CINEMATIC = new Set(["/matches", "/competitions", "/continentals"]);
+
+  let cls = "bg-lobby";
+  if (MENU.has(path)) cls = "bg-menu";
+  if (CINEMATIC.has(path)) cls = "bg-cinematic";
+  b.classList.add(cls);
+}
+
+/** Navega para a rota atual conforme hash */
   function route() {
     ensureSlots();
     const hash = location.hash.replace("#", "");
     const path = hash || "/home";
+    applyBackground(path);
     const view = routes[path] || viewHome;
     const html = view();
     // Renderiza no container e vincula eventos
