@@ -1,3 +1,18 @@
+
+/* === VFM HOTFIX: force global background (GitHub Pages safe) === */
+html, body{
+  min-height: 100%;
+  background-image: url("assets/geral/bg_menu.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+/* Make main containers transparent so the background can appear */
+#app, .app, .screen, .page, .container, .root{
+  background: transparent !important;
+}
+
 /*
  * Vale Futebol Manager 2026 - Premium
  * Estilos principais da aplicação
