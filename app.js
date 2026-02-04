@@ -60,7 +60,7 @@
     }
   }
 
-  const BUILD_TAG = 'v1.12.9';
+  const BUILD_TAG = 'v1.13.0';
 
   // Build exibido no canto inferior esquerdo
   const BUILD = "v1.12.9";
