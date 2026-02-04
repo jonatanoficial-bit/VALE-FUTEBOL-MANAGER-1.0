@@ -52,13 +52,18 @@
     try {
       // Se for absoluta, retorna como está
       if (/^https?:\/\//.test(rel)) return rel;
-      // Remove hashes e queries da URL atual
-      const base = window.location.href.split("?#")[0].split("?")[0];
+      // Remove hash corretamente (GitHub Pages usa hash routing)
+      const base = window.location.href.split("#")[0].split("?")[0];
       return new URL(rel.replace(/^\.\/?/, ""), base).href;
     } catch (e) {
       return rel;
     }
   }
+
+  const BUILD_TAG = 'v1.12.3';
+
+  // Build exibido no canto inferior esquerdo
+  const BUILD = "v1.12.3";
 
   /** Chaves de LocalStorage */
   const LS = {
@@ -4608,7 +4613,14 @@ if (action === 'rejectOfferIn') {
     if (!summary || !Array.isArray(summary.playedMatches) || summary.playedMatches.length === 0) return;
 
     const userId = save.career?.clubId;
-    const focus = (summary.userMatches && summary.userMatches[0]) ? summary.userMatches[0] : summary.playedMatches[0];
+    const userClub = userId ? getClub(userId) : null;
+    const userIsUEFA = !!(userClub && Array.isArray(UEFA_LIDS) && UEFA_LIDS.includes(userClub.leagueId));
+    const preferComps = userIsUEFA ? ['UCL','UEL'] : ['LIB','SUD'];
+
+    let focus = (summary.userMatches && summary.userMatches[0]) ? summary.userMatches[0] : null;
+    if (!focus) {
+      focus = summary.playedMatches.find(m => preferComps.includes(m.comp)) || summary.playedMatches[0];
+    }
 
     const home = getClub(focus.homeId);
     const away = getClub(focus.awayId);
@@ -4759,6 +4771,8 @@ async function boot() {
     ensureSlots();
     await loadPacks();
     await loadPackData();
+    const badge = document.getElementById('buildBadge');
+    if (badge) badge.textContent = `build ${BUILD_TAG}`;
     if (!location.hash) location.hash = '/home';
     route();
   }
