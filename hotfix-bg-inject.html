@@ -1,0 +1,42 @@
+<!-- HOTFIX: robust background loader -->
+<script>
+(function(){
+  function setVar(name, val){
+    document.documentElement.style.setProperty(name, val);
+  }
+  function probe(candidates, cb){
+    var i=0;
+    function next(){
+      if(i>=candidates.length){ cb(null); return; }
+      var src = candidates[i++];
+      var img = new Image();
+      img.onload = function(){ cb(src); };
+      img.onerror = next;
+      img.src = src;
+    }
+    next();
+  }
+  var menuCandidates = [
+    './assets/bg/bg_menu.png',
+    'assets/bg/bg_menu.png',
+    './bg_menu.png',
+    'bg_menu.png'
+  ];
+  var cineCandidates = [
+    './assets/bg/bg_cinematic.png',
+    'assets/bg/bg_cinematic.png',
+    './bg_cinematic.png',
+    'bg_cinematic.png'
+  ];
+  var hash = (location.hash||'').toLowerCase();
+  var useMenu = (hash === '' || hash === '#/' || hash.indexOf('#/home')===0 || hash.indexOf('#/hub')===0);
+  var list = useMenu ? menuCandidates : cineCandidates;
+  probe(list, function(path){
+    if(path){
+      setVar('--bg-img', "url('" + path + "')");
+    } else {
+      setVar('--bg-img', 'linear-gradient(180deg, #0b1220 0%, #0a0f1a 100%)');
+    }
+  });
+})();
+</script>
