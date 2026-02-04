@@ -1,0 +1,12 @@
+
+/* HOTFIX v1.12.8: background fallback */
+html, body {
+  background-image: var(--bg-img) !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-attachment: fixed !important;
+}
+.card, .tile, .panel, .module, .box, .hub-grid > div {
+  background-color: rgba(15,20,30,0.85) !important;
+  backdrop-filter: blur(2px);
+}
