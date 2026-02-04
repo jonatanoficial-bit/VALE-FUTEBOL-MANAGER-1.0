@@ -2,2019 +2,2019 @@
   "players": [
     {
       "id": "P00001",
-      "name": "Jogador FLA-1",
+      "name": "Agustín Rossi",
       "clubId": "BRAA_FLA",
-      "pos": "RB",
-      "age": 34,
-      "ovr": 74
+      "pos": "GK",
+      "age": 29,
+      "ovr": 68
     },
     {
       "id": "P00002",
-      "name": "Jogador FLA-2",
+      "name": "Matheus Cunha",
       "clubId": "BRAA_FLA",
-      "pos": "RB",
-      "age": 28,
-      "ovr": 72
+      "pos": "GK",
+      "age": 23,
+      "ovr": 62
     },
     {
       "id": "P00003",
-      "name": "Jogador FLA-3",
+      "name": "Fabrício Bruno",
       "clubId": "BRAA_FLA",
-      "pos": "GK",
-      "age": 35,
-      "ovr": 85
+      "pos": "CB",
+      "age": 28,
+      "ovr": 74
     },
     {
       "id": "P00004",
-      "name": "Jogador FLA-4",
+      "name": "Ayrton Lucas",
       "clubId": "BRAA_FLA",
-      "pos": "ST",
-      "age": 33,
-      "ovr": 77
+      "pos": "LB",
+      "age": 27,
+      "ovr": 74
     },
     {
       "id": "P00005",
-      "name": "Jogador FLA-5",
+      "name": "Léo Pereira",
       "clubId": "BRAA_FLA",
-      "pos": "RW",
-      "age": 17,
-      "ovr": 77
+      "pos": "CB",
+      "age": 29,
+      "ovr": 71
     },
     {
       "id": "P00006",
-      "name": "Jogador FLA-6",
+      "name": "Guillermo Varela",
       "clubId": "BRAA_FLA",
       "pos": "RB",
-      "age": 23,
-      "ovr": 74
+      "age": 31,
+      "ovr": 65
     },
     {
       "id": "P00007",
-      "name": "Jogador FLA-7",
+      "name": "Wesley",
       "clubId": "BRAA_FLA",
-      "pos": "DM",
-      "age": 32,
-      "ovr": 82
+      "pos": "RB",
+      "age": 21,
+      "ovr": 65
     },
     {
       "id": "P00008",
-      "name": "Jogador FLA-8",
+      "name": "David Luiz",
       "clubId": "BRAA_FLA",
-      "pos": "GK",
-      "age": 19,
-      "ovr": 81
+      "pos": "CB",
+      "age": 37,
+      "ovr": 61
     },
     {
       "id": "P00009",
-      "name": "Jogador FLA-9",
+      "name": "Giorgian De Arrascaeta",
       "clubId": "BRAA_FLA",
-      "pos": "GK",
-      "age": 27,
-      "ovr": 85
+      "pos": "AM",
+      "age": 31,
+      "ovr": 81
     },
     {
       "id": "P00010",
-      "name": "Jogador FLA-10",
+      "name": "Gerson",
       "clubId": "BRAA_FLA",
-      "pos": "LB",
-      "age": 20,
-      "ovr": 78
+      "pos": "CM",
+      "age": 27,
+      "ovr": 76
     },
     {
       "id": "P00011",
-      "name": "Jogador FLA-11",
+      "name": "De La Cruz",
       "clubId": "BRAA_FLA",
-      "pos": "AM",
-      "age": 33,
-      "ovr": 85
+      "pos": "CM",
+      "age": 27,
+      "ovr": 76
     },
     {
       "id": "P00012",
-      "name": "Jogador FLA-12",
+      "name": "Erick Pulgar",
       "clubId": "BRAA_FLA",
-      "pos": "LB",
-      "age": 18,
-      "ovr": 83
+      "pos": "DM",
+      "age": 30,
+      "ovr": 72
     },
     {
       "id": "P00013",
-      "name": "Jogador FLA-13",
+      "name": "Allan",
       "clubId": "BRAA_FLA",
-      "pos": "GK",
-      "age": 31,
-      "ovr": 84
+      "pos": "DM",
+      "age": 28,
+      "ovr": 69
     },
     {
       "id": "P00014",
-      "name": "Jogador FLA-14",
+      "name": "Victor Hugo",
       "clubId": "BRAA_FLA",
-      "pos": "LW",
-      "age": 31,
-      "ovr": 78
+      "pos": "CM",
+      "age": 20,
+      "ovr": 68
     },
     {
       "id": "P00015",
-      "name": "Jogador FLA-15",
+      "name": "Pedro",
       "clubId": "BRAA_FLA",
-      "pos": "AM",
-      "age": 22,
-      "ovr": 81
+      "pos": "ST",
+      "age": 28,
+      "ovr": 85
     },
     {
       "id": "P00016",
-      "name": "Jogador FLA-16",
+      "name": "Gabriel Barbosa",
       "clubId": "BRAA_FLA",
-      "pos": "LB",
-      "age": 34,
-      "ovr": 73
+      "pos": "ST",
+      "age": 28,
+      "ovr": 79
     },
     {
       "id": "P00017",
-      "name": "Jogador FLA-17",
+      "name": "Everton Cebolinha",
       "clubId": "BRAA_FLA",
-      "pos": "CB",
-      "age": 35,
-      "ovr": 71
+      "pos": "LW",
+      "age": 28,
+      "ovr": 78
     },
     {
       "id": "P00018",
-      "name": "Jogador FLA-18",
+      "name": "Luiz Araújo",
       "clubId": "BRAA_FLA",
-      "pos": "RB",
-      "age": 30,
-      "ovr": 85
+      "pos": "RW",
+      "age": 28,
+      "ovr": 78
     },
     {
       "id": "P00019",
-      "name": "Jogador PAL-1",
+      "name": "Weverton",
       "clubId": "BRAA_PAL",
-      "pos": "AM",
-      "age": 17,
-      "ovr": 84
+      "pos": "GK",
+      "age": 37,
+      "ovr": 63
     },
     {
       "id": "P00020",
-      "name": "Jogador PAL-2",
+      "name": "Marcelo Lomba",
       "clubId": "BRAA_PAL",
-      "pos": "DM",
-      "age": 34,
-      "ovr": 82
+      "pos": "GK",
+      "age": 38,
+      "ovr": 52
     },
     {
       "id": "P00021",
-      "name": "Jogador PAL-3",
+      "name": "Murilo",
       "clubId": "BRAA_PAL",
       "pos": "CB",
-      "age": 21,
-      "ovr": 76
+      "age": 27,
+      "ovr": 74
     },
     {
       "id": "P00022",
-      "name": "Jogador PAL-4",
+      "name": "Piquerez",
       "clubId": "BRAA_PAL",
-      "pos": "CB",
-      "age": 28,
-      "ovr": 84
+      "pos": "LB",
+      "age": 26,
+      "ovr": 74
     },
     {
       "id": "P00023",
-      "name": "Jogador PAL-5",
+      "name": "Gustavo Gómez",
       "clubId": "BRAA_PAL",
-      "pos": "GK",
+      "pos": "CB",
       "age": 33,
-      "ovr": 82
+      "ovr": 72
     },
     {
       "id": "P00024",
-      "name": "Jogador PAL-6",
+      "name": "Luan",
       "clubId": "BRAA_PAL",
-      "pos": "DM",
-      "age": 17,
-      "ovr": 76
+      "pos": "CB",
+      "age": 31,
+      "ovr": 65
     },
     {
       "id": "P00025",
-      "name": "Jogador PAL-7",
+      "name": "Naves",
       "clubId": "BRAA_PAL",
-      "pos": "RB",
+      "pos": "CB",
       "age": 22,
-      "ovr": 84
+      "ovr": 65
     },
     {
       "id": "P00026",
-      "name": "Jogador PAL-8",
+      "name": "Mayke",
       "clubId": "BRAA_PAL",
-      "pos": "DM",
-      "age": 29,
-      "ovr": 82
+      "pos": "RB",
+      "age": 32,
+      "ovr": 65
     },
     {
       "id": "P00027",
-      "name": "Jogador PAL-9",
+      "name": "Raphael Veiga",
       "clubId": "BRAA_PAL",
-      "pos": "CB",
-      "age": 31,
-      "ovr": 75
+      "pos": "AM",
+      "age": 30,
+      "ovr": 81
     },
     {
       "id": "P00028",
-      "name": "Jogador PAL-10",
+      "name": "Richard Ríos",
       "clubId": "BRAA_PAL",
-      "pos": "RB",
-      "age": 18,
-      "ovr": 79
+      "pos": "CM",
+      "age": 25,
+      "ovr": 76
     },
     {
       "id": "P00029",
-      "name": "Jogador PAL-11",
+      "name": "Aníbal Moreno",
       "clubId": "BRAA_PAL",
-      "pos": "RW",
-      "age": 34,
-      "ovr": 85
+      "pos": "DM",
+      "age": 26,
+      "ovr": 75
     },
     {
       "id": "P00030",
-      "name": "Jogador PAL-12",
+      "name": "Zé Rafael",
       "clubId": "BRAA_PAL",
-      "pos": "LB",
-      "age": 27,
-      "ovr": 79
+      "pos": "DM",
+      "age": 31,
+      "ovr": 72
     },
     {
       "id": "P00031",
-      "name": "Jogador PAL-13",
+      "name": "Gabriel Menino",
       "clubId": "BRAA_PAL",
-      "pos": "AM",
-      "age": 23,
-      "ovr": 82
+      "pos": "CM",
+      "age": 24,
+      "ovr": 71
     },
     {
       "id": "P00032",
-      "name": "Jogador PAL-14",
+      "name": "Fabinho",
       "clubId": "BRAA_PAL",
       "pos": "CM",
-      "age": 33,
-      "ovr": 80
+      "age": 22,
+      "ovr": 68
     },
     {
       "id": "P00033",
-      "name": "Jogador PAL-15",
+      "name": "Artur",
       "clubId": "BRAA_PAL",
-      "pos": "RB",
-      "age": 20,
-      "ovr": 71
+      "pos": "RW",
+      "age": 27,
+      "ovr": 78
     },
     {
       "id": "P00034",
-      "name": "Jogador PAL-16",
+      "name": "Endrick",
       "clubId": "BRAA_PAL",
-      "pos": "RB",
-      "age": 24,
-      "ovr": 85
+      "pos": "ST",
+      "age": 18,
+      "ovr": 78
     },
     {
       "id": "P00035",
-      "name": "Jogador PAL-17",
+      "name": "Rony",
       "clubId": "BRAA_PAL",
-      "pos": "DM",
-      "age": 19,
-      "ovr": 80
+      "pos": "ST",
+      "age": 29,
+      "ovr": 76
     },
     {
       "id": "P00036",
-      "name": "Jogador PAL-18",
+      "name": "Flaco López",
       "clubId": "BRAA_PAL",
-      "pos": "DM",
-      "age": 18,
-      "ovr": 81
+      "pos": "ST",
+      "age": 24,
+      "ovr": 74
     },
     {
       "id": "P00037",
-      "name": "Jogador CAM-1",
+      "name": "Everson",
       "clubId": "BRAA_CAM",
-      "pos": "DM",
-      "age": 26,
-      "ovr": 82
+      "pos": "GK",
+      "age": 34,
+      "ovr": 63
     },
     {
       "id": "P00038",
-      "name": "Jogador CAM-2",
+      "name": "Matheus Mendes",
       "clubId": "BRAA_CAM",
       "pos": "GK",
-      "age": 18,
-      "ovr": 77
+      "age": 26,
+      "ovr": 59
     },
     {
       "id": "P00039",
-      "name": "Jogador CAM-3",
+      "name": "Guilherme Arana",
       "clubId": "BRAA_CAM",
-      "pos": "LW",
-      "age": 31,
-      "ovr": 78
+      "pos": "LB",
+      "age": 27,
+      "ovr": 79
     },
     {
       "id": "P00040",
-      "name": "Jogador CAM-4",
+      "name": "Jemerson",
       "clubId": "BRAA_CAM",
-      "pos": "DM",
-      "age": 27,
-      "ovr": 84
+      "pos": "CB",
+      "age": 32,
+      "ovr": 71
     },
     {
       "id": "P00041",
-      "name": "Jogador CAM-5",
+      "name": "Bruno Fuchs",
       "clubId": "BRAA_CAM",
       "pos": "CB",
-      "age": 25,
-      "ovr": 79
+      "age": 26,
+      "ovr": 68
     },
     {
       "id": "P00042",
-      "name": "Jogador CAM-6",
+      "name": "Mauricio Lemos",
       "clubId": "BRAA_CAM",
       "pos": "CB",
       "age": 29,
-      "ovr": 74
+      "ovr": 65
     },
     {
       "id": "P00043",
-      "name": "Jogador CAM-7",
+      "name": "Igor Rabello",
       "clubId": "BRAA_CAM",
       "pos": "CB",
-      "age": 32,
-      "ovr": 71
+      "age": 29,
+      "ovr": 65
     },
     {
       "id": "P00044",
-      "name": "Jogador CAM-8",
+      "name": "Saravia",
       "clubId": "BRAA_CAM",
-      "pos": "LW",
-      "age": 18,
-      "ovr": 81
+      "pos": "RB",
+      "age": 31,
+      "ovr": 65
     },
     {
       "id": "P00045",
-      "name": "Jogador CAM-9",
+      "name": "Zaracho",
       "clubId": "BRAA_CAM",
-      "pos": "GK",
-      "age": 21,
-      "ovr": 72
+      "pos": "CM",
+      "age": 26,
+      "ovr": 76
     },
     {
       "id": "P00046",
-      "name": "Jogador CAM-10",
+      "name": "Igor Gomes",
       "clubId": "BRAA_CAM",
-      "pos": "CM",
-      "age": 29,
-      "ovr": 77
+      "pos": "AM",
+      "age": 25,
+      "ovr": 72
     },
     {
       "id": "P00047",
-      "name": "Jogador CAM-11",
+      "name": "Pedrinho",
       "clubId": "BRAA_CAM",
-      "pos": "RW",
-      "age": 28,
-      "ovr": 80
+      "pos": "AM",
+      "age": 26,
+      "ovr": 72
     },
     {
       "id": "P00048",
-      "name": "Jogador CAM-12",
+      "name": "Otávio",
       "clubId": "BRAA_CAM",
-      "pos": "LW",
-      "age": 23,
-      "ovr": 82
+      "pos": "DM",
+      "age": 30,
+      "ovr": 72
     },
     {
       "id": "P00049",
-      "name": "Jogador CAM-13",
+      "name": "Alan Franco",
       "clubId": "BRAA_CAM",
-      "pos": "GK",
-      "age": 27,
-      "ovr": 75
+      "pos": "CM",
+      "age": 26,
+      "ovr": 71
     },
     {
       "id": "P00050",
-      "name": "Jogador CAM-14",
+      "name": "Patrick",
       "clubId": "BRAA_CAM",
-      "pos": "ST",
-      "age": 31,
-      "ovr": 74
+      "pos": "CM",
+      "age": 32,
+      "ovr": 68
     },
     {
       "id": "P00051",
-      "name": "Jogador CAM-15",
+      "name": "Paulinho",
       "clubId": "BRAA_CAM",
-      "pos": "CB",
-      "age": 27,
-      "ovr": 78
-    },
-    {
-      "id": "P00052",
-      "name": "Jogador CAM-16",
-      "clubId": "BRAA_CAM",
-      "pos": "RB",
-      "age": 17,
+      "pos": "LW",
+      "age": 24,
       "ovr": 84
     },
     {
-      "id": "P00053",
-      "name": "Jogador CAM-17",
+      "id": "P00052",
+      "name": "Pavón",
       "clubId": "BRAA_CAM",
-      "pos": "AM",
-      "age": 25,
-      "ovr": 74
+      "pos": "RW",
+      "age": 28,
+      "ovr": 78
+    },
+    {
+      "id": "P00053",
+      "name": "Hulk",
+      "clubId": "BRAA_CAM",
+      "pos": "ST",
+      "age": 38,
+      "ovr": 78
     },
     {
       "id": "P00054",
-      "name": "Jogador CAM-18",
+      "name": "Alisson",
       "clubId": "BRAA_CAM",
-      "pos": "LW",
-      "age": 31,
-      "ovr": 77
+      "pos": "RW",
+      "age": 22,
+      "ovr": 69
     },
     {
       "id": "P00055",
-      "name": "Jogador COR-1",
+      "name": "Carlos Miguel",
       "clubId": "BRAA_COR",
-      "pos": "CM",
-      "age": 20,
-      "ovr": 77
+      "pos": "GK",
+      "age": 26,
+      "ovr": 65
     },
     {
       "id": "P00056",
-      "name": "Jogador COR-2",
+      "name": "Cássio",
       "clubId": "BRAA_COR",
-      "pos": "RB",
-      "age": 28,
-      "ovr": 68
+      "pos": "GK",
+      "age": 37,
+      "ovr": 63
     },
     {
       "id": "P00057",
-      "name": "Jogador COR-3",
+      "name": "Hugo",
       "clubId": "BRAA_COR",
       "pos": "LB",
-      "age": 28,
-      "ovr": 83
-    },
-    {
-      "id": "P00058",
-      "name": "Jogador COR-4",
-      "clubId": "BRAA_COR",
-      "pos": "LW",
-      "age": 25,
-      "ovr": 83
-    },
-    {
-      "id": "P00059",
-      "name": "Jogador COR-5",
-      "clubId": "BRAA_COR",
-      "pos": "CB",
-      "age": 31,
-      "ovr": 74
-    },
-    {
-      "id": "P00060",
-      "name": "Jogador COR-6",
-      "clubId": "BRAA_COR",
-      "pos": "CB",
-      "age": 17,
-      "ovr": 75
-    },
-    {
-      "id": "P00061",
-      "name": "Jogador COR-7",
-      "clubId": "BRAA_COR",
-      "pos": "AM",
-      "age": 29,
+      "age": 27,
       "ovr": 79
     },
     {
-      "id": "P00062",
-      "name": "Jogador COR-8",
+      "id": "P00058",
+      "name": "Félix Torres",
       "clubId": "BRAA_COR",
-      "pos": "CM",
-      "age": 30,
-      "ovr": 71
-    },
-    {
-      "id": "P00063",
-      "name": "Jogador COR-9",
-      "clubId": "BRAA_COR",
-      "pos": "LW",
-      "age": 26,
-      "ovr": 71
-    },
-    {
-      "id": "P00064",
-      "name": "Jogador COR-10",
-      "clubId": "BRAA_COR",
-      "pos": "LW",
+      "pos": "CB",
       "age": 28,
-      "ovr": 68
-    },
-    {
-      "id": "P00065",
-      "name": "Jogador COR-11",
-      "clubId": "BRAA_COR",
-      "pos": "DM",
-      "age": 22,
-      "ovr": 82
-    },
-    {
-      "id": "P00066",
-      "name": "Jogador COR-12",
-      "clubId": "BRAA_COR",
-      "pos": "CM",
-      "age": 25,
-      "ovr": 73
-    },
-    {
-      "id": "P00067",
-      "name": "Jogador COR-13",
-      "clubId": "BRAA_COR",
-      "pos": "AM",
-      "age": 31,
-      "ovr": 70
-    },
-    {
-      "id": "P00068",
-      "name": "Jogador COR-14",
-      "clubId": "BRAA_COR",
-      "pos": "RW",
-      "age": 19,
       "ovr": 74
     },
     {
-      "id": "P00069",
-      "name": "Jogador COR-15",
-      "clubId": "BRAA_COR",
-      "pos": "ST",
-      "age": 22,
-      "ovr": 78
-    },
-    {
-      "id": "P00070",
-      "name": "Jogador COR-16",
+      "id": "P00059",
+      "name": "Palacios",
       "clubId": "BRAA_COR",
       "pos": "LB",
-      "age": 17,
-      "ovr": 69
-    },
-    {
-      "id": "P00071",
-      "name": "Jogador COR-17",
-      "clubId": "BRAA_COR",
-      "pos": "CM",
-      "age": 18,
-      "ovr": 73
-    },
-    {
-      "id": "P00072",
-      "name": "Jogador COR-18",
-      "clubId": "BRAA_COR",
-      "pos": "CM",
-      "age": 23,
+      "age": 25,
       "ovr": 68
     },
     {
-      "id": "P00073",
-      "name": "Jogador SAO-1",
-      "clubId": "BRAA_SAO",
-      "pos": "ST",
-      "age": 18,
-      "ovr": 82
+      "id": "P00060",
+      "name": "Gustavo Henrique",
+      "clubId": "BRAA_COR",
+      "pos": "CB",
+      "age": 31,
+      "ovr": 65
     },
     {
-      "id": "P00074",
-      "name": "Jogador SAO-2",
-      "clubId": "BRAA_SAO",
-      "pos": "LB",
-      "age": 34,
+      "id": "P00061",
+      "name": "Matheuzinho",
+      "clubId": "BRAA_COR",
+      "pos": "RB",
+      "age": 23,
+      "ovr": 65
+    },
+    {
+      "id": "P00062",
+      "name": "Gil",
+      "clubId": "BRAA_COR",
+      "pos": "CB",
+      "age": 37,
+      "ovr": 61
+    },
+    {
+      "id": "P00063",
+      "name": "Rodrigo Garro",
+      "clubId": "BRAA_COR",
+      "pos": "AM",
+      "age": 27,
+      "ovr": 78
+    },
+    {
+      "id": "P00064",
+      "name": "Raniele",
+      "clubId": "BRAA_COR",
+      "pos": "DM",
+      "age": 27,
+      "ovr": 75
+    },
+    {
+      "id": "P00065",
+      "name": "Maycon",
+      "clubId": "BRAA_COR",
+      "pos": "CM",
+      "age": 27,
       "ovr": 71
     },
     {
-      "id": "P00075",
-      "name": "Jogador SAO-3",
-      "clubId": "BRAA_SAO",
-      "pos": "LW",
+      "id": "P00066",
+      "name": "Fausto Vera",
+      "clubId": "BRAA_COR",
+      "pos": "DM",
+      "age": 25,
+      "ovr": 69
+    },
+    {
+      "id": "P00067",
+      "name": "Matheus Araújo",
+      "clubId": "BRAA_COR",
+      "pos": "AM",
       "age": 22,
       "ovr": 69
     },
     {
-      "id": "P00076",
-      "name": "Jogador SAO-4",
-      "clubId": "BRAA_SAO",
-      "pos": "RB",
-      "age": 20,
-      "ovr": 83
+      "id": "P00068",
+      "name": "Paulinho",
+      "clubId": "BRAA_COR",
+      "pos": "CM",
+      "age": 36,
+      "ovr": 63
     },
     {
-      "id": "P00077",
-      "name": "Jogador SAO-5",
-      "clubId": "BRAA_SAO",
-      "pos": "RB",
+      "id": "P00069",
+      "name": "Yuri Alberto",
+      "clubId": "BRAA_COR",
+      "pos": "ST",
+      "age": 23,
+      "ovr": 76
+    },
+    {
+      "id": "P00070",
+      "name": "Pedro Raul",
+      "clubId": "BRAA_COR",
+      "pos": "ST",
       "age": 28,
-      "ovr": 76
+      "ovr": 74
     },
     {
-      "id": "P00078",
-      "name": "Jogador SAO-6",
-      "clubId": "BRAA_SAO",
-      "pos": "LB",
-      "age": 34,
-      "ovr": 78
+      "id": "P00071",
+      "name": "Gustavo Mosquito",
+      "clubId": "BRAA_COR",
+      "pos": "RW",
+      "age": 26,
+      "ovr": 72
     },
     {
-      "id": "P00079",
-      "name": "Jogador SAO-7",
-      "clubId": "BRAA_SAO",
-      "pos": "CB",
-      "age": 27,
-      "ovr": 76
-    },
-    {
-      "id": "P00080",
-      "name": "Jogador SAO-8",
-      "clubId": "BRAA_SAO",
-      "pos": "GK",
-      "age": 32,
+      "id": "P00072",
+      "name": "Romero",
+      "clubId": "BRAA_COR",
+      "pos": "ST",
+      "age": 30,
       "ovr": 71
     },
     {
-      "id": "P00081",
-      "name": "Jogador SAO-9",
+      "id": "P00073",
+      "name": "Rafael",
       "clubId": "BRAA_SAO",
-      "pos": "DM",
-      "age": 29,
-      "ovr": 73
+      "pos": "GK",
+      "age": 35,
+      "ovr": 63
     },
     {
-      "id": "P00082",
-      "name": "Jogador SAO-10",
+      "id": "P00074",
+      "name": "Jandrei",
       "clubId": "BRAA_SAO",
-      "pos": "ST",
+      "pos": "GK",
+      "age": 31,
+      "ovr": 56
+    },
+    {
+      "id": "P00075",
+      "name": "Diego Costa",
+      "clubId": "BRAA_SAO",
+      "pos": "CB",
+      "age": 25,
+      "ovr": 74
+    },
+    {
+      "id": "P00076",
+      "name": "Alan Franco",
+      "clubId": "BRAA_SAO",
+      "pos": "CB",
+      "age": 28,
+      "ovr": 68
+    },
+    {
+      "id": "P00077",
+      "name": "Ferraresi",
+      "clubId": "BRAA_SAO",
+      "pos": "CB",
       "age": 26,
-      "ovr": 67
+      "ovr": 68
     },
     {
-      "id": "P00083",
-      "name": "Jogador SAO-11",
-      "clubId": "BRAA_SAO",
-      "pos": "LW",
-      "age": 17,
-      "ovr": 67
-    },
-    {
-      "id": "P00084",
-      "name": "Jogador SAO-12",
+      "id": "P00078",
+      "name": "Igor Vinícius",
       "clubId": "BRAA_SAO",
       "pos": "RB",
-      "age": 21,
-      "ovr": 83
+      "age": 28,
+      "ovr": 68
     },
     {
-      "id": "P00085",
-      "name": "Jogador SAO-13",
+      "id": "P00079",
+      "name": "Arboleda",
       "clubId": "BRAA_SAO",
-      "pos": "CM",
-      "age": 20,
+      "pos": "CB",
+      "age": 33,
+      "ovr": 66
+    },
+    {
+      "id": "P00080",
+      "name": "Wellington",
+      "clubId": "BRAA_SAO",
+      "pos": "LB",
+      "age": 23,
+      "ovr": 65
+    },
+    {
+      "id": "P00081",
+      "name": "Luciano",
+      "clubId": "BRAA_SAO",
+      "pos": "AM",
+      "age": 31,
       "ovr": 75
     },
     {
-      "id": "P00086",
-      "name": "Jogador SAO-14",
+      "id": "P00082",
+      "name": "Michel Araújo",
       "clubId": "BRAA_SAO",
-      "pos": "LW",
-      "age": 21,
-      "ovr": 83
+      "pos": "AM",
+      "age": 28,
+      "ovr": 72
+    },
+    {
+      "id": "P00083",
+      "name": "Pablo Maia",
+      "clubId": "BRAA_SAO",
+      "pos": "DM",
+      "age": 23,
+      "ovr": 72
+    },
+    {
+      "id": "P00084",
+      "name": "Galoppo",
+      "clubId": "BRAA_SAO",
+      "pos": "CM",
+      "age": 26,
+      "ovr": 71
+    },
+    {
+      "id": "P00085",
+      "name": "Luan",
+      "clubId": "BRAA_SAO",
+      "pos": "DM",
+      "age": 25,
+      "ovr": 69
+    },
+    {
+      "id": "P00086",
+      "name": "Alisson",
+      "clubId": "BRAA_SAO",
+      "pos": "CM",
+      "age": 31,
+      "ovr": 68
     },
     {
       "id": "P00087",
-      "name": "Jogador SAO-15",
+      "name": "Ferreira",
       "clubId": "BRAA_SAO",
-      "pos": "LB",
-      "age": 18,
-      "ovr": 76
-    },
-    {
-      "id": "P00088",
-      "name": "Jogador SAO-16",
-      "clubId": "BRAA_SAO",
-      "pos": "RW",
-      "age": 19,
-      "ovr": 73
-    },
-    {
-      "id": "P00089",
-      "name": "Jogador SAO-17",
-      "clubId": "BRAA_SAO",
-      "pos": "CB",
-      "age": 33,
-      "ovr": 80
-    },
-    {
-      "id": "P00090",
-      "name": "Jogador SAO-18",
-      "clubId": "BRAA_SAO",
-      "pos": "RW",
-      "age": 30,
-      "ovr": 72
-    },
-    {
-      "id": "P00091",
-      "name": "Jogador SAN-1",
-      "clubId": "BRAA_SAN",
-      "pos": "ST",
-      "age": 25,
-      "ovr": 73
-    },
-    {
-      "id": "P00092",
-      "name": "Jogador SAN-2",
-      "clubId": "BRAA_SAN",
-      "pos": "DM",
-      "age": 35,
-      "ovr": 81
-    },
-    {
-      "id": "P00093",
-      "name": "Jogador SAN-3",
-      "clubId": "BRAA_SAN",
-      "pos": "CB",
-      "age": 29,
-      "ovr": 70
-    },
-    {
-      "id": "P00094",
-      "name": "Jogador SAN-4",
-      "clubId": "BRAA_SAN",
-      "pos": "GK",
-      "age": 19,
-      "ovr": 72
-    },
-    {
-      "id": "P00095",
-      "name": "Jogador SAN-5",
-      "clubId": "BRAA_SAN",
-      "pos": "GK",
-      "age": 20,
-      "ovr": 82
-    },
-    {
-      "id": "P00096",
-      "name": "Jogador SAN-6",
-      "clubId": "BRAA_SAN",
-      "pos": "CB",
-      "age": 28,
-      "ovr": 80
-    },
-    {
-      "id": "P00097",
-      "name": "Jogador SAN-7",
-      "clubId": "BRAA_SAN",
-      "pos": "RW",
-      "age": 33,
-      "ovr": 66
-    },
-    {
-      "id": "P00098",
-      "name": "Jogador SAN-8",
-      "clubId": "BRAA_SAN",
-      "pos": "RB",
-      "age": 34,
-      "ovr": 70
-    },
-    {
-      "id": "P00099",
-      "name": "Jogador SAN-9",
-      "clubId": "BRAA_SAN",
-      "pos": "AM",
-      "age": 28,
-      "ovr": 81
-    },
-    {
-      "id": "P00100",
-      "name": "Jogador SAN-10",
-      "clubId": "BRAA_SAN",
-      "pos": "RW",
-      "age": 20,
+      "pos": "LW",
+      "age": 27,
       "ovr": 78
     },
     {
-      "id": "P00101",
-      "name": "Jogador SAN-11",
+      "id": "P00088",
+      "name": "Calleri",
+      "clubId": "BRAA_SAO",
+      "pos": "ST",
+      "age": 31,
+      "ovr": 76
+    },
+    {
+      "id": "P00089",
+      "name": "Lucas Moura",
+      "clubId": "BRAA_SAO",
+      "pos": "RW",
+      "age": 32,
+      "ovr": 75
+    },
+    {
+      "id": "P00090",
+      "name": "André Silva",
+      "clubId": "BRAA_SAO",
+      "pos": "ST",
+      "age": 27,
+      "ovr": 74
+    },
+    {
+      "id": "P00091",
+      "name": "João Paulo",
       "clubId": "BRAA_SAN",
-      "pos": "AM",
-      "age": 18,
+      "pos": "GK",
+      "age": 29,
+      "ovr": 68
+    },
+    {
+      "id": "P00092",
+      "name": "Diógenes",
+      "clubId": "BRAA_SAN",
+      "pos": "GK",
+      "age": 24,
+      "ovr": 59
+    },
+    {
+      "id": "P00093",
+      "name": "Joaquim",
+      "clubId": "BRAA_SAN",
+      "pos": "CB",
+      "age": 26,
+      "ovr": 74
+    },
+    {
+      "id": "P00094",
+      "name": "Felipe Jonatan",
+      "clubId": "BRAA_SAN",
+      "pos": "LB",
+      "age": 27,
+      "ovr": 74
+    },
+    {
+      "id": "P00095",
+      "name": "Danilo Boza",
+      "clubId": "BRAA_SAN",
+      "pos": "CB",
+      "age": 26,
+      "ovr": 68
+    },
+    {
+      "id": "P00096",
+      "name": "Gil",
+      "clubId": "BRAA_SAN",
+      "pos": "CB",
+      "age": 37,
       "ovr": 66
     },
     {
+      "id": "P00097",
+      "name": "Messias",
+      "clubId": "BRAA_SAN",
+      "pos": "CB",
+      "age": 30,
+      "ovr": 65
+    },
+    {
+      "id": "P00098",
+      "name": "Hayner",
+      "clubId": "BRAA_SAN",
+      "pos": "RB",
+      "age": 29,
+      "ovr": 65
+    },
+    {
+      "id": "P00099",
+      "name": "Diego Pituca",
+      "clubId": "BRAA_SAN",
+      "pos": "CM",
+      "age": 32,
+      "ovr": 74
+    },
+    {
+      "id": "P00100",
+      "name": "Dodi",
+      "clubId": "BRAA_SAN",
+      "pos": "CM",
+      "age": 28,
+      "ovr": 71
+    },
+    {
+      "id": "P00101",
+      "name": "Lucas Lima",
+      "clubId": "BRAA_SAN",
+      "pos": "AM",
+      "age": 34,
+      "ovr": 71
+    },
+    {
       "id": "P00102",
-      "name": "Jogador SAN-12",
+      "name": "Nonato",
       "clubId": "BRAA_SAN",
       "pos": "DM",
-      "age": 28,
-      "ovr": 82
+      "age": 27,
+      "ovr": 69
     },
     {
       "id": "P00103",
-      "name": "Jogador SAN-13",
+      "name": "Tomás Rincón",
       "clubId": "BRAA_SAN",
-      "pos": "ST",
-      "age": 18,
+      "pos": "DM",
+      "age": 37,
       "ovr": 68
     },
     {
       "id": "P00104",
-      "name": "Jogador SAN-14",
-      "clubId": "BRAA_SAN",
-      "pos": "CM",
-      "age": 32,
-      "ovr": 71
-    },
-    {
-      "id": "P00105",
-      "name": "Jogador SAN-15",
+      "name": "Giuliano",
       "clubId": "BRAA_SAN",
       "pos": "AM",
-      "age": 32,
-      "ovr": 77
-    },
-    {
-      "id": "P00106",
-      "name": "Jogador SAN-16",
-      "clubId": "BRAA_SAN",
-      "pos": "LW",
-      "age": 25,
-      "ovr": 66
-    },
-    {
-      "id": "P00107",
-      "name": "Jogador SAN-17",
-      "clubId": "BRAA_SAN",
-      "pos": "RW",
-      "age": 35,
-      "ovr": 82
-    },
-    {
-      "id": "P00108",
-      "name": "Jogador SAN-18",
-      "clubId": "BRAA_SAN",
-      "pos": "CM",
-      "age": 35,
-      "ovr": 80
-    },
-    {
-      "id": "P00109",
-      "name": "Jogador FLU-1",
-      "clubId": "BRAA_FLU",
-      "pos": "RB",
-      "age": 17,
-      "ovr": 69
-    },
-    {
-      "id": "P00110",
-      "name": "Jogador FLU-2",
-      "clubId": "BRAA_FLU",
-      "pos": "AM",
-      "age": 35,
-      "ovr": 75
-    },
-    {
-      "id": "P00111",
-      "name": "Jogador FLU-3",
-      "clubId": "BRAA_FLU",
-      "pos": "DM",
-      "age": 33,
-      "ovr": 71
-    },
-    {
-      "id": "P00112",
-      "name": "Jogador FLU-4",
-      "clubId": "BRAA_FLU",
-      "pos": "CM",
-      "age": 35,
+      "age": 34,
       "ovr": 65
     },
     {
-      "id": "P00113",
-      "name": "Jogador FLU-5",
-      "clubId": "BRAA_FLU",
-      "pos": "GK",
+      "id": "P00105",
+      "name": "Marcos Leonardo",
+      "clubId": "BRAA_SAN",
+      "pos": "ST",
       "age": 22,
-      "ovr": 73
+      "ovr": 82
     },
     {
-      "id": "P00114",
-      "name": "Jogador FLU-6",
-      "clubId": "BRAA_FLU",
-      "pos": "RB",
-      "age": 32,
-      "ovr": 78
+      "id": "P00106",
+      "name": "Morelos",
+      "clubId": "BRAA_SAN",
+      "pos": "ST",
+      "age": 29,
+      "ovr": 76
     },
     {
-      "id": "P00115",
-      "name": "Jogador FLU-7",
-      "clubId": "BRAA_FLU",
+      "id": "P00107",
+      "name": "Guilherme",
+      "clubId": "BRAA_SAN",
       "pos": "LW",
+      "age": 29,
+      "ovr": 75
+    },
+    {
+      "id": "P00108",
+      "name": "Deivid Washington",
+      "clubId": "BRAA_SAN",
+      "pos": "ST",
       "age": 20,
       "ovr": 71
     },
     {
-      "id": "P00116",
-      "name": "Jogador FLU-8",
+      "id": "P00109",
+      "name": "Fábio",
+      "clubId": "BRAA_FLU",
+      "pos": "GK",
+      "age": 44,
+      "ovr": 63
+    },
+    {
+      "id": "P00110",
+      "name": "Vitor Eudes",
+      "clubId": "BRAA_FLU",
+      "pos": "GK",
+      "age": 26,
+      "ovr": 59
+    },
+    {
+      "id": "P00111",
+      "name": "Nino",
+      "clubId": "BRAA_FLU",
+      "pos": "CB",
+      "age": 28,
+      "ovr": 74
+    },
+    {
+      "id": "P00112",
+      "name": "Thiago Silva",
+      "clubId": "BRAA_FLU",
+      "pos": "CB",
+      "age": 40,
+      "ovr": 72
+    },
+    {
+      "id": "P00113",
+      "name": "Guga",
+      "clubId": "BRAA_FLU",
+      "pos": "RB",
+      "age": 26,
+      "ovr": 68
+    },
+    {
+      "id": "P00114",
+      "name": "Marcelo",
       "clubId": "BRAA_FLU",
       "pos": "LB",
-      "age": 19,
-      "ovr": 77
+      "age": 36,
+      "ovr": 66
+    },
+    {
+      "id": "P00115",
+      "name": "Diogo Barbosa",
+      "clubId": "BRAA_FLU",
+      "pos": "LB",
+      "age": 32,
+      "ovr": 65
+    },
+    {
+      "id": "P00116",
+      "name": "Felipe Melo",
+      "clubId": "BRAA_FLU",
+      "pos": "CB",
+      "age": 41,
+      "ovr": 61
     },
     {
       "id": "P00117",
-      "name": "Jogador FLU-9",
+      "name": "André",
       "clubId": "BRAA_FLU",
-      "pos": "ST",
-      "age": 30,
-      "ovr": 70
+      "pos": "DM",
+      "age": 23,
+      "ovr": 78
     },
     {
       "id": "P00118",
-      "name": "Jogador FLU-10",
+      "name": "Martinelli",
       "clubId": "BRAA_FLU",
-      "pos": "GK",
-      "age": 22,
-      "ovr": 81
+      "pos": "DM",
+      "age": 23,
+      "ovr": 72
     },
     {
       "id": "P00119",
-      "name": "Jogador FLU-11",
+      "name": "Lima",
       "clubId": "BRAA_FLU",
-      "pos": "DM",
-      "age": 32,
-      "ovr": 72
+      "pos": "CM",
+      "age": 27,
+      "ovr": 71
     },
     {
       "id": "P00120",
-      "name": "Jogador FLU-12",
+      "name": "Ganso",
       "clubId": "BRAA_FLU",
-      "pos": "CM",
-      "age": 30,
-      "ovr": 78
+      "pos": "AM",
+      "age": 35,
+      "ovr": 71
     },
     {
       "id": "P00121",
-      "name": "Jogador FLU-13",
+      "name": "Renato Augusto",
       "clubId": "BRAA_FLU",
-      "pos": "LW",
-      "age": 29,
-      "ovr": 74
+      "pos": "AM",
+      "age": 36,
+      "ovr": 71
     },
     {
       "id": "P00122",
-      "name": "Jogador FLU-14",
+      "name": "Alexsander",
       "clubId": "BRAA_FLU",
-      "pos": "RW",
+      "pos": "CM",
       "age": 20,
-      "ovr": 72
+      "ovr": 68
     },
     {
       "id": "P00123",
-      "name": "Jogador FLU-15",
+      "name": "Arias",
       "clubId": "BRAA_FLU",
-      "pos": "CM",
-      "age": 18,
-      "ovr": 76
+      "pos": "RW",
+      "age": 27,
+      "ovr": 84
     },
     {
       "id": "P00124",
-      "name": "Jogador FLU-16",
+      "name": "Jhon Arias",
       "clubId": "BRAA_FLU",
-      "pos": "GK",
-      "age": 30,
-      "ovr": 79
+      "pos": "LW",
+      "age": 27,
+      "ovr": 78
     },
     {
       "id": "P00125",
-      "name": "Jogador FLU-17",
+      "name": "Germán Cano",
       "clubId": "BRAA_FLU",
-      "pos": "AM",
-      "age": 19,
-      "ovr": 67
+      "pos": "ST",
+      "age": 37,
+      "ovr": 78
     },
     {
       "id": "P00126",
-      "name": "Jogador FLU-18",
+      "name": "Jhon Kennedy",
       "clubId": "BRAA_FLU",
-      "pos": "LB",
-      "age": 31,
-      "ovr": 70
-    },
-    {
-      "id": "P00127",
-      "name": "Jogador GRE-1",
-      "clubId": "BRAA_GRE",
-      "pos": "LW",
-      "age": 23,
-      "ovr": 68
-    },
-    {
-      "id": "P00128",
-      "name": "Jogador GRE-2",
-      "clubId": "BRAA_GRE",
-      "pos": "CM",
-      "age": 30,
+      "pos": "ST",
+      "age": 22,
       "ovr": 76
     },
     {
+      "id": "P00127",
+      "name": "Gabriel Grando",
+      "clubId": "BRAA_GRE",
+      "pos": "GK",
+      "age": 25,
+      "ovr": 65
+    },
+    {
+      "id": "P00128",
+      "name": "Marchesín",
+      "clubId": "BRAA_GRE",
+      "pos": "GK",
+      "age": 36,
+      "ovr": 63
+    },
+    {
       "id": "P00129",
-      "name": "Jogador GRE-3",
+      "name": "João Pedro",
       "clubId": "BRAA_GRE",
-      "pos": "LW",
-      "age": 24,
-      "ovr": 79
-    },
-    {
-      "id": "P00130",
-      "name": "Jogador GRE-4",
-      "clubId": "BRAA_GRE",
-      "pos": "AM",
-      "age": 21,
-      "ovr": 74
-    },
-    {
-      "id": "P00131",
-      "name": "Jogador GRE-5",
-      "clubId": "BRAA_GRE",
-      "pos": "AM",
-      "age": 24,
-      "ovr": 78
-    },
-    {
-      "id": "P00132",
-      "name": "Jogador GRE-6",
-      "clubId": "BRAA_GRE",
-      "pos": "AM",
-      "age": 27,
-      "ovr": 64
-    },
-    {
-      "id": "P00133",
-      "name": "Jogador GRE-7",
-      "clubId": "BRAA_GRE",
-      "pos": "RW",
-      "age": 21,
-      "ovr": 78
-    },
-    {
-      "id": "P00134",
-      "name": "Jogador GRE-8",
-      "clubId": "BRAA_GRE",
-      "pos": "AM",
-      "age": 33,
-      "ovr": 78
-    },
-    {
-      "id": "P00135",
-      "name": "Jogador GRE-9",
-      "clubId": "BRAA_GRE",
-      "pos": "ST",
-      "age": 23,
-      "ovr": 64
-    },
-    {
-      "id": "P00136",
-      "name": "Jogador GRE-10",
-      "clubId": "BRAA_GRE",
-      "pos": "LW",
-      "age": 24,
-      "ovr": 67
-    },
-    {
-      "id": "P00137",
-      "name": "Jogador GRE-11",
-      "clubId": "BRAA_GRE",
-      "pos": "DM",
-      "age": 24,
-      "ovr": 79
-    },
-    {
-      "id": "P00138",
-      "name": "Jogador GRE-12",
-      "clubId": "BRAA_GRE",
-      "pos": "LW",
-      "age": 26,
-      "ovr": 77
-    },
-    {
-      "id": "P00139",
-      "name": "Jogador GRE-13",
-      "clubId": "BRAA_GRE",
-      "pos": "DM",
+      "pos": "RB",
       "age": 27,
       "ovr": 68
     },
     {
-      "id": "P00140",
-      "name": "Jogador GRE-14",
+      "id": "P00130",
+      "name": "Geromel",
       "clubId": "BRAA_GRE",
-      "pos": "LW",
+      "pos": "CB",
+      "age": 39,
+      "ovr": 66
+    },
+    {
+      "id": "P00131",
+      "name": "Kannemann",
+      "clubId": "BRAA_GRE",
+      "pos": "CB",
+      "age": 33,
+      "ovr": 66
+    },
+    {
+      "id": "P00132",
+      "name": "Rodrigo Ely",
+      "clubId": "BRAA_GRE",
+      "pos": "CB",
+      "age": 31,
+      "ovr": 65
+    },
+    {
+      "id": "P00133",
+      "name": "Reinaldo",
+      "clubId": "BRAA_GRE",
+      "pos": "LB",
+      "age": 35,
+      "ovr": 61
+    },
+    {
+      "id": "P00134",
+      "name": "Gustavo Martins",
+      "clubId": "BRAA_GRE",
+      "pos": "CB",
+      "age": 22,
+      "ovr": 59
+    },
+    {
+      "id": "P00135",
+      "name": "Cristaldo",
+      "clubId": "BRAA_GRE",
+      "pos": "AM",
+      "age": 28,
+      "ovr": 78
+    },
+    {
+      "id": "P00136",
+      "name": "Villasanti",
+      "clubId": "BRAA_GRE",
+      "pos": "DM",
+      "age": 27,
+      "ovr": 75
+    },
+    {
+      "id": "P00137",
+      "name": "Carballo",
+      "clubId": "BRAA_GRE",
+      "pos": "CM",
+      "age": 28,
+      "ovr": 71
+    },
+    {
+      "id": "P00138",
+      "name": "Dodi",
+      "clubId": "BRAA_GRE",
+      "pos": "CM",
+      "age": 28,
+      "ovr": 71
+    },
+    {
+      "id": "P00139",
+      "name": "Pepe",
+      "clubId": "BRAA_GRE",
+      "pos": "DM",
+      "age": 26,
+      "ovr": 69
+    },
+    {
+      "id": "P00140",
+      "name": "Nathan Fernandes",
+      "clubId": "BRAA_GRE",
+      "pos": "AM",
       "age": 19,
       "ovr": 65
     },
     {
       "id": "P00141",
-      "name": "Jogador GRE-15",
+      "name": "Soteldo",
       "clubId": "BRAA_GRE",
       "pos": "LW",
-      "age": 23,
-      "ovr": 77
+      "age": 27,
+      "ovr": 78
     },
     {
       "id": "P00142",
-      "name": "Jogador GRE-16",
+      "name": "Pavón",
       "clubId": "BRAA_GRE",
-      "pos": "AM",
-      "age": 30,
+      "pos": "RW",
+      "age": 28,
       "ovr": 78
     },
     {
       "id": "P00143",
-      "name": "Jogador GRE-17",
+      "name": "André Henrique",
       "clubId": "BRAA_GRE",
-      "pos": "CB",
-      "age": 21,
-      "ovr": 80
+      "pos": "ST",
+      "age": 27,
+      "ovr": 74
     },
     {
       "id": "P00144",
-      "name": "Jogador GRE-18",
+      "name": "Ferreira",
       "clubId": "BRAA_GRE",
-      "pos": "RW",
-      "age": 32,
-      "ovr": 71
+      "pos": "LW",
+      "age": 26,
+      "ovr": 72
     },
     {
       "id": "P00145",
-      "name": "Jogador INT-1",
-      "clubId": "BRAA_INT",
-      "pos": "GK",
-      "age": 26,
-      "ovr": 63
-    },
-    {
-      "id": "P00146",
-      "name": "Jogador INT-2",
-      "clubId": "BRAA_INT",
-      "pos": "RW",
-      "age": 27,
-      "ovr": 77
-    },
-    {
-      "id": "P00147",
-      "name": "Jogador INT-3",
-      "clubId": "BRAA_INT",
-      "pos": "LW",
-      "age": 25,
-      "ovr": 79
-    },
-    {
-      "id": "P00148",
-      "name": "Jogador INT-4",
-      "clubId": "BRAA_INT",
-      "pos": "GK",
-      "age": 33,
-      "ovr": 77
-    },
-    {
-      "id": "P00149",
-      "name": "Jogador INT-5",
-      "clubId": "BRAA_INT",
-      "pos": "RB",
-      "age": 35,
-      "ovr": 64
-    },
-    {
-      "id": "P00150",
-      "name": "Jogador INT-6",
-      "clubId": "BRAA_INT",
-      "pos": "CM",
-      "age": 17,
-      "ovr": 72
-    },
-    {
-      "id": "P00151",
-      "name": "Jogador INT-7",
-      "clubId": "BRAA_INT",
-      "pos": "RB",
-      "age": 35,
-      "ovr": 63
-    },
-    {
-      "id": "P00152",
-      "name": "Jogador INT-8",
-      "clubId": "BRAA_INT",
-      "pos": "LW",
-      "age": 27,
-      "ovr": 74
-    },
-    {
-      "id": "P00153",
-      "name": "Jogador INT-9",
+      "name": "Rochet",
       "clubId": "BRAA_INT",
       "pos": "GK",
       "age": 31,
-      "ovr": 64
-    },
-    {
-      "id": "P00154",
-      "name": "Jogador INT-10",
-      "clubId": "BRAA_INT",
-      "pos": "RB",
-      "age": 21,
-      "ovr": 79
-    },
-    {
-      "id": "P00155",
-      "name": "Jogador INT-11",
-      "clubId": "BRAA_INT",
-      "pos": "DM",
-      "age": 24,
-      "ovr": 79
-    },
-    {
-      "id": "P00156",
-      "name": "Jogador INT-12",
-      "clubId": "BRAA_INT",
-      "pos": "GK",
-      "age": 19,
-      "ovr": 74
-    },
-    {
-      "id": "P00157",
-      "name": "Jogador INT-13",
-      "clubId": "BRAA_INT",
-      "pos": "RW",
-      "age": 21,
-      "ovr": 64
-    },
-    {
-      "id": "P00158",
-      "name": "Jogador INT-14",
-      "clubId": "BRAA_INT",
-      "pos": "DM",
-      "age": 32,
-      "ovr": 78
-    },
-    {
-      "id": "P00159",
-      "name": "Jogador INT-15",
-      "clubId": "BRAA_INT",
-      "pos": "LW",
-      "age": 23,
-      "ovr": 72
-    },
-    {
-      "id": "P00160",
-      "name": "Jogador INT-16",
-      "clubId": "BRAA_INT",
-      "pos": "LW",
-      "age": 19,
-      "ovr": 79
-    },
-    {
-      "id": "P00161",
-      "name": "Jogador INT-17",
-      "clubId": "BRAA_INT",
-      "pos": "LW",
-      "age": 18,
-      "ovr": 77
-    },
-    {
-      "id": "P00162",
-      "name": "Jogador INT-18",
-      "clubId": "BRAA_INT",
-      "pos": "GK",
-      "age": 25,
-      "ovr": 71
-    },
-    {
-      "id": "P00163",
-      "name": "Jogador BOT-1",
-      "clubId": "BRAA_BOT",
-      "pos": "DM",
-      "age": 23,
       "ovr": 68
     },
     {
-      "id": "P00164",
-      "name": "Jogador BOT-2",
-      "clubId": "BRAA_BOT",
-      "pos": "CM",
+      "id": "P00146",
+      "name": "Keiller",
+      "clubId": "BRAA_INT",
+      "pos": "GK",
       "age": 28,
+      "ovr": 59
+    },
+    {
+      "id": "P00147",
+      "name": "Vitão",
+      "clubId": "BRAA_INT",
+      "pos": "CB",
+      "age": 25,
       "ovr": 74
     },
     {
-      "id": "P00165",
-      "name": "Jogador BOT-3",
-      "clubId": "BRAA_BOT",
-      "pos": "ST",
+      "id": "P00148",
+      "name": "Robert Renan",
+      "clubId": "BRAA_INT",
+      "pos": "CB",
       "age": 21,
+      "ovr": 65
+    },
+    {
+      "id": "P00149",
+      "name": "René",
+      "clubId": "BRAA_INT",
+      "pos": "LB",
+      "age": 32,
+      "ovr": 65
+    },
+    {
+      "id": "P00150",
+      "name": "Igor Gomes",
+      "clubId": "BRAA_INT",
+      "pos": "CB",
+      "age": 24,
+      "ovr": 62
+    },
+    {
+      "id": "P00151",
+      "name": "Mercado",
+      "clubId": "BRAA_INT",
+      "pos": "CB",
+      "age": 37,
+      "ovr": 61
+    },
+    {
+      "id": "P00152",
+      "name": "Fabrício",
+      "clubId": "BRAA_INT",
+      "pos": "RB",
+      "age": 37,
+      "ovr": 61
+    },
+    {
+      "id": "P00153",
+      "name": "Maurício",
+      "clubId": "BRAA_INT",
+      "pos": "CM",
+      "age": 23,
+      "ovr": 74
+    },
+    {
+      "id": "P00154",
+      "name": "Alan Patrick",
+      "clubId": "BRAA_INT",
+      "pos": "AM",
+      "age": 34,
+      "ovr": 71
+    },
+    {
+      "id": "P00155",
+      "name": "Hyoran",
+      "clubId": "BRAA_INT",
+      "pos": "AM",
+      "age": 30,
       "ovr": 69
+    },
+    {
+      "id": "P00156",
+      "name": "Gabriel",
+      "clubId": "BRAA_INT",
+      "pos": "CM",
+      "age": 22,
+      "ovr": 68
+    },
+    {
+      "id": "P00157",
+      "name": "Aránguiz",
+      "clubId": "BRAA_INT",
+      "pos": "DM",
+      "age": 35,
+      "ovr": 68
+    },
+    {
+      "id": "P00158",
+      "name": "Bruno Henrique",
+      "clubId": "BRAA_INT",
+      "pos": "CM",
+      "age": 34,
+      "ovr": 63
+    },
+    {
+      "id": "P00159",
+      "name": "Wesley",
+      "clubId": "BRAA_INT",
+      "pos": "ST",
+      "age": 25,
+      "ovr": 74
+    },
+    {
+      "id": "P00160",
+      "name": "Vitinho",
+      "clubId": "BRAA_INT",
+      "pos": "RW",
+      "age": 25,
+      "ovr": 72
+    },
+    {
+      "id": "P00161",
+      "name": "Enner Valencia",
+      "clubId": "BRAA_INT",
+      "pos": "ST",
+      "age": 35,
+      "ovr": 72
+    },
+    {
+      "id": "P00162",
+      "name": "Wanderson",
+      "clubId": "BRAA_INT",
+      "pos": "LW",
+      "age": 29,
+      "ovr": 69
+    },
+    {
+      "id": "P00163",
+      "name": "John",
+      "clubId": "BRAA_BOT",
+      "pos": "GK",
+      "age": 28,
+      "ovr": 71
+    },
+    {
+      "id": "P00164",
+      "name": "Gatito Fernández",
+      "clubId": "BRAA_BOT",
+      "pos": "GK",
+      "age": 36,
+      "ovr": 58
+    },
+    {
+      "id": "P00165",
+      "name": "Lucas Halter",
+      "clubId": "BRAA_BOT",
+      "pos": "CB",
+      "age": 24,
+      "ovr": 68
     },
     {
       "id": "P00166",
-      "name": "Jogador BOT-4",
+      "name": "Bastos",
       "clubId": "BRAA_BOT",
-      "pos": "RW",
-      "age": 26,
-      "ovr": 71
+      "pos": "CB",
+      "age": 33,
+      "ovr": 66
     },
     {
       "id": "P00167",
-      "name": "Jogador BOT-5",
+      "name": "Victor Cuesta",
       "clubId": "BRAA_BOT",
-      "pos": "RW",
-      "age": 21,
-      "ovr": 69
+      "pos": "CB",
+      "age": 36,
+      "ovr": 61
     },
     {
       "id": "P00168",
-      "name": "Jogador BOT-6",
+      "name": "Damián Suárez",
       "clubId": "BRAA_BOT",
-      "pos": "DM",
-      "age": 30,
-      "ovr": 77
+      "pos": "RB",
+      "age": 36,
+      "ovr": 61
     },
     {
       "id": "P00169",
-      "name": "Jogador BOT-7",
+      "name": "Rafael",
       "clubId": "BRAA_BOT",
-      "pos": "GK",
-      "age": 27,
-      "ovr": 64
+      "pos": "RB",
+      "age": 34,
+      "ovr": 61
     },
     {
       "id": "P00170",
-      "name": "Jogador BOT-8",
+      "name": "Marçal",
       "clubId": "BRAA_BOT",
-      "pos": "CB",
-      "age": 19,
-      "ovr": 78
+      "pos": "LB",
+      "age": 35,
+      "ovr": 61
     },
     {
       "id": "P00171",
-      "name": "Jogador BOT-9",
+      "name": "Savarino",
       "clubId": "BRAA_BOT",
-      "pos": "RB",
-      "age": 22,
-      "ovr": 76
+      "pos": "AM",
+      "age": 27,
+      "ovr": 78
     },
     {
       "id": "P00172",
-      "name": "Jogador BOT-10",
+      "name": "Jefinho",
       "clubId": "BRAA_BOT",
-      "pos": "RW",
-      "age": 32,
-      "ovr": 71
+      "pos": "AM",
+      "age": 24,
+      "ovr": 72
     },
     {
       "id": "P00173",
-      "name": "Jogador BOT-11",
-      "clubId": "BRAA_BOT",
-      "pos": "CM",
-      "age": 31,
-      "ovr": 71
-    },
-    {
-      "id": "P00174",
-      "name": "Jogador BOT-12",
-      "clubId": "BRAA_BOT",
-      "pos": "LW",
-      "age": 20,
-      "ovr": 69
-    },
-    {
-      "id": "P00175",
-      "name": "Jogador BOT-13",
+      "name": "Marlon Freitas",
       "clubId": "BRAA_BOT",
       "pos": "DM",
       "age": 29,
-      "ovr": 69
+      "ovr": 72
+    },
+    {
+      "id": "P00174",
+      "name": "Tchê Tchê",
+      "clubId": "BRAA_BOT",
+      "pos": "DM",
+      "age": 32,
+      "ovr": 72
+    },
+    {
+      "id": "P00175",
+      "name": "Danilo Barbosa",
+      "clubId": "BRAA_BOT",
+      "pos": "CM",
+      "age": 28,
+      "ovr": 71
     },
     {
       "id": "P00176",
-      "name": "Jogador BOT-14",
-      "clubId": "BRAA_BOT",
-      "pos": "RW",
-      "age": 21,
-      "ovr": 77
-    },
-    {
-      "id": "P00177",
-      "name": "Jogador BOT-15",
+      "name": "Eduardo",
       "clubId": "BRAA_BOT",
       "pos": "CM",
-      "age": 22,
+      "age": 35,
       "ovr": 69
     },
     {
-      "id": "P00178",
-      "name": "Jogador BOT-16",
+      "id": "P00177",
+      "name": "Tiquinho Soares",
       "clubId": "BRAA_BOT",
-      "pos": "GK",
-      "age": 29,
+      "pos": "ST",
+      "age": 34,
+      "ovr": 78
+    },
+    {
+      "id": "P00178",
+      "name": "Júnior Santos",
+      "clubId": "BRAA_BOT",
+      "pos": "LW",
+      "age": 30,
       "ovr": 75
     },
     {
       "id": "P00179",
-      "name": "Jogador BOT-17",
+      "name": "Jeffinho",
       "clubId": "BRAA_BOT",
-      "pos": "AM",
-      "age": 33,
-      "ovr": 65
+      "pos": "ST",
+      "age": 24,
+      "ovr": 74
     },
     {
       "id": "P00180",
-      "name": "Jogador BOT-18",
+      "name": "Rafael Navarro",
       "clubId": "BRAA_BOT",
       "pos": "ST",
-      "age": 18,
-      "ovr": 75
+      "age": 24,
+      "ovr": 74
     },
     {
       "id": "P00181",
-      "name": "Jogador CRU-1",
+      "name": "Rafael Cabral",
       "clubId": "BRAA_CRU",
-      "pos": "LB",
-      "age": 30,
-      "ovr": 66
+      "pos": "GK",
+      "age": 34,
+      "ovr": 63
     },
     {
       "id": "P00182",
-      "name": "Jogador CRU-2",
+      "name": "Anderson",
+      "clubId": "BRAA_CRU",
+      "pos": "GK",
+      "age": 26,
+      "ovr": 59
+    },
+    {
+      "id": "P00183",
+      "name": "William",
       "clubId": "BRAA_CRU",
       "pos": "RB",
       "age": 30,
       "ovr": 71
     },
     {
-      "id": "P00183",
-      "name": "Jogador CRU-3",
-      "clubId": "BRAA_CRU",
-      "pos": "RW",
-      "age": 28,
-      "ovr": 65
-    },
-    {
       "id": "P00184",
-      "name": "Jogador CRU-4",
+      "name": "Zé Ivaldo",
       "clubId": "BRAA_CRU",
-      "pos": "LW",
-      "age": 27,
-      "ovr": 65
+      "pos": "CB",
+      "age": 28,
+      "ovr": 68
     },
     {
       "id": "P00185",
-      "name": "Jogador CRU-5",
+      "name": "Lucas Villalba",
       "clubId": "BRAA_CRU",
-      "pos": "LW",
-      "age": 18,
-      "ovr": 70
-    },
-    {
-      "id": "P00186",
-      "name": "Jogador CRU-6",
-      "clubId": "BRAA_CRU",
-      "pos": "ST",
-      "age": 31,
-      "ovr": 74
-    },
-    {
-      "id": "P00187",
-      "name": "Jogador CRU-7",
-      "clubId": "BRAA_CRU",
-      "pos": "GK",
-      "age": 17,
-      "ovr": 77
-    },
-    {
-      "id": "P00188",
-      "name": "Jogador CRU-8",
-      "clubId": "BRAA_CRU",
-      "pos": "GK",
-      "age": 28,
-      "ovr": 74
-    },
-    {
-      "id": "P00189",
-      "name": "Jogador CRU-9",
-      "clubId": "BRAA_CRU",
-      "pos": "RW",
-      "age": 22,
-      "ovr": 62
-    },
-    {
-      "id": "P00190",
-      "name": "Jogador CRU-10",
-      "clubId": "BRAA_CRU",
-      "pos": "DM",
-      "age": 31,
-      "ovr": 77
-    },
-    {
-      "id": "P00191",
-      "name": "Jogador CRU-11",
-      "clubId": "BRAA_CRU",
-      "pos": "RB",
-      "age": 28,
-      "ovr": 67
-    },
-    {
-      "id": "P00192",
-      "name": "Jogador CRU-12",
-      "clubId": "BRAA_CRU",
-      "pos": "GK",
-      "age": 32,
-      "ovr": 67
-    },
-    {
-      "id": "P00193",
-      "name": "Jogador CRU-13",
-      "clubId": "BRAA_CRU",
-      "pos": "LW",
-      "age": 29,
+      "pos": "CB",
+      "age": 30,
       "ovr": 65
     },
     {
-      "id": "P00194",
-      "name": "Jogador CRU-14",
-      "clubId": "BRAA_CRU",
-      "pos": "ST",
-      "age": 29,
-      "ovr": 75
-    },
-    {
-      "id": "P00195",
-      "name": "Jogador CRU-15",
-      "clubId": "BRAA_CRU",
-      "pos": "CB",
-      "age": 17,
-      "ovr": 74
-    },
-    {
-      "id": "P00196",
-      "name": "Jogador CRU-16",
+      "id": "P00186",
+      "name": "João Marcelo",
       "clubId": "BRAA_CRU",
       "pos": "CB",
       "age": 23,
-      "ovr": 62
+      "ovr": 65
     },
     {
-      "id": "P00197",
-      "name": "Jogador CRU-17",
-      "clubId": "BRAA_CRU",
-      "pos": "GK",
-      "age": 22,
-      "ovr": 73
-    },
-    {
-      "id": "P00198",
-      "name": "Jogador CRU-18",
+      "id": "P00187",
+      "name": "Neris",
       "clubId": "BRAA_CRU",
       "pos": "CB",
-      "age": 34,
-      "ovr": 64
+      "age": 32,
+      "ovr": 65
     },
     {
-      "id": "P00199",
-      "name": "Jogador VAS-1",
-      "clubId": "BRAA_VAS",
-      "pos": "CM",
-      "age": 33,
-      "ovr": 76
+      "id": "P00188",
+      "name": "Palacios",
+      "clubId": "BRAA_CRU",
+      "pos": "RB",
+      "age": 23,
+      "ovr": 65
     },
     {
-      "id": "P00200",
-      "name": "Jogador VAS-2",
-      "clubId": "BRAA_VAS",
-      "pos": "LW",
-      "age": 26,
-      "ovr": 76
-    },
-    {
-      "id": "P00201",
-      "name": "Jogador VAS-3",
-      "clubId": "BRAA_VAS",
-      "pos": "CM",
+      "id": "P00189",
+      "name": "Matheus Pereira",
+      "clubId": "BRAA_CRU",
+      "pos": "AM",
       "age": 28,
-      "ovr": 64
+      "ovr": 84
     },
     {
-      "id": "P00202",
-      "name": "Jogador VAS-4",
-      "clubId": "BRAA_VAS",
-      "pos": "LB",
+      "id": "P00190",
+      "name": "Lucas Silva",
+      "clubId": "BRAA_CRU",
+      "pos": "DM",
       "age": 31,
-      "ovr": 63
+      "ovr": 72
     },
     {
-      "id": "P00203",
-      "name": "Jogador VAS-5",
-      "clubId": "BRAA_VAS",
-      "pos": "GK",
+      "id": "P00191",
+      "name": "Japa",
+      "clubId": "BRAA_CRU",
+      "pos": "AM",
+      "age": 20,
+      "ovr": 69
+    },
+    {
+      "id": "P00192",
+      "name": "Filipe Machado",
+      "clubId": "BRAA_CRU",
+      "pos": "DM",
+      "age": 29,
+      "ovr": 66
+    },
+    {
+      "id": "P00193",
+      "name": "Ramiro",
+      "clubId": "BRAA_CRU",
+      "pos": "CM",
       "age": 35,
       "ovr": 63
     },
     {
-      "id": "P00204",
-      "name": "Jogador VAS-6",
-      "clubId": "BRAA_VAS",
-      "pos": "CM",
-      "age": 18,
-      "ovr": 68
-    },
-    {
-      "id": "P00205",
-      "name": "Jogador VAS-7",
-      "clubId": "BRAA_VAS",
-      "pos": "LW",
-      "age": 28,
-      "ovr": 73
-    },
-    {
-      "id": "P00206",
-      "name": "Jogador VAS-8",
-      "clubId": "BRAA_VAS",
-      "pos": "LW",
-      "age": 23,
-      "ovr": 61
-    },
-    {
-      "id": "P00207",
-      "name": "Jogador VAS-9",
-      "clubId": "BRAA_VAS",
+      "id": "P00194",
+      "name": "Alvaro Barreal",
+      "clubId": "BRAA_CRU",
       "pos": "RW",
-      "age": 22,
-      "ovr": 68
+      "age": 24,
+      "ovr": 78
     },
     {
-      "id": "P00208",
-      "name": "Jogador VAS-10",
-      "clubId": "BRAA_VAS",
-      "pos": "RW",
-      "age": 27,
-      "ovr": 67
-    },
-    {
-      "id": "P00209",
-      "name": "Jogador VAS-11",
-      "clubId": "BRAA_VAS",
+      "id": "P00195",
+      "name": "Dinenno",
+      "clubId": "BRAA_CRU",
       "pos": "ST",
-      "age": 33,
-      "ovr": 70
+      "age": 30,
+      "ovr": 76
     },
     {
-      "id": "P00210",
-      "name": "Jogador VAS-12",
-      "clubId": "BRAA_VAS",
-      "pos": "DM",
-      "age": 31,
-      "ovr": 65
-    },
-    {
-      "id": "P00211",
-      "name": "Jogador VAS-13",
-      "clubId": "BRAA_VAS",
+      "id": "P00196",
+      "name": "Rafael Elias",
+      "clubId": "BRAA_CRU",
       "pos": "ST",
-      "age": 29,
-      "ovr": 73
-    },
-    {
-      "id": "P00212",
-      "name": "Jogador VAS-14",
-      "clubId": "BRAA_VAS",
-      "pos": "RB",
-      "age": 22,
+      "age": 25,
       "ovr": 74
     },
     {
-      "id": "P00213",
-      "name": "Jogador VAS-15",
-      "clubId": "BRAA_VAS",
-      "pos": "DM",
-      "age": 30,
-      "ovr": 70
+      "id": "P00197",
+      "name": "Arthur Gomes",
+      "clubId": "BRAA_CRU",
+      "pos": "LW",
+      "age": 26,
+      "ovr": 72
     },
     {
-      "id": "P00214",
-      "name": "Jogador VAS-16",
+      "id": "P00198",
+      "name": "Wesley",
+      "clubId": "BRAA_CRU",
+      "pos": "RW",
+      "age": 25,
+      "ovr": 72
+    },
+    {
+      "id": "P00199",
+      "name": "Léo Jardim",
+      "clubId": "BRAA_VAS",
+      "pos": "GK",
+      "age": 30,
+      "ovr": 68
+    },
+    {
+      "id": "P00200",
+      "name": "Ivan",
+      "clubId": "BRAA_VAS",
+      "pos": "GK",
+      "age": 27,
+      "ovr": 65
+    },
+    {
+      "id": "P00201",
+      "name": "Léo",
+      "clubId": "BRAA_VAS",
+      "pos": "CB",
+      "age": 28,
+      "ovr": 74
+    },
+    {
+      "id": "P00202",
+      "name": "Puma Rodríguez",
+      "clubId": "BRAA_VAS",
+      "pos": "RB",
+      "age": 28,
+      "ovr": 74
+    },
+    {
+      "id": "P00203",
+      "name": "Lucas Piton",
       "clubId": "BRAA_VAS",
       "pos": "LB",
       "age": 24,
       "ovr": 74
     },
     {
-      "id": "P00215",
-      "name": "Jogador VAS-17",
+      "id": "P00204",
+      "name": "João Victor",
       "clubId": "BRAA_VAS",
-      "pos": "RB",
-      "age": 22,
+      "pos": "CB",
+      "age": 26,
       "ovr": 68
     },
     {
-      "id": "P00216",
-      "name": "Jogador VAS-18",
+      "id": "P00205",
+      "name": "Paulo Henrique",
       "clubId": "BRAA_VAS",
       "pos": "RB",
-      "age": 35,
-      "ovr": 76
+      "age": 27,
+      "ovr": 68
     },
     {
-      "id": "P00217",
-      "name": "Jogador BAH-1",
-      "clubId": "BRAA_BAH",
-      "pos": "GK",
-      "age": 23,
-      "ovr": 59
+      "id": "P00206",
+      "name": "Medel",
+      "clubId": "BRAA_VAS",
+      "pos": "CB",
+      "age": 38,
+      "ovr": 66
     },
     {
-      "id": "P00218",
-      "name": "Jogador BAH-2",
-      "clubId": "BRAA_BAH",
-      "pos": "GK",
+      "id": "P00207",
+      "name": "Jair",
+      "clubId": "BRAA_VAS",
+      "pos": "CM",
+      "age": 30,
+      "ovr": 74
+    },
+    {
+      "id": "P00208",
+      "name": "Sforza",
+      "clubId": "BRAA_VAS",
+      "pos": "DM",
+      "age": 22,
+      "ovr": 72
+    },
+    {
+      "id": "P00209",
+      "name": "Payet",
+      "clubId": "BRAA_VAS",
+      "pos": "AM",
+      "age": 37,
+      "ovr": 71
+    },
+    {
+      "id": "P00210",
+      "name": "Zé Gabriel",
+      "clubId": "BRAA_VAS",
+      "pos": "DM",
       "age": 26,
       "ovr": 69
     },
     {
-      "id": "P00219",
-      "name": "Jogador BAH-3",
-      "clubId": "BRAA_BAH",
-      "pos": "LB",
-      "age": 34,
-      "ovr": 71
-    },
-    {
-      "id": "P00220",
-      "name": "Jogador BAH-4",
-      "clubId": "BRAA_BAH",
-      "pos": "RB",
-      "age": 23,
-      "ovr": 67
-    },
-    {
-      "id": "P00221",
-      "name": "Jogador BAH-5",
-      "clubId": "BRAA_BAH",
-      "pos": "GK",
-      "age": 20,
-      "ovr": 67
-    },
-    {
-      "id": "P00222",
-      "name": "Jogador BAH-6",
-      "clubId": "BRAA_BAH",
-      "pos": "GK",
-      "age": 32,
-      "ovr": 71
-    },
-    {
-      "id": "P00223",
-      "name": "Jogador BAH-7",
-      "clubId": "BRAA_BAH",
-      "pos": "LB",
-      "age": 21,
-      "ovr": 72
-    },
-    {
-      "id": "P00224",
-      "name": "Jogador BAH-8",
-      "clubId": "BRAA_BAH",
-      "pos": "RW",
-      "age": 27,
-      "ovr": 73
-    },
-    {
-      "id": "P00225",
-      "name": "Jogador BAH-9",
-      "clubId": "BRAA_BAH",
-      "pos": "DM",
-      "age": 18,
-      "ovr": 68
-    },
-    {
-      "id": "P00226",
-      "name": "Jogador BAH-10",
-      "clubId": "BRAA_BAH",
-      "pos": "ST",
-      "age": 27,
-      "ovr": 67
-    },
-    {
-      "id": "P00227",
-      "name": "Jogador BAH-11",
-      "clubId": "BRAA_BAH",
-      "pos": "DM",
-      "age": 21,
-      "ovr": 63
-    },
-    {
-      "id": "P00228",
-      "name": "Jogador BAH-12",
-      "clubId": "BRAA_BAH",
-      "pos": "LB",
-      "age": 33,
-      "ovr": 60
-    },
-    {
-      "id": "P00229",
-      "name": "Jogador BAH-13",
-      "clubId": "BRAA_BAH",
-      "pos": "CM",
-      "age": 28,
-      "ovr": 63
-    },
-    {
-      "id": "P00230",
-      "name": "Jogador BAH-14",
-      "clubId": "BRAA_BAH",
-      "pos": "GK",
-      "age": 22,
-      "ovr": 60
-    },
-    {
-      "id": "P00231",
-      "name": "Jogador BAH-15",
-      "clubId": "BRAA_BAH",
-      "pos": "CM",
-      "age": 21,
-      "ovr": 75
-    },
-    {
-      "id": "P00232",
-      "name": "Jogador BAH-16",
-      "clubId": "BRAA_BAH",
-      "pos": "DM",
-      "age": 22,
-      "ovr": 67
-    },
-    {
-      "id": "P00233",
-      "name": "Jogador BAH-17",
-      "clubId": "BRAA_BAH",
+      "id": "P00211",
+      "name": "David",
+      "clubId": "BRAA_VAS",
       "pos": "AM",
-      "age": 30,
-      "ovr": 71
-    },
-    {
-      "id": "P00234",
-      "name": "Jogador BAH-18",
-      "clubId": "BRAA_BAH",
-      "pos": "LW",
-      "age": 33,
-      "ovr": 68
-    },
-    {
-      "id": "P00235",
-      "name": "Jogador FOR-1",
-      "clubId": "BRAA_FOR",
-      "pos": "LB",
-      "age": 30,
-      "ovr": 59
-    },
-    {
-      "id": "P00236",
-      "name": "Jogador FOR-2",
-      "clubId": "BRAA_FOR",
-      "pos": "RW",
-      "age": 17,
-      "ovr": 67
-    },
-    {
-      "id": "P00237",
-      "name": "Jogador FOR-3",
-      "clubId": "BRAA_FOR",
-      "pos": "LB",
-      "age": 20,
-      "ovr": 70
-    },
-    {
-      "id": "P00238",
-      "name": "Jogador FOR-4",
-      "clubId": "BRAA_FOR",
-      "pos": "RW",
-      "age": 25,
-      "ovr": 66
-    },
-    {
-      "id": "P00239",
-      "name": "Jogador FOR-5",
-      "clubId": "BRAA_FOR",
-      "pos": "GK",
-      "age": 35,
-      "ovr": 66
-    },
-    {
-      "id": "P00240",
-      "name": "Jogador FOR-6",
-      "clubId": "BRAA_FOR",
-      "pos": "LB",
-      "age": 18,
-      "ovr": 72
-    },
-    {
-      "id": "P00241",
-      "name": "Jogador FOR-7",
-      "clubId": "BRAA_FOR",
-      "pos": "RB",
       "age": 29,
       "ovr": 69
     },
     {
-      "id": "P00242",
-      "name": "Jogador FOR-8",
-      "clubId": "BRAA_FOR",
+      "id": "P00212",
+      "name": "Praxedes",
+      "clubId": "BRAA_VAS",
+      "pos": "CM",
+      "age": 29,
+      "ovr": 68
+    },
+    {
+      "id": "P00213",
+      "name": "Adson",
+      "clubId": "BRAA_VAS",
+      "pos": "RW",
+      "age": 24,
+      "ovr": 78
+    },
+    {
+      "id": "P00214",
+      "name": "Gabriel Pec",
+      "clubId": "BRAA_VAS",
       "pos": "LW",
+      "age": 24,
+      "ovr": 78
+    },
+    {
+      "id": "P00215",
+      "name": "Clayton",
+      "clubId": "BRAA_VAS",
+      "pos": "ST",
+      "age": 25,
+      "ovr": 74
+    },
+    {
+      "id": "P00216",
+      "name": "Vegetti",
+      "clubId": "BRAA_VAS",
+      "pos": "ST",
+      "age": 36,
+      "ovr": 72
+    },
+    {
+      "id": "P00217",
+      "name": "Marcos Felipe",
+      "clubId": "BRAA_BAH",
+      "pos": "GK",
+      "age": 29,
+      "ovr": 68
+    },
+    {
+      "id": "P00218",
+      "name": "Danilo Fernandes",
+      "clubId": "BRAA_BAH",
+      "pos": "GK",
+      "age": 36,
+      "ovr": 58
+    },
+    {
+      "id": "P00219",
+      "name": "Kanu",
+      "clubId": "BRAA_BAH",
+      "pos": "CB",
+      "age": 28,
+      "ovr": 74
+    },
+    {
+      "id": "P00220",
+      "name": "Gilberto",
+      "clubId": "BRAA_BAH",
+      "pos": "RB",
+      "age": 31,
+      "ovr": 71
+    },
+    {
+      "id": "P00221",
+      "name": "Arias",
+      "clubId": "BRAA_BAH",
+      "pos": "RB",
+      "age": 26,
+      "ovr": 68
+    },
+    {
+      "id": "P00222",
+      "name": "Gabriel Xavier",
+      "clubId": "BRAA_BAH",
+      "pos": "CB",
       "age": 23,
+      "ovr": 65
+    },
+    {
+      "id": "P00223",
+      "name": "Rezende",
+      "clubId": "BRAA_BAH",
+      "pos": "CB",
+      "age": 30,
+      "ovr": 65
+    },
+    {
+      "id": "P00224",
+      "name": "Caio Roque",
+      "clubId": "BRAA_BAH",
+      "pos": "LB",
+      "age": 23,
+      "ovr": 65
+    },
+    {
+      "id": "P00225",
+      "name": "Caio Alexandre",
+      "clubId": "BRAA_BAH",
+      "pos": "CM",
+      "age": 26,
+      "ovr": 76
+    },
+    {
+      "id": "P00226",
+      "name": "Jean Lucas",
+      "clubId": "BRAA_BAH",
+      "pos": "DM",
+      "age": 26,
+      "ovr": 75
+    },
+    {
+      "id": "P00227",
+      "name": "Everton Ribeiro",
+      "clubId": "BRAA_BAH",
+      "pos": "AM",
+      "age": 36,
+      "ovr": 71
+    },
+    {
+      "id": "P00228",
+      "name": "Thaciano",
+      "clubId": "BRAA_BAH",
+      "pos": "CM",
+      "age": 30,
+      "ovr": 68
+    },
+    {
+      "id": "P00229",
+      "name": "Yago Felipe",
+      "clubId": "BRAA_BAH",
+      "pos": "DM",
+      "age": 29,
+      "ovr": 66
+    },
+    {
+      "id": "P00230",
+      "name": "Carlos De Pena",
+      "clubId": "BRAA_BAH",
+      "pos": "AM",
+      "age": 33,
+      "ovr": 65
+    },
+    {
+      "id": "P00231",
+      "name": "Biel",
+      "clubId": "BRAA_BAH",
+      "pos": "LW",
+      "age": 24,
+      "ovr": 78
+    },
+    {
+      "id": "P00232",
+      "name": "Luciano Rodríguez",
+      "clubId": "BRAA_BAH",
+      "pos": "ST",
+      "age": 22,
+      "ovr": 76
+    },
+    {
+      "id": "P00233",
+      "name": "Ademir",
+      "clubId": "BRAA_BAH",
+      "pos": "RW",
+      "age": 30,
+      "ovr": 75
+    },
+    {
+      "id": "P00234",
+      "name": "Everton Galdino",
+      "clubId": "BRAA_BAH",
+      "pos": "ST",
+      "age": 27,
+      "ovr": 74
+    },
+    {
+      "id": "P00235",
+      "name": "João Ricardo",
+      "clubId": "BRAA_FOR",
+      "pos": "GK",
+      "age": 36,
+      "ovr": 63
+    },
+    {
+      "id": "P00236",
+      "name": "Fernando Miguel",
+      "clubId": "BRAA_FOR",
+      "pos": "GK",
+      "age": 39,
+      "ovr": 58
+    },
+    {
+      "id": "P00237",
+      "name": "Brítez",
+      "clubId": "BRAA_FOR",
+      "pos": "CB",
+      "age": 32,
+      "ovr": 71
+    },
+    {
+      "id": "P00238",
+      "name": "Titi",
+      "clubId": "BRAA_FOR",
+      "pos": "CB",
+      "age": 36,
+      "ovr": 66
+    },
+    {
+      "id": "P00239",
+      "name": "Cardona",
+      "clubId": "BRAA_FOR",
+      "pos": "CB",
+      "age": 29,
+      "ovr": 65
+    },
+    {
+      "id": "P00240",
+      "name": "Tinga",
+      "clubId": "BRAA_FOR",
+      "pos": "RB",
+      "age": 30,
+      "ovr": 65
+    },
+    {
+      "id": "P00241",
+      "name": "Bruno Pacheco",
+      "clubId": "BRAA_FOR",
+      "pos": "LB",
+      "age": 32,
+      "ovr": 65
+    },
+    {
+      "id": "P00242",
+      "name": "Dudu",
+      "clubId": "BRAA_FOR",
+      "pos": "RB",
+      "age": 26,
       "ovr": 62
     },
     {
       "id": "P00243",
-      "name": "Jogador FOR-9",
+      "name": "Calebe",
       "clubId": "BRAA_FOR",
-      "pos": "CM",
-      "age": 17,
-      "ovr": 62
+      "pos": "AM",
+      "age": 25,
+      "ovr": 78
     },
     {
       "id": "P00244",
-      "name": "Jogador FOR-10",
+      "name": "Pochettino",
       "clubId": "BRAA_FOR",
-      "pos": "GK",
-      "age": 31,
-      "ovr": 69
+      "pos": "AM",
+      "age": 29,
+      "ovr": 75
     },
     {
       "id": "P00245",
-      "name": "Jogador FOR-11",
+      "name": "Zé Welison",
       "clubId": "BRAA_FOR",
-      "pos": "LB",
-      "age": 27,
-      "ovr": 67
+      "pos": "DM",
+      "age": 30,
+      "ovr": 72
     },
     {
       "id": "P00246",
-      "name": "Jogador FOR-12",
+      "name": "Rossetto",
       "clubId": "BRAA_FOR",
-      "pos": "CM",
-      "age": 31,
+      "pos": "DM",
+      "age": 27,
       "ovr": 69
     },
     {
       "id": "P00247",
-      "name": "Jogador FOR-13",
+      "name": "Lucas Sasha",
       "clubId": "BRAA_FOR",
-      "pos": "RW",
-      "age": 34,
-      "ovr": 66
-    },
-    {
-      "id": "P00248",
-      "name": "Jogador FOR-14",
-      "clubId": "BRAA_FOR",
-      "pos": "ST",
-      "age": 26,
+      "pos": "CM",
+      "age": 35,
       "ovr": 63
     },
     {
-      "id": "P00249",
-      "name": "Jogador FOR-15",
+      "id": "P00248",
+      "name": "Moisés",
       "clubId": "BRAA_FOR",
-      "pos": "RB",
-      "age": 20,
-      "ovr": 61
+      "pos": "LW",
+      "age": 28,
+      "ovr": 78
+    },
+    {
+      "id": "P00249",
+      "name": "Yago Pikachu",
+      "clubId": "BRAA_FOR",
+      "pos": "RW",
+      "age": 31,
+      "ovr": 75
     },
     {
       "id": "P00250",
-      "name": "Jogador FOR-16",
+      "name": "Juan Martín Lucero",
       "clubId": "BRAA_FOR",
-      "pos": "AM",
-      "age": 32,
-      "ovr": 66
+      "pos": "ST",
+      "age": 33,
+      "ovr": 72
     },
     {
       "id": "P00251",
-      "name": "Jogador FOR-17",
+      "name": "Romero",
       "clubId": "BRAA_FOR",
       "pos": "ST",
-      "age": 20,
-      "ovr": 66
+      "age": 32,
+      "ovr": 71
     },
     {
       "id": "P00252",
-      "name": "Jogador FOR-18",
+      "name": "Renato Kayzer",
       "clubId": "BRAA_FOR",
-      "pos": "AM",
-      "age": 33,
-      "ovr": 72
+      "pos": "ST",
+      "age": 29,
+      "ovr": 71
     },
     {
       "id": "P00253",
@@ -2162,291 +2162,291 @@
     },
     {
       "id": "P00271",
-      "name": "Jogador CAP-1",
-      "clubId": "BRAA_CAP",
-      "pos": "RB",
-      "age": 19,
-      "ovr": 72
-    },
-    {
-      "id": "P00272",
-      "name": "Jogador CAP-2",
-      "clubId": "BRAA_CAP",
-      "pos": "CB",
-      "age": 26,
-      "ovr": 65
-    },
-    {
-      "id": "P00273",
-      "name": "Jogador CAP-3",
-      "clubId": "BRAA_CAP",
-      "pos": "LB",
-      "age": 33,
-      "ovr": 59
-    },
-    {
-      "id": "P00274",
-      "name": "Jogador CAP-4",
-      "clubId": "BRAA_CAP",
-      "pos": "AM",
-      "age": 19,
-      "ovr": 69
-    },
-    {
-      "id": "P00275",
-      "name": "Jogador CAP-5",
-      "clubId": "BRAA_CAP",
-      "pos": "DM",
-      "age": 23,
-      "ovr": 64
-    },
-    {
-      "id": "P00276",
-      "name": "Jogador CAP-6",
-      "clubId": "BRAA_CAP",
-      "pos": "LB",
-      "age": 31,
-      "ovr": 63
-    },
-    {
-      "id": "P00277",
-      "name": "Jogador CAP-7",
-      "clubId": "BRAA_CAP",
-      "pos": "LW",
-      "age": 17,
-      "ovr": 68
-    },
-    {
-      "id": "P00278",
-      "name": "Jogador CAP-8",
-      "clubId": "BRAA_CAP",
-      "pos": "LB",
-      "age": 28,
-      "ovr": 60
-    },
-    {
-      "id": "P00279",
-      "name": "Jogador CAP-9",
-      "clubId": "BRAA_CAP",
-      "pos": "RB",
-      "age": 26,
-      "ovr": 66
-    },
-    {
-      "id": "P00280",
-      "name": "Jogador CAP-10",
+      "name": "Bento",
       "clubId": "BRAA_CAP",
       "pos": "GK",
-      "age": 27,
-      "ovr": 60
-    },
-    {
-      "id": "P00281",
-      "name": "Jogador CAP-11",
-      "clubId": "BRAA_CAP",
-      "pos": "DM",
-      "age": 29,
-      "ovr": 63
-    },
-    {
-      "id": "P00282",
-      "name": "Jogador CAP-12",
-      "clubId": "BRAA_CAP",
-      "pos": "CB",
-      "age": 22,
-      "ovr": 72
-    },
-    {
-      "id": "P00283",
-      "name": "Jogador CAP-13",
-      "clubId": "BRAA_CAP",
-      "pos": "RW",
-      "age": 24,
+      "age": 25,
       "ovr": 71
     },
     {
-      "id": "P00284",
-      "name": "Jogador CAP-14",
+      "id": "P00272",
+      "name": "Mycael",
+      "clubId": "BRAA_CAP",
+      "pos": "GK",
+      "age": 20,
+      "ovr": 62
+    },
+    {
+      "id": "P00273",
+      "name": "Khellven",
+      "clubId": "BRAA_CAP",
+      "pos": "RB",
+      "age": 23,
+      "ovr": 71
+    },
+    {
+      "id": "P00274",
+      "name": "Pedro Henrique",
+      "clubId": "BRAA_CAP",
+      "pos": "CB",
+      "age": 28,
+      "ovr": 68
+    },
+    {
+      "id": "P00275",
+      "name": "Esquivel",
       "clubId": "BRAA_CAP",
       "pos": "LB",
-      "age": 29,
+      "age": 25,
+      "ovr": 68
+    },
+    {
+      "id": "P00276",
+      "name": "Thiago Heleno",
+      "clubId": "BRAA_CAP",
+      "pos": "CB",
+      "age": 36,
+      "ovr": 66
+    },
+    {
+      "id": "P00277",
+      "name": "Kaique Rocha",
+      "clubId": "BRAA_CAP",
+      "pos": "CB",
+      "age": 23,
+      "ovr": 65
+    },
+    {
+      "id": "P00278",
+      "name": "Madson",
+      "clubId": "BRAA_CAP",
+      "pos": "RB",
+      "age": 32,
+      "ovr": 65
+    },
+    {
+      "id": "P00279",
+      "name": "Erick",
+      "clubId": "BRAA_CAP",
+      "pos": "DM",
+      "age": 27,
+      "ovr": 75
+    },
+    {
+      "id": "P00280",
+      "name": "Zapelli",
+      "clubId": "BRAA_CAP",
+      "pos": "AM",
+      "age": 22,
+      "ovr": 75
+    },
+    {
+      "id": "P00281",
+      "name": "Cuéllar",
+      "clubId": "BRAA_CAP",
+      "pos": "CM",
+      "age": 32,
+      "ovr": 74
+    },
+    {
+      "id": "P00282",
+      "name": "Hugo Moura",
+      "clubId": "BRAA_CAP",
+      "pos": "CM",
+      "age": 26,
+      "ovr": 71
+    },
+    {
+      "id": "P00283",
+      "name": "Christian",
+      "clubId": "BRAA_CAP",
+      "pos": "CM",
+      "age": 23,
+      "ovr": 68
+    },
+    {
+      "id": "P00284",
+      "name": "Fernandinho",
+      "clubId": "BRAA_CAP",
+      "pos": "DM",
+      "age": 39,
       "ovr": 68
     },
     {
       "id": "P00285",
-      "name": "Jogador CAP-15",
+      "name": "Canobbio",
       "clubId": "BRAA_CAP",
       "pos": "LW",
-      "age": 20,
-      "ovr": 72
+      "age": 26,
+      "ovr": 78
     },
     {
       "id": "P00286",
-      "name": "Jogador CAP-16",
+      "name": "Vitor Roque",
       "clubId": "BRAA_CAP",
-      "pos": "LW",
-      "age": 33,
-      "ovr": 61
+      "pos": "ST",
+      "age": 19,
+      "ovr": 78
     },
     {
       "id": "P00287",
-      "name": "Jogador CAP-17",
+      "name": "Mastriani",
       "clubId": "BRAA_CAP",
       "pos": "ST",
-      "age": 23,
-      "ovr": 60
+      "age": 30,
+      "ovr": 76
     },
     {
       "id": "P00288",
-      "name": "Jogador CAP-18",
+      "name": "Lucas Di Yorio",
       "clubId": "BRAA_CAP",
       "pos": "ST",
-      "age": 31,
-      "ovr": 66
+      "age": 27,
+      "ovr": 74
     },
     {
       "id": "P00289",
-      "name": "Jogador RBB-1",
+      "name": "Cleiton",
       "clubId": "BRAA_RBB",
-      "pos": "ST",
-      "age": 20,
-      "ovr": 64
-    },
-    {
-      "id": "P00290",
-      "name": "Jogador RBB-2",
-      "clubId": "BRAA_RBB",
-      "pos": "LB",
-      "age": 35,
-      "ovr": 68
-    },
-    {
-      "id": "P00291",
-      "name": "Jogador RBB-3",
-      "clubId": "BRAA_RBB",
-      "pos": "LB",
-      "age": 26,
-      "ovr": 70
-    },
-    {
-      "id": "P00292",
-      "name": "Jogador RBB-4",
-      "clubId": "BRAA_RBB",
-      "pos": "LW",
-      "age": 24,
-      "ovr": 57
-    },
-    {
-      "id": "P00293",
-      "name": "Jogador RBB-5",
-      "clubId": "BRAA_RBB",
-      "pos": "LW",
-      "age": 18,
+      "pos": "GK",
+      "age": 27,
       "ovr": 71
     },
     {
-      "id": "P00294",
-      "name": "Jogador RBB-6",
-      "clubId": "BRAA_RBB",
-      "pos": "LB",
-      "age": 22,
-      "ovr": 67
-    },
-    {
-      "id": "P00295",
-      "name": "Jogador RBB-7",
-      "clubId": "BRAA_RBB",
-      "pos": "CB",
-      "age": 23,
-      "ovr": 70
-    },
-    {
-      "id": "P00296",
-      "name": "Jogador RBB-8",
+      "id": "P00290",
+      "name": "Lucão",
       "clubId": "BRAA_RBB",
       "pos": "GK",
-      "age": 30,
-      "ovr": 67
-    },
-    {
-      "id": "P00297",
-      "name": "Jogador RBB-9",
-      "clubId": "BRAA_RBB",
-      "pos": "LW",
       "age": 23,
-      "ovr": 62
-    },
-    {
-      "id": "P00298",
-      "name": "Jogador RBB-10",
-      "clubId": "BRAA_RBB",
-      "pos": "LB",
-      "age": 22,
-      "ovr": 66
-    },
-    {
-      "id": "P00299",
-      "name": "Jogador RBB-11",
-      "clubId": "BRAA_RBB",
-      "pos": "ST",
-      "age": 23,
-      "ovr": 65
-    },
-    {
-      "id": "P00300",
-      "name": "Jogador RBB-12",
-      "clubId": "BRAA_RBB",
-      "pos": "DM",
-      "age": 22,
-      "ovr": 61
-    },
-    {
-      "id": "P00301",
-      "name": "Jogador RBB-13",
-      "clubId": "BRAA_RBB",
-      "pos": "AM",
-      "age": 27,
-      "ovr": 65
-    },
-    {
-      "id": "P00302",
-      "name": "Jogador RBB-14",
-      "clubId": "BRAA_RBB",
-      "pos": "DM",
-      "age": 21,
-      "ovr": 70
-    },
-    {
-      "id": "P00303",
-      "name": "Jogador RBB-15",
-      "clubId": "BRAA_RBB",
-      "pos": "DM",
-      "age": 24,
-      "ovr": 55
-    },
-    {
-      "id": "P00304",
-      "name": "Jogador RBB-16",
-      "clubId": "BRAA_RBB",
-      "pos": "AM",
-      "age": 27,
-      "ovr": 67
-    },
-    {
-      "id": "P00305",
-      "name": "Jogador RBB-17",
-      "clubId": "BRAA_RBB",
-      "pos": "LB",
-      "age": 33,
       "ovr": 56
     },
     {
-      "id": "P00306",
-      "name": "Jogador RBB-18",
+      "id": "P00291",
+      "name": "Léo Ortiz",
       "clubId": "BRAA_RBB",
       "pos": "CB",
-      "age": 17,
-      "ovr": 67
+      "age": 29,
+      "ovr": 76
+    },
+    {
+      "id": "P00292",
+      "name": "Juninho Capixaba",
+      "clubId": "BRAA_RBB",
+      "pos": "LB",
+      "age": 27,
+      "ovr": 74
+    },
+    {
+      "id": "P00293",
+      "name": "Eduardo Santos",
+      "clubId": "BRAA_RBB",
+      "pos": "CB",
+      "age": 26,
+      "ovr": 68
+    },
+    {
+      "id": "P00294",
+      "name": "Gustavo Henrique",
+      "clubId": "BRAA_RBB",
+      "pos": "CB",
+      "age": 25,
+      "ovr": 68
+    },
+    {
+      "id": "P00295",
+      "name": "Andrés Hurtado",
+      "clubId": "BRAA_RBB",
+      "pos": "RB",
+      "age": 24,
+      "ovr": 68
+    },
+    {
+      "id": "P00296",
+      "name": "Luan Patrick",
+      "clubId": "BRAA_RBB",
+      "pos": "CB",
+      "age": 23,
+      "ovr": 65
+    },
+    {
+      "id": "P00297",
+      "name": "Lincoln",
+      "clubId": "BRAA_RBB",
+      "pos": "CM",
+      "age": 26,
+      "ovr": 76
+    },
+    {
+      "id": "P00298",
+      "name": "Vitinho",
+      "clubId": "BRAA_RBB",
+      "pos": "AM",
+      "age": 24,
+      "ovr": 72
+    },
+    {
+      "id": "P00299",
+      "name": "Jadsom Silva",
+      "clubId": "BRAA_RBB",
+      "pos": "DM",
+      "age": 23,
+      "ovr": 72
+    },
+    {
+      "id": "P00300",
+      "name": "Mateus Fernandes",
+      "clubId": "BRAA_RBB",
+      "pos": "CM",
+      "age": 26,
+      "ovr": 71
+    },
+    {
+      "id": "P00301",
+      "name": "Raul",
+      "clubId": "BRAA_RBB",
+      "pos": "DM",
+      "age": 27,
+      "ovr": 69
+    },
+    {
+      "id": "P00302",
+      "name": "Thiago Borbas",
+      "clubId": "BRAA_RBB",
+      "pos": "AM",
+      "age": 22,
+      "ovr": 69
+    },
+    {
+      "id": "P00303",
+      "name": "Alerrandro",
+      "clubId": "BRAA_RBB",
+      "pos": "ST",
+      "age": 25,
+      "ovr": 79
+    },
+    {
+      "id": "P00304",
+      "name": "Helinho",
+      "clubId": "BRAA_RBB",
+      "pos": "LW",
+      "age": 25,
+      "ovr": 78
+    },
+    {
+      "id": "P00305",
+      "name": "Bruno Tubarão",
+      "clubId": "BRAA_RBB",
+      "pos": "ST",
+      "age": 28,
+      "ovr": 74
+    },
+    {
+      "id": "P00306",
+      "name": "Everton",
+      "clubId": "BRAA_RBB",
+      "pos": "RW",
+      "age": 26,
+      "ovr": 72
     },
     {
       "id": "P00307",
@@ -2594,291 +2594,291 @@
     },
     {
       "id": "P00325",
-      "name": "Jogador CUI-1",
+      "name": "Walter",
       "clubId": "BRAA_CUI",
-      "pos": "ST",
-      "age": 21,
-      "ovr": 67
+      "pos": "GK",
+      "age": 37,
+      "ovr": 63
     },
     {
       "id": "P00326",
-      "name": "Jogador CUI-2",
-      "clubId": "BRAA_CUI",
-      "pos": "CB",
-      "age": 28,
-      "ovr": 65
-    },
-    {
-      "id": "P00327",
-      "name": "Jogador CUI-3",
-      "clubId": "BRAA_CUI",
-      "pos": "AM",
-      "age": 22,
-      "ovr": 68
-    },
-    {
-      "id": "P00328",
-      "name": "Jogador CUI-4",
-      "clubId": "BRAA_CUI",
-      "pos": "RB",
-      "age": 34,
-      "ovr": 62
-    },
-    {
-      "id": "P00329",
-      "name": "Jogador CUI-5",
-      "clubId": "BRAA_CUI",
-      "pos": "ST",
-      "age": 30,
-      "ovr": 56
-    },
-    {
-      "id": "P00330",
-      "name": "Jogador CUI-6",
-      "clubId": "BRAA_CUI",
-      "pos": "DM",
-      "age": 18,
-      "ovr": 67
-    },
-    {
-      "id": "P00331",
-      "name": "Jogador CUI-7",
-      "clubId": "BRAA_CUI",
-      "pos": "DM",
-      "age": 32,
-      "ovr": 62
-    },
-    {
-      "id": "P00332",
-      "name": "Jogador CUI-8",
-      "clubId": "BRAA_CUI",
-      "pos": "LB",
-      "age": 30,
-      "ovr": 58
-    },
-    {
-      "id": "P00333",
-      "name": "Jogador CUI-9",
+      "name": "João Carlos",
       "clubId": "BRAA_CUI",
       "pos": "GK",
-      "age": 25,
-      "ovr": 60
-    },
-    {
-      "id": "P00334",
-      "name": "Jogador CUI-10",
-      "clubId": "BRAA_CUI",
-      "pos": "RW",
-      "age": 21,
-      "ovr": 60
-    },
-    {
-      "id": "P00335",
-      "name": "Jogador CUI-11",
-      "clubId": "BRAA_CUI",
-      "pos": "CB",
-      "age": 34,
-      "ovr": 59
-    },
-    {
-      "id": "P00336",
-      "name": "Jogador CUI-12",
-      "clubId": "BRAA_CUI",
-      "pos": "AM",
-      "age": 32,
-      "ovr": 64
-    },
-    {
-      "id": "P00337",
-      "name": "Jogador CUI-13",
-      "clubId": "BRAA_CUI",
-      "pos": "ST",
-      "age": 23,
-      "ovr": 55
-    },
-    {
-      "id": "P00338",
-      "name": "Jogador CUI-14",
-      "clubId": "BRAA_CUI",
-      "pos": "ST",
-      "age": 32,
-      "ovr": 68
-    },
-    {
-      "id": "P00339",
-      "name": "Jogador CUI-15",
-      "clubId": "BRAA_CUI",
-      "pos": "CM",
-      "age": 29,
-      "ovr": 62
-    },
-    {
-      "id": "P00340",
-      "name": "Jogador CUI-16",
-      "clubId": "BRAA_CUI",
-      "pos": "LB",
-      "age": 18,
-      "ovr": 53
-    },
-    {
-      "id": "P00341",
-      "name": "Jogador CUI-17",
-      "clubId": "BRAA_CUI",
-      "pos": "AM",
-      "age": 24,
-      "ovr": 69
-    },
-    {
-      "id": "P00342",
-      "name": "Jogador CUI-18",
-      "clubId": "BRAA_CUI",
-      "pos": "LB",
-      "age": 23,
-      "ovr": 60
-    },
-    {
-      "id": "P00343",
-      "name": "Jogador VIT-1",
-      "clubId": "BRAA_VIT",
-      "pos": "RB",
-      "age": 31,
-      "ovr": 61
-    },
-    {
-      "id": "P00344",
-      "name": "Jogador VIT-2",
-      "clubId": "BRAA_VIT",
-      "pos": "RW",
-      "age": 25,
-      "ovr": 67
-    },
-    {
-      "id": "P00345",
-      "name": "Jogador VIT-3",
-      "clubId": "BRAA_VIT",
-      "pos": "AM",
-      "age": 25,
-      "ovr": 55
-    },
-    {
-      "id": "P00346",
-      "name": "Jogador VIT-4",
-      "clubId": "BRAA_VIT",
-      "pos": "LB",
-      "age": 18,
-      "ovr": 61
-    },
-    {
-      "id": "P00347",
-      "name": "Jogador VIT-5",
-      "clubId": "BRAA_VIT",
-      "pos": "RB",
-      "age": 22,
-      "ovr": 52
-    },
-    {
-      "id": "P00348",
-      "name": "Jogador VIT-6",
-      "clubId": "BRAA_VIT",
-      "pos": "ST",
-      "age": 25,
-      "ovr": 65
-    },
-    {
-      "id": "P00349",
-      "name": "Jogador VIT-7",
-      "clubId": "BRAA_VIT",
-      "pos": "ST",
-      "age": 23,
-      "ovr": 58
-    },
-    {
-      "id": "P00350",
-      "name": "Jogador VIT-8",
-      "clubId": "BRAA_VIT",
-      "pos": "DM",
-      "age": 24,
-      "ovr": 65
-    },
-    {
-      "id": "P00351",
-      "name": "Jogador VIT-9",
-      "clubId": "BRAA_VIT",
-      "pos": "GK",
-      "age": 24,
-      "ovr": 61
-    },
-    {
-      "id": "P00352",
-      "name": "Jogador VIT-10",
-      "clubId": "BRAA_VIT",
-      "pos": "CB",
-      "age": 20,
-      "ovr": 68
-    },
-    {
-      "id": "P00353",
-      "name": "Jogador VIT-11",
-      "clubId": "BRAA_VIT",
-      "pos": "DM",
-      "age": 22,
-      "ovr": 57
-    },
-    {
-      "id": "P00354",
-      "name": "Jogador VIT-12",
-      "clubId": "BRAA_VIT",
-      "pos": "LB",
-      "age": 28,
-      "ovr": 59
-    },
-    {
-      "id": "P00355",
-      "name": "Jogador VIT-13",
-      "clubId": "BRAA_VIT",
-      "pos": "LW",
-      "age": 34,
-      "ovr": 65
-    },
-    {
-      "id": "P00356",
-      "name": "Jogador VIT-14",
-      "clubId": "BRAA_VIT",
-      "pos": "ST",
-      "age": 33,
-      "ovr": 56
-    },
-    {
-      "id": "P00357",
-      "name": "Jogador VIT-15",
-      "clubId": "BRAA_VIT",
-      "pos": "ST",
-      "age": 35,
-      "ovr": 53
-    },
-    {
-      "id": "P00358",
-      "name": "Jogador VIT-16",
-      "clubId": "BRAA_VIT",
-      "pos": "CM",
-      "age": 18,
-      "ovr": 56
-    },
-    {
-      "id": "P00359",
-      "name": "Jogador VIT-17",
-      "clubId": "BRAA_VIT",
-      "pos": "AM",
       "age": 27,
       "ovr": 59
     },
     {
-      "id": "P00360",
-      "name": "Jogador VIT-18",
+      "id": "P00327",
+      "name": "Alan Empereur",
+      "clubId": "BRAA_CUI",
+      "pos": "CB",
+      "age": 30,
+      "ovr": 71
+    },
+    {
+      "id": "P00328",
+      "name": "Matheus Alexandre",
+      "clubId": "BRAA_CUI",
+      "pos": "RB",
+      "age": 25,
+      "ovr": 68
+    },
+    {
+      "id": "P00329",
+      "name": "Marllon",
+      "clubId": "BRAA_CUI",
+      "pos": "CB",
+      "age": 32,
+      "ovr": 65
+    },
+    {
+      "id": "P00330",
+      "name": "Rikelme",
+      "clubId": "BRAA_CUI",
+      "pos": "CB",
+      "age": 22,
+      "ovr": 65
+    },
+    {
+      "id": "P00331",
+      "name": "Railan",
+      "clubId": "BRAA_CUI",
+      "pos": "RB",
+      "age": 26,
+      "ovr": 62
+    },
+    {
+      "id": "P00332",
+      "name": "Raniele",
+      "clubId": "BRAA_CUI",
+      "pos": "DM",
+      "age": 27,
+      "ovr": 75
+    },
+    {
+      "id": "P00333",
+      "name": "Fernando Sobral",
+      "clubId": "BRAA_CUI",
+      "pos": "CM",
+      "age": 30,
+      "ovr": 74
+    },
+    {
+      "id": "P00334",
+      "name": "Pepê",
+      "clubId": "BRAA_CUI",
+      "pos": "AM",
+      "age": 27,
+      "ovr": 72
+    },
+    {
+      "id": "P00335",
+      "name": "Lucas Mineiro",
+      "clubId": "BRAA_CUI",
+      "pos": "CM",
+      "age": 28,
+      "ovr": 71
+    },
+    {
+      "id": "P00336",
+      "name": "Denilson",
+      "clubId": "BRAA_CUI",
+      "pos": "DM",
+      "age": 24,
+      "ovr": 69
+    },
+    {
+      "id": "P00337",
+      "name": "Max",
+      "clubId": "BRAA_CUI",
+      "pos": "AM",
+      "age": 29,
+      "ovr": 69
+    },
+    {
+      "id": "P00338",
+      "name": "Isidro Pitta",
+      "clubId": "BRAA_CUI",
+      "pos": "ST",
+      "age": 25,
+      "ovr": 79
+    },
+    {
+      "id": "P00339",
+      "name": "Derik Lacerda",
+      "clubId": "BRAA_CUI",
+      "pos": "ST",
+      "age": 25,
+      "ovr": 74
+    },
+    {
+      "id": "P00340",
+      "name": "Matheusinho",
+      "clubId": "BRAA_CUI",
+      "pos": "ST",
+      "age": 26,
+      "ovr": 74
+    },
+    {
+      "id": "P00341",
+      "name": "Deyverson",
+      "clubId": "BRAA_CUI",
+      "pos": "ST",
+      "age": 34,
+      "ovr": 72
+    },
+    {
+      "id": "P00342",
+      "name": "Clayson",
+      "clubId": "BRAA_CUI",
+      "pos": "LW",
+      "age": 29,
+      "ovr": 69
+    },
+    {
+      "id": "P00343",
+      "name": "Lucas Arcanjo",
+      "clubId": "BRAA_VIT",
+      "pos": "GK",
+      "age": 26,
+      "ovr": 71
+    },
+    {
+      "id": "P00344",
+      "name": "Thiago Rodrigues",
+      "clubId": "BRAA_VIT",
+      "pos": "GK",
+      "age": 35,
+      "ovr": 58
+    },
+    {
+      "id": "P00345",
+      "name": "Wagner Leonardo",
       "clubId": "BRAA_VIT",
       "pos": "CB",
-      "age": 21,
-      "ovr": 63
+      "age": 25,
+      "ovr": 74
+    },
+    {
+      "id": "P00346",
+      "name": "Lucas Esteves",
+      "clubId": "BRAA_VIT",
+      "pos": "LB",
+      "age": 25,
+      "ovr": 74
+    },
+    {
+      "id": "P00347",
+      "name": "Camutanga",
+      "clubId": "BRAA_VIT",
+      "pos": "CB",
+      "age": 31,
+      "ovr": 71
+    },
+    {
+      "id": "P00348",
+      "name": "Raí",
+      "clubId": "BRAA_VIT",
+      "pos": "RB",
+      "age": 24,
+      "ovr": 68
+    },
+    {
+      "id": "P00349",
+      "name": "Zeca",
+      "clubId": "BRAA_VIT",
+      "pos": "CB",
+      "age": 30,
+      "ovr": 65
+    },
+    {
+      "id": "P00350",
+      "name": "Rodrigo Andrade",
+      "clubId": "BRAA_VIT",
+      "pos": "DM",
+      "age": 27,
+      "ovr": 75
+    },
+    {
+      "id": "P00351",
+      "name": "Matheuzinho",
+      "clubId": "BRAA_VIT",
+      "pos": "AM",
+      "age": 27,
+      "ovr": 72
+    },
+    {
+      "id": "P00352",
+      "name": "Matheusinho",
+      "clubId": "BRAA_VIT",
+      "pos": "CM",
+      "age": 26,
+      "ovr": 71
+    },
+    {
+      "id": "P00353",
+      "name": "Dudu",
+      "clubId": "BRAA_VIT",
+      "pos": "DM",
+      "age": 24,
+      "ovr": 69
+    },
+    {
+      "id": "P00354",
+      "name": "Gegê",
+      "clubId": "BRAA_VIT",
+      "pos": "AM",
+      "age": 31,
+      "ovr": 69
+    },
+    {
+      "id": "P00355",
+      "name": "Léo Naldi",
+      "clubId": "BRAA_VIT",
+      "pos": "CM",
+      "age": 22,
+      "ovr": 68
+    },
+    {
+      "id": "P00356",
+      "name": "Alerrandro",
+      "clubId": "BRAA_VIT",
+      "pos": "ST",
+      "age": 25,
+      "ovr": 79
+    },
+    {
+      "id": "P00357",
+      "name": "Janderson",
+      "clubId": "BRAA_VIT",
+      "pos": "ST",
+      "age": 25,
+      "ovr": 74
+    },
+    {
+      "id": "P00358",
+      "name": "Iury Castilho",
+      "clubId": "BRAA_VIT",
+      "pos": "LW",
+      "age": 28,
+      "ovr": 72
+    },
+    {
+      "id": "P00359",
+      "name": "Lucas Braga",
+      "clubId": "BRAA_VIT",
+      "pos": "RW",
+      "age": 27,
+      "ovr": 72
+    },
+    {
+      "id": "P00360",
+      "name": "Wellington Rato",
+      "clubId": "BRAA_VIT",
+      "pos": "ST",
+      "age": 31,
+      "ovr": 71
     },
     {
       "id": "P00361",
@@ -3602,147 +3602,147 @@
     },
     {
       "id": "P00451",
-      "name": "Jogador JUV-1",
+      "name": "Thiago Couto",
       "clubId": "BRAB_JUV",
-      "pos": "CB",
-      "age": 33,
-      "ovr": 78
+      "pos": "GK",
+      "age": 25,
+      "ovr": 65
     },
     {
       "id": "P00452",
-      "name": "Jogador JUV-2",
+      "name": "Danilo Boza",
       "clubId": "BRAB_JUV",
-      "pos": "DM",
-      "age": 20,
-      "ovr": 77
+      "pos": "CB",
+      "age": 26,
+      "ovr": 68
     },
     {
       "id": "P00453",
-      "name": "Jogador JUV-3",
+      "name": "Zé Marcos",
       "clubId": "BRAB_JUV",
-      "pos": "LW",
-      "age": 27,
-      "ovr": 67
+      "pos": "CB",
+      "age": 26,
+      "ovr": 68
     },
     {
       "id": "P00454",
-      "name": "Jogador JUV-4",
+      "name": "Luis Oyama",
       "clubId": "BRAB_JUV",
-      "pos": "RW",
-      "age": 17,
-      "ovr": 78
+      "pos": "RB",
+      "age": 27,
+      "ovr": 68
     },
     {
       "id": "P00455",
-      "name": "Jogador JUV-5",
+      "name": "Felipinho",
       "clubId": "BRAB_JUV",
-      "pos": "AM",
-      "age": 33,
-      "ovr": 75
+      "pos": "LB",
+      "age": 27,
+      "ovr": 68
     },
     {
       "id": "P00456",
-      "name": "Jogador JUV-6",
+      "name": "Rodrigo Sam",
       "clubId": "BRAB_JUV",
-      "pos": "DM",
-      "age": 25,
-      "ovr": 76
+      "pos": "CB",
+      "age": 29,
+      "ovr": 65
     },
     {
       "id": "P00457",
-      "name": "Jogador JUV-7",
+      "name": "Ewerthon",
       "clubId": "BRAB_JUV",
-      "pos": "LB",
-      "age": 24,
-      "ovr": 81
+      "pos": "RB",
+      "age": 22,
+      "ovr": 65
     },
     {
       "id": "P00458",
-      "name": "Jogador JUV-8",
+      "name": "Marcos Vinícius",
       "clubId": "BRAB_JUV",
-      "pos": "LB",
-      "age": 25,
-      "ovr": 77
+      "pos": "AM",
+      "age": 24,
+      "ovr": 72
     },
     {
       "id": "P00459",
-      "name": "Jogador JUV-9",
+      "name": "Jadson",
       "clubId": "BRAB_JUV",
-      "pos": "LB",
-      "age": 29,
-      "ovr": 67
+      "pos": "DM",
+      "age": 30,
+      "ovr": 72
     },
     {
       "id": "P00460",
-      "name": "Jogador JUV-10",
+      "name": "Mandaca",
       "clubId": "BRAB_JUV",
-      "pos": "ST",
-      "age": 24,
-      "ovr": 78
+      "pos": "CM",
+      "age": 27,
+      "ovr": 71
     },
     {
       "id": "P00461",
-      "name": "Jogador JUV-11",
+      "name": "Lucas Fernandes",
       "clubId": "BRAB_JUV",
-      "pos": "LB",
-      "age": 25,
-      "ovr": 80
+      "pos": "CM",
+      "age": 26,
+      "ovr": 71
     },
     {
       "id": "P00462",
-      "name": "Jogador JUV-12",
+      "name": "Jean Irmer",
       "clubId": "BRAB_JUV",
-      "pos": "CB",
-      "age": 31,
-      "ovr": 71
-    },
-    {
-      "id": "P00463",
-      "name": "Jogador JUV-13",
-      "clubId": "BRAB_JUV",
-      "pos": "CM",
-      "age": 20,
+      "pos": "DM",
+      "age": 29,
       "ovr": 66
     },
     {
-      "id": "P00464",
-      "name": "Jogador JUV-14",
+      "id": "P00463",
+      "name": "Nenê",
       "clubId": "BRAB_JUV",
-      "pos": "ST",
-      "age": 19,
-      "ovr": 71
+      "pos": "AM",
+      "age": 43,
+      "ovr": 65
+    },
+    {
+      "id": "P00464",
+      "name": "Erick Farias",
+      "clubId": "BRAB_JUV",
+      "pos": "LW",
+      "age": 27,
+      "ovr": 72
     },
     {
       "id": "P00465",
-      "name": "Jogador JUV-15",
+      "name": "Edson Carioca",
       "clubId": "BRAB_JUV",
-      "pos": "RW",
-      "age": 23,
-      "ovr": 70
+      "pos": "LW",
+      "age": 26,
+      "ovr": 72
     },
     {
       "id": "P00466",
-      "name": "Jogador JUV-16",
+      "name": "Rafael Bilu",
       "clubId": "BRAB_JUV",
-      "pos": "LB",
+      "pos": "RW",
       "age": 25,
-      "ovr": 70
+      "ovr": 72
     },
     {
       "id": "P00467",
-      "name": "Jogador JUV-17",
+      "name": "Léo Gamalho",
       "clubId": "BRAB_JUV",
-      "pos": "GK",
-      "age": 34,
-      "ovr": 81
+      "pos": "ST",
+      "age": 38,
+      "ovr": 72
     },
     {
       "id": "P00468",
-      "name": "Jogador JUV-18",
+      "name": "Matheus Peixoto",
       "clubId": "BRAB_JUV",
-      "pos": "RW",
-      "age": 17,
-      "ovr": 68
+      "pos": "ST",
+      "age": 29,
+      "ovr": 71
     },
     {
       "id": "P00469",
@@ -11519,6 +11519,1014 @@
       "pos": "DM",
       "age": 29,
       "ovr": 64
+    },
+    {
+      "id": "P01441",
+      "name": "Ronaldo",
+      "clubId": "BRAB_ATG",
+      "pos": "GK",
+      "age": 28,
+      "ovr": 71
+    },
+    {
+      "id": "P01442",
+      "name": "Jean",
+      "clubId": "BRAB_ATG",
+      "pos": "GK",
+      "age": 29,
+      "ovr": 56
+    },
+    {
+      "id": "P01443",
+      "name": "Alix Vinícius",
+      "clubId": "BRAB_ATG",
+      "pos": "CB",
+      "age": 25,
+      "ovr": 68
+    },
+    {
+      "id": "P01444",
+      "name": "Adriano Martins",
+      "clubId": "BRAB_ATG",
+      "pos": "CB",
+      "age": 26,
+      "ovr": 68
+    },
+    {
+      "id": "P01445",
+      "name": "Bruno Tubarão",
+      "clubId": "BRAB_ATG",
+      "pos": "RB",
+      "age": 28,
+      "ovr": 68
+    },
+    {
+      "id": "P01446",
+      "name": "Guilherme Romão",
+      "clubId": "BRAB_ATG",
+      "pos": "LB",
+      "age": 26,
+      "ovr": 68
+    },
+    {
+      "id": "P01447",
+      "name": "Luiz Felipe",
+      "clubId": "BRAB_ATG",
+      "pos": "CB",
+      "age": 31,
+      "ovr": 65
+    },
+    {
+      "id": "P01448",
+      "name": "Maguinho",
+      "clubId": "BRAB_ATG",
+      "pos": "RB",
+      "age": 32,
+      "ovr": 65
+    },
+    {
+      "id": "P01449",
+      "name": "Luiz Fernando",
+      "clubId": "BRAB_ATG",
+      "pos": "AM",
+      "age": 27,
+      "ovr": 78
+    },
+    {
+      "id": "P01450",
+      "name": "Shaylon",
+      "clubId": "BRAB_ATG",
+      "pos": "CM",
+      "age": 27,
+      "ovr": 76
+    },
+    {
+      "id": "P01451",
+      "name": "Baralhas",
+      "clubId": "BRAB_ATG",
+      "pos": "DM",
+      "age": 25,
+      "ovr": 75
+    },
+    {
+      "id": "P01452",
+      "name": "Rhaldney",
+      "clubId": "BRAB_ATG",
+      "pos": "DM",
+      "age": 26,
+      "ovr": 69
+    },
+    {
+      "id": "P01453",
+      "name": "Marcelinho",
+      "clubId": "BRAB_ATG",
+      "pos": "CM",
+      "age": 23,
+      "ovr": 68
+    },
+    {
+      "id": "P01454",
+      "name": "Vágner Love",
+      "clubId": "BRAB_ATG",
+      "pos": "AM",
+      "age": 40,
+      "ovr": 65
+    },
+    {
+      "id": "P01455",
+      "name": "Derek",
+      "clubId": "BRAB_ATG",
+      "pos": "ST",
+      "age": 26,
+      "ovr": 74
+    },
+    {
+      "id": "P01456",
+      "name": "Matheus Peixoto",
+      "clubId": "BRAB_ATG",
+      "pos": "ST",
+      "age": 28,
+      "ovr": 74
+    },
+    {
+      "id": "P01457",
+      "name": "Gustavo Coutinho",
+      "clubId": "BRAB_ATG",
+      "pos": "ST",
+      "age": 25,
+      "ovr": 74
+    },
+    {
+      "id": "P01458",
+      "name": "Gabriel Baralhas",
+      "clubId": "BRAB_ATG",
+      "pos": "LW",
+      "age": 25,
+      "ovr": 72
+    },
+    {
+      "id": "P01459",
+      "name": "João ATH1",
+      "clubId": "BRAB_ATH",
+      "pos": "GK",
+      "age": 21,
+      "ovr": 59
+    },
+    {
+      "id": "P01460",
+      "name": "Pedro ATH2",
+      "clubId": "BRAB_ATH",
+      "pos": "GK",
+      "age": 26,
+      "ovr": 62
+    },
+    {
+      "id": "P01461",
+      "name": "Lucas ATH3",
+      "clubId": "BRAB_ATH",
+      "pos": "LB",
+      "age": 25,
+      "ovr": 61
+    },
+    {
+      "id": "P01462",
+      "name": "Mateus ATH4",
+      "clubId": "BRAB_ATH",
+      "pos": "CB",
+      "age": 21,
+      "ovr": 67
+    },
+    {
+      "id": "P01463",
+      "name": "Gabriel ATH5",
+      "clubId": "BRAB_ATH",
+      "pos": "CB",
+      "age": 20,
+      "ovr": 65
+    },
+    {
+      "id": "P01464",
+      "name": "Rafael ATH6",
+      "clubId": "BRAB_ATH",
+      "pos": "RB",
+      "age": 19,
+      "ovr": 59
+    },
+    {
+      "id": "P01465",
+      "name": "Bruno ATH7",
+      "clubId": "BRAB_ATH",
+      "pos": "DM",
+      "age": 20,
+      "ovr": 62
+    },
+    {
+      "id": "P01466",
+      "name": "Gustavo ATH8",
+      "clubId": "BRAB_ATH",
+      "pos": "CM",
+      "age": 25,
+      "ovr": 67
+    },
+    {
+      "id": "P01467",
+      "name": "Felipe ATH9",
+      "clubId": "BRAB_ATH",
+      "pos": "CM",
+      "age": 18,
+      "ovr": 67
+    },
+    {
+      "id": "P01468",
+      "name": "Caio ATH10",
+      "clubId": "BRAB_ATH",
+      "pos": "AM",
+      "age": 24,
+      "ovr": 67
+    },
+    {
+      "id": "P01469",
+      "name": "Renato ATH11",
+      "clubId": "BRAB_ATH",
+      "pos": "LW",
+      "age": 31,
+      "ovr": 62
+    },
+    {
+      "id": "P01470",
+      "name": "Thiago ATH12",
+      "clubId": "BRAB_ATH",
+      "pos": "RW",
+      "age": 32,
+      "ovr": 63
+    },
+    {
+      "id": "P01471",
+      "name": "Diego ATH13",
+      "clubId": "BRAB_ATH",
+      "pos": "ST",
+      "age": 18,
+      "ovr": 61
+    },
+    {
+      "id": "P01472",
+      "name": "Marcos ATH14",
+      "clubId": "BRAB_ATH",
+      "pos": "ST",
+      "age": 31,
+      "ovr": 64
+    },
+    {
+      "id": "P01473",
+      "name": "Eduardo ATH15",
+      "clubId": "BRAB_ATH",
+      "pos": "CB",
+      "age": 26,
+      "ovr": 61
+    },
+    {
+      "id": "P01474",
+      "name": "André ATH16",
+      "clubId": "BRAB_ATH",
+      "pos": "CM",
+      "age": 24,
+      "ovr": 64
+    },
+    {
+      "id": "P01475",
+      "name": "Vitor ATH17",
+      "clubId": "BRAB_ATH",
+      "pos": "DM",
+      "age": 21,
+      "ovr": 60
+    },
+    {
+      "id": "P01476",
+      "name": "Henrique ATH18",
+      "clubId": "BRAB_ATH",
+      "pos": "RB",
+      "age": 30,
+      "ovr": 60
+    },
+    {
+      "id": "P01477",
+      "name": "João BSP1",
+      "clubId": "BRAB_BSP",
+      "pos": "GK",
+      "age": 29,
+      "ovr": 63
+    },
+    {
+      "id": "P01478",
+      "name": "Pedro BSP2",
+      "clubId": "BRAB_BSP",
+      "pos": "GK",
+      "age": 26,
+      "ovr": 58
+    },
+    {
+      "id": "P01479",
+      "name": "Lucas BSP3",
+      "clubId": "BRAB_BSP",
+      "pos": "LB",
+      "age": 32,
+      "ovr": 66
+    },
+    {
+      "id": "P01480",
+      "name": "Mateus BSP4",
+      "clubId": "BRAB_BSP",
+      "pos": "CB",
+      "age": 21,
+      "ovr": 64
+    },
+    {
+      "id": "P01481",
+      "name": "Gabriel BSP5",
+      "clubId": "BRAB_BSP",
+      "pos": "CB",
+      "age": 20,
+      "ovr": 66
+    },
+    {
+      "id": "P01482",
+      "name": "Rafael BSP6",
+      "clubId": "BRAB_BSP",
+      "pos": "RB",
+      "age": 27,
+      "ovr": 63
+    },
+    {
+      "id": "P01483",
+      "name": "Bruno BSP7",
+      "clubId": "BRAB_BSP",
+      "pos": "DM",
+      "age": 24,
+      "ovr": 59
+    },
+    {
+      "id": "P01484",
+      "name": "Gustavo BSP8",
+      "clubId": "BRAB_BSP",
+      "pos": "CM",
+      "age": 19,
+      "ovr": 61
+    },
+    {
+      "id": "P01485",
+      "name": "Felipe BSP9",
+      "clubId": "BRAB_BSP",
+      "pos": "CM",
+      "age": 27,
+      "ovr": 59
+    },
+    {
+      "id": "P01486",
+      "name": "Caio BSP10",
+      "clubId": "BRAB_BSP",
+      "pos": "AM",
+      "age": 25,
+      "ovr": 59
+    },
+    {
+      "id": "P01487",
+      "name": "Renato BSP11",
+      "clubId": "BRAB_BSP",
+      "pos": "LW",
+      "age": 30,
+      "ovr": 62
+    },
+    {
+      "id": "P01488",
+      "name": "Thiago BSP12",
+      "clubId": "BRAB_BSP",
+      "pos": "RW",
+      "age": 32,
+      "ovr": 63
+    },
+    {
+      "id": "P01489",
+      "name": "Diego BSP13",
+      "clubId": "BRAB_BSP",
+      "pos": "ST",
+      "age": 23,
+      "ovr": 63
+    },
+    {
+      "id": "P01490",
+      "name": "Marcos BSP14",
+      "clubId": "BRAB_BSP",
+      "pos": "ST",
+      "age": 29,
+      "ovr": 61
+    },
+    {
+      "id": "P01491",
+      "name": "Eduardo BSP15",
+      "clubId": "BRAB_BSP",
+      "pos": "CB",
+      "age": 26,
+      "ovr": 59
+    },
+    {
+      "id": "P01492",
+      "name": "André BSP16",
+      "clubId": "BRAB_BSP",
+      "pos": "CM",
+      "age": 23,
+      "ovr": 66
+    },
+    {
+      "id": "P01493",
+      "name": "Vitor BSP17",
+      "clubId": "BRAB_BSP",
+      "pos": "DM",
+      "age": 25,
+      "ovr": 60
+    },
+    {
+      "id": "P01494",
+      "name": "Henrique BSP18",
+      "clubId": "BRAB_BSP",
+      "pos": "RB",
+      "age": 32,
+      "ovr": 64
+    },
+    {
+      "id": "P01495",
+      "name": "João CRB1",
+      "clubId": "BRAB_CRB",
+      "pos": "GK",
+      "age": 26,
+      "ovr": 67
+    },
+    {
+      "id": "P01496",
+      "name": "Pedro CRB2",
+      "clubId": "BRAB_CRB",
+      "pos": "GK",
+      "age": 25,
+      "ovr": 64
+    },
+    {
+      "id": "P01497",
+      "name": "Lucas CRB3",
+      "clubId": "BRAB_CRB",
+      "pos": "LB",
+      "age": 19,
+      "ovr": 62
+    },
+    {
+      "id": "P01498",
+      "name": "Mateus CRB4",
+      "clubId": "BRAB_CRB",
+      "pos": "CB",
+      "age": 19,
+      "ovr": 64
+    },
+    {
+      "id": "P01499",
+      "name": "Gabriel CRB5",
+      "clubId": "BRAB_CRB",
+      "pos": "CB",
+      "age": 30,
+      "ovr": 63
+    },
+    {
+      "id": "P01500",
+      "name": "Rafael CRB6",
+      "clubId": "BRAB_CRB",
+      "pos": "RB",
+      "age": 20,
+      "ovr": 62
+    },
+    {
+      "id": "P01501",
+      "name": "Bruno CRB7",
+      "clubId": "BRAB_CRB",
+      "pos": "DM",
+      "age": 28,
+      "ovr": 62
+    },
+    {
+      "id": "P01502",
+      "name": "Gustavo CRB8",
+      "clubId": "BRAB_CRB",
+      "pos": "CM",
+      "age": 33,
+      "ovr": 65
+    },
+    {
+      "id": "P01503",
+      "name": "Felipe CRB9",
+      "clubId": "BRAB_CRB",
+      "pos": "CM",
+      "age": 32,
+      "ovr": 61
+    },
+    {
+      "id": "P01504",
+      "name": "Caio CRB10",
+      "clubId": "BRAB_CRB",
+      "pos": "AM",
+      "age": 26,
+      "ovr": 61
+    },
+    {
+      "id": "P01505",
+      "name": "Renato CRB11",
+      "clubId": "BRAB_CRB",
+      "pos": "LW",
+      "age": 25,
+      "ovr": 67
+    },
+    {
+      "id": "P01506",
+      "name": "Thiago CRB12",
+      "clubId": "BRAB_CRB",
+      "pos": "RW",
+      "age": 26,
+      "ovr": 65
+    },
+    {
+      "id": "P01507",
+      "name": "Diego CRB13",
+      "clubId": "BRAB_CRB",
+      "pos": "ST",
+      "age": 30,
+      "ovr": 64
+    },
+    {
+      "id": "P01508",
+      "name": "Marcos CRB14",
+      "clubId": "BRAB_CRB",
+      "pos": "ST",
+      "age": 25,
+      "ovr": 61
+    },
+    {
+      "id": "P01509",
+      "name": "Eduardo CRB15",
+      "clubId": "BRAB_CRB",
+      "pos": "CB",
+      "age": 34,
+      "ovr": 66
+    },
+    {
+      "id": "P01510",
+      "name": "André CRB16",
+      "clubId": "BRAB_CRB",
+      "pos": "CM",
+      "age": 20,
+      "ovr": 59
+    },
+    {
+      "id": "P01511",
+      "name": "Vitor CRB17",
+      "clubId": "BRAB_CRB",
+      "pos": "DM",
+      "age": 21,
+      "ovr": 61
+    },
+    {
+      "id": "P01512",
+      "name": "Henrique CRB18",
+      "clubId": "BRAB_CRB",
+      "pos": "RB",
+      "age": 23,
+      "ovr": 65
+    },
+    {
+      "id": "P01513",
+      "name": "João FER1",
+      "clubId": "BRAB_FER",
+      "pos": "GK",
+      "age": 20,
+      "ovr": 63
+    },
+    {
+      "id": "P01514",
+      "name": "Pedro FER2",
+      "clubId": "BRAB_FER",
+      "pos": "GK",
+      "age": 30,
+      "ovr": 64
+    },
+    {
+      "id": "P01515",
+      "name": "Lucas FER3",
+      "clubId": "BRAB_FER",
+      "pos": "LB",
+      "age": 34,
+      "ovr": 61
+    },
+    {
+      "id": "P01516",
+      "name": "Mateus FER4",
+      "clubId": "BRAB_FER",
+      "pos": "CB",
+      "age": 18,
+      "ovr": 58
+    },
+    {
+      "id": "P01517",
+      "name": "Gabriel FER5",
+      "clubId": "BRAB_FER",
+      "pos": "CB",
+      "age": 26,
+      "ovr": 62
+    },
+    {
+      "id": "P01518",
+      "name": "Rafael FER6",
+      "clubId": "BRAB_FER",
+      "pos": "RB",
+      "age": 21,
+      "ovr": 61
+    },
+    {
+      "id": "P01519",
+      "name": "Bruno FER7",
+      "clubId": "BRAB_FER",
+      "pos": "DM",
+      "age": 31,
+      "ovr": 59
+    },
+    {
+      "id": "P01520",
+      "name": "Gustavo FER8",
+      "clubId": "BRAB_FER",
+      "pos": "CM",
+      "age": 32,
+      "ovr": 57
+    },
+    {
+      "id": "P01521",
+      "name": "Felipe FER9",
+      "clubId": "BRAB_FER",
+      "pos": "CM",
+      "age": 26,
+      "ovr": 65
+    },
+    {
+      "id": "P01522",
+      "name": "Caio FER10",
+      "clubId": "BRAB_FER",
+      "pos": "AM",
+      "age": 23,
+      "ovr": 65
+    },
+    {
+      "id": "P01523",
+      "name": "Renato FER11",
+      "clubId": "BRAB_FER",
+      "pos": "LW",
+      "age": 21,
+      "ovr": 61
+    },
+    {
+      "id": "P01524",
+      "name": "Thiago FER12",
+      "clubId": "BRAB_FER",
+      "pos": "RW",
+      "age": 34,
+      "ovr": 60
+    },
+    {
+      "id": "P01525",
+      "name": "Diego FER13",
+      "clubId": "BRAB_FER",
+      "pos": "ST",
+      "age": 22,
+      "ovr": 62
+    },
+    {
+      "id": "P01526",
+      "name": "Marcos FER14",
+      "clubId": "BRAB_FER",
+      "pos": "ST",
+      "age": 23,
+      "ovr": 65
+    },
+    {
+      "id": "P01527",
+      "name": "Eduardo FER15",
+      "clubId": "BRAB_FER",
+      "pos": "CB",
+      "age": 34,
+      "ovr": 57
+    },
+    {
+      "id": "P01528",
+      "name": "André FER16",
+      "clubId": "BRAB_FER",
+      "pos": "CM",
+      "age": 28,
+      "ovr": 64
+    },
+    {
+      "id": "P01529",
+      "name": "Vitor FER17",
+      "clubId": "BRAB_FER",
+      "pos": "DM",
+      "age": 18,
+      "ovr": 58
+    },
+    {
+      "id": "P01530",
+      "name": "Henrique FER18",
+      "clubId": "BRAB_FER",
+      "pos": "RB",
+      "age": 29,
+      "ovr": 61
+    },
+    {
+      "id": "P01531",
+      "name": "João VRD1",
+      "clubId": "BRAB_VRD",
+      "pos": "GK",
+      "age": 25,
+      "ovr": 56
+    },
+    {
+      "id": "P01532",
+      "name": "Pedro VRD2",
+      "clubId": "BRAB_VRD",
+      "pos": "GK",
+      "age": 25,
+      "ovr": 57
+    },
+    {
+      "id": "P01533",
+      "name": "Lucas VRD3",
+      "clubId": "BRAB_VRD",
+      "pos": "LB",
+      "age": 20,
+      "ovr": 63
+    },
+    {
+      "id": "P01534",
+      "name": "Mateus VRD4",
+      "clubId": "BRAB_VRD",
+      "pos": "CB",
+      "age": 20,
+      "ovr": 64
+    },
+    {
+      "id": "P01535",
+      "name": "Gabriel VRD5",
+      "clubId": "BRAB_VRD",
+      "pos": "CB",
+      "age": 22,
+      "ovr": 58
+    },
+    {
+      "id": "P01536",
+      "name": "Rafael VRD6",
+      "clubId": "BRAB_VRD",
+      "pos": "RB",
+      "age": 33,
+      "ovr": 64
+    },
+    {
+      "id": "P01537",
+      "name": "Bruno VRD7",
+      "clubId": "BRAB_VRD",
+      "pos": "DM",
+      "age": 23,
+      "ovr": 60
+    },
+    {
+      "id": "P01538",
+      "name": "Gustavo VRD8",
+      "clubId": "BRAB_VRD",
+      "pos": "CM",
+      "age": 34,
+      "ovr": 62
+    },
+    {
+      "id": "P01539",
+      "name": "Felipe VRD9",
+      "clubId": "BRAB_VRD",
+      "pos": "CM",
+      "age": 24,
+      "ovr": 64
+    },
+    {
+      "id": "P01540",
+      "name": "Caio VRD10",
+      "clubId": "BRAB_VRD",
+      "pos": "AM",
+      "age": 24,
+      "ovr": 60
+    },
+    {
+      "id": "P01541",
+      "name": "Renato VRD11",
+      "clubId": "BRAB_VRD",
+      "pos": "LW",
+      "age": 30,
+      "ovr": 61
+    },
+    {
+      "id": "P01542",
+      "name": "Thiago VRD12",
+      "clubId": "BRAB_VRD",
+      "pos": "RW",
+      "age": 32,
+      "ovr": 64
+    },
+    {
+      "id": "P01543",
+      "name": "Diego VRD13",
+      "clubId": "BRAB_VRD",
+      "pos": "ST",
+      "age": 32,
+      "ovr": 57
+    },
+    {
+      "id": "P01544",
+      "name": "Marcos VRD14",
+      "clubId": "BRAB_VRD",
+      "pos": "ST",
+      "age": 25,
+      "ovr": 59
+    },
+    {
+      "id": "P01545",
+      "name": "Eduardo VRD15",
+      "clubId": "BRAB_VRD",
+      "pos": "CB",
+      "age": 20,
+      "ovr": 61
+    },
+    {
+      "id": "P01546",
+      "name": "André VRD16",
+      "clubId": "BRAB_VRD",
+      "pos": "CM",
+      "age": 18,
+      "ovr": 64
+    },
+    {
+      "id": "P01547",
+      "name": "Vitor VRD17",
+      "clubId": "BRAB_VRD",
+      "pos": "DM",
+      "age": 25,
+      "ovr": 59
+    },
+    {
+      "id": "P01548",
+      "name": "Henrique VRD18",
+      "clubId": "BRAB_VRD",
+      "pos": "RB",
+      "age": 18,
+      "ovr": 57
+    },
+    {
+      "id": "P01549",
+      "name": "João AMZ1",
+      "clubId": "BRAB_AMZ",
+      "pos": "GK",
+      "age": 19,
+      "ovr": 59
+    },
+    {
+      "id": "P01550",
+      "name": "Pedro AMZ2",
+      "clubId": "BRAB_AMZ",
+      "pos": "GK",
+      "age": 20,
+      "ovr": 56
+    },
+    {
+      "id": "P01551",
+      "name": "Lucas AMZ3",
+      "clubId": "BRAB_AMZ",
+      "pos": "LB",
+      "age": 28,
+      "ovr": 57
+    },
+    {
+      "id": "P01552",
+      "name": "Mateus AMZ4",
+      "clubId": "BRAB_AMZ",
+      "pos": "CB",
+      "age": 34,
+      "ovr": 59
+    },
+    {
+      "id": "P01553",
+      "name": "Gabriel AMZ5",
+      "clubId": "BRAB_AMZ",
+      "pos": "CB",
+      "age": 26,
+      "ovr": 63
+    },
+    {
+      "id": "P01554",
+      "name": "Rafael AMZ6",
+      "clubId": "BRAB_AMZ",
+      "pos": "RB",
+      "age": 24,
+      "ovr": 64
+    },
+    {
+      "id": "P01555",
+      "name": "Bruno AMZ7",
+      "clubId": "BRAB_AMZ",
+      "pos": "DM",
+      "age": 22,
+      "ovr": 63
+    },
+    {
+      "id": "P01556",
+      "name": "Gustavo AMZ8",
+      "clubId": "BRAB_AMZ",
+      "pos": "CM",
+      "age": 25,
+      "ovr": 63
+    },
+    {
+      "id": "P01557",
+      "name": "Felipe AMZ9",
+      "clubId": "BRAB_AMZ",
+      "pos": "CM",
+      "age": 31,
+      "ovr": 59
+    },
+    {
+      "id": "P01558",
+      "name": "Caio AMZ10",
+      "clubId": "BRAB_AMZ",
+      "pos": "AM",
+      "age": 21,
+      "ovr": 57
+    },
+    {
+      "id": "P01559",
+      "name": "Renato AMZ11",
+      "clubId": "BRAB_AMZ",
+      "pos": "LW",
+      "age": 31,
+      "ovr": 61
+    },
+    {
+      "id": "P01560",
+      "name": "Thiago AMZ12",
+      "clubId": "BRAB_AMZ",
+      "pos": "RW",
+      "age": 31,
+      "ovr": 62
+    },
+    {
+      "id": "P01561",
+      "name": "Diego AMZ13",
+      "clubId": "BRAB_AMZ",
+      "pos": "ST",
+      "age": 32,
+      "ovr": 56
+    },
+    {
+      "id": "P01562",
+      "name": "Marcos AMZ14",
+      "clubId": "BRAB_AMZ",
+      "pos": "ST",
+      "age": 21,
+      "ovr": 56
+    },
+    {
+      "id": "P01563",
+      "name": "Eduardo AMZ15",
+      "clubId": "BRAB_AMZ",
+      "pos": "CB",
+      "age": 30,
+      "ovr": 61
+    },
+    {
+      "id": "P01564",
+      "name": "André AMZ16",
+      "clubId": "BRAB_AMZ",
+      "pos": "CM",
+      "age": 21,
+      "ovr": 59
+    },
+    {
+      "id": "P01565",
+      "name": "Vitor AMZ17",
+      "clubId": "BRAB_AMZ",
+      "pos": "DM",
+      "age": 24,
+      "ovr": 59
+    },
+    {
+      "id": "P01566",
+      "name": "Henrique AMZ18",
+      "clubId": "BRAB_AMZ",
+      "pos": "RB",
+      "age": 32,
+      "ovr": 58
     }
   ]
 }
