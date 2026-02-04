@@ -60,10 +60,10 @@
     }
   }
 
-  const BUILD_TAG = 'v1.12.3';
+  const BUILD_TAG = 'v1.12.4';
 
   // Build exibido no canto inferior esquerdo
-  const BUILD = "v1.12.3";
+  const BUILD = "v1.12.4";
 
   /** Chaves de LocalStorage */
   const LS = {
@@ -2616,11 +2616,10 @@ save.season.lastRoundPlayed = roundIndex;
         for (const lid of CONM_LIDS) pushUnique(sula, topByStrengthFromLeague(lid, 6));
       }
 
-const strengthOf = (clubId) => {
-        try { return teamStrength(clubId, save); } catch (e) { return 60; }
-      };
-      const rankByStrength = (ids) => (ids || []).slice().filter(Boolean).sort((a,b) => strengthOf(b) - strengthOf(a));
-
+function strengthOf(clubId){
+      try { return teamStrength(clubId, save); } catch (e) { return 60; }
+    }
+function rankByStrength(ids){ return (ids || []).slice().filter(Boolean).sort((a,b)=>strengthOf(b)-strengthOf(a)); }
       const allocCfg = (state.packData?.qualifications?.continentalAllocations || {});
       const uefaAlloc = allocCfg.uefa || {};
       const conmebolAlloc = allocCfg.conmebol || {};
@@ -3316,15 +3315,7 @@ function pickBrazilQualifiers(save, leagueId, from, to) {
       if (cont.champions) pushUnique(ucl, pickLeagueQualifiers(save, lid, cont.champions.from, cont.champions.to));
       if (cont.europa) pushUnique(uel, pickLeagueQualifiers(save, lid, cont.europa.from, cont.europa.to));
     }
-
-
-    // Ranking por força (para desempates e preenchimento de vagas)
-    const strengthOf = (clubId) => {
-      try { return teamStrength(clubId, save); } catch (e) { return 60; }
-    };
-    const rankByStrength = (ids) => (ids || []).slice().sort((a, b) => strengthOf(b) - strengthOf(a));
-
-    // B1.2: alocação configurável por país (associação) + preenchimento por força
+// B1.2: alocação configurável por país (associação) + preenchimento por força
     const allocCfg = (state.packData?.qualifications?.continentalAllocations || {});
     const uefaAlloc = allocCfg.uefa || {};
     const conmebolAlloc = allocCfg.conmebol || {};
