@@ -60,7 +60,7 @@
     }
   }
 
-  const BUILD_TAG = 'v1.14.3'; 
+  const BUILD_TAG = 'v1.14.5'; 
 
   /** Chaves de LocalStorage */
   const LS = {
@@ -407,27 +407,45 @@
       if (node) break;
     }
 
-    // Busca o próximo table.wikitable após o heading, senão pega o primeiro wikitable grande
+    // Busca o próximo table.wikitable após o heading, senão escolhe a wikitable mais "provável"
     let table = null;
+
+    // 1) Seção dedicada (Current squad / Elenco atual / etc.)
     if (node) {
-      let cur = node;
-      for (let i = 0; i < 60 && cur; i++) {
-        cur = cur.parentElement || cur.nextElementSibling;
-        if (!cur) break;
+      const heading = node.closest ? node.closest("h2,h3,h4") : null;
+      let cur = heading ? heading.nextElementSibling : node.parentElement?.nextElementSibling;
+      for (let i = 0; i < 80 && cur; i++) {
+        if (cur.matches?.("table.wikitable")) { table = cur; break; }
         const t = cur.querySelector?.("table.wikitable");
         if (t) { table = t; break; }
+        cur = cur.nextElementSibling;
       }
     }
-    if (!table) {
-      // fallback: pega a primeira wikitable que tenha colunas de posição/jogador
-      const tables = Array.from(doc.querySelectorAll("table.wikitable"));
-      table = tables.find((t) => {
-        const th = t.querySelectorAll("th");
-        const txt = Array.from(th).map(x => (x.textContent || "").toLowerCase()).join(" ");
-        return txt.includes("pos") || txt.includes("position") || txt.includes("player") || txt.includes("jogador");
-      }) || null;
+
+    // 2) Heurística por cabeçalho
+    const tables = Array.from(doc.querySelectorAll("table.wikitable"));
+    if (!table && tables.length) {
+      const byHeader = tables.find((t) => {
+        const th = Array.from(t.querySelectorAll("th")).map(x => (x.textContent || "").toLowerCase()).join(" ");
+        return (
+          th.includes("pos") || th.includes("position") ||
+          th.includes("player") || th.includes("jogador") ||
+          th.includes("nat") || th.includes("nation") || th.includes("nac") ||
+          th.includes("age") || th.includes("idade") ||
+          th.includes("no.") || th.includes("number") || th.includes("nº")
+        );
+      });
+      if (byHeader) table = byHeader;
     }
-    if (!table) throw new Error("Tabela de elenco não encontrada");
+
+    // 3) Último fallback: maior tabela com muitos jogadores
+    if (!table && tables.length) {
+      table = tables
+        .map(t => ({ t, rows: t.querySelectorAll("tr").length }))
+        .filter(x => x.rows >= 12)
+        .sort((a,b) => b.rows - a.rows)[0]?.t || null;
+    }
+if (!table) throw new Error("Tabela de elenco não encontrada");
 
     const rows = Array.from(table.querySelectorAll("tr"));
     const players = [];
@@ -4499,30 +4517,40 @@ function viewFinance() {
       
       // --- Atualização Online de Elencos
       if (action === 'rosterUpdateLeague') {
-        const sel = document.getElementById('rosterLeague');
-        const logEl = document.getElementById('rosterLog');
-        const log = (msg) => { if (logEl) logEl.textContent += msg + "\n"; };
-        const leagueId = sel ? sel.value : null;
-        if (!leagueId) { log('Selecione uma liga.'); return; }
-        logEl.textContent = '';
-        (async () => {
+        el.addEventListener('click', async () => {
+          const sel = document.getElementById('rosterLeague');
+          const logEl = document.getElementById('rosterLog');
+          const log = (msg) => { if (logEl) logEl.textContent += msg + "\n"; };
+          const leagueId = sel ? sel.value : null;
+
+          if (!logEl) return;
+          logEl.textContent = '';
+
+          if (!leagueId) {
+            log('Selecione uma liga.');
+            return;
+          }
+
           try {
             log('Iniciando atualização online...');
             await updateLeagueRostersOnline(leagueId, log);
+            refreshFooterStatus();
           } catch (e) {
             log('Erro: ' + (e?.message || e));
           }
-        })();
+        });
         return;
       }
 
       if (action === 'rosterClearOverride') {
-        localStorage.removeItem(ROSTER_OVERRIDE_KEY);
-      refreshFooterStatus();
-        applyRosterOverride();
-        const logEl = document.getElementById('rosterLog');
-        if (logEl) logEl.textContent = 'Atualização online removida. Voltou para os dados do pacote.';
-        state.ui.toast = 'Override removido';
+        el.addEventListener('click', () => {
+          localStorage.removeItem(ROSTER_OVERRIDE_KEY);
+          applyRosterOverride();
+          refreshFooterStatus();
+          const logEl = document.getElementById('rosterLog');
+          if (logEl) logEl.textContent = 'Atualização online removida. Voltou para os dados do pacote.';
+          state.ui.toast = 'Override removido';
+        });
         return;
       }
 
