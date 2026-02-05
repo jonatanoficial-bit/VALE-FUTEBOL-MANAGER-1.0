@@ -60,7 +60,7 @@
     }
   }
 
-  const BUILD_TAG = "v1.14.9"; 
+  const BUILD_TAG = 'v1.15.0'; 
 
   /** Chaves de LocalStorage */
   const LS = {
@@ -390,8 +390,6 @@
     // demais sul-americanas e ligas menores europeias incluídas no jogo
     return 3;
   
-  }
-
   const WIKI_TITLE_OVERRIDES = {
     // Brasil (siglas internas -> título mais comum na Wikipédia em PT)
     BRA: {
@@ -468,118 +466,178 @@
     return "en";
   }
 
+}
 
   async function fetchSquadFromWikipedia({ title, lang }) {
-    // Usa MediaWiki API parse->HTML (CORS via origin=*)
-    const base = `https://${lang}.wikipedia.org/w/api.php`;
-    const url = `${base}?action=parse&format=json&prop=text&formatversion=2&origin=*&page=${encodeURIComponent(title)}`;
+  // Estratégia robusta (custo zero):
+  // 1) Descobre a seção "Current squad / Elenco atual / Plantel actual / ..." via prop=sections
+  // 2) Faz parse SOMENTE dessa seção (evita pegar tabela de patrocinadores, títulos, etc.)
+  // 3) Se não houver seção, usa página inteira como fallback
+  // 4) Extrai jogadores de tabelas (qualquer classe) com score + fallback por listas
 
+  const base = `https://${lang}.wikipedia.org/w/api.php`;
+
+  async function fetchParse(params) {
+    const qs = new URLSearchParams({
+      action: "parse",
+      format: "json",
+      formatversion: "2",
+      origin: "*",
+      ...params
+    });
+    const url = `${base}?${qs.toString()}`;
     const r = await fetch(url, { cache: "no-store" });
     if (!r.ok) throw new Error("Falha ao buscar página");
     const data = await r.json();
-    const html = data?.parse?.text;
-    if (!html) throw new Error("Página sem HTML");
+    return data?.parse || null;
+  }
 
-    const doc = new DOMParser().parseFromString(html, "text/html");
+  const anchors = [
+    // en
+    "current squad", "first-team squad", "first team squad", "squad",
+    // pt
+    "elenco atual", "elenco",
+    // es
+    "plantel actual", "plantilla", "equipo"
+  ];
 
-    // Tenta achar a seção "Current squad" (en) ou "Elenco atual" (pt)
-    const anchors = ["Current_squad", "Current_squad_and_staff", "First-team_squad", "Elenco_atual", "Plantel_actual"];
-    let node = null;
-    for (const id of anchors) {
-      node = doc.getElementById(id);
-      if (node) break;
+  // 1) tenta achar índice de seção por título
+  let sectionIndex = null;
+  try {
+    const parsed = await fetchParse({ prop: "sections", page: title });
+    const sections = parsed?.sections || [];
+    const best = sections.find((s) => {
+      const line = (s?.line || "").toLowerCase();
+      return anchors.some((a) => line.includes(a));
+    });
+    if (best && best.index != null) sectionIndex = String(best.index);
+  } catch (_) {
+    sectionIndex = null;
+  }
+
+  // 2) pega HTML da seção (ou da página inteira)
+  let html = null;
+  if (sectionIndex != null) {
+    const parsed = await fetchParse({ prop: "text", page: title, section: sectionIndex });
+    html = parsed?.text || null;
+  }
+  if (!html) {
+    const parsed = await fetchParse({ prop: "text", page: title });
+    html = parsed?.text || null;
+  }
+  if (!html) throw new Error("Página sem HTML");
+
+  const doc = new DOMParser().parseFromString(html, "text/html");
+
+  function norm(s) { return (s || "").replace(/\s+/g, " ").trim(); }
+  const badNameRx = /^(\d{4}(\s*[–-]\s*\d{2,4})?)$/;
+  const badBrandRx = /(adidas|umbro|nike|puma|reebok|kappa|penalty|lotto|topper|joma|macron|new balance|mizuno|diadora|hummel|fila)/i;
+
+  function detectPos(text) {
+    const t = (text || "").toUpperCase();
+    if (/\b(GK|GOALKEEPER|GOLEIRO|GOL)\b/.test(t)) return "GK";
+    if (/\b(DF|DEF|DEFENDER|ZAG|CB|LB|RB|LAT)\b/.test(t)) return "DF";
+    if (/\b(MF|MID|MIDFIELDER|MEI|CM|DM|AM)\b/.test(t)) return "MF";
+    if (/\b(FW|ATT|FORWARD|ATA|ST|CF|LW|RW)\b/.test(t)) return "FW";
+    return null;
+  }
+
+  function detectAge(cellsText) {
+    for (const s of cellsText) {
+      const m = (s || "").match(/\b(\d{2})\b/);
+      if (!m) continue;
+      const n = parseInt(m[1], 10);
+      if (n >= 15 && n <= 45) return n;
     }
+    return null;
+  }
 
-    // Busca o próximo table.wikitable após o heading, senão escolhe a wikitable mais "provável"
-    let table = null;
+  function scoreTable(t) {
+    const th = norm(Array.from(t.querySelectorAll("th")).map(x => x.textContent).join(" ")).toLowerCase();
+    const rows = t.querySelectorAll("tr").length;
 
-    // 1) Seção dedicada (Current squad / Elenco atual / etc.)
-    if (node) {
-      const heading = node.closest ? node.closest("h2,h3,h4") : null;
-      let cur = heading ? heading.nextElementSibling : node.parentElement?.nextElementSibling;
-      for (let i = 0; i < 80 && cur; i++) {
-        if (cur.matches?.("table.wikitable")) { table = cur; break; }
-        const t = cur.querySelector?.("table.wikitable");
-        if (t) { table = t; break; }
-        cur = cur.nextElementSibling;
-      }
-    }
+    let score = 0;
+    if (rows >= 12) score += Math.min(30, rows);
+    if (/(pos|position|jogador|player|nome|name|idade|age|no\.|nº|number|nation|nat|nac)/.test(th)) score += 25;
+    if (/(current squad|elenco|plantel|squad|plantilla)/.test(th)) score += 20;
 
-    // 2) Heurística por cabeçalho
-    const tables = Array.from(doc.querySelectorAll("table.wikitable"));
-    if (!table && tables.length) {
-      const byHeader = tables.find((t) => {
-        const th = Array.from(t.querySelectorAll("th")).map(x => (x.textContent || "").toLowerCase()).join(" ");
-        return (
-          th.includes("pos") || th.includes("position") ||
-          th.includes("player") || th.includes("jogador") ||
-          th.includes("nat") || th.includes("nation") || th.includes("nac") ||
-          th.includes("age") || th.includes("idade") ||
-          th.includes("no.") || th.includes("number") || th.includes("nº")
-        );
-      });
-      if (byHeader) table = byHeader;
-    }
+    const links = t.querySelectorAll('a[href^="/wiki/"]').length;
+    score += Math.min(40, links);
 
-    // 3) Último fallback: maior tabela com muitos jogadores
-    if (!table && tables.length) {
-      table = tables
-        .map(t => ({ t, rows: t.querySelectorAll("tr").length }))
-        .filter(x => x.rows >= 12)
-        .sort((a,b) => b.rows - a.rows)[0]?.t || null;
-    }
-if (!table) throw new Error("Tabela de elenco não encontrada");
+    if (/(sponsor|sponsorship|patrocin|supplier|fornecedor|material esportivo|kit|manufacturer|marcas)/.test(th)) score -= 60;
+    if (/(honours|honors|títulos|titles|campeonat|copa|taça|torneio|supercopa|recopa|libertadores|sul-americana)/.test(th)) score -= 30;
 
+    return score;
+  }
+
+  const tables = Array.from(doc.querySelectorAll("table"));
+  let table = null;
+  if (tables.length) {
+    const ranked = tables.map(t => ({ t, s: scoreTable(t) })).sort((a,b) => b.s - a.s);
+    if (ranked[0] && ranked[0].s >= 30) table = ranked[0].t;
+  }
+
+  const players = [];
+
+  if (table) {
     const rows = Array.from(table.querySelectorAll("tr"));
-    const players = [];
-
     for (const tr of rows) {
-      const cells = Array.from(tr.querySelectorAll("td"));
-      if (cells.length < 2) continue;
+      const tds = Array.from(tr.querySelectorAll("td"));
+      if (tds.length < 2) continue;
 
-      const rowText = cells.map(c => (c.textContent || "").trim());
-      // heurística: achar nome pelo primeiro link com /wiki/
-      const a = tr.querySelector('a[href^="/wiki/"]');
-      const name = (a?.textContent || rowText.find(x => x && x.length > 2) || "").trim();
+      const cellsText = tds.map(td => norm(td.textContent));
+      const rowAllText = norm(cellsText.join(" "));
+
+      const links = Array.from(tr.querySelectorAll('a[href^="/wiki/"]'));
+      let name = "";
+      for (const a of links) {
+        const tx = norm(a.textContent);
+        if (!tx) continue;
+        if (tx.length < 3) continue;
+        if (badNameRx.test(tx)) continue;
+        if (badBrandRx.test(tx)) continue;
+        if (/(campeonato|copa|taça|torneio|supercopa|recopa|libertadores|sul-americana)/i.test(tx)) continue;
+        name = tx;
+        break;
+      }
       if (!name) continue;
 
-      // posição: tenta primeira célula curta
-      let pos = (rowText[1] || rowText[0] || "").toUpperCase();
-      if (pos.length > 6) pos = (rowText[0] || "").toUpperCase();
-      pos = pos.replace(/\W+/g, "");
+      let pos = detectPos(rowAllText);
+      if (!pos) pos = detectPos(cellsText[0]) || detectPos(cellsText[1]) || "MF";
 
-      if (!pos || pos.length > 6) pos = "MF";
-
-      // idade: tenta extrair de data de nascimento em tooltip (raramente presente)
-      let age = null;
-      const birth = tr.querySelector('span.bday')?.textContent;
-      if (birth) {
-        const d = new Date(birth);
-        if (!isNaN(d.getTime())) {
-          const now = new Date();
-          age = now.getFullYear() - d.getFullYear();
-          const m = now.getMonth() - d.getMonth();
-          if (m < 0 || (m === 0 && now.getDate() < d.getDate())) age--;
-        }
-      }
+      const age = detectAge(cellsText);
 
       players.push({ name, pos, age });
     }
-
-    // Remove duplicados por nome
-    const seen = new Set();
-    const uniq = [];
-    for (const p of players) {
-      const key = p.name.toLowerCase();
-      if (seen.has(key)) continue;
-      seen.add(key);
-      uniq.push(p);
-    }
-
-    return uniq;
   }
 
-  function viewRosterUpdate() {
+  if (players.length < 11) {
+    const lis = Array.from(doc.querySelectorAll("li a[href^='/wiki/']"));
+    for (const a of lis) {
+      const name = norm(a.textContent);
+      if (!name || name.length < 3) continue;
+      if (badNameRx.test(name)) continue;
+      if (badBrandRx.test(name)) continue;
+      if (/(campeonato|copa|taça|torneio|supercopa|recopa|libertadores|sul-americana)/i.test(name)) continue;
+      players.push({ name, pos: "MF", age: null });
+      if (players.length >= 40) break;
+    }
+  }
+
+  if (!players.length) throw new Error("Tabela de elenco não encontrada");
+
+  const seen = new Set();
+  const uniq = [];
+  for (const p of players) {
+    const key = p.name.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    uniq.push(p);
+  }
+  return uniq;
+}
+
+function viewRosterUpdate() {
     return requirePackData(() => {
       const leagues = state.packData?.competitions?.leagues || [];
       const options = leagues.map((l) => `<option value="${esc(l.id)}">${esc(l.name || l.id)}</option>`).join("");
@@ -717,23 +775,6 @@ if (!table) throw new Error("Tabela de elenco não encontrada");
 
     saveRosterOverride(merged);
     applyRosterOverride();
-
-    // Se houver carreira ativa, sincroniza o elenco do clube (snapshot do save) com os dados atualizados
-    try {
-      const slotId = state.settings?.activeSlotId;
-      if (slotId) {
-        const save = readSlot(slotId);
-        if (save?.career?.clubId) {
-          ensureSystems(save);
-          save.squad.players = generateSquadForClub(save.career.clubId);
-          writeSlot(slotId, save);
-        }
-      }
-    } catch {}
-
-    
-
-    refreshFooterStatus();
 
     log(`\nConcluído! Elencos desta liga foram atualizados e salvos neste navegador.`);
   }
@@ -901,29 +942,6 @@ function applyBackground(path) {
 
   /** Gera aleatoriamente um elenco para um clube (MVP) */
   function generateSquadForClub(clubId) {
-    // 1) Se houver base real de jogadores no pacote (players.json), use-a (23 jogadores).
-    // Isso garante que elencos atualizados (incluindo via atualização online) reflitam na carreira.
-    const real = getClubPlayers(clubId) || [];
-    if (real.length >= 11) {
-      // Ordena por overall desc e pega 23 (ou menos, se a base for menor)
-      const picked = real
-        .slice()
-        .sort((a, b) => (b.overall || 0) - (a.overall || 0))
-        .slice(0, 23);
-
-      // Normaliza para o formato do save
-      return picked.map((p) => ({
-        id: p.id || `${p.clubId || clubId}_${String(p.name || "player").replace(/\s+/g, "_")}`,
-        clubId: p.clubId || clubId,
-        name: p.name || "Jogador",
-        pos: p.pos || "MID",
-        age: Number.isFinite(+p.age) ? +p.age : 24,
-        overall: Number.isFinite(+p.overall) ? +p.overall : 65,
-        form: 0
-      }));
-    }
-
-    // 2) Fallback: gera elenco fictício (quando não existir base real)
     // Define base de overall conforme a liga
     const club = getClub(clubId);
     let base = 65;
