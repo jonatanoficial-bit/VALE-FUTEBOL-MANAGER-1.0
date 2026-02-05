@@ -83,19 +83,22 @@ body:not(.bg-menu):not(.bg-lobby):not(.bg-cinematic){
 
 /* Badge de build (canto inferior esquerdo) */
 .build-badge{
-  position:fixed;
-  left:12px;
-  bottom:12px;
-  z-index:99999;
-  padding:6px 10px;
-  border-radius:999px;
-  font-size:12px;
-  letter-spacing:.2px;
-  background:rgba(2,6,23,.55);
-  border:1px solid rgba(255,255,255,.10);
-  color:rgba(255,255,255,.92);
-  backdrop-filter: blur(8px);
+  position: fixed;
+  left: 12px;
+  bottom: 12px;
+  z-index: 9999;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(0,0,0,0.65);
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.2;
+  letter-spacing: .2px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  max-width: 70vw;
 }
+.build-badge .build-line{ margin: 2px 0; }
+.build-badge b{ font-weight: 700; }
 
 /* =======================================================
    VFM – Matchday Modal (A2)

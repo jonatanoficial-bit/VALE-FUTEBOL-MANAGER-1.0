@@ -60,10 +60,7 @@
     }
   }
 
-  const BUILD_TAG = 'v1.14.0';
-
-  // Build exibido no canto inferior esquerdo
-  const BUILD = "v1.12.9";
+  const BUILD_TAG = 'v1.14.1'; 
 
   /** Chaves de LocalStorage */
   const LS = {
@@ -312,7 +309,31 @@
       players
     };
     localStorage.setItem(ROSTER_OVERRIDE_KEY, JSON.stringify(payload));
+  
+  function getRosterOverrideMeta() {
+    try {
+      const raw = localStorage.getItem(ROSTER_OVERRIDE_KEY);
+      if (!raw) return null;
+      const obj = JSON.parse(raw);
+      if (!obj || typeof obj.updatedAt !== "string") return null;
+      return { updatedAt: obj.updatedAt };
+    } catch {
+      return null;
+    }
   }
+
+  function refreshFooterStatus() {
+    const el = document.getElementById("buildBadge");
+    if (!el) return;
+    const meta = getRosterOverrideMeta();
+    const updated = meta?.updatedAt ? new Date(meta.updatedAt) : null;
+    const updatedStr = updated ? updated.toLocaleString("pt-BR") : "nunca";
+    el.innerHTML = `
+      <div class="build-line"><b>build</b> ${BUILD_TAG}</div>
+      <div class="build-line"><b>dados</b> ${updatedStr}</div>
+    `;
+  }
+}
 
   function normalizeWikiTitle(name) {
     return (name || "")
@@ -1131,6 +1152,7 @@ return save;
             <button class="btn btn-primary" data-go="/dlc">Iniciar Carreira</button>
             <button class="btn" data-go="/admin">Admin</button>
             ${canGoHub ? `<button class="btn" data-go="/hub">HUB</button>` : ``}
+            <button class=\"btn\" data-go=\"/roster-update\">Atualizar Elencos</button>
           </div>
         </div>
       </div>
@@ -4458,6 +4480,7 @@ function viewFinance() {
 
       if (action === 'rosterClearOverride') {
         localStorage.removeItem(ROSTER_OVERRIDE_KEY);
+      refreshFooterStatus();
         applyRosterOverride();
         const logEl = document.getElementById('rosterLog');
         if (logEl) logEl.textContent = 'Atualização online removida. Voltou para os dados do pacote.';
@@ -5162,6 +5185,7 @@ async function boot() {
     await loadPackData();
     const badge = document.getElementById('buildBadge');
     if (badge) badge.textContent = `build ${BUILD_TAG}`;
+    refreshFooterStatus();
     if (!location.hash) location.hash = '/home';
     route();
   }
