@@ -60,7 +60,7 @@
     }
   }
 
-  const BUILD_TAG = "v1.14.7"; 
+  const BUILD_TAG = "v1.14.8"; 
 
   /** Chaves de LocalStorage */
   const LS = {
@@ -298,6 +298,20 @@
       const merged = kept.concat(obj.players);
       state.packData.players.players = merged;
       state.ui.toast = `Elencos online aplicados (${obj.updatedAt || "data desconhecida"})`;
+
+      // IMPORTANTE: o save da carreira guarda um snapshot do elenco.
+      // Então, após aplicar override, sincronizamos automaticamente o elenco do clube atual
+      // (se existir carreira ativa) para o usuário ver a mudança imediatamente.
+      try {
+        const save = state?.save;
+        const clubId = save?.career?.clubId;
+        if (save && clubId && typeof generateSquadForClub === 'function') {
+          // Regera 23 jogadores do clube (agora já com o override aplicado no packData)
+          save.squad = save.squad || {};
+          save.squad.players = generateSquadForClub(clubId);
+          save.squad.lastSyncAt = new Date().toISOString();
+        }
+      } catch {}
     } catch {
       // ignora override corrompido
     }
@@ -505,30 +519,46 @@
       }
     }
 
-    // 2) Heurística por cabeçalho
-    const tables = Array.from(doc.querySelectorAll("table.wikitable"));
-    if (!table && tables.length) {
-      const byHeader = tables.find((t) => {
-        const th = Array.from(t.querySelectorAll("th")).map(x => (x.textContent || "").toLowerCase()).join(" ");
-        return (
-          th.includes("pos") || th.includes("position") ||
-          th.includes("player") || th.includes("jogador") ||
-          th.includes("nat") || th.includes("nation") || th.includes("nac") ||
-          th.includes("age") || th.includes("idade") ||
-          th.includes("no.") || th.includes("number") || th.includes("nº")
-        );
+    // 2) Heurística robusta: pontua tabelas candidatas (wikitable + toccolours + outras grandes)
+    const cand = Array.from(doc.querySelectorAll("table"))
+      .filter(t => {
+        const cls = (t.getAttribute("class") || "").toLowerCase();
+        if (cls.includes("infobox") || cls.includes("navbox")) return false;
+        const rows = t.querySelectorAll("tr").length;
+        if (rows < 10) return false;
+        // precisa ter links de jogadores
+        const links = t.querySelectorAll('a[href^="/wiki/"]').length;
+        return links >= 8;
       });
-      if (byHeader) table = byHeader;
+
+    function scoreTable(t) {
+      const th = Array.from(t.querySelectorAll("th")).map(x => (x.textContent || "").toLowerCase()).join(" ");
+      const rows = t.querySelectorAll("tr").length;
+      const links = t.querySelectorAll('a[href^="/wiki/"]').length;
+      let score = 0;
+      // cabeçalhos comuns de elenco
+      if (th.includes("pos") || th.includes("position")) score += 6;
+      if (th.includes("player") || th.includes("jogador") || th.includes("nome")) score += 6;
+      if (th.includes("age") || th.includes("idade")) score += 3;
+      if (th.includes("nation") || th.includes("nat") || th.includes("nac") || th.includes("país")) score += 2;
+      if (th.includes("no") || th.includes("nº") || th.includes("number")) score += 2;
+      // muita evidência de nomes (links) e tamanho
+      score += Math.min(12, Math.floor(links / 3));
+      score += Math.min(10, Math.floor(rows / 3));
+      // classes comuns em tabelas de elenco
+      const cls = (t.getAttribute("class") || "").toLowerCase();
+      if (cls.includes("wikitable")) score += 2;
+      if (cls.includes("toccolours")) score += 2;
+      return score;
     }
 
-    // 3) Último fallback: maior tabela com muitos jogadores
-    if (!table && tables.length) {
-      table = tables
-        .map(t => ({ t, rows: t.querySelectorAll("tr").length }))
-        .filter(x => x.rows >= 12)
-        .sort((a,b) => b.rows - a.rows)[0]?.t || null;
+    if (!table && cand.length) {
+      table = cand
+        .map(t => ({ t, s: scoreTable(t) }))
+        .sort((a, b) => b.s - a.s)[0]?.t || null;
     }
-if (!table) throw new Error("Tabela de elenco não encontrada");
+
+    if (!table) throw new Error("Tabela de elenco não encontrada");
 
     const rows = Array.from(table.querySelectorAll("tr"));
     const players = [];
