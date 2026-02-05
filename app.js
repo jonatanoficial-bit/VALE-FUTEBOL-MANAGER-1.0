@@ -60,7 +60,7 @@
     }
   }
 
-  const BUILD_TAG = 'v1.14.2'; 
+  const BUILD_TAG = 'v1.14.3'; 
 
   /** Chaves de LocalStorage */
   const LS = {
@@ -700,6 +700,42 @@ function applyBackground(path) {
     if (!id) return null;
     return readSlot(id);
   }
+
+
+  /** Exige apenas que o pacote de dados esteja carregado (sem exigir save). */
+  function requirePackData(cb) {
+    if (!state.settings.selectedPackId) {
+      return `
+        <div class="card">
+          <div class="card-body">
+            <div class="notice">Selecione um pacote (DLC) antes de continuar.</div>
+            <div class="sep"></div>
+            <button class="btn btn-primary" data-go="/dlc">Escolher DLC</button>
+            <button class="btn btn-ghost" data-go="/home">Menu</button>
+          </div>
+        </div>
+      `;
+    }
+    // Se por algum motivo o pacote ainda não carregou, orienta recarregar
+    if (!state.packData || !state.packData.clubs || !state.packData.players || !state.packData.competitions) {
+      return `
+        <div class="card">
+          <div class="card-header"><div class="card-title">Carregando dados...</div></div>
+          <div class="card-body">
+            <div class="notice">Os dados do pacote ainda não foram carregados. Aguarde alguns segundos ou recarregue a página.</div>
+            <div class="sep"></div>
+            <div class="row">
+              <button class="btn btn-primary" type="button" onclick="location.reload()">Recarregar</button>
+              <button class="btn" data-go="/dlc">Trocar DLC</button>
+              <button class="btn btn-ghost" data-go="/home">Menu</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    return cb();
+  }
+
 
   /** Exige um save válido; caso contrário, retorna mensagem de aviso */
   function requireSave(cb) {
@@ -1621,6 +1657,23 @@ return save;
       <div class="hub-cta">Abrir</div>
     </div>
   </div>
+
+
+  <div class="hub-card" data-go="/roster-update">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_staff.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">🛰️</div>
+        <div>
+          <div class="hub-title">Atualizar Elencos</div>
+          <div class="hub-desc">Buscar elencos online e recalcular OVR (23 por clube)</div>
+        </div>
+      </div>
+      <div class="hub-cta">Abrir</div>
+    </div>
+  </div>
+
 </div></div>
             <div class="sep"></div>
             <div class="notice">
@@ -1722,22 +1775,6 @@ return save;
               <div class="col-6">
                 <div class="label">Autoescalar</div>
                 <button class="btn btn-primary" data-action="autoPickXI">Melhor XI</button>
-              
-  <div class="hub-card" data-go="/roster-update">
-    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_staff.png')}')"></div>
-    <div class="hub-overlay"></div>
-    <div class="hub-content">
-      <div class="hub-left">
-        <div class="hub-pill">🛰️</div>
-        <div>
-          <div class="hub-title">Atualizar Elencos</div>
-          <div class="hub-desc">Buscar elencos online (Wikipedia) e recalcular OVR</div>
-        </div>
-      </div>
-      <div class="hub-right">➡️</div>
-    </div>
-  </div>
-</div>
             </div>
             <div class="sep"></div>
             <div class="notice">Sua escalação é salva automaticamente. Selecione jogadores no Elenco para ajustar.</div>
