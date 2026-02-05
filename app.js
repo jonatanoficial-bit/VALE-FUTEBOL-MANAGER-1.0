@@ -60,7 +60,7 @@
     }
   }
 
-  const BUILD_TAG = 'v1.14.5'; 
+  const BUILD_TAG = 'v1.14.6'; 
 
   /** Chaves de LocalStorage */
   const LS = {
@@ -344,7 +344,12 @@
   }
 
   function guessWikiLangForCountry(country) {
-    // Preferimos enwiki para padronizar
+    const c = (country || "").toLowerCase();
+    if (c.includes("brasil") || c.includes("brazil")) return "pt";
+    if (c.includes("portugal")) return "pt";
+    if (c.includes("espanha") || c.includes("spain")) return "es";
+    if (c.includes("argentina") || c.includes("uruguai") || c.includes("uruguay") || c.includes("chile") || c.includes("colômbia") || c.includes("colombia") || c.includes("equador") || c.includes("ecuador") || c.includes("bolívia") || c.includes("bolivia") || c.includes("venezuela")) return "es";
+    // padrão: enwiki costuma ter melhor padronização de tabelas
     return "en";
   }
 
@@ -384,7 +389,84 @@
     if (["POR", "ARG", "BRA_B"].includes(id)) return 2;
     // demais sul-americanas e ligas menores europeias incluídas no jogo
     return 3;
+  
+  const WIKI_TITLE_OVERRIDES = {
+    // Brasil (siglas internas -> título mais comum na Wikipédia em PT)
+    BRA: {
+      ACG: "Atlético Clube Goianiense",
+      AMG: "Clube Atlético Mineiro",
+      ATC: "Athletico Paranaense",
+      CAP: "Athletico Paranaense",
+      CHA: "Associação Chapecoense de Futebol",
+      COR: "Sport Club Corinthians Paulista",
+      CRU: "Cruzeiro Esporte Clube",
+      FLA: "Clube de Regatas do Flamengo",
+      FLU: "Fluminense Football Club",
+      FOR: "Fortaleza Esporte Clube",
+      GRE: "Grêmio Foot-Ball Porto Alegrense",
+      INT: "Sport Club Internacional",
+      PAL: "Sociedade Esportiva Palmeiras",
+      SAO: "São Paulo Futebol Clube",
+      SAN: "Santos Futebol Clube",
+      VAS: "Club de Regatas Vasco da Gama",
+      BOT: "Botafogo de Futebol e Regatas",
+      BAH: "Esporte Clube Bahia",
+      VIT: "Esporte Clube Vitória",
+      RBB: "Red Bull Bragantino",
+      CEA: "Ceará Sporting Club",
+      SPT: "Sport Club do Recife",
+      JUV: "Esporte Clube Juventude",
+      MIR: "Mirassol Futebol Clube",
+      CFC: "Coritiba Foot Ball Club",
+      GOI: "Goiás Esporte Clube",
+      VNO: "Vila Nova Futebol Clube",
+      ATG: "Atlético Clube Goianiense",
+      CRI: "Criciúma Esporte Clube",
+      REM: "Clube do Remo",
+      PAY: "Paysandu Sport Club",
+      AVA: "Avaí Futebol Clube",
+      NOV: "Grêmio Novorizontino",
+      BOTSP: "Botafogo Futebol Clube (Ribeirão Preto)",
+      BFS: "Botafogo Futebol Clube (Ribeirão Preto)",
+      FER: "Associação Ferroviária de Esportes",
+      VOL: "Volta Redonda Futebol Clube",
+      AMA: "Amazonas Futebol Clube",
+      CRB: "Clube de Regatas Brasil",
+      AME: "América Futebol Clube (Minas Gerais)",
+      CUI: "Cuiabá Esporte Clube",
+      OPE: "Operário Ferroviário Esporte Clube"
+    }
+  };
+
+  function wikiTitleForClub(club, leagueId) {
+    const raw = (club?.wikiTitle || club?.name || "").trim();
+    const short = (club?.short || club?.id || "").trim();
+    const lid = (leagueId || club?.leagueId || "").toUpperCase();
+
+    // Se o clube vem só como sigla (ex.: CAP), tenta override brasileiro
+    if ((lid.startsWith("BRA") || (club?.country || "").toLowerCase().includes("brasil")) && raw && raw.length <= 4) {
+      const key = raw.toUpperCase();
+      const t = WIKI_TITLE_OVERRIDES?.BRA?.[key];
+      if (t) return t;
+      // fallback: tenta expandir por short
+      const t2 = WIKI_TITLE_OVERRIDES?.BRA?.[short.toUpperCase()];
+      if (t2) return t2;
+    }
+    return raw;
   }
+
+  function wikiLangForClub(club, leagueId) {
+    // Se o país não existe no dado do clube, inferimos pelo leagueId
+    const lid = (leagueId || club?.leagueId || "").toUpperCase();
+    if (club?.country) return guessWikiLangForCountry(club.country);
+    if (lid.startsWith("BRA")) return "pt";
+    if (lid.startsWith("ARG") || lid.startsWith("URU") || lid.startsWith("CHI") || lid.startsWith("COL") || lid.startsWith("ECU") || lid.startsWith("BOL") || lid.startsWith("VEN")) return "es";
+    if (lid.startsWith("POR")) return "pt";
+    if (lid.startsWith("ESP")) return "es";
+    return "en";
+  }
+
+}
 
   async function fetchSquadFromWikipedia({ title, lang }) {
     // Usa MediaWiki API parse->HTML (CORS via origin=*)
@@ -551,8 +633,8 @@ if (!table) throw new Error("Tabela de elenco não encontrada");
     log(`Atualizando ${leagueClubs.length} clubes... (isso pode demorar)`);
     for (let i = 0; i < leagueClubs.length; i++) {
       const club = leagueClubs[i];
-      const lang = guessWikiLangForCountry(club.country);
-      const title = normalizeWikiTitle(club.wikiTitle || club.name);
+      const lang = wikiLangForClub(club, leagueId);
+      const title = normalizeWikiTitle(wikiTitleForClub(club, leagueId));
 
       log(`\n[${i + 1}/${leagueClubs.length}] ${club.name} → Wikipedia (${lang}): ${title}`);
 
