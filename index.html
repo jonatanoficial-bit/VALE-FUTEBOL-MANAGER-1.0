@@ -4,20 +4,17 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Vale Futebol Manager 2026 - Premium</title>
-  <!-- Estilos principais -->
-  <link rel="stylesheet" href="./styles.css?v=1.14.1" />
-  <!-- Diagnósticos provisórios (removível no final) -->
-  <script src="./js/diagnostics.js"></script>
+
+  <link rel="stylesheet" href="./styles.css?v=1.14.2" />
 </head>
 <body>
-  <!-- Tela de abertura com logo da produtora -->
+  <!-- Splash -->
   <div class="splash" id="splash">
     <div class="splash-logo">
       <img src="./assets/images/vale_games_logo.png" alt="Vale Games" />
     </div>
   </div>
 
-  <!-- Estrutura principal da aplicação -->
   <div class="app-shell">
     <header class="topbar">
       <div class="brand">
@@ -28,55 +25,55 @@
         </div>
       </div>
       <div class="topbar-actions">
-        <button class="btn btn-ghost" type="button" onclick="location.hash='#/home'">
-          Início
-        </button>
+        <button class="btn btn-ghost" type="button" onclick="location.hash='#/home'">Início</button>
       </div>
     </header>
+
     <main class="main">
-      <div id="view" class="view">
-        <!-- O conteúdo será renderizado dinamicamente pelo app.js?v=1.14.1"footer">
+      <div id="view" class="view"></div>
+    </main>
+
+    <footer class="footer">
       <span>© Vale Games</span>
       <span class="dot">•</span>
       <span>Offline • LocalStorage</span>
     </footer>
+
+    <!-- Badge fixo (build + data dos dados) -->
     <div id="buildBadge" class="build-badge" aria-label="Build"></div>
   </div>
 
-  <!-- Lógica principal da aplicação -->
-  <script src="./app.js?v=1.14.1" defer></script>
-<script>
-(function(){
-  var ready = false;
-  try {
-    window.addEventListener('VFM_APP_READY', function(){ ready = true; }, { once:true });
-  } catch(e) {}
+  <!-- App principal -->
+  <script src="./app.js?v=1.14.2" defer></script>
 
-  // remove splash em até 2s sempre
-  setTimeout(function(){
-    var splash = document.getElementById('splash');
-    if (splash) { splash.classList.add('hidden'); splash.style.display='none'; }
-  }, 2000);
+  <!-- Guardas de UX (não altera lógica do jogo) -->
+  <script>
+    (function(){
+      // remove splash em até 2s sempre
+      setTimeout(function(){
+        var splash = document.getElementById('splash');
+        if (splash) { splash.classList.add('hidden'); splash.style.display='none'; }
+      }, 2000);
 
-  // Segurança: não carregue um segundo bundle (isso pode causar "piscar" e voltar UI antiga).
-  // Se o app.js?v=1.14.1'view');
-    if (viewEl && !viewEl.innerHTML.trim()){
-      viewEl.innerHTML =
-        '<div class="card">' +
-          '<div class="card-header">' +
-            '<div><div class="card-title">Carregando...</div><div class="card-subtitle">O jogo está demorando para iniciar (GitHub Pages)</div></div>' +
-            '<span class="badge">VFM</span>' +
-          '</div>' +
-          '<div class="card-body">' +
-            '<div class="notice">Se ficar preso aqui, recarregue a página (Ctrl+F5).</div>' +
-            '<div class="sep"></div>' +
-            '<button class="btn btn-primary" type="button" onclick="location.reload()">Recarregar</button>' +
-          '</div>' +
-        '</div>';
-    }
-  }, 5000);
-})();
-</script>
-
+      // Se depois de 5s ainda não renderizou nada, mostra uma tela de fallback
+      setTimeout(function(){
+        var viewEl = document.getElementById('view');
+        if (viewEl && !viewEl.innerHTML.trim()){
+          viewEl.innerHTML =
+            '<div class="card">' +
+              '<div class="card-header">' +
+                '<div><div class="card-title">Carregando...</div><div class="card-subtitle">O jogo está demorando para iniciar (GitHub Pages)</div></div>' +
+                '<span class="badge">VFM</span>' +
+              '</div>' +
+              '<div class="card-body">' +
+                '<div class="notice">Se ficar preso aqui, recarregue a página (Ctrl+F5).</div>' +
+                '<div class="sep"></div>' +
+                '<button class="btn btn-primary" type="button" onclick="location.reload()">Recarregar</button>' +
+              '</div>' +
+            '</div>';
+        }
+      }, 5000);
+    })();
+  </script>
 </body>
 </html>

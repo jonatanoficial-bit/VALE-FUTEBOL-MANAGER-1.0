@@ -60,7 +60,7 @@
     }
   }
 
-  const BUILD_TAG = 'v1.14.1'; 
+  const BUILD_TAG = 'v1.14.2'; 
 
   /** Chaves de LocalStorage */
   const LS = {
@@ -309,7 +309,8 @@
       players
     };
     localStorage.setItem(ROSTER_OVERRIDE_KEY, JSON.stringify(payload));
-  
+  }
+
   function getRosterOverrideMeta() {
     try {
       const raw = localStorage.getItem(ROSTER_OVERRIDE_KEY);
@@ -333,7 +334,7 @@
       <div class="build-line"><b>dados</b> ${updatedStr}</div>
     `;
   }
-}
+
 
   function normalizeWikiTitle(name) {
     return (name || "")
