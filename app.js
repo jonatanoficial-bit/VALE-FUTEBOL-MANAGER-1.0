@@ -60,7 +60,7 @@
     }
   }
 
-  const BUILD_TAG = 'v1.14.6'; 
+  const BUILD_TAG = "v1.14.7"; 
 
   /** Chaves de LocalStorage */
   const LS = {
@@ -390,6 +390,8 @@
     // demais sul-americanas e ligas menores europeias incluídas no jogo
     return 3;
   
+  }
+
   const WIKI_TITLE_OVERRIDES = {
     // Brasil (siglas internas -> título mais comum na Wikipédia em PT)
     BRA: {
@@ -466,7 +468,6 @@
     return "en";
   }
 
-}
 
   async function fetchSquadFromWikipedia({ title, lang }) {
     // Usa MediaWiki API parse->HTML (CORS via origin=*)
