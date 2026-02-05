@@ -60,7 +60,7 @@
     }
   }
 
-  const BUILD_TAG = 'v1.13.0';
+  const BUILD_TAG = 'v1.14.0';
 
   // Build exibido no canto inferior esquerdo
   const BUILD = "v1.12.9";
@@ -260,13 +260,346 @@
         players: await tryLoad(files.players, { players: [] }),
         qualifications: await tryLoad(files.qualifications, {})
       };
+      applyRosterOverride();
+
     } catch {
       state.packData = null;
       state.ui.error = "Falha ao carregar dados do pacote.";
     }
   }
 
-  /** Router: mapeia rotas para funções de renderização */
+  
+  // ---------------------------------------------------------------------------
+  // Atualização Online de Elencos (custo zero) - via Wikipedia (MediaWiki API)
+  // ---------------------------------------------------------------------------
+
+  const ROSTER_OVERRIDE_KEY = "vfm_roster_override_v1";
+
+  function applyRosterOverride() {
+    try {
+      const raw = localStorage.getItem(ROSTER_OVERRIDE_KEY);
+      if (!raw) return;
+      const obj = JSON.parse(raw);
+      if (!obj || !Array.isArray(obj.players)) return;
+      if (!state.packData?.players?.players) return;
+
+      // Substitui jogadores do mesmo clubId pelos mais recentes (override)
+      const byClub = new Map();
+      for (const p of obj.players) {
+        if (!p || !p.clubId) continue;
+        if (!byClub.has(p.clubId)) byClub.set(p.clubId, []);
+        byClub.get(p.clubId).push(p);
+      }
+
+      const base = state.packData.players.players;
+      const kept = [];
+      const replacedClubIds = new Set(byClub.keys());
+      for (const p of base) {
+        if (!replacedClubIds.has(p.clubId)) kept.push(p);
+      }
+
+      const merged = kept.concat(obj.players);
+      state.packData.players.players = merged;
+      state.ui.toast = `Elencos online aplicados (${obj.updatedAt || "data desconhecida"})`;
+    } catch {
+      // ignora override corrompido
+    }
+  }
+
+  function saveRosterOverride(players) {
+    const payload = {
+      updatedAt: new Date().toISOString(),
+      players
+    };
+    localStorage.setItem(ROSTER_OVERRIDE_KEY, JSON.stringify(payload));
+  }
+
+  function normalizeWikiTitle(name) {
+    return (name || "")
+      .trim()
+      .replace(/\s+/g, " ")
+      .replace(/&/g, "and");
+  }
+
+  function guessWikiLangForCountry(country) {
+    // Preferimos enwiki para padronizar
+    return "en";
+  }
+
+  function computeOvr({ age, position, leagueTier, clubStrengthHint }) {
+    // Modelo consistente (custo zero): idade + posição + força da liga/clube
+    // Retorna 45..92
+    const pos = (position || "MF").toUpperCase();
+    const a = Number.isFinite(age) ? age : 25;
+
+    // Pico entre 26-29
+    const agePeak = 28;
+    const ageDelta = Math.abs(a - agePeak);
+    const ageScore = Math.max(0, 18 - ageDelta * 1.8); // 0..18
+
+    // Base por tier de liga (1 = elite, 5 = menor)
+    const tier = Number.isFinite(leagueTier) ? leagueTier : 3;
+    const tierBase = 68 - (tier - 1) * 5; // tier1=68, tier5=48
+
+    // Ajuste por posição
+    let posAdj = 0;
+    if (pos.includes("GK")) posAdj = 0;
+    else if (pos.includes("DF") || pos.includes("CB") || pos.includes("LB") || pos.includes("RB")) posAdj = 1;
+    else if (pos.includes("FW") || pos.includes("ST") || pos.includes("CF") || pos.includes("WG")) posAdj = 2;
+    else posAdj = 1; // MF
+
+    // Força do clube (hint) 0..10
+    const clubAdj = Math.max(-2, Math.min(10, Number.isFinite(clubStrengthHint) ? clubStrengthHint : 0));
+
+    const raw = tierBase + ageScore + posAdj + clubAdj;
+    return Math.max(45, Math.min(92, Math.round(raw)));
+  }
+
+  function leagueTierFromLeagueId(leagueId) {
+    // Heurística simples: as "big 5" europeias e Brasil A = tier 1
+    const id = (leagueId || "").toUpperCase();
+    if (["ENG", "ESP", "GER", "ITA", "FRA", "BRA_A"].includes(id)) return 1;
+    if (["POR", "ARG", "BRA_B"].includes(id)) return 2;
+    // demais sul-americanas e ligas menores europeias incluídas no jogo
+    return 3;
+  }
+
+  async function fetchSquadFromWikipedia({ title, lang }) {
+    // Usa MediaWiki API parse->HTML (CORS via origin=*)
+    const base = `https://${lang}.wikipedia.org/w/api.php`;
+    const url = `${base}?action=parse&format=json&prop=text&formatversion=2&origin=*&page=${encodeURIComponent(title)}`;
+
+    const r = await fetch(url, { cache: "no-store" });
+    if (!r.ok) throw new Error("Falha ao buscar página");
+    const data = await r.json();
+    const html = data?.parse?.text;
+    if (!html) throw new Error("Página sem HTML");
+
+    const doc = new DOMParser().parseFromString(html, "text/html");
+
+    // Tenta achar a seção "Current squad" (en) ou "Elenco atual" (pt)
+    const anchors = ["Current_squad", "Current_squad_and_staff", "First-team_squad", "Elenco_atual", "Plantel_actual"];
+    let node = null;
+    for (const id of anchors) {
+      node = doc.getElementById(id);
+      if (node) break;
+    }
+
+    // Busca o próximo table.wikitable após o heading, senão pega o primeiro wikitable grande
+    let table = null;
+    if (node) {
+      let cur = node;
+      for (let i = 0; i < 60 && cur; i++) {
+        cur = cur.parentElement || cur.nextElementSibling;
+        if (!cur) break;
+        const t = cur.querySelector?.("table.wikitable");
+        if (t) { table = t; break; }
+      }
+    }
+    if (!table) {
+      // fallback: pega a primeira wikitable que tenha colunas de posição/jogador
+      const tables = Array.from(doc.querySelectorAll("table.wikitable"));
+      table = tables.find((t) => {
+        const th = t.querySelectorAll("th");
+        const txt = Array.from(th).map(x => (x.textContent || "").toLowerCase()).join(" ");
+        return txt.includes("pos") || txt.includes("position") || txt.includes("player") || txt.includes("jogador");
+      }) || null;
+    }
+    if (!table) throw new Error("Tabela de elenco não encontrada");
+
+    const rows = Array.from(table.querySelectorAll("tr"));
+    const players = [];
+
+    for (const tr of rows) {
+      const cells = Array.from(tr.querySelectorAll("td"));
+      if (cells.length < 2) continue;
+
+      const rowText = cells.map(c => (c.textContent || "").trim());
+      // heurística: achar nome pelo primeiro link com /wiki/
+      const a = tr.querySelector('a[href^="/wiki/"]');
+      const name = (a?.textContent || rowText.find(x => x && x.length > 2) || "").trim();
+      if (!name) continue;
+
+      // posição: tenta primeira célula curta
+      let pos = (rowText[1] || rowText[0] || "").toUpperCase();
+      if (pos.length > 6) pos = (rowText[0] || "").toUpperCase();
+      pos = pos.replace(/\W+/g, "");
+
+      if (!pos || pos.length > 6) pos = "MF";
+
+      // idade: tenta extrair de data de nascimento em tooltip (raramente presente)
+      let age = null;
+      const birth = tr.querySelector('span.bday')?.textContent;
+      if (birth) {
+        const d = new Date(birth);
+        if (!isNaN(d.getTime())) {
+          const now = new Date();
+          age = now.getFullYear() - d.getFullYear();
+          const m = now.getMonth() - d.getMonth();
+          if (m < 0 || (m === 0 && now.getDate() < d.getDate())) age--;
+        }
+      }
+
+      players.push({ name, pos, age });
+    }
+
+    // Remove duplicados por nome
+    const seen = new Set();
+    const uniq = [];
+    for (const p of players) {
+      const key = p.name.toLowerCase();
+      if (seen.has(key)) continue;
+      seen.add(key);
+      uniq.push(p);
+    }
+
+    return uniq;
+  }
+
+  function viewRosterUpdate() {
+    return requirePackData(() => {
+      const leagues = state.packData?.competitions?.leagues || [];
+      const options = leagues.map((l) => `<option value="${esc(l.id)}">${esc(l.name || l.id)}</option>`).join("");
+      const info = `
+        <div class="notice">
+          <b>Atualização Online (custo zero)</b><br/>
+          Este modo busca o elenco atual na Wikipedia (sem API paga), cria <b>23 jogadores</b> por clube e recalcula OVR
+          com um modelo consistente (idade/posição/força da liga). O resultado fica salvo neste navegador.
+        </div>
+      `;
+      return `
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Atualizar Elencos Online</div>
+              <div class="card-subtitle">Modo automático • Sem planilhas • Sem APIs pagas</div>
+            </div>
+            <span class="badge">Build ${BUILD_TAG}</span>
+          </div>
+          <div class="card-body">
+            ${info}
+            <div class="sep"></div>
+            <div class="row">
+              <label class="small">Liga</label>
+              <select id="rosterLeague" class="input">${options}</select>
+            </div>
+            <div class="row" style="margin-top:10px;">
+              <button class="btn btn-primary" data-action="rosterUpdateLeague">Atualizar Liga Selecionada</button>
+              <button class="btn" data-action="rosterClearOverride">Limpar Atualização Online</button>
+              <button class="btn" data-go="/hub">Voltar</button>
+            </div>
+            <div class="sep"></div>
+            <div id="rosterLog" class="small" style="white-space:pre-wrap; line-height:1.35;"></div>
+          </div>
+        </div>
+      `;
+    });
+  }
+
+  async function updateLeagueRostersOnline(leagueId, log) {
+    const clubs = state.packData?.clubs?.clubs || [];
+    const allPlayers = state.packData?.players?.players || [];
+    const leagueClubs = clubs.filter((c) => c.leagueId === leagueId);
+    if (!leagueClubs.length) {
+      log(`Nenhum clube encontrado para liga ${leagueId}.`);
+      return;
+    }
+
+    const tier = leagueTierFromLeagueId(leagueId);
+    const newPlayers = [];
+
+    log(`Atualizando ${leagueClubs.length} clubes... (isso pode demorar)`);
+    for (let i = 0; i < leagueClubs.length; i++) {
+      const club = leagueClubs[i];
+      const lang = guessWikiLangForCountry(club.country);
+      const title = normalizeWikiTitle(club.wikiTitle || club.name);
+
+      log(`\n[${i + 1}/${leagueClubs.length}] ${club.name} → Wikipedia (${lang}): ${title}`);
+
+      try {
+        const squad = await fetchSquadFromWikipedia({ title, lang });
+
+        // Garante 23 com balanceamento por posição
+        const picked = [];
+        const groups = { GK: [], DF: [], MF: [], FW: [] };
+        for (const p of squad) {
+          const pos = (p.pos || "").toUpperCase();
+          const bucket = pos.includes("GK") ? "GK" : (pos.includes("DF") || pos.includes("CB") || pos.includes("LB") || pos.includes("RB")) ? "DF" :
+                         (pos.includes("FW") || pos.includes("ST") || pos.includes("CF") || pos.includes("WG")) ? "FW" : "MF";
+          groups[bucket].push(p);
+        }
+
+        // meta: 3 GK, 8 DF, 8 MF, 4 FW (total 23)
+        const take = (arr, n) => arr.slice(0, Math.max(0, n));
+        picked.push(...take(groups.GK, 3));
+        picked.push(...take(groups.DF, 8));
+        picked.push(...take(groups.MF, 8));
+        picked.push(...take(groups.FW, 4));
+
+        // completa se faltar
+        if (picked.length < 23) {
+          const flat = squad.filter(p => !picked.includes(p));
+          picked.push(...flat.slice(0, 23 - picked.length));
+        }
+        const final = picked.slice(0, 23);
+
+        // força do clube: base no elenco atual do jogo (se existir)
+        const cur = allPlayers.filter(p => p.clubId === club.id).slice(0, 23);
+        const avg = cur.length ? Math.round(cur.reduce((s, p) => s + (p.ovr || 0), 0) / cur.length) : 65;
+        const clubHint = Math.round((avg - 60) / 3); // -2..10 aprox
+
+        const created = final.map((p, idx) => {
+          const age = Number.isFinite(p.age) ? p.age : (18 + (idx % 15)); // fallback determinístico
+          const ovr = computeOvr({ age, position: p.pos, leagueTier: tier, clubStrengthHint: clubHint });
+          return {
+            id: `w_${club.id}_${idx + 1}`,
+            name: p.name,
+            pos: p.pos || "MF",
+            age,
+            ovr,
+            clubId: club.id,
+            nationality: "",
+            source: "wikipedia"
+          };
+        });
+
+        newPlayers.push(...created);
+        log(`✓ OK (${created.length} jogadores)`);
+      } catch (e) {
+        log(`✗ Falha: ${(e && e.message) ? e.message : "erro desconhecido"} — mantendo elenco atual do jogo`);
+      }
+
+      // Pequeno atraso para ser gentil com o servidor
+      await new Promise((res) => setTimeout(res, 350));
+    }
+
+    // Aplica override apenas para clubes que conseguimos gerar (mantém os demais)
+    const clubIds = new Set(leagueClubs.map(c => c.id));
+    const filtered = newPlayers.filter(p => clubIds.has(p.clubId));
+    if (!filtered.length) {
+      log(`\nNenhum elenco novo foi gerado.`);
+      return;
+    }
+
+    // Salva override mesclando com overrides existentes
+    let existing = [];
+    try {
+      const raw = localStorage.getItem(ROSTER_OVERRIDE_KEY);
+      if (raw) existing = (JSON.parse(raw)?.players || []);
+    } catch {}
+
+    // Remove clubes desta liga do override existente e adiciona os novos
+    const keep = existing.filter(p => !clubIds.has(p.clubId));
+    const merged = keep.concat(filtered);
+
+    saveRosterOverride(merged);
+    applyRosterOverride();
+
+    log(`\nConcluído! Elencos desta liga foram atualizados e salvos neste navegador.`);
+  }
+
+
+/** Router: mapeia rotas para funções de renderização */
   const routes = {
     "/home": viewHome,
     "/dlc": viewDlc,
@@ -275,6 +608,7 @@
     "/club-pick": viewClubPick,
     "/tutorial": viewTutorial,
     "/hub": viewHub,
+    "/roster-update": viewRosterUpdate,
     "/squad": viewSquad,
     "/tactics": viewTactics,
     "/training": viewTraining,
@@ -1365,7 +1699,22 @@ return save;
               <div class="col-6">
                 <div class="label">Autoescalar</div>
                 <button class="btn btn-primary" data-action="autoPickXI">Melhor XI</button>
-              </div>
+              
+  <div class="hub-card" data-go="/roster-update">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_staff.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">🛰️</div>
+        <div>
+          <div class="hub-title">Atualizar Elencos</div>
+          <div class="hub-desc">Buscar elencos online (Wikipedia) e recalcular OVR</div>
+        </div>
+      </div>
+      <div class="hub-right">➡️</div>
+    </div>
+  </div>
+</div>
             </div>
             <div class="sep"></div>
             <div class="notice">Sua escalação é salva automaticamente. Selecione jogadores no Elenco para ajustar.</div>
@@ -4087,7 +4436,36 @@ function viewFinance() {
     document.querySelectorAll('[data-action]').forEach((el) => {
       const action = el.getAttribute('data-action');
 
-      // --- Diagnósticos (provisório)
+      
+      // --- Atualização Online de Elencos
+      if (action === 'rosterUpdateLeague') {
+        const sel = document.getElementById('rosterLeague');
+        const logEl = document.getElementById('rosterLog');
+        const log = (msg) => { if (logEl) logEl.textContent += msg + "\n"; };
+        const leagueId = sel ? sel.value : null;
+        if (!leagueId) { log('Selecione uma liga.'); return; }
+        logEl.textContent = '';
+        (async () => {
+          try {
+            log('Iniciando atualização online...');
+            await updateLeagueRostersOnline(leagueId, log);
+          } catch (e) {
+            log('Erro: ' + (e?.message || e));
+          }
+        })();
+        return;
+      }
+
+      if (action === 'rosterClearOverride') {
+        localStorage.removeItem(ROSTER_OVERRIDE_KEY);
+        applyRosterOverride();
+        const logEl = document.getElementById('rosterLog');
+        if (logEl) logEl.textContent = 'Atualização online removida. Voltou para os dados do pacote.';
+        state.ui.toast = 'Override removido';
+        return;
+      }
+
+// --- Diagnósticos (provisório)
       if (action === 'diagCopy') {
         el.addEventListener('click', () => {
           try {
