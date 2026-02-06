@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>FlySim • DLC Offline (Admin Local)</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    body{overflow:auto}
+    .wrap{max-width:920px;margin:0 auto;padding:84px 14px 22px}
+    .topRow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
+    textarea{min-height:220px}
+    .grid{display:grid;grid-template-columns:1fr;gap:10px}
+    @media (min-width: 920px){ .grid{grid-template-columns:1fr 1fr} }
+    .note{color:rgba(234,241,255,.75); font-size:12px; line-height:1.4}
+    a{color:rgba(57,183,255,.95); text-decoration:none}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="brand">
+      <img src="assets/images/logo.png" class="logo" alt="Logo"/>
+      <div class="brandText">
+        <div class="brandTitle">DLC Offline</div>
+        <div class="brandSub">Editor local • Sem Firebase • Sem internet</div>
+      </div>
+    </div>
+    <div class="headerRight">
+      <a class="pillBtn" href="index.html">Voltar ao jogo</a>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="card">
+      <div class="h2">Como funciona</div>
+      <div class="note">
+        • Este admin é <b>local</b>. Ele grava no <b>localStorage</b> do seu navegador/dispositivo.<br/>
+        • Você pode <b>exportar</b> o DLC (JSON) e levar para outro dispositivo colando em Config → Importar DLC.<br/>
+        • Para adicionar foto real depois, use o campo <span class="mono">imageRef</span> (ex: <span class="mono">assets/aircraft/NJ-320.jpg</span>).
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="h2">Exportar DLC</div>
+        <div class="note">Copia o JSON atual do DLC para você guardar ou distribuir.</div>
+        <div class="hr"></div>
+        <button class="btn primary" id="exportBtn">Copiar JSON</button>
+        <div id="exportMsg" class="note" style="margin-top:8px"></div>
+        <div class="hr"></div>
+        <textarea id="dlcText" class="input mono" placeholder="O JSON aparece aqui (export) ou cole aqui (import)…"></textarea>
+      </div>
+
+      <div class="card">
+        <div class="h2">Importar DLC</div>
+        <div class="note">Cole um JSON válido e clique em Importar. Recarregue o jogo depois.</div>
+        <div class="hr"></div>
+        <button class="btn" id="importBtn">Importar do campo</button>
+        <div style="height:8px"></div>
+        <button class="btn danger" id="clearBtn">Limpar DLC</button>
+        <div id="importMsg" class="note" style="margin-top:8px"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="h2">Adicionar aeronave rapidamente</div>
+      <div class="note">Cria um item e adiciona ao <span class="mono">aircraftCatalog</span> do DLC.</div>
+      <div class="hr"></div>
+
+      <label>modelId (único)</label>
+      <input id="mId" class="input mono" placeholder="Ex: NJ-320"/>
+
+      <label>Nome exibido</label>
+      <input id="mName" class="input" placeholder="Ex: NarrowJet 320"/>
+
+      <label>Categoria</label>
+      <select id="mCat" class="input">
+        <option value="turboprop">turboprop</option>
+        <option value="regional" selected>regional</option>
+        <option value="narrow">narrow</option>
+        <option value="wide">wide</option>
+        <option value="jumbo">jumbo</option>
+      </select>
+
+      <div class="grid" style="grid-template-columns:1fr 1fr">
+        <div>
+          <label>Assentos</label>
+          <input id="mSeats" class="input" type="number" value="180"/>
+        </div>
+        <div>
+          <label>Alcance (km)</label>
+          <input id="mRange" class="input" type="number" value="6100"/>
+        </div>
+      </div>
+
+      <div class="grid" style="grid-template-columns:1fr 1fr">
+        <div>
+          <label>Preço (USD)</label>
+          <input id="mPrice" class="input" type="number" value="450000000"/>
+        </div>
+        <div>
+          <label>FuelBurn por km</label>
+          <input id="mFuel" class="input" type="number" step="0.01" value="2.4"/>
+        </div>
+      </div>
+
+      <label>imageRef (opcional)</label>
+      <input id="mImg" class="input mono" placeholder="assets/aircraft/NJ-320.jpg"/>
+
+      <div style="height:10px"></div>
+      <button class="btn primary" id="addModelBtn">Adicionar ao DLC</button>
+      <div id="addMsg" class="note" style="margin-top:8px"></div>
+    </div>
+  </div>
+
+  <script>
+    const DLC_KEY = "flysim_dlc_v1";
+    const $ = (id)=>document.getElementById(id);
+
+    function loadDlc(){
+      try{
+        const raw = localStorage.getItem(DLC_KEY);
+        if(!raw) return {};
+        return JSON.parse(raw);
+      }catch(e){ return {}; }
+    }
+    function saveDlc(obj){
+      localStorage.setItem(DLC_KEY, JSON.stringify(obj || {}));
+      window.dispatchEvent(new Event("dlc-updated"));
+    }
+
+    function toClipboard(text){
+      return navigator.clipboard.writeText(text);
+    }
+
+    $("exportBtn").addEventListener("click", async ()=>{
+      const dlc = loadDlc();
+      const json = JSON.stringify(dlc, null, 2);
+      $("dlcText").value = json;
+      try{
+        await toClipboard(json);
+        $("exportMsg").textContent = "Copiado!";
+      }catch(e){
+        $("exportMsg").textContent = "Não consegui copiar automaticamente — selecione e copie manualmente.";
+      }
+    });
+
+    $("importBtn").addEventListener("click", ()=>{
+      const raw = $("dlcText").value.trim();
+      if(!raw){ $("importMsg").textContent = "Cole um JSON primeiro."; return; }
+      try{
+        const obj = JSON.parse(raw);
+        saveDlc(obj);
+        $("importMsg").textContent = "DLC importado! Abra o jogo e recarregue a página.";
+      }catch(e){
+        $("importMsg").textContent = "JSON inválido.";
+      }
+    });
+
+    $("clearBtn").addEventListener("click", ()=>{
+      if(confirm("Limpar DLC local?")){
+        localStorage.removeItem(DLC_KEY);
+        $("importMsg").textContent = "DLC removido.";
+        $("dlcText").value = "";
+      }
+    });
+
+    $("addModelBtn").addEventListener("click", ()=>{
+      const dlc = loadDlc();
+      dlc.aircraftCatalog = Array.isArray(dlc.aircraftCatalog) ? dlc.aircraftCatalog : [];
+      const modelId = $("mId").value.trim();
+      if(!modelId){ $("addMsg").textContent = "modelId é obrigatório."; return; }
+      if(dlc.aircraftCatalog.some(x=>x.modelId===modelId)){
+        $("addMsg").textContent = "Já existe um modelId igual no DLC."; return;
+      }
+      const m = {
+        modelId,
+        name: $("mName").value.trim() || modelId,
+        category: $("mCat").value,
+        seats: Number($("mSeats").value||0),
+        rangeKm: Number($("mRange").value||0),
+        price: Number($("mPrice").value||0),
+        fuelBurnPerKm: Number($("mFuel").value||0),
+        imageRef: $("mImg").value.trim() || "assets/images/aircraft_narrow.png"
+      };
+      dlc.aircraftCatalog.unshift(m);
+      saveDlc(dlc);
+      $("addMsg").textContent = "Aeronave adicionada ao DLC. Exporte o JSON se quiser guardar.";
+    });
+  </script>
+</body>
+</html>

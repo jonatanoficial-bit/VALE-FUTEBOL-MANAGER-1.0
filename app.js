@@ -59,7 +59,7 @@
     }
   }
 
-  const BUILD_TAG = "v1.20.0";
+  const BUILD_TAG = "v1.20.1";
 
 // -----------------------------
 // Carreira (Parte 1) — Identidade do Treinador
@@ -1040,6 +1040,15 @@ function getTransferWindow(save) {
   return { open: false, label: 'Janela fechada', round: r, total };
 }
 
+// Safe wrapper: avoids ReferenceError if getTransferWindow is not declared in some builds
+function safeGetTransferWindow(save) {
+  try {
+    if (typeof getTransferWindow === 'function') return getTransferWindow(save);
+  } catch (e) {}
+  return { open: true, label: 'Janela aberta' };
+}
+
+
 function uid(prefix) {
   return `${prefix || 'id'}_${Math.random().toString(36).slice(2, 10)}_${Date.now().toString(36)}`;
 }
@@ -1071,7 +1080,7 @@ function evaluateBuyOffer(player, fee, wage) {
 
 /** Cria ofertas aleatórias de IA por jogadores do usuário (provisório) */
 function maybeGenerateIncomingOffers(save) {
-  const win = getTransferWindow(save);
+  const win = safeGetTransferWindow(save);
   if (!win.open) return;
 
   const squad = save.squad?.players || [];
@@ -4782,7 +4791,7 @@ function viewFinance() {
       const currency = state.packData?.rules?.gameRules?.currency || 'BRL';
       const cashStr = (save.finance?.cash || 0).toLocaleString('pt-BR', { style: 'currency', currency });
 
-      const win = getTransferWindow(save);
+      const win = safeGetTransferWindow(save);
       const winBadge = win.open ? `<span class="badge">✅ ${esc(win.label)}</span>` : `<span class="badge">⛔ ${esc(win.label)}</span>`;
 
       const players = state.packData?.players?.players || [];
@@ -5542,7 +5551,7 @@ if (action === 'makeOffer') {
     ensureSystems(save);
     ensureSeason(save);
 
-    const win = getTransferWindow(save);
+    const win = safeGetTransferWindow(save);
     if (!win.open) {
       alert('Janela de transferências fechada. Aguarde a próxima janela.');
       return;
@@ -5666,7 +5675,7 @@ if (action === 'acceptOfferIn') {
     ensureSystems(save);
     ensureSeason(save);
 
-    const win = getTransferWindow(save);
+    const win = safeGetTransferWindow(save);
     if (!win.open) {
       alert('Janela fechada. Não é possível vender agora.');
       return;
