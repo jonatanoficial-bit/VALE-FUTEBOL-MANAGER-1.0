@@ -60,7 +60,93 @@
     }
   }
 
-  const BUILD_TAG = 'v1.15.1'; 
+  const BUILD_TAG = 'v1.16.0';
+
+// -----------------------------
+// Carreira (Parte 1) — Identidade do Treinador
+// -----------------------------
+const NATIONALITIES = [
+  { id: 'BRA', name: 'Brasil', flag: '🇧🇷', asset: 'assets/flags/bra.png' },
+  { id: 'ARG', name: 'Argentina', flag: '🇦🇷', asset: 'assets/flags/arg.png' },
+  { id: 'URU', name: 'Uruguai', flag: '🇺🇾', asset: 'assets/flags/uru.png' },
+  { id: 'CHI', name: 'Chile', flag: '🇨🇱', asset: 'assets/flags/chi.png' },
+  { id: 'COL', name: 'Colômbia', flag: '🇨🇴', asset: 'assets/flags/col.png' },
+  { id: 'ENG', name: 'Inglaterra', flag: '🏴', asset: 'assets/flags/eng.png' },
+  { id: 'ESP', name: 'Espanha', flag: '🇪🇸', asset: 'assets/flags/esp.png' },
+  { id: 'ITA', name: 'Itália', flag: '🇮🇹', asset: 'assets/flags/ita.png' },
+  { id: 'GER', name: 'Alemanha', flag: '🇩🇪', asset: 'assets/flags/ger.png' },
+  { id: 'FRA', name: 'França', flag: '🇫🇷', asset: 'assets/flags/fra.png' },
+  { id: 'POR', name: 'Portugal', flag: '🇵🇹', asset: 'assets/flags/por.png' }
+];
+
+const AVATARS = [
+  { id: 'avatar_01', label: 'Avatar 01', asset: 'assets/avatars/avatar_01.png' },
+  { id: 'avatar_02', label: 'Avatar 02', asset: 'assets/avatars/avatar_02.png' },
+  { id: 'avatar_03', label: 'Avatar 03', asset: 'assets/avatars/avatar_03.png' },
+  { id: 'avatar_04', label: 'Avatar 04', asset: 'assets/avatars/avatar_04.png' }
+];
+
+const COACH_STYLES = [
+  { id: 'balanced', name: 'Equilibrado' },
+  { id: 'possession', name: 'Posse de bola' },
+  { id: 'pressing', name: 'Pressão alta' },
+  { id: 'counter', name: 'Contra-ataque' }
+];
+
+const CAREER_SCORE_RULES = {
+  WIN: 10,
+  DRAW: 3,
+  LOSS: 0,
+  CUP_QUALIFY: 50,
+  STATE_TITLE: 100,
+  LEAGUE_TITLE: 200,
+  CONTINENTAL_TITLE: 400,
+  RELEGATION: -200,
+  SACKED: -150
+};
+
+function getNationalityById(id) {
+  return NATIONALITIES.find(n => n.id === id) || NATIONALITIES[0];
+}
+function getAvatarById(id) {
+  return AVATARS.find(a => a.id === id) || AVATARS[0];
+}
+function getStyleById(id) {
+  return COACH_STYLES.find(s => s.id === id) || COACH_STYLES[0];
+}
+function computeReputationTier(score) {
+  const s = Number(score || 0);
+  if (s >= 1500) return 'ELITE';
+  if (s >= 800) return 'RECONHECIDO';
+  if (s >= 300) return 'PROMISSOR';
+  return 'INICIANTE';
+}
+function addCareerScore(save, points, reason) {
+  if (!save?.career) return;
+  if (!save.career.careerScore && save.career.careerScore !== 0) save.career.careerScore = 0;
+  const p = Number(points || 0);
+  if (!p) return;
+  save.career.careerScore = Math.max(0, Number(save.career.careerScore || 0) + p);
+  save.career.reputationTier = computeReputationTier(save.career.careerScore);
+  if (!Array.isArray(save.career.scoreLog)) save.career.scoreLog = [];
+  save.career.scoreLog.push({ at: nowIso(), points: p, reason: reason || 'Ação' });
+  // mantém log pequeno
+  if (save.career.scoreLog.length > 50) save.career.scoreLog = save.career.scoreLog.slice(-50);
+}
+
+function generateClubObjective(save) {
+  const club = getClub(save.career.clubId);
+  const leagueId = club?.leagueId || 'BRA_SERIE_A';
+  // regra simples por liga
+  if (String(leagueId).includes('SERIE_A') || String(leagueId).includes('BRA_SERIE_A')) {
+    return { type: 'league', target: 'TOP_6', rewardScore: 120, penaltyScore: -80, label: 'Terminar no TOP 6' };
+  }
+  if (String(leagueId).includes('SERIE_B') || String(leagueId).includes('BRA_SERIE_B')) {
+    return { type: 'league', target: 'PROMOTION', rewardScore: 160, penaltyScore: -60, label: 'Buscar acesso (TOP 4)' };
+  }
+  return { type: 'league', target: 'MIDTABLE', rewardScore: 80, penaltyScore: -60, label: 'Terminar no meio da tabela' };
+}
+ 
 
   /** Chaves de LocalStorage */
   const LS = {
@@ -344,12 +430,7 @@
   }
 
   function guessWikiLangForCountry(country) {
-    const c = (country || "").toLowerCase();
-    if (c.includes("brasil") || c.includes("brazil")) return "pt";
-    if (c.includes("portugal")) return "pt";
-    if (c.includes("espanha") || c.includes("spain")) return "es";
-    if (c.includes("argentina") || c.includes("uruguai") || c.includes("uruguay") || c.includes("chile") || c.includes("colômbia") || c.includes("colombia") || c.includes("equador") || c.includes("ecuador") || c.includes("bolívia") || c.includes("bolivia") || c.includes("venezuela")) return "es";
-    // padrão: enwiki costuma ter melhor padronização de tabelas
+    // Preferimos enwiki para padronizar
     return "en";
   }
 
@@ -389,256 +470,101 @@
     if (["POR", "ARG", "BRA_B"].includes(id)) return 2;
     // demais sul-americanas e ligas menores europeias incluídas no jogo
     return 3;
-  
   }
-
-  const WIKI_TITLE_OVERRIDES = {
-    // Brasil (siglas internas -> título mais comum na Wikipédia em PT)
-    BRA: {
-      ACG: "Atlético Clube Goianiense",
-      AMG: "Clube Atlético Mineiro",
-      ATC: "Athletico Paranaense",
-      CAP: "Athletico Paranaense",
-      CHA: "Associação Chapecoense de Futebol",
-      COR: "Sport Club Corinthians Paulista",
-      CRU: "Cruzeiro Esporte Clube",
-      FLA: "Clube de Regatas do Flamengo",
-      FLU: "Fluminense Football Club",
-      FOR: "Fortaleza Esporte Clube",
-      GRE: "Grêmio Foot-Ball Porto Alegrense",
-      INT: "Sport Club Internacional",
-      PAL: "Sociedade Esportiva Palmeiras",
-      SAO: "São Paulo Futebol Clube",
-      SAN: "Santos Futebol Clube",
-      VAS: "Club de Regatas Vasco da Gama",
-      BOT: "Botafogo de Futebol e Regatas",
-      BAH: "Esporte Clube Bahia",
-      VIT: "Esporte Clube Vitória",
-      RBB: "Red Bull Bragantino",
-      CEA: "Ceará Sporting Club",
-      SPT: "Sport Club do Recife",
-      JUV: "Esporte Clube Juventude",
-      MIR: "Mirassol Futebol Clube",
-      CFC: "Coritiba Foot Ball Club",
-      GOI: "Goiás Esporte Clube",
-      VNO: "Vila Nova Futebol Clube",
-      ATG: "Atlético Clube Goianiense",
-      CRI: "Criciúma Esporte Clube",
-      REM: "Clube do Remo",
-      PAY: "Paysandu Sport Club",
-      AVA: "Avaí Futebol Clube",
-      NOV: "Grêmio Novorizontino",
-      BOTSP: "Botafogo Futebol Clube (Ribeirão Preto)",
-      BFS: "Botafogo Futebol Clube (Ribeirão Preto)",
-      FER: "Associação Ferroviária de Esportes",
-      VOL: "Volta Redonda Futebol Clube",
-      AMA: "Amazonas Futebol Clube",
-      CRB: "Clube de Regatas Brasil",
-      AME: "América Futebol Clube (Minas Gerais)",
-      CUI: "Cuiabá Esporte Clube",
-      OPE: "Operário Ferroviário Esporte Clube"
-    }
-  };
-
-  function wikiTitleForClub(club, leagueId) {
-    const raw = (club?.wikiTitle || club?.name || "").trim();
-    const short = (club?.short || club?.id || "").trim();
-    const lid = (leagueId || club?.leagueId || "").toUpperCase();
-
-    // Se o clube vem só como sigla (ex.: CAP), tenta override brasileiro
-    if ((lid.startsWith("BRA") || (club?.country || "").toLowerCase().includes("brasil")) && raw && raw.length <= 4) {
-      const key = raw.toUpperCase();
-      const t = WIKI_TITLE_OVERRIDES?.BRA?.[key];
-      if (t) return t;
-      // fallback: tenta expandir por short
-      const t2 = WIKI_TITLE_OVERRIDES?.BRA?.[short.toUpperCase()];
-      if (t2) return t2;
-    }
-    return raw;
-  }
-
-  function wikiLangForClub(club, leagueId) {
-    // Se o país não existe no dado do clube, inferimos pelo leagueId
-    const lid = (leagueId || club?.leagueId || "").toUpperCase();
-    if (club?.country) return guessWikiLangForCountry(club.country);
-    if (lid.startsWith("BRA")) return "pt";
-    if (lid.startsWith("ARG") || lid.startsWith("URU") || lid.startsWith("CHI") || lid.startsWith("COL") || lid.startsWith("ECU") || lid.startsWith("BOL") || lid.startsWith("VEN")) return "es";
-    if (lid.startsWith("POR")) return "pt";
-    if (lid.startsWith("ESP")) return "es";
-    return "en";
-  }
-
 
   async function fetchSquadFromWikipedia({ title, lang }) {
-  // Estratégia robusta (custo zero):
-  // 1) Descobre a seção "Current squad / Elenco atual / Plantel actual / ..." via prop=sections
-  // 2) Faz parse SOMENTE dessa seção (evita pegar tabela de patrocinadores, títulos, etc.)
-  // 3) Se não houver seção, usa página inteira como fallback
-  // 4) Extrai jogadores de tabelas (qualquer classe) com score + fallback por listas
+    // Usa MediaWiki API parse->HTML (CORS via origin=*)
+    const base = `https://${lang}.wikipedia.org/w/api.php`;
+    const url = `${base}?action=parse&format=json&prop=text&formatversion=2&origin=*&page=${encodeURIComponent(title)}`;
 
-  const base = `https://${lang}.wikipedia.org/w/api.php`;
-
-  async function fetchParse(params) {
-    const qs = new URLSearchParams({
-      action: "parse",
-      format: "json",
-      formatversion: "2",
-      origin: "*",
-      ...params
-    });
-    const url = `${base}?${qs.toString()}`;
     const r = await fetch(url, { cache: "no-store" });
     if (!r.ok) throw new Error("Falha ao buscar página");
     const data = await r.json();
-    return data?.parse || null;
-  }
+    const html = data?.parse?.text;
+    if (!html) throw new Error("Página sem HTML");
 
-  const anchors = [
-    // en
-    "current squad", "first-team squad", "first team squad", "squad",
-    // pt
-    "elenco atual", "elenco",
-    // es
-    "plantel actual", "plantilla", "equipo"
-  ];
+    const doc = new DOMParser().parseFromString(html, "text/html");
 
-  // 1) tenta achar índice de seção por título
-  let sectionIndex = null;
-  try {
-    const parsed = await fetchParse({ prop: "sections", page: title });
-    const sections = parsed?.sections || [];
-    const best = sections.find((s) => {
-      const line = (s?.line || "").toLowerCase();
-      return anchors.some((a) => line.includes(a));
-    });
-    if (best && best.index != null) sectionIndex = String(best.index);
-  } catch (_) {
-    sectionIndex = null;
-  }
-
-  // 2) pega HTML da seção (ou da página inteira)
-  let html = null;
-  if (sectionIndex != null) {
-    const parsed = await fetchParse({ prop: "text", page: title, section: sectionIndex });
-    html = parsed?.text || null;
-  }
-  if (!html) {
-    const parsed = await fetchParse({ prop: "text", page: title });
-    html = parsed?.text || null;
-  }
-  if (!html) throw new Error("Página sem HTML");
-
-  const doc = new DOMParser().parseFromString(html, "text/html");
-
-  function norm(s) { return (s || "").replace(/\s+/g, " ").trim(); }
-  const badNameRx = /^(\d{4}(\s*[–-]\s*\d{2,4})?)$/;
-  const badBrandRx = /(adidas|umbro|nike|puma|reebok|kappa|penalty|lotto|topper|joma|macron|new balance|mizuno|diadora|hummel|fila)/i;
-
-  function detectPos(text) {
-    const t = (text || "").toUpperCase();
-    if (/\b(GK|GOALKEEPER|GOLEIRO|GOL)\b/.test(t)) return "GK";
-    if (/\b(DF|DEF|DEFENDER|ZAG|CB|LB|RB|LAT)\b/.test(t)) return "DF";
-    if (/\b(MF|MID|MIDFIELDER|MEI|CM|DM|AM)\b/.test(t)) return "MF";
-    if (/\b(FW|ATT|FORWARD|ATA|ST|CF|LW|RW)\b/.test(t)) return "FW";
-    return null;
-  }
-
-  function detectAge(cellsText) {
-    for (const s of cellsText) {
-      const m = (s || "").match(/\b(\d{2})\b/);
-      if (!m) continue;
-      const n = parseInt(m[1], 10);
-      if (n >= 15 && n <= 45) return n;
+    // Tenta achar a seção "Current squad" (en) ou "Elenco atual" (pt)
+    const anchors = ["Current_squad", "Current_squad_and_staff", "First-team_squad", "Elenco_atual", "Plantel_actual"];
+    let node = null;
+    for (const id of anchors) {
+      node = doc.getElementById(id);
+      if (node) break;
     }
-    return null;
-  }
 
-  function scoreTable(t) {
-    const th = norm(Array.from(t.querySelectorAll("th")).map(x => x.textContent).join(" ")).toLowerCase();
-    const rows = t.querySelectorAll("tr").length;
-
-    let score = 0;
-    if (rows >= 12) score += Math.min(30, rows);
-    if (/(pos|position|jogador|player|nome|name|idade|age|no\.|nº|number|nation|nat|nac)/.test(th)) score += 25;
-    if (/(current squad|elenco|plantel|squad|plantilla)/.test(th)) score += 20;
-
-    const links = t.querySelectorAll('a[href^="/wiki/"]').length;
-    score += Math.min(40, links);
-
-    if (/(sponsor|sponsorship|patrocin|supplier|fornecedor|material esportivo|kit|manufacturer|marcas)/.test(th)) score -= 60;
-    if (/(honours|honors|títulos|titles|campeonat|copa|taça|torneio|supercopa|recopa|libertadores|sul-americana)/.test(th)) score -= 30;
-
-    return score;
-  }
-
-  const tables = Array.from(doc.querySelectorAll("table"));
-  let table = null;
-  if (tables.length) {
-    const ranked = tables.map(t => ({ t, s: scoreTable(t) })).sort((a,b) => b.s - a.s);
-    if (ranked[0] && ranked[0].s >= 30) table = ranked[0].t;
-  }
-
-  const players = [];
-
-  if (table) {
-    const rows = Array.from(table.querySelectorAll("tr"));
-    for (const tr of rows) {
-      const tds = Array.from(tr.querySelectorAll("td"));
-      if (tds.length < 2) continue;
-
-      const cellsText = tds.map(td => norm(td.textContent));
-      const rowAllText = norm(cellsText.join(" "));
-
-      const links = Array.from(tr.querySelectorAll('a[href^="/wiki/"]'));
-      let name = "";
-      for (const a of links) {
-        const tx = norm(a.textContent);
-        if (!tx) continue;
-        if (tx.length < 3) continue;
-        if (badNameRx.test(tx)) continue;
-        if (badBrandRx.test(tx)) continue;
-        if (/(campeonato|copa|taça|torneio|supercopa|recopa|libertadores|sul-americana)/i.test(tx)) continue;
-        name = tx;
-        break;
+    // Busca o próximo table.wikitable após o heading, senão pega o primeiro wikitable grande
+    let table = null;
+    if (node) {
+      let cur = node;
+      for (let i = 0; i < 60 && cur; i++) {
+        cur = cur.parentElement || cur.nextElementSibling;
+        if (!cur) break;
+        const t = cur.querySelector?.("table.wikitable");
+        if (t) { table = t; break; }
       }
+    }
+    if (!table) {
+      // fallback: pega a primeira wikitable que tenha colunas de posição/jogador
+      const tables = Array.from(doc.querySelectorAll("table.wikitable"));
+      table = tables.find((t) => {
+        const th = t.querySelectorAll("th");
+        const txt = Array.from(th).map(x => (x.textContent || "").toLowerCase()).join(" ");
+        return txt.includes("pos") || txt.includes("position") || txt.includes("player") || txt.includes("jogador");
+      }) || null;
+    }
+    if (!table) throw new Error("Tabela de elenco não encontrada");
+
+    const rows = Array.from(table.querySelectorAll("tr"));
+    const players = [];
+
+    for (const tr of rows) {
+      const cells = Array.from(tr.querySelectorAll("td"));
+      if (cells.length < 2) continue;
+
+      const rowText = cells.map(c => (c.textContent || "").trim());
+      // heurística: achar nome pelo primeiro link com /wiki/
+      const a = tr.querySelector('a[href^="/wiki/"]');
+      const name = (a?.textContent || rowText.find(x => x && x.length > 2) || "").trim();
       if (!name) continue;
 
-      let pos = detectPos(rowAllText);
-      if (!pos) pos = detectPos(cellsText[0]) || detectPos(cellsText[1]) || "MF";
+      // posição: tenta primeira célula curta
+      let pos = (rowText[1] || rowText[0] || "").toUpperCase();
+      if (pos.length > 6) pos = (rowText[0] || "").toUpperCase();
+      pos = pos.replace(/\W+/g, "");
 
-      const age = detectAge(cellsText);
+      if (!pos || pos.length > 6) pos = "MF";
+
+      // idade: tenta extrair de data de nascimento em tooltip (raramente presente)
+      let age = null;
+      const birth = tr.querySelector('span.bday')?.textContent;
+      if (birth) {
+        const d = new Date(birth);
+        if (!isNaN(d.getTime())) {
+          const now = new Date();
+          age = now.getFullYear() - d.getFullYear();
+          const m = now.getMonth() - d.getMonth();
+          if (m < 0 || (m === 0 && now.getDate() < d.getDate())) age--;
+        }
+      }
 
       players.push({ name, pos, age });
     }
-  }
 
-  if (players.length < 11) {
-    const lis = Array.from(doc.querySelectorAll("li a[href^='/wiki/']"));
-    for (const a of lis) {
-      const name = norm(a.textContent);
-      if (!name || name.length < 3) continue;
-      if (badNameRx.test(name)) continue;
-      if (badBrandRx.test(name)) continue;
-      if (/(campeonato|copa|taça|torneio|supercopa|recopa|libertadores|sul-americana)/i.test(name)) continue;
-      players.push({ name, pos: "MF", age: null });
-      if (players.length >= 40) break;
+    // Remove duplicados por nome
+    const seen = new Set();
+    const uniq = [];
+    for (const p of players) {
+      const key = p.name.toLowerCase();
+      if (seen.has(key)) continue;
+      seen.add(key);
+      uniq.push(p);
     }
+
+    return uniq;
   }
 
-  if (!players.length) throw new Error("Tabela de elenco não encontrada");
-
-  const seen = new Set();
-  const uniq = [];
-  for (const p of players) {
-    const key = p.name.toLowerCase();
-    if (seen.has(key)) continue;
-    seen.add(key);
-    uniq.push(p);
-  }
-  return uniq;
-}
-
-function viewRosterUpdate() {
+  function viewRosterUpdate() {
     return requirePackData(() => {
       const leagues = state.packData?.competitions?.leagues || [];
       const options = leagues.map((l) => `<option value="${esc(l.id)}">${esc(l.name || l.id)}</option>`).join("");
@@ -693,8 +619,8 @@ function viewRosterUpdate() {
     log(`Atualizando ${leagueClubs.length} clubes... (isso pode demorar)`);
     for (let i = 0; i < leagueClubs.length; i++) {
       const club = leagueClubs[i];
-      const lang = wikiLangForClub(club, leagueId);
-      const title = normalizeWikiTitle(wikiTitleForClub(club, leagueId));
+      const lang = guessWikiLangForCountry(club.country);
+      const title = normalizeWikiTitle(club.wikiTitle || club.name);
 
       log(`\n[${i + 1}/${leagueClubs.length}] ${club.name} → Wikipedia (${lang}): ${title}`);
 
@@ -861,42 +787,6 @@ function applyBackground(path) {
     return readSlot(id);
   }
 
-
-  /** Exige apenas que o pacote de dados esteja carregado (sem exigir save). */
-  function requirePackData(cb) {
-    if (!state.settings.selectedPackId) {
-      return `
-        <div class="card">
-          <div class="card-body">
-            <div class="notice">Selecione um pacote (DLC) antes de continuar.</div>
-            <div class="sep"></div>
-            <button class="btn btn-primary" data-go="/dlc">Escolher DLC</button>
-            <button class="btn btn-ghost" data-go="/home">Menu</button>
-          </div>
-        </div>
-      `;
-    }
-    // Se por algum motivo o pacote ainda não carregou, orienta recarregar
-    if (!state.packData || !state.packData.clubs || !state.packData.players || !state.packData.competitions) {
-      return `
-        <div class="card">
-          <div class="card-header"><div class="card-title">Carregando dados...</div></div>
-          <div class="card-body">
-            <div class="notice">Os dados do pacote ainda não foram carregados. Aguarde alguns segundos ou recarregue a página.</div>
-            <div class="sep"></div>
-            <div class="row">
-              <button class="btn btn-primary" type="button" onclick="location.reload()">Recarregar</button>
-              <button class="btn" data-go="/dlc">Trocar DLC</button>
-              <button class="btn btn-ghost" data-go="/home">Menu</button>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-    return cb();
-  }
-
-
   /** Exige um save válido; caso contrário, retorna mensagem de aviso */
   function requireSave(cb) {
     const save = activeSave();
@@ -1005,6 +895,20 @@ function applyBackground(path) {
 
   /** Garante que a carreira tenha sistemas de elenco, tática e treinos */
   function ensureSystems(save) {
+    if (!save.career) save.career = { clubId: null };
+    if (!save.career.coachId) save.career.coachId = 'C001';
+    if (save.career.coachName === undefined || save.career.coachName === null) save.career.coachName = '';
+    if (!save.career.nationalityId) save.career.nationalityId = 'BRA';
+    if (!save.career.nationality) save.career.nationality = getNationalityById(save.career.nationalityId).name;
+    if (!save.career.avatarId) save.career.avatarId = 'avatar_01';
+    if (!save.career.coachAge) save.career.coachAge = 35;
+    if (!save.career.styleId) save.career.styleId = 'balanced';
+    if (save.career.careerScore === undefined || save.career.careerScore === null) save.career.careerScore = 0;
+    if (!save.career.reputationTier) save.career.reputationTier = computeReputationTier(save.career.careerScore);
+    if (!Array.isArray(save.career.trophies)) save.career.trophies = [];
+    if (!Array.isArray(save.career.history)) save.career.history = [];
+    if (!Array.isArray(save.career.scoreLog)) save.career.scoreLog = [];
+    if (!save.career.objective && save.career.clubId) save.career.objective = generateClubObjective(save);
     save.squad = save.squad || {};
     save.tactics = save.tactics || {};
     save.training = save.training || {};
@@ -1450,42 +1354,87 @@ return save;
   }
 
   /** Criação de carreira: nome, nacionalidade, etc. */
-  function viewCareerCreate() {
-    return requireSave((save) => {
-      const coachName = save.career?.coachName || "";
-      const nationality = save.career?.nationality || "Brasil";
-      return `
-        <div class="card">
-          <div class="card-header">
-            <div>
-              <div class="card-title">Criar Carreira</div>
-              <div class="card-subtitle">Defina seu treinador</div>
-            </div>
-            <span class="badge">Passo 1/3</span>
+  
+function viewCareerCreate() {
+  return requireSave((save) => {
+    ensureSystems(save);
+    const coachName = save.career?.coachName || "";
+    const age = Number(save.career?.coachAge || 35);
+    const nat = getNationalityById(save.career?.nationalityId || 'BRA');
+    const av = getAvatarById(save.career?.avatarId || 'avatar_01');
+    const style = getStyleById(save.career?.styleId || 'balanced');
+
+    const natButtons = NATIONALITIES.map(n => {
+      const active = n.id === nat.id ? 'chip active' : 'chip';
+      return `<button class="${active}" data-action="setCoachNationality" data-value="${esc(n.id)}" title="${esc(n.name)}">${esc(n.flag)} <span>${esc(n.name)}</span></button>`;
+    }).join('');
+
+    const avatarButtons = AVATARS.map(a => {
+      const active = a.id === av.id ? 'avatar-tile active' : 'avatar-tile';
+      // Se o PNG não existir, mostramos apenas o label — o usuário poderá adicionar depois.
+      return `<button class="${active}" data-action="setCoachAvatar" data-value="${esc(a.id)}">
+        <div class="avatar-img" style="background-image:url('${urlOf(a.asset)}');background-size:cover;background-position:center;"></div>
+        <div class="avatar-label">${esc(a.label)}</div>
+      </button>`;
+    }).join('');
+
+    const styleOptions = COACH_STYLES.map(s => `<option value="${esc(s.id)}" ${s.id === style.id ? 'selected' : ''}>${esc(s.name)}</option>`).join('');
+
+    return `
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Criar Carreira</div>
+            <div class="card-subtitle">Defina seu treinador</div>
           </div>
-          <div class="card-body">
-            <div class="grid">
-              <div class="col-6">
-                <div class="label">Nome do treinador</div>
-                <input class="input" data-field="coachName" value="${esc(coachName)}" placeholder="Ex: João Vale" />
-              </div>
-              <div class="col-6">
-                <div class="label">Nacionalidade</div>
-                <input class="input" data-field="nationality" value="${esc(nationality)}" placeholder="Ex: Brasil" />
-              </div>
+          <span class="badge">Passo 1/3</span>
+        </div>
+        <div class="card-body">
+          <div class="grid">
+            <div class="col-6">
+              <div class="label">Nome do treinador</div>
+              <input class="input" data-action="coachFieldInput" data-field="coachName" value="${esc(coachName)}" placeholder="Ex: João Vale" />
             </div>
-            <div class="sep"></div>
-            <div class="row">
-              <button class="btn" data-go="/slots">Voltar</button>
-              <button class="btn btn-primary" data-action="careerContinueToClub">Continuar</button>
+            <div class="col-3">
+              <div class="label">Idade (início)</div>
+              <input class="input" type="number" min="18" max="70" step="1" data-action="coachFieldInput" data-field="coachAge" value="${esc(String(age))}" />
             </div>
+            <div class="col-3">
+              <div class="label">Estilo</div>
+              <select class="select" data-action="setCoachStyle">
+                ${styleOptions}
+              </select>
+            </div>
+          </div>
+
+          <div class="sep"></div>
+
+          <div class="label">País</div>
+          <div class="chip-grid">
+            ${natButtons}
+          </div>
+
+          <div class="sep"></div>
+
+          <div class="label">Avatar</div>
+          <div class="avatar-grid">
+            ${avatarButtons}
+          </div>
+          <div class="hint">Dica: você pode colocar seus PNGs em <code>assets/avatars/</code>. O jogo também funciona sem eles (usa tiles).</div>
+
+          <div class="sep"></div>
+          <div class="row">
+            <button class="btn" data-go="/slots">Voltar</button>
+            <button class="btn btn-primary" data-action="careerContinueToClub">Continuar</button>
           </div>
         </div>
-      `;
-    });
-  }
+      </div>
+    `;
+  });
+}
 
-  /** Escolha de clube */
+/** Escolha de clube */
+ */
   function viewClubPick() {
     return requireSave((save) => {
       const clubs = state.packData?.clubs?.clubs || [];
@@ -1627,7 +1576,7 @@ return save;
           <div class="card-header">
             <div>
               <div class="card-title">HUB do Treinador</div>
-              <div class="card-subtitle">${esc(club?.name || '')} • Treinador: ${esc(save.career.coachName)}</div>
+              <div class="card-subtitle">${esc(club?.name || '')} • ${esc(getNationalityById(save.career.nationalityId).flag)} ${esc(save.career.coachName)} • Idade: ${esc(String(save.career.coachAge||''))} • Reputação: <b>${esc(save.career.reputationTier||'INICIANTE')}</b> • Score: <b>${esc(String(save.career.careerScore||0))}</b></div>
             </div>
             <span class="badge">Caixa: ${cashStr}</span>
           </div>
@@ -1636,6 +1585,16 @@ return save;
               <span class="small">Patrocínio</span>
               <b>${esc(sponsorName)}</b>
             </div>
+
+<div class="kv">
+  <span class="small">Meta da Temporada</span>
+  <b>${esc(save.career.objective?.label || '—')}</b>
+</div>
+<div class="kv">
+  <span class="small">Temporada</span>
+  <b>${esc(save.season?.id || '')}</b>
+</div>
+
             <div class="sep"></div>
             <div class="hub-grid">
   <div class="hub-card" data-go="/matches">
@@ -1817,23 +1776,6 @@ return save;
       <div class="hub-cta">Abrir</div>
     </div>
   </div>
-
-
-  <div class="hub-card" data-go="/roster-update">
-    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_staff.png')}')"></div>
-    <div class="hub-overlay"></div>
-    <div class="hub-content">
-      <div class="hub-left">
-        <div class="hub-pill">🛰️</div>
-        <div>
-          <div class="hub-title">Atualizar Elencos</div>
-          <div class="hub-desc">Buscar elencos online e recalcular OVR (23 por clube)</div>
-        </div>
-      </div>
-      <div class="hub-cta">Abrir</div>
-    </div>
-  </div>
-
 </div></div>
             <div class="sep"></div>
             <div class="notice">
@@ -1935,6 +1877,22 @@ return save;
               <div class="col-6">
                 <div class="label">Autoescalar</div>
                 <button class="btn btn-primary" data-action="autoPickXI">Melhor XI</button>
+              
+  <div class="hub-card" data-go="/roster-update">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_staff.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">🛰️</div>
+        <div>
+          <div class="hub-title">Atualizar Elencos</div>
+          <div class="hub-desc">Buscar elencos online (Wikipedia) e recalcular OVR</div>
+        </div>
+      </div>
+      <div class="hub-right">➡️</div>
+    </div>
+  </div>
+</div>
             </div>
             <div class="sep"></div>
             <div class="notice">Sua escalação é salva automaticamente. Selecione jogadores no Elenco para ajustar.</div>
@@ -2085,6 +2043,50 @@ return save;
       userPos,
       finishedAt: save.season.completedAt
     });
+
+// Parte 1: pontuação e histórico de carreira
+try {
+  if (!save.career) save.career = {};
+  if (!Array.isArray(save.career.history)) save.career.history = [];
+  const league = (state.packData?.competitions?.leagues || []).find(l => l.id === save.season.leagueId);
+  const club = getClub(save.career.clubId);
+  const isUserChampion = championId && (championId === save.career.clubId);
+
+  // Título de liga (pontuação)
+  if (isUserChampion) {
+    addCareerScore(save, CAREER_SCORE_RULES.LEAGUE_TITLE, `Título: ${league?.name || save.season.leagueId}`);
+    // Guarda troféu (apenas uma vez por temporada)
+    save.career.trophies.push({ seasonId: save.season.id, type: 'LEAGUE', leagueId: save.season.leagueId, name: league?.name || save.season.leagueId, clubId: save.career.clubId });
+  }
+
+  // Avalia objetivo da temporada
+  const obj = save.career.objective;
+  if (obj) {
+    let ok = false;
+    if (obj.target === 'TOP_6') ok = userPos > 0 && userPos <= 6;
+    else if (obj.target === 'PROMOTION') ok = userPos > 0 && userPos <= 4;
+    else if (obj.target === 'MIDTABLE') ok = userPos > 0 && userPos <= Math.max(10, Math.floor(rows.length * 0.6));
+    if (ok) addCareerScore(save, Number(obj.rewardScore || 0), `Meta cumprida: ${obj.label || obj.target}`);
+    else addCareerScore(save, Number(obj.penaltyScore || 0), `Meta não cumprida: ${obj.label || obj.target}`);
+  }
+
+  // Histórico anual do treinador
+  save.career.history.push({
+    seasonId: save.season.id,
+    yearStart: save.season.yearStart,
+    yearEnd: save.season.yearEnd,
+    clubId: save.career.clubId,
+    clubName: club?.name || save.career.clubId,
+    leagueId: save.season.leagueId,
+    leagueName: league?.name || save.season.leagueId,
+    finalPosition: userPos,
+    championId,
+    finishedAt: save.season.completedAt,
+    careerScore: Number(save.career.careerScore || 0)
+  });
+  if (save.career.history.length > 30) save.career.history = save.career.history.slice(-30);
+  save.career.reputationTier = computeReputationTier(save.career.careerScore);
+} catch (e) {}
 
     // Atualiza resumo do slot
     const league = (state.packData?.competitions?.leagues || []).find(l => l.id === save.season.leagueId);
@@ -2243,6 +2245,16 @@ function ensureLeagueTableStore(save) {
       if (m.played) continue;
       const sim = simulateMatch(m.homeId, m.awayId, save);
       m.hg = sim.hg; m.ag = sim.ag; m.played = true;
+
+// Career Score: pontua resultado do seu clube
+const userId = save.career?.clubId;
+if (userId && (m.homeId === userId || m.awayId === userId)) {
+  const userIsHome = (m.homeId === userId);
+  const userGoals = userIsHome ? Number(sim.hg || 0) : Number(sim.ag || 0);
+  const oppGoals = userIsHome ? Number(sim.ag || 0) : Number(sim.hg || 0);
+  if (userGoals > oppGoals) addCareerScore(save, CAREER_SCORE_RULES.WIN, 'Vitória');
+  else if (userGoals === oppGoals) addCareerScore(save, CAREER_SCORE_RULES.DRAW, 'Empate');
+}
       applyResultToTable(ls.table, m.homeId, m.awayId, m.hg, m.ag);
     }
     ls.currentRound = Math.max(ls.currentRound, r + 1);
@@ -2372,6 +2384,9 @@ function ensureLeagueTableStore(save) {
     ensureSystems(save);
     ensureSeason(save);
 
+    // Treinador envelhece a cada nova temporada (Parte 1)
+    save.career.coachAge = Math.min(80, Number(save.career.coachAge || 35) + 1);
+
     // Avança ano/season id
     const next = nextSeasonIdFrom(save.season.id, save.season.yearStart || 2025);
     const leagueId = getClub(save.career.clubId)?.leagueId || save.season.leagueId;
@@ -2389,6 +2404,9 @@ function ensureLeagueTableStore(save) {
       completed: false,
       summary: null
     };
+
+    // Nova meta da temporada
+    save.career.objective = generateClubObjective(save);
 
 
 // Parte 3: reinicia liga paralela do Brasil (A/B) na nova temporada
@@ -4659,40 +4677,30 @@ function viewFinance() {
       
       // --- Atualização Online de Elencos
       if (action === 'rosterUpdateLeague') {
-        el.addEventListener('click', async () => {
-          const sel = document.getElementById('rosterLeague');
-          const logEl = document.getElementById('rosterLog');
-          const log = (msg) => { if (logEl) logEl.textContent += msg + "\n"; };
-          const leagueId = sel ? sel.value : null;
-
-          if (!logEl) return;
-          logEl.textContent = '';
-
-          if (!leagueId) {
-            log('Selecione uma liga.');
-            return;
-          }
-
+        const sel = document.getElementById('rosterLeague');
+        const logEl = document.getElementById('rosterLog');
+        const log = (msg) => { if (logEl) logEl.textContent += msg + "\n"; };
+        const leagueId = sel ? sel.value : null;
+        if (!leagueId) { log('Selecione uma liga.'); return; }
+        logEl.textContent = '';
+        (async () => {
           try {
             log('Iniciando atualização online...');
             await updateLeagueRostersOnline(leagueId, log);
-            refreshFooterStatus();
           } catch (e) {
             log('Erro: ' + (e?.message || e));
           }
-        });
+        })();
         return;
       }
 
       if (action === 'rosterClearOverride') {
-        el.addEventListener('click', () => {
-          localStorage.removeItem(ROSTER_OVERRIDE_KEY);
-          applyRosterOverride();
-          refreshFooterStatus();
-          const logEl = document.getElementById('rosterLog');
-          if (logEl) logEl.textContent = 'Atualização online removida. Voltou para os dados do pacote.';
-          state.ui.toast = 'Override removido';
-        });
+        localStorage.removeItem(ROSTER_OVERRIDE_KEY);
+      refreshFooterStatus();
+        applyRosterOverride();
+        const logEl = document.getElementById('rosterLog');
+        if (logEl) logEl.textContent = 'Atualização online removida. Voltou para os dados do pacote.';
+        state.ui.toast = 'Override removido';
         return;
       }
 
@@ -4745,7 +4753,7 @@ function viewFinance() {
           const pack = state.packs.find((p) => p.id === state.settings.selectedPackId);
           const save = {
             meta: { createdAt: nowIso(), updatedAt: nowIso(), summary: `Carreira • ${pack?.name || state.settings.selectedPackId}` },
-            career: { coachName: '', nationality: 'Brasil', clubId: null, leagueFilter: '', clubSearch: '' },
+            career: { coachId: 'C001', coachName: '', nationalityId: 'BRA', nationality: 'Brasil', avatarId: 'avatar_01', coachAge: 35, styleId: 'balanced', careerScore: 0, reputationTier: 'INICIANTE', objective: null, trophies: [], history: [], scoreLog: [], clubId: null, leagueFilter: '', clubSearch: '' },
             squad: {}, tactics: {}, training: {},
             progress: {}
           };
@@ -4771,8 +4779,77 @@ function viewFinance() {
           route();
         });
       }
-      if (action === 'careerContinueToClub') {
+      
+if (action === 'coachFieldInput') {
+  el.addEventListener('input', () => {
+    const save = activeSave();
+    if (!save) return;
+    ensureSystems(save);
+    const field = el.getAttribute('data-field');
+    const val = el.value;
+    if (field === 'coachAge') {
+      const n = Math.max(18, Math.min(70, Number(val || 35)));
+      save.career.coachAge = n;
+    } else if (field === 'coachName') {
+      save.career.coachName = String(val || '').slice(0, 32);
+    }
+    // Mantém consistência
+    save.career.nationality = getNationalityById(save.career.nationalityId).name;
+    save.meta.updatedAt = nowIso();
+    writeSlot(state.settings.activeSlotId, save);
+  });
+}
+
+if (action === 'setCoachNationality') {
+  el.addEventListener('click', () => {
+    const save = activeSave();
+    if (!save) return;
+    ensureSystems(save);
+    const id = el.getAttribute('data-value') || 'BRA';
+    save.career.nationalityId = id;
+    save.career.nationality = getNationalityById(id).name;
+    save.meta.updatedAt = nowIso();
+    writeSlot(state.settings.activeSlotId, save);
+    route();
+  });
+}
+
+if (action === 'setCoachAvatar') {
+  el.addEventListener('click', () => {
+    const save = activeSave();
+    if (!save) return;
+    ensureSystems(save);
+    const id = el.getAttribute('data-value') || 'avatar_01';
+    save.career.avatarId = id;
+    save.meta.updatedAt = nowIso();
+    writeSlot(state.settings.activeSlotId, save);
+    route();
+  });
+}
+
+if (action === 'setCoachStyle') {
+  el.addEventListener('change', () => {
+    const save = activeSave();
+    if (!save) return;
+    ensureSystems(save);
+    const id = el.value || 'balanced';
+    save.career.styleId = id;
+    save.meta.updatedAt = nowIso();
+    writeSlot(state.settings.activeSlotId, save);
+  });
+}
+
+if (action === 'careerContinueToClub') {
         el.addEventListener('click', () => {
+          const save = activeSave();
+          if (save) {
+            ensureSystems(save);
+            if (!String(save.career.coachName || '').trim()) save.career.coachName = 'Treinador';
+            save.career.nationality = getNationalityById(save.career.nationalityId).name;
+            save.career.reputationTier = computeReputationTier(save.career.careerScore);
+            save.meta.updatedAt = nowIso();
+            writeSlot(state.settings.activeSlotId, save);
+          }
           location.hash = '/club-pick';
         });
       }
@@ -4803,6 +4880,8 @@ function viewFinance() {
           const save = activeSave();
           if (!save) return;
           save.career.clubId = clubId;
+          ensureSystems(save);
+          save.career.objective = generateClubObjective(save);
           save.meta.updatedAt = nowIso();
           save.meta.summary = `Carreira • ${getClub(clubId)?.name || 'Clube'}`;
           writeSlot(state.settings.activeSlotId, save);
