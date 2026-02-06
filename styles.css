@@ -728,3 +728,16 @@ body:not(.bg-menu):not(.bg-lobby):not(.bg-cinematic){
 .avatar-label{font-size:12px;opacity:.9}
 .hint{font-size:12px;opacity:.8;margin-top:8px}
 .select{width:100%;padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.2);color:#fff}
+
+/* Mini card (tela Tática) */
+.card-mini{
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+  border-radius: 18px;
+  padding: 14px;
+}
+.card-mini-title{
+  font-weight: 800;
+  margin-bottom: 10px;
+  letter-spacing: .2px;
+}

@@ -60,7 +60,7 @@
     }
   }
 
-  const BUILD_TAG = 'v1.16.0';
+  const BUILD_TAG = 'v1.19.0';
 
 // -----------------------------
 // Carreira (Parte 1) — Identidade do Treinador
@@ -162,28 +162,49 @@ function generateClubObjective(save) {
    * carregados de um JSON externo.
    */
   const STAFF_CATALOG = [
-    {
-      id: "assistant_coach",
-      name: "Assistente Técnico",
-      effect: { trainingBoost: 0.1 },
-      salary: 500000,
-      description: "Aumenta ligeiramente o efeito de qualquer plano de treino."
-    },
-    {
-      id: "fitness_coach",
-      name: "Preparador Físico",
-      effect: { formBoostMultiplier: 1.2 },
-      salary: 400000,
-      description: "Multiplica o bônus do treino, mantendo os atletas em melhor forma física."
-    },
-    {
-      id: "analyst",
-      name: "Analista de Desempenho",
-      effect: { trainingBoost: 0.05, formBoostMultiplier: 1.1 },
-      salary: 300000,
-      description: "Fornece dados para otimizar treinos e escalar melhor o time."
-    }
-  ];
+  {
+    id: "assistant_coach",
+    name: "Assistente Técnico",
+    effect: { trainingBoost: 0.10 },
+    salary: 500000,
+    description: "Aumenta ligeiramente o efeito de qualquer plano de treino."
+  },
+  {
+    id: "fitness_coach",
+    name: "Preparador Físico",
+    effect: { formBoostMultiplier: 1.15, fatigueMultiplier: 0.92, recoveryBoost: 1.0 },
+    salary: 450000,
+    description: "Reduz fadiga de jogos e melhora a recuperação semanal. Mantém o elenco mais inteiro."
+  },
+  {
+    id: "analyst",
+    name: "Analista de Desempenho",
+    effect: { trainingBoost: 0.05, formBoostMultiplier: 1.05, matchAttackBoost: 0.04, matchDefenseBoost: 0.03 },
+    salary: 350000,
+    description: "Ajuda com dados: pequena melhoria de performance em jogos e otimização de treino."
+  },
+  {
+    id: "head_physio",
+    name: "Fisioterapeuta Chefe",
+    effect: { injuryRiskMultiplier: 0.75, injuryWeeksMultiplier: 0.85, recoveryBoost: 1.5 },
+    salary: 420000,
+    description: "Diminui a chance de lesões e reduz o tempo de recuperação."
+  },
+  {
+    id: "setpiece_coach",
+    name: "Treinador de Bolas Paradas",
+    effect: { setpieceBoost: 0.06, matchAttackBoost: 0.02 },
+    salary: 280000,
+    description: "Melhora ligeiramente o poder ofensivo em bolas paradas (mais gols 'achados')."
+  },
+  {
+    id: "scout",
+    name: "Olheiro",
+    effect: { scoutingQuality: 0.15, marketDiscount: 0.05 },
+    salary: 300000,
+    description: "Aumenta a qualidade das sugestões de mercado e melhora pequenas oportunidades de contratação."
+  }
+];
 
   const SPONSOR_CATALOG = [
     {
@@ -925,11 +946,33 @@ function applyBackground(path) {
       save.squad.players = generateSquadForClub(save.career.clubId);
     }
     if (!save.tactics.formation) save.tactics.formation = "4-3-3";
+    if (!save.tactics.approach) save.tactics.approach = "balanced"; // balanced | possession | direct | counter
+    if (!save.tactics.tempo) save.tactics.tempo = "normal";        // slow | normal | fast
+    if (!save.tactics.pressure) save.tactics.pressure = "medium";  // low | medium | high
+    if (!save.tactics.defLine) save.tactics.defLine = "medium";    // deep | medium | high
+    if (!save.tactics.width) save.tactics.width = "normal";        // narrow | normal | wide
+    if (!save.tactics.focus) save.tactics.focus = "mixed";         // wings | middle | mixed
+    
     if (!Array.isArray(save.tactics.startingXI) || save.tactics.startingXI.length === 0) {
       save.tactics.startingXI = buildDefaultXI(save.squad.players, save.tactics.formation);
     }
     if (!save.training.weekPlan) save.training.weekPlan = "Equilibrado";
     if (typeof save.training.formBoost !== "number") save.training.formBoost = 0;
+    // Treinos avançados (Parte 3)
+    if (!save.training.focus) save.training.focus = "balanced"; // balanced | fitness | attack | defense | setpieces | youth
+    if (!save.training.intensity) save.training.intensity = save.training.weekPlan === "Intenso" ? "high" : (save.training.weekPlan === "Leve" ? "low" : "medium"); // low | medium | high
+    if (typeof save.training.lastAppliedRound !== "number") save.training.lastAppliedRound = -1;
+    if (!save.training.injuries) save.training.injuries = {}; // { [playerId]: weeksLeft }
+    if (!save.training.dev) save.training.dev = {}; // { [playerId]: float } progress for +OVR
+    // Inicializa campos de condicionamento dos jogadores (compatível com saves antigos)
+    if (Array.isArray(save.squad?.players)) {
+      save.squad.players = save.squad.players.map((p, i) => {
+        const id = p.id || p.playerId || (`P${String(i+1).padStart(5,'0')}`);
+        const fitness = (typeof p.fitness === "number") ? p.fitness : (92 + Math.random()*6);
+        const sharp = (typeof p.sharpness === "number") ? p.sharpness : 0;
+        return { ...p, id, fitness: Math.round(clampFloat(fitness, 40, 100)), sharpness: Math.round(clampFloat(sharp, -5, 5)*10)/10 };
+      });
+    }
 
     // Inicializa sistemas adicionais: staff, patrocínio, finanças e filtros de transferência
     if (!save.staff) save.staff = { hired: [] };
@@ -1197,19 +1240,46 @@ return save;
    * Retorna um objeto com um bônus adicional (extra) e um multiplicador (multiplier).
    */
   function computeStaffTraining(save) {
-    const hired = (save.staff && Array.isArray(save.staff.hired)) ? save.staff.hired : [];
-    let extra = 0;
-    let multiplier = 1;
-    for (const st of hired) {
-      if (st.effect && typeof st.effect.trainingBoost === 'number') {
-        extra += st.effect.trainingBoost;
-      }
-      if (st.effect && typeof st.effect.formBoostMultiplier === 'number') {
-        multiplier *= st.effect.formBoostMultiplier;
-      }
+  const hired = (save.staff && Array.isArray(save.staff.hired)) ? save.staff.hired : [];
+  let extra = 0;
+  let multiplier = 1;
+  let injuryRiskMultiplier = 1;
+  let injuryWeeksMultiplier = 1;
+  let recoveryBoost = 0; // soma em pontos de fitness por semana
+  for (const st of hired) {
+    if (st.effect && typeof st.effect.trainingBoost === 'number') {
+      extra += st.effect.trainingBoost;
     }
-    return { extra, multiplier };
+    if (st.effect && typeof st.effect.formBoostMultiplier === 'number') {
+      multiplier *= st.effect.formBoostMultiplier;
+    }
+    if (st.effect && typeof st.effect.injuryRiskMultiplier === 'number') {
+      injuryRiskMultiplier *= st.effect.injuryRiskMultiplier;
+    }
+    if (st.effect && typeof st.effect.injuryWeeksMultiplier === 'number') {
+      injuryWeeksMultiplier *= st.effect.injuryWeeksMultiplier;
+    }
+    if (st.effect && typeof st.effect.recoveryBoost === 'number') {
+      recoveryBoost += st.effect.recoveryBoost;
+    }
   }
+  return { extra, multiplier, injuryRiskMultiplier, injuryWeeksMultiplier, recoveryBoost };
+}
+
+function computeStaffMatch(save){
+  const hired = (save.staff && Array.isArray(save.staff.hired)) ? save.staff.hired : [];
+  let attack = 0;
+  let defense = 0;
+  let setpiece = 0;
+  let fatigueMultiplier = 1;
+  for (const st of hired) {
+    if (st.effect && typeof st.effect.matchAttackBoost === 'number') attack += st.effect.matchAttackBoost;
+    if (st.effect && typeof st.effect.matchDefenseBoost === 'number') defense += st.effect.matchDefenseBoost;
+    if (st.effect && typeof st.effect.setpieceBoost === 'number') setpiece += st.effect.setpieceBoost;
+    if (st.effect && typeof st.effect.fatigueMultiplier === 'number') fatigueMultiplier *= st.effect.fatigueMultiplier;
+  }
+  return { attack, defense, setpiece, fatigueMultiplier };
+}
 
   /* ========== VIEWS ========== */
 
@@ -1391,23 +1461,31 @@ function viewCareerCreate() {
         </div>
         <div class="card-body">
           <div class="grid">
-            <div class="col-6">
-              <div class="label">Nome do treinador</div>
-              <input class="input" data-action="coachFieldInput" data-field="coachName" value="${esc(coachName)}" placeholder="Ex: João Vale" />
+              <div class="col-4">
+                <div class="label">Plano da semana</div>
+                <select class="input" data-action="setTrainingPlan">
+                  <option value="Leve" ${plan === 'Leve' ? 'selected' : ''}>Leve</option>
+                  <option value="Equilibrado" ${plan === 'Equilibrado' ? 'selected' : ''}>Equilibrado</option>
+                  <option value="Intenso" ${plan === 'Intenso' ? 'selected' : ''}>Intenso</option>
+                </select>
+              </div>
+              <div class="col-4">
+                <div class="label">Foco do treino</div>
+                <select class="input" data-action="setTrainingFocus">
+                  <option value="balanced" ${focus === 'balanced' ? 'selected' : ''}>Equilibrado</option>
+                  <option value="fitness" ${focus === 'fitness' ? 'selected' : ''}>Condicionamento</option>
+                  <option value="attack" ${focus === 'attack' ? 'selected' : ''}>Ataque</option>
+                  <option value="defense" ${focus === 'defense' ? 'selected' : ''}>Defesa</option>
+                  <option value="setpieces" ${focus === 'setpieces' ? 'selected' : ''}>Bolas paradas</option>
+                  <option value="youth" ${focus === 'youth' ? 'selected' : ''}>Jovens</option>
+                </select>
+              </div>
+              <div class="col-4">
+                <div class="label">Aplicar treino</div>
+                <button class="btn btn-primary" data-action="applyTraining">Aplicar</button>
+              </div>
             </div>
-            <div class="col-3">
-              <div class="label">Idade (início)</div>
-              <input class="input" type="number" min="18" max="70" step="1" data-action="coachFieldInput" data-field="coachAge" value="${esc(String(age))}" />
-            </div>
-            <div class="col-3">
-              <div class="label">Estilo</div>
-              <select class="select" data-action="setCoachStyle">
-                ${styleOptions}
-              </select>
-            </div>
-          </div>
-
-          <div class="sep"></div>
+            <div class="sep"></div>
 
           <div class="label">País</div>
           <div class="chip-grid">
@@ -1793,6 +1871,7 @@ function viewCareerCreate() {
       ensureSystems(save);
       const club = getClub(save.career.clubId);
       const players = save.squad.players;
+      const injuries = save.training?.injuries || {};
       // Filtra por busca e posição se for implementado (por simplicidade não)
       const rows = players
         .sort((a, b) => b.overall - a.overall)
@@ -1802,6 +1881,8 @@ function viewCareerCreate() {
             <td class="center">${esc(p.pos)}</td>
             <td class="center">${esc(p.age)}</td>
             <td class="center"><b>${esc(p.overall)}</b></td>
+            <td class="center">${Math.round(p.fitness||90)}%</td>
+            <td class="center">${(injuries[p.id||p.playerId||p.name]||0)>0 ? (`Lesão ${injuries[p.id||p.playerId||p.name]} sem`) : "OK"}</td>
             <td class="center">${p.form > 0 ? '+' + p.form : p.form}</td>
           </tr>
         `)
@@ -1824,6 +1905,8 @@ function viewCareerCreate() {
                   <th class="center">Pos</th>
                   <th class="center">Idade</th>
                   <th class="center">OVR</th>
+                  <th class="center">Fitness</th>
+                  <th class="center">Status</th>
                   <th class="center">Forma</th>
                 </tr>
               </thead>
@@ -1895,6 +1978,68 @@ function viewCareerCreate() {
 </div>
             </div>
             <div class="sep"></div>
+
+<div class="card-mini">
+  <div class="card-mini-title">Plano de Jogo</div>
+  <div class="grid">
+    <div class="col-6">
+      <div class="label">Abordagem</div>
+      <select class="input" data-action="setTacticParam" data-field="approach">
+        <option value="balanced" ${save.tactics.approach === 'balanced' ? 'selected' : ''}>Equilibrado</option>
+        <option value="possession" ${save.tactics.approach === 'possession' ? 'selected' : ''}>Posse</option>
+        <option value="direct" ${save.tactics.approach === 'direct' ? 'selected' : ''}>Direto</option>
+        <option value="counter" ${save.tactics.approach === 'counter' ? 'selected' : ''}>Contra-ataque</option>
+      </select>
+    </div>
+    <div class="col-6">
+      <div class="label">Ritmo</div>
+      <select class="input" data-action="setTacticParam" data-field="tempo">
+        <option value="slow" ${save.tactics.tempo === 'slow' ? 'selected' : ''}>Lento</option>
+        <option value="normal" ${save.tactics.tempo === 'normal' ? 'selected' : ''}>Normal</option>
+        <option value="fast" ${save.tactics.tempo === 'fast' ? 'selected' : ''}>Rápido</option>
+      </select>
+    </div>
+    <div class="col-6">
+      <div class="label">Pressão</div>
+      <select class="input" data-action="setTacticParam" data-field="pressure">
+        <option value="low" ${save.tactics.pressure === 'low' ? 'selected' : ''}>Baixa</option>
+        <option value="medium" ${save.tactics.pressure === 'medium' ? 'selected' : ''}>Média</option>
+        <option value="high" ${save.tactics.pressure === 'high' ? 'selected' : ''}>Alta</option>
+      </select>
+    </div>
+    <div class="col-6">
+      <div class="label">Linha Defensiva</div>
+      <select class="input" data-action="setTacticParam" data-field="defLine">
+        <option value="deep" ${save.tactics.defLine === 'deep' ? 'selected' : ''}>Baixa</option>
+        <option value="medium" ${save.tactics.defLine === 'medium' ? 'selected' : ''}>Média</option>
+        <option value="high" ${save.tactics.defLine === 'high' ? 'selected' : ''}>Alta</option>
+      </select>
+    </div>
+    <div class="col-6">
+      <div class="label">Amplitude</div>
+      <select class="input" data-action="setTacticParam" data-field="width">
+        <option value="narrow" ${save.tactics.width === 'narrow' ? 'selected' : ''}>Estreita</option>
+        <option value="normal" ${save.tactics.width === 'normal' ? 'selected' : ''}>Normal</option>
+        <option value="wide" ${save.tactics.width === 'wide' ? 'selected' : ''}>Larga</option>
+      </select>
+    </div>
+    <div class="col-6">
+      <div class="label">Foco</div>
+      <select class="input" data-action="setTacticParam" data-field="focus">
+        <option value="mixed" ${save.tactics.focus === 'mixed' ? 'selected' : ''}>Misto</option>
+        <option value="wings" ${save.tactics.focus === 'wings' ? 'selected' : ''}>Pelos lados</option>
+        <option value="middle" ${save.tactics.focus === 'middle' ? 'selected' : ''}>Pelo meio</option>
+      </select>
+    </div>
+  </div>
+  <div class="sep"></div>
+  <div class="mini">
+    Dica: <b>Pressão alta</b> e <b>ritmo rápido</b> criam mais chances, mas aumentam o risco defensivo.
+  </div>
+  <div class="sep"></div>
+  <button class="btn" data-action="resetTactics">Resetar Plano</button>
+</div>
+<div class="sep"></div>
             <div class="notice">Sua escalação é salva automaticamente. Selecione jogadores no Elenco para ajustar.</div>
             <div class="sep"></div>
             <table class="table">
@@ -1918,6 +2063,11 @@ function viewCareerCreate() {
       ensureSystems(save);
       const club = getClub(save.career.clubId);
       const plan = save.training.weekPlan;
+      const focus = save.training.focus || 'balanced';
+      const players = save.squad?.players || [];
+      const avgFitness = players.reduce((s,p)=>s+(p.fitness||90),0)/Math.max(1,players.length);
+      const injuries = save.training.injuries || {};
+      const injuredCount = players.reduce((n,p)=>n+((injuries[p.id||p.playerId||p.name]||0)>0?1:0),0);
       writeSlot(state.settings.activeSlotId, save);
       return `
         <div class="card">
@@ -1926,7 +2076,9 @@ function viewCareerCreate() {
               <div class="card-title">Treinos</div>
               <div class="card-subtitle">${esc(club?.name || '')} • Planejamento Semanal</div>
             </div>
-            <span class="badge">Bônus forma: ${save.training.formBoost.toFixed(1)}</span>
+            <span class="badge">Forma acum.: ${save.training.formBoost.toFixed(1)}</span>
+            <span class="badge">Fitness méd.: ${avgFitness.toFixed(0)}%</span>
+            <span class="badge">${injuredCount} lesionado(s)</span>
           </div>
           <div class="card-body">
             <div class="grid">
@@ -1945,7 +2097,7 @@ function viewCareerCreate() {
             </div>
             <div class="sep"></div>
             <div class="notice">
-              O treino melhora levemente a forma dos jogadores. Planos intensos dão bônus maior.
+              O treino afeta forma, condicionamento (fitness) e evolução de jovens. Plano intenso dá mais ganho e maior risco de lesão.
             </div>
             <div class="sep"></div>
             <div class="row">
@@ -2483,26 +2635,171 @@ save.meta.updatedAt = nowIso();
     return base;
   }
 
-  function simulateMatch(homeId, awayId, save) {
-    // Simulação mais realista (Poisson) com vantagem de mando e força relativa
-    const h = teamStrength(homeId, save);
-    const a = teamStrength(awayId, save);
-    const advantage = 1.6; // mando de campo
-    const diff = (h + advantage) - a;
-
-    // converte diferença de força em expectativa de gols
-    const base = 1.25;
-    const lamHome = clampFloat(base + (diff / 18), 0.2, 3.2);
-    const lamAway = clampFloat(base - (diff / 22), 0.2, 3.0);
-
-    const hg = clampInt(poisson(lamHome), 0, 7);
-    const ag = clampInt(poisson(lamAway), 0, 7);
-
-    // Pequena variância extra em jogos desequilibrados
-    return { hg, ag, lamHome: round2(lamHome), lamAway: round2(lamAway) };
+  // -----------------------------
+  // Treinos avançados (Parte 3) - condicionamento e lesões (leve)
+  // -----------------------------
+  function tickRecoveryAndInjuries(save){
+    try{
+      ensureSystems(save);
+      const staffRec = computeStaffTraining(save).recoveryBoost || 0;
+      const injuries = save.training?.injuries || {};
+      const players = save.squad?.players || [];
+      players.forEach(p => {
+        const id = p.id || p.playerId || p.name;
+        const w = Number(injuries[id] || 0);
+        if (w > 0){
+          const nw = w - 1;
+          if (nw <= 0) delete injuries[id];
+          else injuries[id] = nw;
+        }
+        // recuperação semanal natural
+        p.fitness = Math.round(clampFloat((p.fitness ?? 90) + 3 + staffRec + (Math.random()*2-1), 40, 100));
+        // leve regressão de forma ao longo do tempo (para manter gestão)
+        if (typeof p.form === 'number'){
+          p.form = Math.round(clampFloat(p.form * 0.98, -5, 5) * 10) / 10;
+        }
+      });
+      save.training.injuries = injuries;
+      save.squad.players = players;
+    } catch(e){}
   }
 
-  function round2(n) { return Math.round(n * 100) / 100; }
+  function applyMatchFatigueForUser(save, matchesNow){
+    try{
+      ensureSystems(save);
+      const clubId = save.career?.clubId;
+      if (!clubId) return;
+      const played = (matchesNow || []).find(m => (m.homeId === clubId || m.awayId === clubId));
+      if (!played) return;
+
+      const t = save.tactics || {};
+      let base = 6; // custo padrão por jogo
+      if (t.pressure === 'high') base += 3;
+      if (t.pressure === 'low') base -= 1;
+      if (t.tempo === 'fast') base += 2;
+      if (t.tempo === 'slow') base -= 1;
+      if (t.defLine === 'high') base += 1;
+
+      // Se treino intenso na semana, pequeno custo extra (gestão)
+      if (save.training?.weekPlan === 'Intenso') base += 1;
+
+      // Staff pode reduzir fadiga de jogos
+      const fatMul = clampFloat(computeStaffMatch(save).fatigueMultiplier || 1, 0.80, 1.05);
+      base = base * fatMul;
+
+      const xi = Array.isArray(save.tactics?.startingXI) ? save.tactics.startingXI : [];
+      const ids = new Set(xi.map(x => x.playerId || x.id || x));
+      save.squad.players = (save.squad.players || []).map(p => {
+        const pid = p.id || p.playerId || p.name;
+        if (!ids.has(pid)) return p;
+        const cost = base + (Math.random()*4);
+        const newFit = clampFloat((p.fitness ?? 90) - cost, 40, 100);
+        return { ...p, fitness: Math.round(newFit) };
+      });
+    } catch(e){}
+  }
+
+function tacticEffectForClub(clubId, save){
+  // Aplica apenas ao clube do usuário (leve e previsível)
+  if (!save || clubId !== save.career?.clubId) return {
+    attMult: 1.0, defRed: 0.0, possDelta: 0, chaos: 0
+  };
+  ensureSystems(save);
+  const t = save.tactics || {};
+  let att = 1.0;
+  let defRed = 0.0; // redução do ataque adversário
+  let poss = 0;     // delta na posse (pontos percentuais)
+  let chaos = 0;    // aumenta variância (0..1)
+
+  // Abordagem
+  if (t.approach === 'possession') { att += 0.05; defRed += 0.05; poss += 6; chaos -= 0.08; }
+  if (t.approach === 'direct')     { att += 0.07; defRed += 0.01; poss -= 3; chaos += 0.10; }
+  if (t.approach === 'counter')    { att += 0.06; defRed += 0.06; poss -= 6; chaos += 0.06; }
+
+  // Ritmo
+  if (t.tempo === 'slow')  { att -= 0.02; defRed += 0.03; poss += 2; chaos -= 0.06; }
+  if (t.tempo === 'fast')  { att += 0.06; defRed -= 0.02; poss -= 2; chaos += 0.10; }
+
+  // Pressão
+  if (t.pressure === 'low')    { att -= 0.01; defRed += 0.03; poss -= 1; chaos -= 0.03; }
+  if (t.pressure === 'high')   { att += 0.06; defRed -= 0.04; poss += 1; chaos += 0.12; }
+
+  // Linha defensiva
+  if (t.defLine === 'deep')  { att -= 0.01; defRed += 0.05; poss -= 2; chaos -= 0.02; }
+  if (t.defLine === 'high')  { att += 0.03; defRed -= 0.05; poss += 1; chaos += 0.10; }
+
+  // Amplitude / Foco (pequenos ajustes)
+  if (t.width === 'wide' && t.focus === 'wings')  { att += 0.03; }
+  if (t.width === 'narrow' && t.focus === 'middle'){ att += 0.02; defRed += 0.01; }
+  if (t.focus === 'wings')  { poss -= 1; chaos += 0.02; }
+  if (t.focus === 'middle') { poss += 1; chaos -= 0.01; }
+
+  // Clamp
+  att = Math.max(0.85, Math.min(1.20, att));
+  defRed = Math.max(0.0, Math.min(0.14, defRed));
+  poss = Math.max(-12, Math.min(12, poss));
+  chaos = Math.max(-0.15, Math.min(0.25, chaos));
+
+  return { attMult: att, defRed, possDelta: poss, chaos };
+}
+
+  function simulateMatch(homeId, awayId, save) {
+  // Simulação (Poisson) com mando, força relativa e impacto tático do usuário
+  const h = teamStrength(homeId, save);
+  const a = teamStrength(awayId, save);
+  const advantage = 1.6; // mando de campo
+  const diff = (h + advantage) - a;
+
+  // converte diferença de força em expectativa de gols
+  const base = 1.25;
+  let lamHome = clampFloat(base + (diff / 18), 0.2, 3.2);
+  let lamAway = clampFloat(base - (diff / 22), 0.2, 3.0);
+
+  // Tática (apenas clube do usuário)
+  const effHome = tacticEffectForClub(homeId, save);
+  const effAway = tacticEffectForClub(awayId, save);
+
+  // Se o usuário for mandante
+  if (homeId === save?.career?.clubId) {
+    lamHome *= effHome.attMult;
+    lamAway *= (1 - effHome.defRed);
+    // caos aumenta variância (ambos os lados)
+    lamHome *= (1 + effHome.chaos * 0.25);
+    lamAway *= (1 + effHome.chaos * 0.25);
+  }
+  // Se o usuário for visitante
+  if (awayId === save?.career?.clubId) {
+    lamAway *= effAway.attMult;
+    lamHome *= (1 - effAway.defRed);
+    lamHome *= (1 + effAway.chaos * 0.25);
+    lamAway *= (1 + effAway.chaos * 0.25);
+  }
+
+  // Staff (apenas clube do usuário): pequenos bônus de performance e bolas paradas
+  if ((homeId === save?.career?.clubId) || (awayId === save?.career?.clubId)) {
+    const st = computeStaffMatch(save);
+    const atk = clampFloat(1 + (st.attack || 0) + (st.setpiece || 0) * 0.60, 0.90, 1.20);
+    const def = clampFloat(1 - (st.defense || 0), 0.80, 1.05);
+    if (homeId === save?.career?.clubId) {
+      lamHome *= atk;
+      lamAway *= def;
+    }
+    if (awayId === save?.career?.clubId) {
+      lamAway *= atk;
+      lamHome *= def;
+    }
+  }
+
+  lamHome = clampFloat(lamHome, 0.2, 3.6);
+  lamAway = clampFloat(lamAway, 0.2, 3.4);
+
+  const hg = clampInt(poisson(lamHome), 0, 7);
+  const ag = clampInt(poisson(lamAway), 0, 7);
+
+  return { hg, ag, lamHome: round2(lamHome), lamAway: round2(lamAway) };
+}
+
+function round2(n) { return Math.round(n * 100) / 100; }
 
   function clampFloat(n, min, max) {
     return Math.max(min, Math.min(max, n));
@@ -2610,8 +2907,11 @@ function clubLogoHtml(clubId, size = 34) {
     const sh = teamStrength(homeId, save);
     const sa = teamStrength(awayId, save);
     let possH = 50;
+    const tEffH = tacticEffectForClub(homeId, save);
+    const tEffA = tacticEffectForClub(awayId, save);
     if (sh + sa > 0) possH = 50 + (sh - sa) / (sh + sa) * 14;
-    possH = clamp(Math.round(possH + rnd(-4, 4)), 35, 65);
+    possH = possH + tEffH.possDelta - tEffA.possDelta;
+    possH = clamp(Math.round(possH + rnd(-4, 4)), 33, 67);
     const possA = 100 - possH;
 
     return {
@@ -2905,6 +3205,10 @@ function clubLogoHtml(clubId, size = 34) {
         applyContinentalEconomy(save, csum);
       } catch (e) {}
 save.season.lastRoundPlayed = roundIndex;
+      // Treinos avançados: aplica fadiga do jogo e recuperação semanal / lesões
+      try { applyMatchFatigueForUser(save, matchesNow); } catch(e) {}
+      try { tickRecoveryAndInjuries(save); } catch(e) {}
+
       save.season.lastResults = (matchesNow || []).map(m => ({ ...m }));
 
       // economia semanal
@@ -4911,6 +5215,40 @@ if (action === 'careerContinueToClub') {
           route();
         });
       }
+if (action === 'setTacticParam') {
+  el.addEventListener('change', () => {
+    const save = activeSave();
+    if (!save) return;
+    ensureSystems(save);
+    const field = el.getAttribute('data-field');
+    const val = el.value;
+    if (field && typeof val === 'string') {
+      save.tactics[field] = val;
+      save.meta.updatedAt = nowIso();
+      writeSlot(state.settings.activeSlotId, save);
+    }
+  });
+  return;
+}
+
+if (action === 'resetTactics') {
+  el.addEventListener('click', () => {
+    const save = activeSave();
+    if (!save) return;
+    ensureSystems(save);
+    save.tactics.approach = 'balanced';
+    save.tactics.tempo = 'normal';
+    save.tactics.pressure = 'medium';
+    save.tactics.defLine = 'medium';
+    save.tactics.width = 'normal';
+    save.tactics.focus = 'mixed';
+    save.meta.updatedAt = nowIso();
+    writeSlot(state.settings.activeSlotId, save);
+    route();
+  });
+  return;
+}
+
       if (action === 'autoPickXI') {
         el.addEventListener('click', () => {
           const save = activeSave();
@@ -4932,51 +5270,139 @@ if (action === 'careerContinueToClub') {
           writeSlot(state.settings.activeSlotId, save);
         });
       }
-      if (action === 'applyTraining') {
+            if (action === 'setTrainingFocus') {
+        el.addEventListener('change', () => {
+          const save = activeSave();
+          if (!save) return;
+          ensureSystems(save);
+          save.training.focus = el.value;
+          save.meta.updatedAt = nowIso();
+          writeSlot(state.settings.activeSlotId, save);
+        });
+      }
+if (action === 'applyTraining') {
         el.addEventListener('click', () => {
           const save = activeSave();
           if (!save) return;
           ensureSystems(save);
-          const plan = save.training.weekPlan;
-          // Define o bônus base de acordo com o plano
-          let base = 0.5;
-          if (plan === 'Leve') base = 0.3;
-          if (plan === 'Intenso') base = 0.8;
-          // Calcula o efeito dos staff contratados (bônus adicional e multiplicador)
-          const { extra, multiplier } = computeStaffTraining(save);
-          const boost = (base + extra) * multiplier;
-          // Aplica o bônus de forma a todos os jogadores do elenco
-          save.squad.players = save.squad.players.map((p) => {
-            const delta = Math.random() * boost;
-            const newForm = Math.max(-5, Math.min(5, (p.form || 0) + delta));
-            return { ...p, form: Math.round(newForm * 10) / 10 };
+
+          // Evita aplicar treino múltiplas vezes na mesma semana/rodada
+          const curRound = Number.isFinite(save?.season?.currentRound) ? save.season.currentRound : 0;
+          if (save.training.lastAppliedRound === curRound) {
+            alert('Treino já foi aplicado nesta semana. Jogue a próxima rodada para treinar de novo.');
+            return;
+          }
+
+          const plan = save.training.weekPlan; // Leve | Equilibrado | Intenso
+          const focus = save.training.focus || 'balanced';
+          // Define o bônus base de forma e custo físico
+          let baseForm = 0.45;
+          let fitnessDelta = 2;     // recuperação/condição
+          let sharpDelta = 0.12;    // entrosamento/ritmo
+          let injuryRisk = 0.00;
+
+          if (plan === 'Leve') { baseForm = 0.28; fitnessDelta = 4; sharpDelta = 0.08; injuryRisk = 0.00; }
+          if (plan === 'Intenso') { baseForm = 0.70; fitnessDelta = -2; sharpDelta = 0.18; injuryRisk = 0.04; }
+
+          // Ajustes por foco (leve e previsível)
+          // balanced | fitness | attack | defense | setpieces | youth
+          if (focus === 'fitness') { fitnessDelta += 2; baseForm -= 0.05; }
+          if (focus === 'attack')  { baseForm += 0.06; injuryRisk += 0.01; }
+          if (focus === 'defense') { baseForm += 0.03; }
+          if (focus === 'setpieces'){ baseForm += 0.02; }
+          if (focus === 'youth')   { baseForm -= 0.03; }
+
+          // Staff contratado pode turbinar o treino
+          const { extra, multiplier, injuryRiskMultiplier, injuryWeeksMultiplier } = computeStaffTraining(save);
+          const formBoost = (baseForm + extra) * multiplier;
+          // staff pode reduzir o risco e o tempo de lesões
+          injuryRisk = clampFloat(injuryRisk * injuryRiskMultiplier, 0, 0.20);
+          const injuryWeeksMult = clampFloat(injuryWeeksMultiplier, 0.5, 1.2);
+
+          // Desenvolvimento (jovens) - acumulativo e bem lento
+          const devBase = (focus === 'youth') ? 0.18 : 0.10;
+
+          // Aplica treino
+          const injuries = save.training.injuries || {};
+          const dev = save.training.dev || {};
+          let injuredCount = 0;
+          let evolvedCount = 0;
+
+          save.squad.players = (save.squad.players || []).map((p) => {
+            const id = p.id || p.playerId || p.name;
+            const weeksLeft = Number(injuries[id] || 0);
+
+            // Jogador lesionado treina leve/reabilitação (não ganha forma forte)
+            if (weeksLeft > 0) {
+              injuredCount++;
+              const rec = (plan === 'Intenso') ? 1 : 2;
+              const newFit = clampFloat((p.fitness ?? 90) + rec, 40, 100);
+              return { ...p, fitness: Math.round(newFit), form: p.form ?? 0, sharpness: p.sharpness ?? 0 };
+            }
+
+            // Variação suave
+            const rnd = (Math.random() * 0.25) - 0.10;
+            const deltaForm = (Math.random() * formBoost) + rnd;
+            const newForm = clampFloat((p.form || 0) + deltaForm, -5, 5);
+
+            const fitNoise = (Math.random() * 2 - 1);
+            const newFit = clampFloat((p.fitness ?? 90) + fitnessDelta + fitNoise, 40, 100);
+
+            const newSharp = clampFloat((p.sharpness || 0) + sharpDelta, -5, 5);
+
+            // Desenvolvimento (somente jovens) - lento e acumulativo
+            let newOverall = p.overall;
+            if ((p.age || 0) <= 21) {
+              const ageFactor = clampFloat(1.0 - ((p.age || 18) - 16) * 0.05, 0.55, 1.0);
+              dev[id] = (dev[id] || 0) + devBase * ageFactor;
+              // Evolução por "marcos" (1.0 = +1 OVR)
+              while (dev[id] >= 1.0 && newOverall < 99) {
+                dev[id] -= 1.0;
+                newOverall += 1;
+                evolvedCount++;
+              }
+            }
+
+            // Risco de lesão (bem leve, só para dar gestão)
+            // Mais risco se fitness baixo + treino intenso
+            const lowFit = newFit < 75 ? 0.03 : 0.0;
+            const risk = injuryRisk + lowFit + (focus === 'fitness' ? -0.01 : 0.0);
+            if (risk > 0 && Math.random() < risk) {
+              let w = 1 + Math.floor(Math.random() * 4); // 1..4 semanas
+              w = Math.max(1, Math.round(w * injuryWeeksMult));
+              injuries[id] = w;
+              return { ...p, overall: newOverall, form: Math.round(newForm * 10) / 10, fitness: Math.round(newFit), sharpness: Math.round(newSharp * 10) / 10 };
+            }
+
+            return { ...p, overall: newOverall, form: Math.round(newForm * 10) / 10, fitness: Math.round(newFit), sharpness: Math.round(newSharp * 10) / 10 };
           });
-          // Acumula bônus total de forma no save
-          save.training.formBoost = (save.training.formBoost || 0) + boost;
-          // Atualiza finanças: calcula despesas semanais e receitas de patrocínio
+
+          save.training.dev = dev;
+          save.training.injuries = injuries;
+          save.training.formBoost = (save.training.formBoost || 0) + formBoost;
+          save.training.lastAppliedRound = curRound;
+
+          // Atualiza finanças (economia semanal)
           let weeklyCost = 0;
           try {
             const econ = state.packData?.rules?.economy;
             weeklyCost += econ?.weeklyCosts?.staff || 0;
             weeklyCost += econ?.weeklyCosts?.maintenance || 0;
           } catch {}
-          // soma salários de staff contratados
           if (Array.isArray(save.staff?.hired)) {
             weeklyCost += save.staff.hired.reduce((s, st) => s + (st.salary || 0), 0);
           }
-          // receitas de patrocínio semanal
           let sponsorIncome = 0;
-          if (save.sponsorship?.current) {
-            sponsorIncome += save.sponsorship.current.weekly || 0;
-          }
-          // atualiza caixa
+          if (save.sponsorship?.current) sponsorIncome += save.sponsorship.current.weekly || 0;
           if (!save.finance) save.finance = { cash: 0 };
           save.finance.cash = (save.finance.cash || 0) + sponsorIncome - weeklyCost;
-          // garante que caixa não fique negativo por questões de simplicidade
           if (save.finance.cash < 0) save.finance.cash = 0;
+
           save.meta.updatedAt = nowIso();
           writeSlot(state.settings.activeSlotId, save);
-          alert(`Treino ${plan} aplicado! Bônus total: ${boost.toFixed(2)}. Receita ${sponsorIncome.toLocaleString('pt-BR', { style: 'currency', currency: state.packData?.rules?.gameRules?.currency || 'BRL' })}, despesas ${weeklyCost.toLocaleString('pt-BR', { style: 'currency', currency: state.packData?.rules?.gameRules?.currency || 'BRL' })}.`);
+
+          const msg = `Treino ${plan} aplicado! Forma +${formBoost.toFixed(2)} • Jovens evoluíram: ${evolvedCount} • Lesionados: ${injuredCount}`;
+          alert(msg);
           route();
         });
       }
