@@ -741,3 +741,113 @@ body:not(.bg-menu):not(.bg-lobby):not(.bg-cinematic){
   margin-bottom: 10px;
   letter-spacing: .2px;
 }
+
+
+/* ---------------------------------------------------------------------------
+   Parte 6: Cerimônia de Campeão + Carreira (Hall da Fama)
+--------------------------------------------------------------------------- */
+.champion-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  z-index: 9999;
+}
+.champion-modal{
+  width: min(720px, 96vw);
+}
+.champion-hero{
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+.champion-logos{
+  display:flex;
+  gap: 10px;
+  align-items:center;
+}
+.champion-logo{
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 8px;
+}
+.champion-info{
+  flex: 1;
+}
+.champion-club{
+  font-size: 18px;
+}
+.champion-line{
+  opacity: .85;
+}
+.champion-avatar img{
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+}
+
+.career-header{
+  display:flex;
+  gap: 12px;
+  align-items: center;
+}
+.career-avatar{
+  width: 74px;
+  height: 74px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+.career-avatar img{
+  width: 74px;
+  height: 74px;
+  object-fit: cover;
+}
+.career-name{
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+.flag-mini{
+  width: 18px;
+  height: 18px;
+  object-fit: cover;
+  border-radius: 999px;
+  vertical-align: -3px;
+  margin-right: 6px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.trophy-item{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.trophy-logos{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  margin-right: 8px;
+}
+.trophy-logos img{
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+  padding: 4px;
+}

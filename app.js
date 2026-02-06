@@ -59,7 +59,7 @@
     }
   }
 
-  const BUILD_TAG = "v1.20.1";
+  const BUILD_TAG = "v1.21.1";
 
 // -----------------------------
 // Carreira (Parte 1) — Identidade do Treinador
@@ -748,7 +748,8 @@ function generateClubObjective(save) {
     "/admin": viewAdmin,
     "/staff": viewStaff,
     "/sponsorship": viewSponsorship,
-    "/transfers": viewTransfers
+    "/transfers": viewTransfers,
+    "/career": viewCareer
     ,"/diagnostics": viewDiagnostics
   };
 
@@ -785,6 +786,9 @@ function applyBackground(path) {
       viewEl.innerHTML = html;
     }
     bindEvents();
+
+    // Parte 6: se houver cerimônia pendente, mostra após render
+    try { setTimeout(showChampionOverlayIfAny, 30); } catch (e) {}
   }
 
   // Ouve mudança de hash para atualizar a rota
@@ -1699,6 +1703,21 @@ function viewCareerCreate() {
 
             <div class="sep"></div>
             <div class="hub-grid">
+  <div class="hub-card" data-go="/career">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">🏆</div>
+        <div>
+          <div class="hub-title">Carreira</div>
+          <div class="hub-desc">Hall da fama, títulos e reputação</div>
+        </div>
+      </div>
+      <div class="hub-cta">Abrir</div>
+    </div>
+  </div>
+
   <div class="hub-card" data-go="/matches">
     <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_match.png')}')"></div>
     <div class="hub-overlay"></div>
@@ -1888,6 +1907,98 @@ function viewCareerCreate() {
       `;
     });
   }
+  function viewCareer() {
+    return requireSave((save) => {
+      ensureSystems(save);
+      ensureUiState(save);
+
+      const club = save.career?.clubId ? getClub(save.career.clubId) : null;
+      const trophies = (save.career?.trophies || []).slice().reverse();
+      const history = (save.career?.history || []).slice().reverse();
+
+      const flagPath = `./assets/flags/${String(save.career?.nationalityId || 'bra').toLowerCase()}.png`;
+      const rep = computeReputationTier(Number(save.career?.careerScore || 0));
+
+      function trophyRow(t) {
+        const compName = t.competitionName || t.name || t.competitionId || t.leagueId || 'Título';
+        const compId = t.competitionId || t.leagueId || '';
+        const clubId = t.clubId || '';
+        const seasonId = t.seasonId || '';
+        return `
+          <div class="item trophy-item">
+            <div class="trophy-logos">
+              <img src="${competitionLogoPath(compId)}" alt="${esc(compName)}" onerror="this.style.display='none'"/>
+              <img src="${clubLogoPath(clubId)}" alt="${esc(clubId)}" onerror="this.style.display='none'"/>
+            </div>
+            <div>
+              <div><b>${esc(compName)}</b></div>
+              <div class="small">${esc(seasonId)} • ${esc(getClub(clubId)?.name || clubId)}</div>
+            </div>
+            <span class="badge">${esc(String(t.type || 'TITLE'))}</span>
+          </div>
+        `;
+      }
+
+      function historyRow(h) {
+        return `
+          <div class="item">
+            <div>
+              <div><b>${esc(h.seasonId || '')}</b> • ${esc(h.clubName || h.clubId || '')}</div>
+              <div class="small">${esc(h.leagueName || h.leagueId || '')} • Posição: <b>${esc(h.finalPosition ?? '-')}</b></div>
+            </div>
+            <span class="badge">Score: ${esc(h.careerScore ?? '')}</span>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Carreira</div>
+              <div class="card-subtitle">Histórico, reputação e conquistas</div>
+            </div>
+            <span class="badge">${esc(rep)}</span>
+          </div>
+          <div class="card-body">
+            <div class="career-header">
+              <div class="career-avatar">
+                <img src="${avatarPath(save.career?.avatarId)}" alt="Avatar" onerror="this.style.display='none'"/>
+              </div>
+              <div class="career-meta">
+                <div class="career-name"><b>${esc(save.career?.coachName || 'Treinador')}</b></div>
+                <div class="small">
+                  <img class="flag-mini" src="${flagPath}" alt="Bandeira" onerror="this.style.display='none'"/>
+                  ${esc(save.career?.nationality || '')} • ${esc(String(save.career?.coachAge || ''))} anos
+                </div>
+                <div class="small">Clube atual: <b>${esc(club?.name || '')}</b></div>
+                <div class="small">Career Score: <b>${esc(String(save.career?.careerScore || 0))}</b></div>
+              </div>
+            </div>
+
+            <div class="sep"></div>
+
+            <div class="row" style="justify-content:space-between; align-items:center;">
+              <div><b>Títulos</b> <span class="muted">(${trophies.length})</span></div>
+              <button class="btn btn-ghost" type="button" data-go="/hub">Voltar</button>
+            </div>
+
+            <div class="list">
+              ${trophies.length ? trophies.map(trophyRow).join('') : '<div class="notice">Nenhum título ainda.</div>'}
+            </div>
+
+            <div class="sep"></div>
+            <div><b>Histórico por temporada</b></div>
+            <div class="list">
+              ${history.length ? history.map(historyRow).join('') : '<div class="notice">Sem histórico ainda.</div>'}
+            </div>
+          </div>
+        </div>
+      `;
+    });
+  }
+
+
 
   /** Elenco */
   function viewSquad() {
@@ -2133,6 +2244,141 @@ function viewCareerCreate() {
       `;
     });
   }
+  // ---------------------------------------------------------------------------
+  // Parte 6: Títulos, Cerimônia de Campeão, Hall da Fama, Intercontinental
+  // ---------------------------------------------------------------------------
+
+  function ensureUiState(save) {
+    if (!save.ui) save.ui = {};
+    if (!Array.isArray(save.ui.championQueue)) save.ui.championQueue = [];
+  }
+
+  function enqueueChampionCeremony(save, payload) {
+    try {
+      ensureUiState(save);
+      const p = payload || {};
+      // evita duplicar o mesmo evento
+      const key = `${p.seasonId || ''}|${p.competitionId || ''}|${p.clubId || ''}`;
+      if (save.ui.championQueue.some(x => (x && x._key) === key)) return;
+      save.ui.championQueue.push({ ...p, _key: key, enqueuedAt: nowIso() });
+    } catch (e) {}
+  }
+
+  function hasTrophy(save, seasonId, competitionId, clubId) {
+    const arr = save?.career?.trophies || [];
+    return arr.some(t =>
+      (t.seasonId === seasonId || t.seasonId === save?.season?.id) &&
+      (t.competitionId === competitionId || t.leagueId === competitionId) &&
+      (t.clubId === clubId)
+    );
+  }
+
+  function addTrophy(save, trophy) {
+    try {
+      if (!save?.career) return;
+      if (!Array.isArray(save.career.trophies)) save.career.trophies = [];
+      const t = trophy || {};
+      const seasonId = t.seasonId || save?.season?.id || 'unknown';
+      const competitionId = t.competitionId || t.leagueId || 'unknown';
+      const clubId = t.clubId || save?.career?.clubId || null;
+      if (!clubId) return;
+      if (hasTrophy(save, seasonId, competitionId, clubId)) return;
+      save.career.trophies.push({
+        seasonId,
+        yearStart: t.yearStart ?? save?.season?.yearStart ?? null,
+        yearEnd: t.yearEnd ?? save?.season?.yearEnd ?? null,
+        type: t.type || 'TITLE',
+        competitionId,
+        competitionName: t.competitionName || t.name || competitionId,
+        clubId,
+        clubName: t.clubName || getClub(clubId)?.name || clubId,
+        createdAt: nowIso()
+      });
+      if (save.career.trophies.length > 80) save.career.trophies = save.career.trophies.slice(-80);
+    } catch (e) {}
+  }
+
+  function competitionLogoPath(competitionId) {
+    const id = String(competitionId || '').toLowerCase();
+    const map = {
+      'bra_serie_a': 'brasileirao_a',
+      'bra_serie_b': 'brasileirao_b',
+      'conmebol_lib': 'libertadores',
+      'conmebol_sud': 'sulamericana',
+      'uefa_cl': 'champions',
+      'uefa_el': 'europa_league',
+      'intercontinental': 'intercontinental'
+    };
+    const file = map[id] || id;
+    return `./assets/logos/competitions/${file}.png`;
+  }
+
+  function clubLogoPath(clubId) {
+    return `./assets/logos/clubs/${String(clubId || '').toUpperCase()}.png`;
+  }
+
+  function avatarPath(avatarId) {
+    return `./assets/avatars/${String(avatarId || 'avatar_01')}.png`;
+  }
+
+  function showChampionOverlayIfAny() {
+    const save = activeSave();
+    if (!save) return;
+    ensureSystems(save);
+    ensureUiState(save);
+    if (!save.ui.championQueue.length) return;
+
+    const ev = save.ui.championQueue.shift();
+    writeSlot(state.settings.activeSlotId, save);
+
+    const compName = ev.competitionName || ev.competitionId || 'Título';
+    const club = getClub(ev.clubId) || {};
+    const clubName = ev.clubName || club.name || ev.clubId || '';
+    const seasonId = ev.seasonId || save?.season?.id || '';
+
+    const overlay = document.createElement('div');
+    overlay.className = 'champion-overlay';
+    overlay.innerHTML = `
+      <div class="champion-modal card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">CAMPEÃO</div>
+            <div class="card-subtitle">${esc(compName)} • ${esc(seasonId)}</div>
+          </div>
+          <span class="badge">Carreira</span>
+        </div>
+        <div class="card-body">
+          <div class="champion-hero">
+            <div class="champion-logos">
+              <img class="champion-logo" src="${competitionLogoPath(ev.competitionId)}" alt="${esc(compName)}"
+                onerror="this.style.display='none'"/>
+              <img class="champion-logo" src="${clubLogoPath(ev.clubId)}" alt="${esc(clubName)}"
+                onerror="this.style.display='none'"/>
+            </div>
+            <div class="champion-info">
+              <div class="champion-club"><b>${esc(clubName)}</b></div>
+              <div class="champion-line">Parabéns, treinador!</div>
+            </div>
+            <div class="champion-avatar">
+              <img src="${avatarPath(save.career.avatarId)}" alt="Avatar"
+                onerror="this.style.display='none'"/>
+            </div>
+          </div>
+          <div class="sep"></div>
+          <button class="btn btn-primary" type="button" data-action="closeChampionOverlay">Continuar</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+
+    const btn = overlay.querySelector('[data-action="closeChampionOverlay"]');
+    if (btn) btn.addEventListener('click', () => {
+      overlay.remove();
+      // se ainda houver mais títulos, mostra o próximo com leve delay
+      setTimeout(() => { try { showChampionOverlayIfAny(); } catch (e) {} }, 120);
+    });
+  }
+
 
   // -----------------------------
   // Temporada / Jogos (Liga)
@@ -2232,7 +2478,8 @@ try {
   if (isUserChampion) {
     addCareerScore(save, CAREER_SCORE_RULES.LEAGUE_TITLE, `Título: ${league?.name || save.season.leagueId}`);
     // Guarda troféu (apenas uma vez por temporada)
-    save.career.trophies.push({ seasonId: save.season.id, type: 'LEAGUE', leagueId: save.season.leagueId, name: league?.name || save.season.leagueId, clubId: save.career.clubId });
+    addTrophy(save, { seasonId: save.season.id, type: 'LEAGUE', competitionId: save.season.leagueId, competitionName: league?.name || save.season.leagueId, clubId: save.career.clubId });
+    enqueueChampionCeremony(save, { seasonId: save.season.id, competitionId: save.season.leagueId, competitionName: league?.name || save.season.leagueId, clubId: save.career.clubId });
   }
 
   // Avalia objetivo da temporada
@@ -2263,6 +2510,58 @@ try {
   if (save.career.history.length > 30) save.career.history = save.career.history.slice(-30);
   save.career.reputationTier = computeReputationTier(save.career.careerScore);
 } catch (e) {}
+
+
+    // Parte 6: gera continentais no fim da temporada e registra títulos/campeão
+    try {
+      // garante geração (mesmo que o usuário não tenha aberto a aba Continentais)
+      generateContinentalCompetitionsForSeason(save);
+
+      const sid = save.season?.id || 'unknown';
+      const cont = ensureContinentalStore(save);
+
+      // Helper para avaliar e registrar título se o usuário foi campeão
+      function maybeAwardContinental(t, compId, compName, type) {
+        if (!t || !t.championId) return;
+        if (t.championId !== save.career.clubId) return;
+        addCareerScore(save, Number(CAREER_SCORE_RULES.CONTINENTAL_TITLE || 400), `Título: ${compName}`);
+        addTrophy(save, { seasonId: sid, type, competitionId: compId, competitionName: compName, clubId: save.career.clubId });
+        enqueueChampionCeremony(save, { seasonId: sid, competitionId: compId, competitionName: compName, clubId: save.career.clubId });
+      }
+
+      maybeAwardContinental(cont.libertadores, 'CONMEBOL_LIB', 'CONMEBOL Libertadores', 'CONTINENTAL');
+      maybeAwardContinental(cont.sudamericana, 'CONMEBOL_SUD', 'CONMEBOL Sul-Americana', 'CONTINENTAL');
+      maybeAwardContinental(cont.uefa?.champions, 'UEFA_CL', 'UEFA Champions League', 'CONTINENTAL');
+      maybeAwardContinental(cont.uefa?.europa, 'UEFA_EL', 'UEFA Europa League', 'CONTINENTAL');
+
+      // Intercontinental: Libertadores x Champions (jogo único) após a geração
+      const libW = cont.libertadores?.championId || null;
+      const uclW = cont.uefa?.champions?.championId || null;
+      if (libW && uclW) {
+        if (!cont.intercontinental || cont.intercontinental.sourceSeasonId !== sid) {
+          const sim = simulateMatch(libW, uclW, save);
+          const champ = (sim.hg > sim.ag) ? libW : (sim.hg < sim.ag ? uclW : (Math.random() < 0.5 ? libW : uclW));
+          cont.intercontinental = {
+            id: 'INTERCONTINENTAL',
+            name: 'Copa Intercontinental',
+            format: 'ONE_OFF',
+            sourceSeasonId: sid,
+            homeId: libW,
+            awayId: uclW,
+            hg: sim.hg,
+            ag: sim.ag,
+            championId: champ,
+            championName: getClub(champ)?.name || champ,
+            playedAt: nowIso()
+          };
+        }
+        if (cont.intercontinental?.championId === save.career.clubId) {
+          addCareerScore(save, 600, 'Título: Copa Intercontinental');
+          addTrophy(save, { seasonId: sid, type: 'INTERCONTINENTAL', competitionId: 'intercontinental', competitionName: 'Copa Intercontinental', clubId: save.career.clubId });
+          enqueueChampionCeremony(save, { seasonId: sid, competitionId: 'intercontinental', competitionName: 'Copa Intercontinental', clubId: save.career.clubId });
+        }
+      }
+    } catch (e) {}
 
     // Atualiza resumo do slot
     const league = (state.packData?.competitions?.leagues || []).find(l => l.id === save.season.leagueId);
@@ -4410,6 +4709,35 @@ function pickBrazilQualifiers(save, leagueId, from, to) {
     if (!t) return '';
     const champ = t.championId ? `${clubLogoHtml(t.championId, 34)} <b>${esc(t.championName || '')}</b>` : `<span class="badge">Indefinido</span>`;
 
+    // Jogo único (Intercontinental)
+    if (t.format === 'ONE_OFF') {
+      const h = getClub(t.homeId); const a = getClub(t.awayId);
+      const score = (Number.isFinite(t.hg) && Number.isFinite(t.ag)) ? `<b>${t.hg} x ${t.ag}</b>` : '<span class="badge">A jogar</span>';
+      return `
+        <div class="card" style="margin-bottom:12px;">
+          <div class="card-header">
+            <div>
+              <div class="card-title">${esc(t.name || 'Final')}</div>
+              <div class="card-subtitle">Formato: jogo único</div>
+            </div>
+            <span class="badge">Campeão</span>
+          </div>
+          <div class="card-body">
+            <div class="row" style="align-items:center; gap:10px;">
+              ${t.homeId ? clubLogoHtml(t.homeId, 28) : ''} ${esc(h?.short || h?.name || t.homeId || '')}
+              <span class="dot">•</span>
+              ${score}
+              <span class="dot">•</span>
+              ${t.awayId ? clubLogoHtml(t.awayId, 28) : ''} ${esc(a?.short || a?.name || t.awayId || '')}
+            </div>
+            <div class="sep"></div>
+            <div class="row" style="align-items:center; gap:10px;">${champ}</div>
+          </div>
+        </div>
+      `;
+    }
+
+
     // KO simples (compatibilidade)
     if (!t.format || t.format === 'KO') {
       return `
@@ -4560,13 +4888,15 @@ function pickBrazilQualifiers(save, leagueId, from, to) {
             lib: contStore.libertadores,
             sud: contStore.sudamericana,
             ucl: contStore.uefa?.champions,
-            uel: contStore.uefa?.europa
+            uel: contStore.uefa?.europa,
+            inter: contStore.intercontinental
           }
         : {
             lib: useLive?.tournaments?.conmebol?.libertadores,
             sud: useLive?.tournaments?.conmebol?.sudamericana,
             ucl: useLive?.tournaments?.uefa?.champions,
-            uel: useLive?.tournaments?.uefa?.europa
+            uel: useLive?.tournaments?.uefa?.europa,
+            inter: useLive?.tournaments?.intercontinental
           };
 
       const libCard = source.lib ? renderTournamentCard(source.lib) : '';
@@ -4574,6 +4904,8 @@ function pickBrazilQualifiers(save, leagueId, from, to) {
 
       const uclCard = source.ucl ? renderTournamentCard(source.ucl) : '';
       const uelCard = source.uel ? renderTournamentCard(source.uel) : '';
+
+      const interCard = source.inter ? renderTournamentCard(source.inter) : '';
 
       writeSlot(state.settings.activeSlotId, save);
 
@@ -4598,6 +4930,7 @@ function pickBrazilQualifiers(save, leagueId, from, to) {
             <div class="label">UEFA</div>
             ${uclCard}
             ${uelCard}
+            ${interCard}
 
             <div class="sep"></div>
             <div class="row">
