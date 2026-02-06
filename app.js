@@ -59,7 +59,7 @@
     }
   }
 
-  const BUILD_TAG = "v1.19.3";
+  const BUILD_TAG = "v1.20.0";
 
 // -----------------------------
 // Carreira (Parte 1) — Identidade do Treinador
@@ -1092,6 +1092,7 @@ function maybeGenerateIncomingOffers(save) {
     if (already) continue;
 
     const value = Number(p.value || 0);
+    const staffMkt = computeStaffMarket(save);
     const fee = Math.round(value * (0.80 + Math.random() * 0.50)); // 80% a 130%
     const wage = Math.round((Number(p.wage || 150000) * (0.90 + Math.random() * 0.35))); // provisório
 
@@ -1166,7 +1167,9 @@ function finalizeBuy(save, pid, fee, wage) {
   const p = (state.packData?.players?.players || []).find(x => x.id === pid);
   if (!p) return { ok: false, message: 'Jogador não encontrado' };
 
-  const price = Number(fee || p.value || 0);
+  const staffMkt = computeStaffMarket(save);
+  const basePrice = Number(fee || p.value || 0);
+  const price = Math.max(0, Math.round(basePrice * (1 - (staffMkt.marketDiscount || 0))));
   if (!save.finance) save.finance = { cash: 0 };
   if ((save.finance.cash || 0) < price) return { ok: false, message: 'Caixa insuficiente' };
 
@@ -1277,7 +1280,29 @@ function computeStaffMatch(save){
     if (st.effect && typeof st.effect.setpieceBoost === 'number') setpiece += st.effect.setpieceBoost;
     if (st.effect && typeof st.effect.fatigueMultiplier === 'number') fatigueMultiplier *= st.effect.fatigueMultiplier;
   }
+
   return { attack, defense, setpiece, fatigueMultiplier };
+}
+
+
+/** Calcula efeitos do staff no mercado de transferências */
+function computeStaffMarket(save) {
+  const hired = (save.staff && Array.isArray(save.staff.hired)) ? save.staff.hired : [];
+  let marketDiscount = 0;
+  let scoutingQuality = 0;
+  for (const st of hired) {
+    if (st?.effect && typeof st.effect.marketDiscount === 'number') {
+      marketDiscount += st.effect.marketDiscount;
+    }
+    if (st?.effect && typeof st.effect.scoutingQuality === 'number') {
+      scoutingQuality += st.effect.scoutingQuality;
+    }
+  }
+  if (!Number.isFinite(marketDiscount)) marketDiscount = 0;
+  if (!Number.isFinite(scoutingQuality)) scoutingQuality = 0;
+  marketDiscount = Math.max(0, Math.min(0.25, marketDiscount));
+  scoutingQuality = Math.max(0, Math.min(0.50, scoutingQuality));
+  return { marketDiscount, scoutingQuality };
 }
 
   /* ========== VIEWS ========== */
@@ -4775,7 +4800,7 @@ function viewFinance() {
           return p.name.toLowerCase().includes(q.trim().toLowerCase());
         })
         .sort((a, b) => b.overall - a.overall)
-        .slice(0, 120); // limite para performance mobile
+        .slice(0, Math.min(180, 120 + Math.round((computeStaffMarket(save).scoutingQuality||0) * 120))); // limite para performance mobile
 
       const posOpts = ['ALL', 'GK', 'DEF', 'MID', 'ATT']
         .map((p) => `<option value="${p}" ${p === filterPos ? 'selected' : ''}>${p === 'ALL' ? 'Todos' : p}</option>`)
@@ -4860,6 +4885,7 @@ function viewFinance() {
           </div>
           <div class="card-body">
             <div class="notice">Status da janela: ${winBadge}</div>
+            <div class="mini">Bônus do staff no mercado: desconto ${(computeStaffMarket(save).marketDiscount*100).toFixed(0)}% • scouting +${(computeStaffMarket(save).scoutingQuality*100).toFixed(0)}%</div>
             <div class="sep"></div>
 
             <div class="grid">
@@ -5527,18 +5553,22 @@ if (action === 'makeOffer') {
     if (!p) return;
 
     const value = Number(p.value || 0);
+    const staffMkt = computeStaffMarket(save);
+    const suggested = Math.max(1, Math.round(value * (1 - (staffMkt.marketDiscount || 0))));
     const currency = state.packData?.rules?.gameRules?.currency || 'BRL';
     const valueStr = value.toLocaleString('pt-BR', { style: 'currency', currency });
 
     const fee = Number(prompt(`Oferta pelo jogador ${p.name}
 Valor estimado: ${valueStr}
 
-Digite a oferta (apenas número):`, String(value)));
+Seu staff dá desconto aproximado de ${(staffMkt.marketDiscount*100).toFixed(0)}% em negociações.
+Digite a oferta (apenas número):`, String(suggested)));
     if (!Number.isFinite(fee) || fee <= 0) return;
 
     if (!save.finance) save.finance = { cash: 0 };
-    if ((save.finance.cash || 0) < fee) {
-      alert('Caixa insuficiente para esta oferta.');
+    const effectiveFee = Math.max(0, Math.round(fee * (1 - (staffMkt.marketDiscount || 0))));
+    if ((save.finance.cash || 0) < effectiveFee) {
+      alert('Caixa insuficiente para esta oferta (considerando desconto do staff).');
       return;
     }
 
