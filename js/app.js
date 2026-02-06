@@ -874,29 +874,121 @@ return save;
   /** Criação de carreira: nome, nacionalidade, etc. */
   function viewCareerCreate() {
     return requireSave((save) => {
-      const coachName = save.career?.coachName || "";
-      const nationality = save.career?.nationality || "Brasil";
+      ensureSystems(save);
+
+      // Defaults (robusto p/ saves antigos)
+      if (!save.career) save.career = {};
+      if (!save.career.coachProfile) save.career.coachProfile = {};
+
+      const coachName = save.career.coachProfile.name || save.career.coachName || "";
+      const nationality = save.career.coachProfile.nationality || save.career.nationality || "BRA";
+      const age = Number.isFinite(save.career.coachProfile.age) ? save.career.coachProfile.age : (save.career.coachAge || 35);
+      const avatar = save.career.coachProfile.avatar || save.career.avatar || "avatar_01.png";
+      const style = save.career.coachProfile.style || save.career.style || "balanced";
+
+      const countries = [
+        { id: "BRA", name: "Brasil", flag: "assets/flags/bra.png", emoji: "🇧🇷" },
+        { id: "ARG", name: "Argentina", flag: "assets/flags/arg.png", emoji: "🇦🇷" },
+        { id: "ENG", name: "Inglaterra", flag: "assets/flags/eng.png", emoji: "🏴" },
+        { id: "ESP", name: "Espanha", flag: "assets/flags/esp.png", emoji: "🇪🇸" },
+        { id: "ITA", name: "Itália", flag: "assets/flags/ita.png", emoji: "🇮🇹" },
+        { id: "GER", name: "Alemanha", flag: "assets/flags/ger.png", emoji: "🇩🇪" },
+        { id: "FRA", name: "França", flag: "assets/flags/fra.png", emoji: "🇫🇷" },
+        { id: "POR", name: "Portugal", flag: "assets/flags/por.png", emoji: "🇵🇹" },
+      ];
+
+      const avatars = [
+        "avatar_01.png",
+        "avatar_02.png",
+        "avatar_03.png",
+        "avatar_04.png",
+      ];
+
+      const countryButtons = countries.map((c) => {
+        const active = c.id === nationality ? "active" : "";
+        return `
+          <button class="flag-btn ${active}" data-action="setCoachNationality" data-value="${esc(c.id)}" title="${esc(c.name)}">
+            <span class="flag-emoji">${esc(c.emoji)}</span>
+            <span class="flag-name">${esc(c.name)}</span>
+          </button>
+        `;
+      }).join("");
+
+      const avatarButtons = avatars.map((a) => {
+        const active = a === avatar ? "active" : "";
+        return `
+          <button class="avatar-btn ${active}" data-action="setCoachAvatar" data-value="${esc(a)}" title="${esc(a)}">
+            <img src="assets/avatars/${esc(a)}" alt="${esc(a)}" />
+          </button>
+        `;
+      }).join("");
+
+      const styleOptions = [
+        { id: "balanced", name: "Equilibrado" },
+        { id: "possession", name: "Posse" },
+        { id: "direct", name: "Direto" },
+        { id: "counter", name: "Contra-ataque" },
+      ].map((s) => `<option value="${esc(s.id)}" ${s.id === style ? "selected" : ""}>${esc(s.name)}</option>`).join("");
+
       return `
         <div class="card">
           <div class="card-header">
             <div>
               <div class="card-title">Criar Carreira</div>
-              <div class="card-subtitle">Defina seu treinador</div>
+              <div class="card-subtitle">Defina seu treinador (nome, país, avatar e estilo)</div>
             </div>
             <span class="badge">Passo 1/3</span>
           </div>
+
           <div class="card-body">
             <div class="grid">
-              <div class="col-6">
+              <div class="col-8">
                 <div class="label">Nome do treinador</div>
-                <input class="input" data-field="coachName" value="${esc(coachName)}" placeholder="Ex: João Vale" />
+                <input class="input" data-field="coachProfile.name" value="${esc(coachName)}" placeholder="Ex: João Vale" />
               </div>
-              <div class="col-6">
-                <div class="label">Nacionalidade</div>
-                <input class="input" data-field="nationality" value="${esc(nationality)}" placeholder="Ex: Brasil" />
+              <div class="col-4">
+                <div class="label">Idade inicial</div>
+                <input class="input" type="number" min="18" max="75" data-field="coachProfile.age" value="${esc(String(age))}" />
               </div>
             </div>
+
             <div class="sep"></div>
+
+            <div class="label">País (bandeiras)</div>
+            <div class="flag-grid">
+              ${countryButtons}
+            </div>
+
+            <div class="sep"></div>
+
+            <div class="label">Avatar</div>
+            <div class="avatar-grid">
+              ${avatarButtons}
+            </div>
+
+            <div class="sep"></div>
+
+            <div class="grid">
+              <div class="col-6">
+                <div class="label">Estilo do treinador</div>
+                <select class="input" data-field="coachProfile.style">
+                  ${styleOptions}
+                </select>
+              </div>
+              <div class="col-6">
+                <div class="label">Pré-visualização</div>
+                <div class="coach-preview">
+                  <img class="coach-preview-avatar" src="assets/avatars/${esc(avatar)}" alt="avatar" />
+                  <div class="coach-preview-meta">
+                    <div class="coach-preview-name">${esc(coachName || "Seu treinador")}</div>
+                    <div class="coach-preview-sub">${esc(nationality)} • ${esc(String(age))} anos</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="sep"></div>
+
             <div class="row">
               <button class="btn" data-go="/slots">Voltar</button>
               <button class="btn btn-primary" data-action="careerContinueToClub">Continuar</button>
@@ -3928,6 +4020,41 @@ function viewFinance() {
               window.VFM_DIAG.clear();
             }
           } catch (e) {}
+          route();
+        });
+        return;
+      }
+
+
+      if (action === 'setCoachNationality') {
+        el.addEventListener('click', () => {
+          const save = readSlot(state.settings.activeSlotId);
+          if (!save) return;
+          ensureSystems(save);
+          if (!save.career) save.career = {};
+          if (!save.career.coachProfile) save.career.coachProfile = {};
+          const v = el.getAttribute('data-value') || 'BRA';
+          save.career.coachProfile.nationality = v;
+          // compat legado
+          save.career.nationality = v;
+          writeSlot(state.settings.activeSlotId, save);
+          route();
+        });
+        return;
+      }
+
+      if (action === 'setCoachAvatar') {
+        el.addEventListener('click', () => {
+          const save = readSlot(state.settings.activeSlotId);
+          if (!save) return;
+          ensureSystems(save);
+          if (!save.career) save.career = {};
+          if (!save.career.coachProfile) save.career.coachProfile = {};
+          const v = el.getAttribute('data-value') || 'avatar_01.png';
+          save.career.coachProfile.avatar = v;
+          // compat legado
+          save.career.avatar = v;
+          writeSlot(state.settings.activeSlotId, save);
           route();
         });
         return;

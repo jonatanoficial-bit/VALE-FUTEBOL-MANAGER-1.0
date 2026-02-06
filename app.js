@@ -59,7 +59,7 @@
     }
   }
 
-  const BUILD_TAG = 'v1.19.1';
+  const BUILD_TAG = "v1.19.3";
 
 // -----------------------------
 // Carreira (Parte 1) — Identidade do Treinador
@@ -1460,32 +1460,23 @@ function viewCareerCreate() {
           <span class="badge">Passo 1/3</span>
         </div>
         <div class="card-body">
-          <div class="grid">
-              <div class="col-4">
-                <div class="label">Plano da semana</div>
-                <select class="input" data-action="setTrainingPlan">
-                  <option value="Leve" ${plan === 'Leve' ? 'selected' : ''}>Leve</option>
-                  <option value="Equilibrado" ${plan === 'Equilibrado' ? 'selected' : ''}>Equilibrado</option>
-                  <option value="Intenso" ${plan === 'Intenso' ? 'selected' : ''}>Intenso</option>
-                </select>
-              </div>
-              <div class="col-4">
-                <div class="label">Foco do treino</div>
-                <select class="input" data-action="setTrainingFocus">
-                  <option value="balanced" ${focus === 'balanced' ? 'selected' : ''}>Equilibrado</option>
-                  <option value="fitness" ${focus === 'fitness' ? 'selected' : ''}>Condicionamento</option>
-                  <option value="attack" ${focus === 'attack' ? 'selected' : ''}>Ataque</option>
-                  <option value="defense" ${focus === 'defense' ? 'selected' : ''}>Defesa</option>
-                  <option value="setpieces" ${focus === 'setpieces' ? 'selected' : ''}>Bolas paradas</option>
-                  <option value="youth" ${focus === 'youth' ? 'selected' : ''}>Jovens</option>
-                </select>
-              </div>
-              <div class="col-4">
-                <div class="label">Aplicar treino</div>
-                <button class="btn btn-primary" data-action="applyTraining">Aplicar</button>
-              </div>
+          <div class="row">
+            <div class="col-6">
+              <div class="label">Nome do treinador</div>
+              <input class="input" placeholder="Digite seu nome" value='${esc(coachName)}' data-action="setCoachName">
             </div>
-            <div class="sep"></div>
+            <div class="col-3">
+              <div class="label">Idade</div>
+              <input class="input" type="number" min="18" max="80" value="${age}" data-action="setCoachAge">
+            </div>
+            <div class="col-3">
+              <div class="label">Estilo</div>
+              <select class="input" data-action="setCoachStyle">
+                ${styleOptions}
+              </select>
+            </div>
+          </div>
+          <div class="sep"></div>
 
           <div class="label">País</div>
           <div class="chip-grid">
@@ -5127,6 +5118,31 @@ if (action === 'setCoachAvatar') {
     save.meta.updatedAt = nowIso();
     writeSlot(state.settings.activeSlotId, save);
     route();
+  });
+}
+
+if (action === 'setCoachName') {
+  el.addEventListener('input', () => {
+    const save = activeSave();
+    if (!save) return;
+    ensureSystems(save);
+    save.career.coachName = String(el.value || '').slice(0, 32);
+    save.meta.updatedAt = nowIso();
+    writeSlot(state.settings.activeSlotId, save);
+  });
+}
+
+if (action === 'setCoachAge') {
+  el.addEventListener('change', () => {
+    const save = activeSave();
+    if (!save) return;
+    ensureSystems(save);
+    let v = Number(el.value || 35);
+    if (!Number.isFinite(v)) v = 35;
+    v = Math.max(18, Math.min(80, Math.round(v)));
+    save.career.coachAge = v;
+    save.meta.updatedAt = nowIso();
+    writeSlot(state.settings.activeSlotId, save);
   });
 }
 
