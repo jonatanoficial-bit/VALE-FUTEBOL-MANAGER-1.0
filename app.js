@@ -59,7 +59,7 @@
     }
   }
 
-  const BUILD_TAG = "v1.21.1";
+  const BUILD_TAG = "v1.21.2";
 
 // -----------------------------
 // Carreira (Parte 1) — Identidade do Treinador
@@ -5114,7 +5114,20 @@ function viewFinance() {
   }
 
   /** Transferências: mercado de jogadores */
-  function viewTransfers() {
+  
+// --- Transfers: safe window helpers (top-level) ---
+function safeGetTransferWindow(save) {
+  // janela simples por padrão: sempre aberta
+  try {
+    if (typeof getTransferWindowNow === 'function') return getTransferWindowNow(save);
+    if (typeof getTransferWindow === 'function') return getTransferWindow(save);
+  } catch (e) {}
+  return { isOpen: true, label: 'Aberta' };
+}
+function safeGetTransferWindowNow(save) { return safeGetTransferWindow(save); }
+// -------------------------------------------------
+
+function viewTransfers() {
     return requireSave((save) => {
       ensureSystems(save);
       ensureSeason(save);
