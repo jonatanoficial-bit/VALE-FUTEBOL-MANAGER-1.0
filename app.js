@@ -9,7 +9,6 @@
    * de carreira, seleção de clube, tutorial, HUB do treinador e módulos
    * básicos (elenco, tática, treinos). Todas as interações são feitas
    * sem backend, utilizando LocalStorage para persistência.
-   */
 
   // Oculta a tela de splash após a página carregar
   document.addEventListener("DOMContentLoaded", () => {
@@ -60,7 +59,7 @@
     }
   }
 
-  const BUILD_TAG = 'v1.19.0';
+  const BUILD_TAG = 'v1.19.1';
 
 // -----------------------------
 // Carreira (Parte 1) — Identidade do Treinador
@@ -1442,10 +1441,11 @@ function viewCareerCreate() {
     const avatarButtons = AVATARS.map(a => {
       const active = a.id === av.id ? 'avatar-tile active' : 'avatar-tile';
       // Se o PNG não existir, mostramos apenas o label — o usuário poderá adicionar depois.
-      return `<button class="${active}" data-action="setCoachAvatar" data-value="${esc(a.id)}">
-        <div class="avatar-img" style="background-image:url('${urlOf(a.asset)}');background-size:cover;background-position:center;"></div>
-        <div class="avatar-label">${esc(a.label)}</div>
-      </button>`;
+      return `
+        <button class="${active}" data-action="setCoachAvatar" data-value="${esc(a.id)}" title="${esc(a.label)}">
+          <div class="avatar-img" style="background-image:url(\'${urlOf(a.asset)}\');background-size:cover;background-position:center;"></div>
+          <div class="avatar-label">${esc(a.label)}</div>
+        </button>`;
     }).join('');
 
     const styleOptions = COACH_STYLES.map(s => `<option value="${esc(s.id)}" ${s.id === style.id ? 'selected' : ''}>${esc(s.name)}</option>`).join('');
@@ -1512,7 +1512,6 @@ function viewCareerCreate() {
 }
 
 /** Escolha de clube */
- */
   function viewClubPick() {
     return requireSave((save) => {
       const clubs = state.packData?.clubs?.clubs || [];
