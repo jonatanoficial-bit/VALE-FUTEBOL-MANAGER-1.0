@@ -59,7 +59,7 @@
     }
   }
 
-  const BUILD_TAG = "v1.21.3";
+  const BUILD_TAG = "v1.21.4";
 
 // -----------------------------
 // Carreira (Parte 1) — Identidade do Treinador
@@ -384,7 +384,6 @@ function generateClubObjective(save) {
 
   const ROSTER_OVERRIDE_FILE = "./data/roster_override.json";
 
-  const ROSTER_OVERRIDE_FILE = "./data/roster_override.json";
 
   function applyRosterOverride() {
     try {
