@@ -49,17 +49,24 @@
    */
   function urlOf(rel) {
     try {
-      // Se for absoluta, retorna como está
+      if (!rel) return rel;
+      // Se for absoluta (http/https), retorna como está
       if (/^https?:\/\//.test(rel)) return rel;
-      // Remove hash corretamente (GitHub Pages usa hash routing)
+      // Normaliza caminhos internos:
+      // - remove "/" inicial para não quebrar em GitHub Pages (subpasta do repo)
+      // - remove "./" inicial
+      const cleaned = String(rel).replace(/^\/+/, "").replace(/^\.\//, "");
+      // Remove hash e query (hash routing)
       const base = window.location.href.split("#")[0].split("?")[0];
-      return new URL(rel.replace(/^\.\/?/, ""), base).href;
+      return new URL(cleaned, base).href;
     } catch (e) {
       return rel;
     }
   }
 
-  const BUILD_TAG = "v1.21.5";
+  }
+
+  const BUILD_TAG = "v1.21.6";
 
 // -----------------------------
 // Carreira (Parte 1) — Identidade do Treinador
