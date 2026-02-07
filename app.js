@@ -59,7 +59,7 @@
     }
   }
 
-  const BUILD_TAG = "v1.21.4";
+  const BUILD_TAG = "v1.21.5";
 
 // -----------------------------
 // Carreira (Parte 1) — Identidade do Treinador
@@ -363,11 +363,16 @@ function generateClubObjective(save) {
         players: await tryLoad(files.players, { players: [] }),
         qualifications: await tryLoad(files.qualifications, {})
       };
-       applyRosterOverride();
+      // Primeiro normaliza o pacote base
+      normalizePackPlayers();
+      // Aplica override salvo no navegador
+      applyRosterOverride();
+      // Re-normaliza após merge
+      normalizePackPlayers();
 
       // Auto-carrega override empacotado (data/roster_override.json) se existir
       const applied = await autoLoadRosterOverrideFromFile();
-      if (applied) applyRosterOverride();
+      if (applied) { applyRosterOverride(); normalizePackPlayers(); }
 
     } catch {
       state.packData = null;
@@ -414,6 +419,77 @@ function generateClubObjective(save) {
     } catch {
       // ignora override corrompido
     }
+
+
+  // ---------------------------------------------------------------------------
+  // Normalização de jogadores (compatibilidade entre pacotes e override)
+  // Garante que cada jogador tenha: name (string), pos, age (number), ovr (number),
+  // overall (number) e value (number, em EUR).
+  // ---------------------------------------------------------------------------
+  function normalizePackPlayers() {
+    const arr = state.packData?.players?.players;
+    if (!Array.isArray(arr)) return;
+
+    for (const p of arr) {
+      if (!p) continue;
+
+      // Nome
+      if (p.name === undefined || p.name === null) {
+        // tenta chaves alternativas (planilhas antigas)
+        p.name = (p.nome !== undefined ? p.nome : '') + '';
+      } else {
+        p.name = String(p.name);
+      }
+
+      // Posição / Idade
+      if (p.pos === undefined && p.position !== undefined) p.pos = p.position;
+      p.pos = String(p.pos || 'MID').toUpperCase();
+
+      const age = Number(p.age ?? p.idade ?? 22);
+      p.age = Number.isFinite(age) ? Math.max(15, Math.min(50, Math.round(age))) : 22;
+
+      // Overall / OVR (o pacote base usa "ovr"; telas novas usam "overall")
+      const ovr = Number(p.ovr ?? p.overall ?? 60);
+      const o = Number.isFinite(ovr) ? Math.max(30, Math.min(95, Math.round(ovr))) : 60;
+      p.ovr = o;
+      p.overall = o;
+
+      // Valor (EUR) - se não existir, estimamos baseado em ovr + idade
+      let value = Number(p.value ?? p.valor ?? p.value_eur ?? p.valueEUR ?? 0);
+      if (!Number.isFinite(value) || value <= 0) {
+        const youthBoost = p.age <= 23 ? 1.25 : p.age <= 27 ? 1.10 : p.age <= 31 ? 0.95 : 0.85;
+        value = Math.round((o ** 2) * 12000 * youthBoost); // ~0.5M..15M em geral
+      }
+      p.value = Math.max(0, Math.round(value));
+    }
+  }
+
+  // Sincroniza o save com o elenco do pacote (quando o override muda)
+  function syncSaveRosterIfNeeded(save) {
+    try {
+      const raw = localStorage.getItem(ROSTER_OVERRIDE_KEY);
+      if (!raw) return;
+      const obj = JSON.parse(raw);
+      const ts = String(obj?.updatedAt || '');
+      if (!ts) return;
+
+      if (!save.progress) save.progress = {};
+      const last = String(save.progress.rosterUpdatedAt || '');
+      if (last === ts) return;
+
+      // Se mudou o roster, recria o elenco do clube atual e limpa filtros de mercado
+      save.squad = save.squad || {};
+      save.squad.players = generateSquadForClub(save.career?.clubId);
+
+      // Recria pool de mercado / remove compras pendentes para evitar IDs antigos sem lookup
+      save.transfers = save.transfers || {};
+      save.transfers.bought = [];
+      save.transfers.outbox = [];
+      save.transfers.inbox = [];
+
+      save.progress.rosterUpdatedAt = ts;
+    } catch {}
+  }
   }
 
   function saveRosterOverride(players) {
@@ -980,6 +1056,8 @@ function applyBackground(path) {
     if (!Array.isArray(save.squad.players) || save.squad.players.length === 0) {
       save.squad.players = generateSquadForClub(save.career.clubId);
     }
+    // Se o roster online mudou, sincroniza o save para refletir o elenco atual
+    syncSaveRosterIfNeeded(save);
     if (!save.tactics.formation) save.tactics.formation = "4-3-3";
     if (!save.tactics.approach) save.tactics.approach = "balanced"; // balanced | possession | direct | counter
     if (!save.tactics.tempo) save.tactics.tempo = "normal";        // slow | normal | fast
