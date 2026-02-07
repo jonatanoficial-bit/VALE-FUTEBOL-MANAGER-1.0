@@ -59,7 +59,7 @@
     }
   }
 
-  const BUILD_TAG = "v1.21.2";
+  const BUILD_TAG = "v1.21.3";
 
 // -----------------------------
 // Carreira (Parte 1) — Identidade do Treinador
@@ -363,7 +363,11 @@ function generateClubObjective(save) {
         players: await tryLoad(files.players, { players: [] }),
         qualifications: await tryLoad(files.qualifications, {})
       };
-      applyRosterOverride();
+       applyRosterOverride();
+
+      // Auto-carrega override empacotado (data/roster_override.json) se existir
+      const applied = await autoLoadRosterOverrideFromFile();
+      if (applied) applyRosterOverride();
 
     } catch {
       state.packData = null;
@@ -377,6 +381,10 @@ function generateClubObjective(save) {
   // ---------------------------------------------------------------------------
 
   const ROSTER_OVERRIDE_KEY = "vfm_roster_override_v1";
+
+  const ROSTER_OVERRIDE_FILE = "./data/roster_override.json";
+
+  const ROSTER_OVERRIDE_FILE = "./data/roster_override.json";
 
   function applyRosterOverride() {
     try {
@@ -426,6 +434,31 @@ function generateClubObjective(save) {
       return { updatedAt: obj.updatedAt };
     } catch {
       return null;
+    }
+  }
+
+
+  async function autoLoadRosterOverrideFromFile() {
+    try {
+      const res = await fetch(ROSTER_OVERRIDE_FILE, { cache: "no-store" });
+      if (!res.ok) return false;
+      const obj = await res.json();
+      if (!obj || !Array.isArray(obj.players) || obj.players.length === 0) return false;
+
+      const meta = getRosterOverrideMeta();
+      const remoteTime = obj.updatedAt ? Date.parse(obj.updatedAt) : NaN;
+      const localTime = meta?.updatedAt ? Date.parse(meta.updatedAt) : NaN;
+
+      const shouldApply =
+        !meta?.updatedAt ||
+        (!Number.isNaN(remoteTime) && (Number.isNaN(localTime) || remoteTime > localTime));
+
+      if (!shouldApply) return false;
+
+      localStorage.setItem(ROSTER_OVERRIDE_KEY, JSON.stringify(obj));
+      return true;
+    } catch {
+      return false;
     }
   }
 
