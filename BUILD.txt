@@ -1,3 +1,1 @@
-Vale Fly Simulator 1.0
-BUILD_2026-02-06
-Generated: 2026-02-06
+v1.21.9

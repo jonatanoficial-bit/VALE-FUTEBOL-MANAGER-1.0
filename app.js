@@ -64,9 +64,7 @@
     }
   }
 
-  }
-
-  const BUILD_TAG = "v1.21.7";
+  const BUILD_TAG = "v1.21.9";
 
 // -----------------------------
 // Carreira (Parte 1) — Identidade do Treinador
@@ -427,7 +425,6 @@ function generateClubObjective(save) {
       // ignora override corrompido
     }
 
-  }
 
   // ---------------------------------------------------------------------------
   // Normalização de jogadores (compatibilidade entre pacotes e override)
@@ -498,7 +495,7 @@ function generateClubObjective(save) {
       save.progress.rosterUpdatedAt = ts;
     } catch {}
   }
-
+  }
 
   function saveRosterOverride(players) {
     const payload = {
