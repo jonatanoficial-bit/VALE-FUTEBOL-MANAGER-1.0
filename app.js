@@ -466,6 +466,7 @@ async function loadPackData() {
     } catch {
       // ignora override corrompido
     }
+  }
 
 
   // ---------------------------------------------------------------------------
@@ -536,7 +537,6 @@ async function loadPackData() {
 
       save.progress.rosterUpdatedAt = ts;
     } catch {}
-  }
   }
 
   function saveRosterOverride(players) {
