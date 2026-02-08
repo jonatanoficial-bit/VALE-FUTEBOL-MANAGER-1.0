@@ -64,7 +64,7 @@
     }
   }
 
-  const BUILD_TAG = "v1.21.9";
+  const BUILD_TAG = "v1.22.0";
 
 // -----------------------------
 // Carreira (Parte 1) — Identidade do Treinador
@@ -332,60 +332,102 @@ function generateClubObjective(save) {
     }
   }
 
-  /** Carrega os dados completos do pacote selecionado */
-  async function loadPackData() {
-    const pid = state.settings.selectedPackId;
-    if (!pid) {
-      state.packData = null;
-      return;
-    }
-    const pack = state.packs.find((p) => p.id === pid);
-    if (!pack) {
-      state.packData = null;
-      return;
-    }
-    try {
-      // Resolve caminho do manifest para URL completa (suporta deploy em subpasta)
-      const manifestUrl = urlOf(pack.path || "");
-      const manifest = await fetch(manifestUrl, { cache: "no-store" }).then((r) => r.json());
-      const files = manifest.files || {};
-      // Carrega cada arquivo, caindo para fallback se falhar
-      async function tryLoad(path, fb) {
-        try {
-          const resolved = urlOf(path || "");
-          const r = await fetch(resolved, { cache: "no-store" });
-          return await r.json();
-        } catch {
-          return fb;
-        }
-      }
-      state.packData = {
-        manifest,
-        clubs: await tryLoad(files.clubs, { clubs: [] }),
-        competitions: await tryLoad(files.competitions, { leagues: [], cups: [] }),
-        rules: await tryLoad(files.rules, {}),
-        seasons: await tryLoad(files.seasons, { seasons: [] }),
-        players: await tryLoad(files.players, { players: [] }),
-        qualifications: await tryLoad(files.qualifications, {})
-      };
-      // Primeiro normaliza o pacote base
-      normalizePackPlayers();
-      // Aplica override salvo no navegador
-      applyRosterOverride();
-      // Re-normaliza após merge
-      normalizePackPlayers();
+  
+/** Carrega os dados completos do pacote selecionado */
+async function loadPackData() {
+  const pid = state.settings.selectedPackId;
+  if (!pid) { state.packData = null; return; }
 
-      // Auto-carrega override empacotado (data/roster_override.json) se existir
-      const applied = await autoLoadRosterOverrideFromFile();
-      if (applied) { applyRosterOverride(); normalizePackPlayers(); }
+  const pack = state.packs.find((p) => p.id === pid);
+  if (!pack) { state.packData = null; return; }
 
-    } catch {
-      state.packData = null;
-      state.ui.error = "Falha ao carregar dados do pacote.";
-    }
+  // helper to surface errors to the UI (mobile-friendly)
+  function fail(msg) {
+    state.packData = null;
+    state.ui.error = msg;
+    state.ui.toast = msg;
   }
 
-  
+  try {
+    // 1) Carrega manifest do pacote (com fallback)
+    const manifestCandidates = [
+      pack.path || "",
+      `./data/${pid}/manifest.json`,
+      `data/${pid}/manifest.json`,
+      `./data/base_2025_2026/manifest.json`,
+      `data/base_2025_2026/manifest.json`,
+    ].filter(Boolean);
+
+    let manifest = null;
+    let manifestUrl = "";
+
+    for (const cand of manifestCandidates) {
+      try {
+        manifestUrl = urlOf(cand);
+        const res = await fetch(manifestUrl, { cache: "no-store" });
+        if (!res.ok) continue;
+        manifest = await res.json();
+        break;
+      } catch {
+        // tenta próximo
+      }
+    }
+
+    if (!manifest || typeof manifest !== "object") {
+      fail(`Falha ao carregar manifest do pacote (${pid}). Verifique se existe: data/${pid}/manifest.json`);
+      return;
+    }
+
+    const files = manifest.files || {};
+
+    // 2) Carrega cada arquivo (com validação de status e fallback seguro)
+    async function loadJsonFile(label, path, fb) {
+      try {
+        const resolved = urlOf(path || "");
+        const r = await fetch(resolved, { cache: "no-store" });
+        if (!r.ok) return fb;
+        return await r.json();
+      } catch {
+        return fb;
+      }
+    }
+
+    state.packData = {
+      manifest,
+      clubs: await loadJsonFile("clubs", files.clubs, { clubs: [] }),
+      competitions: await loadJsonFile("competitions", files.competitions, { leagues: [], cups: [] }),
+      rules: await loadJsonFile("rules", files.rules, {}),
+      seasons: await loadJsonFile("seasons", files.seasons, { seasons: [] }),
+      players: await loadJsonFile("players", files.players, { players: [] }),
+      qualifications: await loadJsonFile("qualifications", files.qualifications, {}),
+    };
+
+    // 3) Normaliza pacote base (compat)
+    normalizePackPlayers();
+
+    // 4) Aplica override salvo no navegador
+    applyRosterOverride();
+    normalizePackPlayers();
+
+    // 5) Auto-carrega override empacotado (data/roster_override.json) se existir
+    const applied = await autoLoadRosterOverrideFromFile();
+    if (applied) { applyRosterOverride(); normalizePackPlayers(); }
+
+    // sanity check mínimo (evita "Pronto" com pack vazio)
+    const clubsCount = state.packData?.clubs?.clubs?.length || 0;
+    const playersCount = state.packData?.players?.players?.length || 0;
+    if (clubsCount === 0 || playersCount === 0) {
+      fail(`Pacote carregado, mas está vazio (clubs=${clubsCount}, players=${playersCount}). Verifique os arquivos do pack.`);
+      return;
+    }
+
+    // ok
+    state.ui.error = "";
+  } catch {
+    fail("Falha ao carregar dados do pacote.");
+  }
+}
+
   // ---------------------------------------------------------------------------
   // Atualização Online de Elencos (custo zero) - via Wikipedia (MediaWiki API)
   // ---------------------------------------------------------------------------
