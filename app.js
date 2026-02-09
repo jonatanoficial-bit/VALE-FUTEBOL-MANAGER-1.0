@@ -64,7 +64,8 @@
     }
   }
 
-  const BUILD_TAG = 'v1.22.2';
+  const BUILD_TAG = "v1.22.3";
+const BUILD_TIME_STR = "09/02/2026 10:26:04";
 
 // -----------------------------
 // Carreira (Parte 1) — Identidade do Treinador
@@ -539,6 +540,51 @@ async function loadPackData() {
     } catch {}
   }
 
+
+  /** Força sincronização do save (squad/tática) com jogadores do pacote carregado (inclui override empacotado). */
+  function forceSyncSaveRosterFromPack(save) {
+    if (!save || !save.career || !save.career.clubId) return false;
+    const clubId = save.career.clubId;
+    const packPlayers = (state.packData && state.packData.players && Array.isArray(state.packData.players.players))
+      ? state.packData.players.players.filter(p => String(p.clubId) === String(clubId))
+      : [];
+    if (!packPlayers || packPlayers.length === 0) return false;
+
+    // normaliza campos esperados pelo jogo
+    const players = packPlayers.map((p, i) => ({
+      id: p.id || `${clubId}_p${i+1}`,
+      clubId,
+      name: p.name || `Jogador ${i+1}`,
+      pos: p.pos || "MID",
+      age: Number.isFinite(+p.age) ? +p.age : 22,
+      overall: Number.isFinite(+p.overall) ? +p.overall : (Number.isFinite(+p.ovr) ? +p.ovr : 60),
+      value: Number.isFinite(+p.value) ? +p.value : (
+        Number.isFinite(+p.value_eur) ? +p.value_eur :
+        (Number.isFinite(+p.value_eur_mi) ? (+p.value_eur_mi * 1000000) : 0)
+      ),
+      nationality: p.nationality || null,
+      form: (typeof p.form === "number") ? p.form : 0,
+      source: p.source || "pack"
+    }));
+
+    if (!save.squad) save.squad = {};
+    save.squad.players = players;
+
+    // atualiza XI padrão conforme formação atual
+    if (!save.tactics) save.tactics = {};
+    if (!save.tactics.formation) save.tactics.formation = "4-3-3";
+    save.tactics.startingXI = buildDefaultXI(save.squad.players, save.tactics.formation);
+
+    // marca meta e salva
+    if (!save.meta) save.meta = {};
+    save.meta.updatedAt = nowIso();
+
+    // marca "dados" no footer
+    state.settings.dataUpdatedAt = save.meta.updatedAt;
+    persistSettings();
+
+    return true;
+  }
   function saveRosterOverride(players) {
     const payload = {
       updatedAt: new Date().toISOString(),
@@ -592,6 +638,7 @@ async function loadPackData() {
     const updatedStr = updated ? updated.toLocaleString("pt-BR") : "nunca";
     el.innerHTML = `
       <div class="build-line"><b>build</b> ${BUILD_TAG}</div>
+      <div class="build-line"><b>data</b> ${BUILD_TIME_STR}</div>
       <div class="build-line"><b>dados</b> ${updatedStr}</div>
     `;
   }
@@ -993,20 +1040,7 @@ function applyBackground(path) {
         </div>
       `;
     }
-    // deixa o save disponível para funções que usam getClub()/world
     state._saveCtx = save;
-
-    // Se o roster/pack mudou, sincroniza o elenco do clube atual com os jogadores reais do pack.
-    // Isso garante que Elenco/Tática usem os mesmos dados que o Mercado.
-    try {
-      const before = String(save?.progress?.rosterUpdatedAt || "");
-      syncSaveRosterIfNeeded(save);
-      const after = String(save?.progress?.rosterUpdatedAt || "");
-      if (before !== after) {
-        writeSlot(state.settings.activeSlotId, save);
-      }
-    } catch {}
-
     return cb(save);
   }
 
@@ -1025,43 +1059,6 @@ function applyBackground(path) {
 
   /** Gera aleatoriamente um elenco para um clube (MVP) */
   function generateSquadForClub(clubId) {
-    // Preferência: se o pack já tem jogadores reais para o clube, usa eles.
-    try {
-      const real = (state.packData?.players?.players || []).filter(p => p.clubId === clubId);
-      if (real && real.length) {
-        const normPos = (pos) => {
-          const v = String(pos || "").toUpperCase();
-          if (["GK","GOL","GOLEIRO"].includes(v)) return "GK";
-          if (["DEF","DF","D","CB","LB","RB","LWB","RWB","ZAG","LAT"].includes(v)) return "DEF";
-          if (["MID","MF","M","CM","CDM","CAM","LM","RM","VOL","MEI"].includes(v)) return "MID";
-          if (["ATT","ST","CF","FW","LW","RW","ATA","SA","PON"].includes(v)) return "ATT";
-          return v || "MID";
-        };
-        const pickOverall = (p) => {
-          const o = Number(p.overall ?? p.ovr);
-          return Number.isFinite(o) ? o : 65;
-        };
-        const players = [...real]
-          .map(p => ({
-            id: p.id || `${clubId}_${String(p.name||"p").replace(/\s+/g,'_')}`,
-            clubId,
-            name: String(p.name || p.playerName || "Jogador"),
-            pos: normPos(p.pos || p.position),
-            age: Number(p.age) || 24,
-            overall: pickOverall(p),
-            value: Number(p.value) || Math.max(200000, pickOverall(p) * 900000),
-            fitness: 92 + Math.floor(Math.random()*9),
-            status: "OK",
-            form: Math.floor(Math.random()*5)-2
-          }))
-          .sort((a,b)=> b.overall - a.overall);
-
-        // garante tamanho padrão ~23
-        return players.slice(0, 23);
-      }
-    } catch {}
-
-    // Fallback: elenco genérico (quando não existe roster real no pack)
     // Define base de overall conforme a liga
     const club = getClub(clubId);
     let base = 65;
@@ -1095,9 +1092,9 @@ function applyBackground(path) {
         age,
         overall,
         value,
-        fitness: 92 + Math.floor(Math.random()*9),
-        status: "OK",
-        form
+        nationality: club?.country || null,
+        form,
+        source: "generated"
       };
     });
   }
@@ -5507,6 +5504,9 @@ function viewTransfers() {
           <div class="notice">Painel de administração (Parte 3). Ferramentas extras para depuração e manutenção.</div>
           <div class="sep"></div>
           ${hasDiag ? '<button class="btn btn-primary" data-go="/diagnostics">Diagnósticos</button>' : ''}
+          <button class="btn btn-primary" data-action="adminRegenSquadFromPack">Aplicar elenco do pacote no save</button>
+          <div class="hint">Use isto após importar planilha/override para sincronizar Elenco + Tática + Mercado no slot atual.</div>
+          <div class="sep"></div>
           <button class="btn btn-ghost" data-go="/home">Menu</button>
         </div>
       </div>
@@ -5584,6 +5584,27 @@ function viewTransfers() {
         if (logEl) logEl.textContent = 'Atualização online removida. Voltou para os dados do pacote.';
         state.ui.toast = 'Override removido';
         return;
+
+      // --- Admin: forçar sincronização do elenco do pacote no slot atual
+      if (action === 'adminRegenSquadFromPack') {
+        (async () => {
+          try {
+            const save = activeSave();
+            if (!save) { toast('Selecione/crie uma carreira primeiro.'); return; }
+            if (!state.packData) { await loadPackData(); }
+            if (!state.packData) { toast('Pacote não carregado. Vá em "Dados" e selecione um pacote.'); return; }
+            if (!confirm('Aplicar elenco do pacote ao slot atual? Isso substituirá o elenco atual do clube salvo.')) return;
+            const ok = forceSyncSaveRosterFromPack(save);
+            if (!ok) { toast('Não encontrei jogadores do seu clube no pacote.'); return; }
+            writeSlot(state.settings.activeSlotId, save);
+            toast('Elenco sincronizado com o pacote ✔');
+            route(); // re-render tela atual
+          } catch (e) {
+            toast('Falha ao sincronizar: ' + (e?.message || e));
+          }
+        })();
+        return;
+      }
       }
 
 // --- Diagnósticos (provisório)
