@@ -64,7 +64,7 @@
     }
   }
 
-  const BUILD_TAG = "v1.22.1";
+  const BUILD_TAG = 'v1.22.2';
 
 // -----------------------------
 // Carreira (Parte 1) — Identidade do Treinador
@@ -527,7 +527,7 @@ async function loadPackData() {
 
       // Se mudou o roster, recria o elenco do clube atual e limpa filtros de mercado
       save.squad = save.squad || {};
-      save.squad.players = (getPackSquadForClub(save.career?.clubId) || generateSquadForClub(save.career?.clubId));
+      save.squad.players = generateSquadForClub(save.career?.clubId);
 
       // Recria pool de mercado / remove compras pendentes para evitar IDs antigos sem lookup
       save.transfers = save.transfers || {};
@@ -993,7 +993,20 @@ function applyBackground(path) {
         </div>
       `;
     }
+    // deixa o save disponível para funções que usam getClub()/world
     state._saveCtx = save;
+
+    // Se o roster/pack mudou, sincroniza o elenco do clube atual com os jogadores reais do pack.
+    // Isso garante que Elenco/Tática usem os mesmos dados que o Mercado.
+    try {
+      const before = String(save?.progress?.rosterUpdatedAt || "");
+      syncSaveRosterIfNeeded(save);
+      const after = String(save?.progress?.rosterUpdatedAt || "");
+      if (before !== after) {
+        writeSlot(state.settings.activeSlotId, save);
+      }
+    } catch {}
+
     return cb(save);
   }
 
@@ -1012,6 +1025,43 @@ function applyBackground(path) {
 
   /** Gera aleatoriamente um elenco para um clube (MVP) */
   function generateSquadForClub(clubId) {
+    // Preferência: se o pack já tem jogadores reais para o clube, usa eles.
+    try {
+      const real = (state.packData?.players?.players || []).filter(p => p.clubId === clubId);
+      if (real && real.length) {
+        const normPos = (pos) => {
+          const v = String(pos || "").toUpperCase();
+          if (["GK","GOL","GOLEIRO"].includes(v)) return "GK";
+          if (["DEF","DF","D","CB","LB","RB","LWB","RWB","ZAG","LAT"].includes(v)) return "DEF";
+          if (["MID","MF","M","CM","CDM","CAM","LM","RM","VOL","MEI"].includes(v)) return "MID";
+          if (["ATT","ST","CF","FW","LW","RW","ATA","SA","PON"].includes(v)) return "ATT";
+          return v || "MID";
+        };
+        const pickOverall = (p) => {
+          const o = Number(p.overall ?? p.ovr);
+          return Number.isFinite(o) ? o : 65;
+        };
+        const players = [...real]
+          .map(p => ({
+            id: p.id || `${clubId}_${String(p.name||"p").replace(/\s+/g,'_')}`,
+            clubId,
+            name: String(p.name || p.playerName || "Jogador"),
+            pos: normPos(p.pos || p.position),
+            age: Number(p.age) || 24,
+            overall: pickOverall(p),
+            value: Number(p.value) || Math.max(200000, pickOverall(p) * 900000),
+            fitness: 92 + Math.floor(Math.random()*9),
+            status: "OK",
+            form: Math.floor(Math.random()*5)-2
+          }))
+          .sort((a,b)=> b.overall - a.overall);
+
+        // garante tamanho padrão ~23
+        return players.slice(0, 23);
+      }
+    } catch {}
+
+    // Fallback: elenco genérico (quando não existe roster real no pack)
     // Define base de overall conforme a liga
     const club = getClub(clubId);
     let base = 65;
@@ -1045,27 +1095,14 @@ function applyBackground(path) {
         age,
         overall,
         value,
-        nationality: club?.country || null,
-        form,
-        source: "generated"
+        fitness: 92 + Math.floor(Math.random()*9),
+        status: "OK",
+        form
       };
     });
   }
 
-  
-  /** Obtém elenco do pacote para um clube (23 jogadores), se existir */
-  function getPackSquadForClub(clubId) {
-    try {
-      const arr = state.packData?.players?.players || [];
-      const squad = arr.filter((p) => p && p.clubId === clubId).map((p) => ({ ...p }));
-      if (squad.length >= 11) return squad.slice(0, 23);
-      return null;
-    } catch {
-      return null;
-    }
-  }
-
-/** Cria o XI inicial com base na formação */
+  /** Cria o XI inicial com base na formação */
   function buildDefaultXI(players, formation) {
     const byPos = {
       GK: players.filter((p) => p.pos === "GK").sort((a, b) => b.overall - a.overall),
@@ -1114,8 +1151,7 @@ function applyBackground(path) {
     if (!save.progress.leagueTables) save.progress.leagueTables = {};
 
     if (!Array.isArray(save.squad.players) || save.squad.players.length === 0) {
-      const fromPack = getPackSquadForClub(save.career.clubId);
-      save.squad.players = fromPack || generateSquadForClub(save.career.clubId);
+      save.squad.players = generateSquadForClub(save.career.clubId);
     }
     // Se o roster online mudou, sincroniza o save para refletir o elenco atual
     syncSaveRosterIfNeeded(save);
