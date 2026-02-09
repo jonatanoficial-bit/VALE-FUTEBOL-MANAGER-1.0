@@ -64,8 +64,8 @@
     }
   }
 
-  const BUILD_TAG = "v1.22.3";
-const BUILD_TIME_STR = "09/02/2026 10:26:04";
+  const BUILD_TAG = "v1.22.4";
+const BUILD_TIME_STR = "09/02/2026 14:37:03";
 
 // -----------------------------
 // Carreira (Parte 1) — Identidade do Treinador
@@ -5556,55 +5556,61 @@ function viewTransfers() {
     document.querySelectorAll('[data-action]').forEach((el) => {
       const action = el.getAttribute('data-action');
 
-      
-      // --- Atualização Online de Elencos
-      if (action === 'rosterUpdateLeague') {
-        const sel = document.getElementById('rosterLeague');
-        const logEl = document.getElementById('rosterLog');
-        const log = (msg) => { if (logEl) logEl.textContent += msg + "\n"; };
-        const leagueId = sel ? sel.value : null;
-        if (!leagueId) { log('Selecione uma liga.'); return; }
-        logEl.textContent = '';
-        (async () => {
-          try {
-            log('Iniciando atualização online...');
-            await updateLeagueRostersOnline(leagueId, log);
-          } catch (e) {
-            log('Erro: ' + (e?.message || e));
-          }
-        })();
-        return;
-      }
-
-      if (action === 'rosterClearOverride') {
-        localStorage.removeItem(ROSTER_OVERRIDE_KEY);
-      refreshFooterStatus();
-        applyRosterOverride();
-        const logEl = document.getElementById('rosterLog');
-        if (logEl) logEl.textContent = 'Atualização online removida. Voltou para os dados do pacote.';
-        state.ui.toast = 'Override removido';
-        return;
-
-      // --- Admin: forçar sincronização do elenco do pacote no slot atual
+      // Admin: aplicar elenco do pacote no save (força sincronização do slot atual)
       if (action === 'adminRegenSquadFromPack') {
-        (async () => {
+        el.addEventListener('click', async () => {
           try {
             const save = activeSave();
             if (!save) { toast('Selecione/crie uma carreira primeiro.'); return; }
             if (!state.packData) { await loadPackData(); }
             if (!state.packData) { toast('Pacote não carregado. Vá em "Dados" e selecione um pacote.'); return; }
             if (!confirm('Aplicar elenco do pacote ao slot atual? Isso substituirá o elenco atual do clube salvo.')) return;
+
             const ok = forceSyncSaveRosterFromPack(save);
             if (!ok) { toast('Não encontrei jogadores do seu clube no pacote.'); return; }
+
             writeSlot(state.settings.activeSlotId, save);
             toast('Elenco sincronizado com o pacote ✔');
-            route(); // re-render tela atual
+            route();
           } catch (e) {
             toast('Falha ao sincronizar: ' + (e?.message || e));
           }
-        })();
+        });
         return;
       }
+
+      // --- Atualização Online de Elencos
+      if (action === 'rosterUpdateLeague') {
+        el.addEventListener('click', () => {
+          const sel = document.getElementById('rosterLeague');
+          const logEl = document.getElementById('rosterLog');
+          const log = (msg) => { if (logEl) logEl.textContent += msg + "\n"; };
+          const leagueId = sel ? sel.value : null;
+          if (!leagueId) { log('Selecione uma liga.'); return; }
+          if (logEl) logEl.textContent = '';
+          (async () => {
+            try {
+              log('Iniciando atualização online...');
+              await updateLeagueRostersOnline(leagueId, log);
+            } catch (e) {
+              log('Erro: ' + (e?.message || e));
+            }
+          })();
+        });
+        return;
+      }
+
+      if (action === 'rosterClearOverride') {
+        el.addEventListener('click', () => {
+          try { localStorage.removeItem(ROSTER_OVERRIDE_KEY); } catch(e) {}
+          try { refreshFooterStatus(); } catch(e) {}
+          try { applyRosterOverride(); } catch(e) {}
+          const logEl = document.getElementById('rosterLog');
+          if (logEl) logEl.textContent = 'Atualização online removida. Voltou para os dados do pacote.';
+          state.ui.toast = 'Override removido';
+          route();
+        });
+        return;
       }
 
 // --- Diagnósticos (provisório)
