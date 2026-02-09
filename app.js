@@ -64,8 +64,8 @@
     }
   }
 
-  const BUILD_TAG = "v1.22.4";
-const BUILD_TIME_STR = "09/02/2026 14:37:03";
+  const BUILD_TAG = "v1.22.5";
+const BUILD_TIME_STR = "09/02/2026 16:51:31";
 
 // -----------------------------
 // Carreira (Parte 1) — Identidade do Treinador
@@ -542,49 +542,127 @@ async function loadPackData() {
 
 
   /** Força sincronização do save (squad/tática) com jogadores do pacote carregado (inclui override empacotado). */
-  function forceSyncSaveRosterFromPack(save) {
-    if (!save || !save.career || !save.career.clubId) return false;
-    const clubId = save.career.clubId;
-    const packPlayers = (state.packData && state.packData.players && Array.isArray(state.packData.players.players))
-      ? state.packData.players.players.filter(p => String(p.clubId) === String(clubId))
-      : [];
-    if (!packPlayers || packPlayers.length === 0) return false;
+  function normClubId(x){
+  return String(x||"").trim().toUpperCase();
+}
 
-    // normaliza campos esperados pelo jogo
-    const players = packPlayers.map((p, i) => ({
-      id: p.id || `${clubId}_p${i+1}`,
-      clubId,
-      name: p.name || `Jogador ${i+1}`,
-      pos: p.pos || "MID",
-      age: Number.isFinite(+p.age) ? +p.age : 22,
-      overall: Number.isFinite(+p.overall) ? +p.overall : (Number.isFinite(+p.ovr) ? +p.ovr : 60),
-      value: Number.isFinite(+p.value) ? +p.value : (
-        Number.isFinite(+p.value_eur) ? +p.value_eur :
-        (Number.isFinite(+p.value_eur_mi) ? (+p.value_eur_mi * 1000000) : 0)
-      ),
-      nationality: p.nationality || null,
-      form: (typeof p.form === "number") ? p.form : 0,
-      source: p.source || "pack"
-    }));
+function getPackPlayersForClubId(clubId){
+  const cid = normClubId(clubId);
+  const all = (state.packData && state.packData.players && Array.isArray(state.packData.players.players))
+    ? state.packData.players.players
+    : [];
+  if (!cid || all.length === 0) return [];
+  // aceita match exato e também IDs compostos (ex: BRA_SERIEA_PAL, BRAA_PAL, etc.)
+  const direct = all.filter(p=>{
+    const pc = normClubId(p && p.clubId);
+    return pc === cid || pc.endsWith("_"+cid) || pc.endsWith("-"+cid) || pc.endsWith(":"+cid);
+  });
+  if (direct.length) return direct;
 
-    if (!save.squad) save.squad = {};
-    save.squad.players = players;
-
-    // atualiza XI padrão conforme formação atual
-    if (!save.tactics) save.tactics = {};
-    if (!save.tactics.formation) save.tactics.formation = "4-3-3";
-    save.tactics.startingXI = buildDefaultXI(save.squad.players, save.tactics.formation);
-
-    // marca meta e salva
-    if (!save.meta) save.meta = {};
-    save.meta.updatedAt = nowIso();
-
-    // marca "dados" no footer
-    state.settings.dataUpdatedAt = save.meta.updatedAt;
-    persistSettings();
-
-    return true;
+  // fallback: tenta mapear por clubes (id/short/name/displayName)
+  const clubs = state.packData?.clubs?.clubs || [];
+  const aliases = new Set([cid]);
+  for (const c of clubs){
+    const id = normClubId(c?.id);
+    const sh = normClubId(c?.short);
+    if (id===cid || sh===cid){
+      aliases.add(id);
+      aliases.add(sh);
+    }
   }
+  return all.filter(p=>{
+    const pc = normClubId(p && p.clubId);
+    for (const a of aliases){
+      if (pc===a || pc.endsWith("_"+a) || pc.endsWith("-"+a) || pc.endsWith(":"+a)) return true;
+    }
+    return false;
+  });
+}
+
+function syncSaveRosterFromPack(save, opts){
+  if (!save || !save.career || !save.career.clubId) return { ok:false, reason:"no_save" };
+  const clubId = save.career.clubId;
+  const packPlayers = getPackPlayersForClubId(clubId);
+  if (!packPlayers || packPlayers.length === 0) return { ok:false, reason:"no_pack_players" };
+
+  // normaliza campos esperados pelo jogo
+  const players = packPlayers.map((p, i) => ({
+    id: p.id || `${clubId}_p${i+1}`,
+    clubId: normClubId(p.clubId) ? normClubId(p.clubId).slice(-3) === normClubId(clubId) ? clubId : String(p.clubId).trim() : clubId,
+    name: p.name || `Jogador ${i+1}`,
+    pos: p.pos || "MID",
+    age: Number.isFinite(+p.age) ? +p.age : 22,
+    overall: Number.isFinite(+p.overall) ? +p.overall : (Number.isFinite(+p.ovr) ? +p.ovr : 60),
+    value: Number.isFinite(+p.value) ? +p.value : (
+      Number.isFinite(+p.value_eur) ? +p.value_eur :
+      (Number.isFinite(+p.value_eur_mi) ? (+p.value_eur_mi * 1000000) : 0)
+    ),
+    nationality: p.nationality || null,
+    form: (typeof p.form === "number") ? p.form : 0,
+    source: p.source || "pack"
+  }));
+
+  if (!save.squad) save.squad = {};
+  save.squad.players = players;
+
+  // atualiza XI padrão conforme formação atual
+  if (!save.tactics) save.tactics = {};
+  if (!save.tactics.formation) save.tactics.formation = "4-3-3";
+  save.tactics.startingXI = buildDefaultXI(save.squad.players, save.tactics.formation);
+
+  // marca meta e salva
+  if (!save.meta) save.meta = {};
+  save.meta.updatedAt = nowIso();
+
+  // marca "dados" no footer
+  state.settings.lastDataAt = save.meta.updatedAt;
+  saveSettings();
+
+  return { ok:true, count: players.length };
+}
+
+function shouldAutoSyncRoster(save){
+  // Só força se o elenco salvo parece genérico ou divergente do pack.
+  const saved = save?.squad?.players || [];
+  const packPlayers = getPackPlayersForClubId(save?.career?.clubId);
+  if (!packPlayers || packPlayers.length===0) return false;
+  if (!saved || saved.length===0) return true;
+
+  const genericCount = saved.filter(p=>/^Jogador\s\d+$/i.test(String(p?.name||""))).length;
+  if (genericCount >= Math.max(5, Math.floor(saved.length*0.3))) return true;
+
+  // se tamanhos divergem muito
+  if (Math.abs(saved.length - packPlayers.length) >= 5) return true;
+
+  // se a interseção de nomes é muito baixa
+  const savedNames = new Set(saved.map(p=>String(p?.name||"").trim().toLowerCase()));
+  const packNames = packPlayers.map(p=>String(p?.name||"").trim().toLowerCase());
+  const inter = packNames.filter(n=>savedNames.has(n)).length;
+  const ratio = inter / Math.max(1, Math.min(savedNames.size, packNames.length));
+  return ratio < 0.25;
+}
+
+function autoSyncRosterIfNeeded(save){
+  try{
+    if (!state.packData) return false;
+    if (!save) return false;
+    if (!shouldAutoSyncRoster(save)) return false;
+    const res = syncSaveRosterFromPack(save, {auto:true});
+    if (!res.ok) return false;
+    // persiste no slot ativo (fallback seguro)
+    const sid = state.settings.activeSlotId;
+    if (sid) writeSlot(sid, save);
+    return true;
+  }catch{
+    return false;
+  }
+}
+
+// compat: mantém nome antigo usado em versões anteriores
+function forceSyncSaveRosterFromPack(save){
+  const r = syncSaveRosterFromPack(save, {force:true});
+  return !!r.ok;
+}
   function saveRosterOverride(players) {
     const payload = {
       updatedAt: new Date().toISOString(),
@@ -2208,6 +2286,7 @@ function viewCareerCreate() {
   function viewSquad() {
     return requireSave((save) => {
       ensureSystems(save);
+      autoSyncRosterIfNeeded(save);
       const club = getClub(save.career.clubId);
       const players = save.squad.players;
       const injuries = save.training?.injuries || {};
@@ -2263,6 +2342,7 @@ function viewCareerCreate() {
   function viewTactics() {
     return requireSave((save) => {
       ensureSystems(save);
+      autoSyncRosterIfNeeded(save);
       const club = getClub(save.career.clubId);
       const players = save.squad.players;
       const formation = save.tactics.formation;
@@ -5564,21 +5644,33 @@ function viewTransfers() {
             if (!save) { toast('Selecione/crie uma carreira primeiro.'); return; }
             if (!state.packData) { await loadPackData(); }
             if (!state.packData) { toast('Pacote não carregado. Vá em "Dados" e selecione um pacote.'); return; }
-            if (!confirm('Aplicar elenco do pacote ao slot atual? Isso substituirá o elenco atual do clube salvo.')) return;
 
-            const ok = forceSyncSaveRosterFromPack(save);
-            if (!ok) { toast('Não encontrei jogadores do seu clube no pacote.'); return; }
+            // sem confirm no mobile: só pede se desktop
+            const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || '');
+            if (!isMobile) {
+              if (!confirm('Aplicar elenco do pacote ao slot atual? Isso substituirá o elenco atual do clube salvo.')) return;
+            }
 
-            writeSlot(state.settings.activeSlotId, save);
-            toast('Elenco sincronizado com o pacote ✔');
+            const res = syncSaveRosterFromPack(save, { force: true });
+            if (!res.ok) {
+              toast('Não encontrei jogadores do seu clube no pacote (clubId=' + (save?.career?.clubId||'?') + ').');
+              alert('Falha ao aplicar elenco: não encontrei jogadores do clube no pacote.');
+              return;
+            }
+
+            const sid = state.settings.activeSlotId;
+            if (sid) writeSlot(sid, save);
+
+            toast('Elenco aplicado ✔ (' + res.count + ' jogadores)');
+            alert('Elenco aplicado com sucesso!\nClube: ' + save.career.clubId + '\nJogadores: ' + res.count);
             route();
           } catch (e) {
             toast('Falha ao sincronizar: ' + (e?.message || e));
+            alert('Falha ao sincronizar: ' + (e?.message || e));
           }
         });
         return;
       }
-
       // --- Atualização Online de Elencos
       if (action === 'rosterUpdateLeague') {
         el.addEventListener('click', () => {
