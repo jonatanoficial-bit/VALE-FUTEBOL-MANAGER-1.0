@@ -64,8 +64,8 @@
     }
   }
 
-    const BUILD_TAG = "v1.24.1_allinone";
-const BUILD_TIME_STR = "10/02/2026 11:19:48";
+    const BUILD_TAG = "v1.30.0_allinone_ph3-6";
+const BUILD_TIME_STR = "10/02/2026 16:02:58";
 
 // -----------------------------
 // Carreira (Parte 1) — Identidade do Treinador
@@ -605,12 +605,41 @@ function syncSaveRosterFromPack(save, opts){
   if (!save.squad) save.squad = {};
   save.squad.players = players;
 
-  // atualiza XI padrão conforme formação atual
+  // inicializa tática (não sobrescreve escolhas do usuário)
   if (!save.tactics) save.tactics = {};
   if (!save.tactics.formation) save.tactics.formation = "4-3-3";
-  save.tactics.startingXI = buildDefaultXI(save.squad.players, save.tactics.formation);
-
-  // marca meta e salva
+  if (!Array.isArray(save.tactics.startingXI) || save.tactics.startingXI.length < 11) {
+    save.tactics.startingXI = buildDefaultXI(save.squad.players, save.tactics.formation);
+          save.tactics.bench = buildDefaultBench(save.squad.players, save.tactics.startingXI, 7);
+          const cap = pickBestByOverall(save.squad.players, save.tactics.startingXI);
+          if (cap) {
+            save.tactics.captainId = cap.id;
+            if (!save.tactics.pkTakerId) save.tactics.pkTakerId = cap.id;
+            if (!save.tactics.fkTakerId) save.tactics.fkTakerId = cap.id;
+            if (!save.tactics.ckTakerId) save.tactics.ckTakerId = cap.id;
+          }
+  }
+  if (!Array.isArray(save.tactics.bench) || save.tactics.bench.length < 7) {
+    save.tactics.bench = buildDefaultBench(save.squad.players, save.tactics.startingXI, 7);
+  }
+  // liderança e bola parada (defaults)
+  if (!save.tactics.captainId) {
+    const cap = pickBestByOverall(save.squad.players, save.tactics.startingXI);
+    if (cap) save.tactics.captainId = cap.id;
+  }
+  if (!save.tactics.pkTakerId) {
+    const pk = pickBestByOverall(save.squad.players, save.tactics.startingXI);
+    if (pk) save.tactics.pkTakerId = pk.id;
+  }
+  if (!save.tactics.fkTakerId) {
+    const fk = pickBestByOverall(save.squad.players, save.tactics.startingXI);
+    if (fk) save.tactics.fkTakerId = fk.id;
+  }
+  if (!save.tactics.ckTakerId) {
+    const ck = pickBestByOverall(save.squad.players, save.tactics.startingXI);
+    if (ck) save.tactics.ckTakerId = ck.id;
+  }
+// marca meta e salva
   if (!save.meta) save.meta = {};
   save.meta.updatedAt = nowIso();
 
@@ -1207,7 +1236,24 @@ function applyBackground(path) {
         if (byPos[pos][i]) xi.push(byPos[pos][i].id);
       }
     });
-    return xi;
+    return x
+
+  function buildDefaultBench(players, startingXI, benchSize = 7) {
+    const xi = new Set(Array.isArray(startingXI) ? startingXI : []);
+    const pool = (players || []).filter(p => p && p.id && !xi.has(p.id))
+      .sort((a,b) => (b.overall||0) - (a.overall||0));
+    return pool.slice(0, benchSize).map(p => p.id);
+  }
+
+  function pickBestByOverall(players, ids) {
+    if (!Array.isArray(players)) return null;
+    const set = new Set(Array.isArray(ids) ? ids : []);
+    const pool = set.size ? players.filter(p => set.has(p.id)) : players.slice();
+    pool.sort((a,b)=> (b.overall||0)-(a.overall||0));
+    return pool[0] || null;
+  }
+
+i;
   }
 
   /** Garante que a carreira tenha sistemas de elenco, tática e treinos */
@@ -2412,6 +2458,38 @@ function viewCareerCreate() {
             <div class="sep"></div>
 
 <div class="card-mini">
+  <div class="card-mini-title">Liderança & Bola Parada</div>
+  <div class="grid">
+    <div class="col-6">
+      <div class="label">Capitão</div>
+      <select class="input" data-action="setCaptain">
+        ${players.map(p=>`<option value="${esc(p.id)}" ${save.tactics.captainId===p.id?'selected':''}>${esc(p.name)} (${esc(p.pos)})</option>`).join('')}
+      </select>
+    </div>
+    <div class="col-6">
+      <div class="label">Batedor de Pênalti</div>
+      <select class="input" data-action="setSetPiece" data-field="pkTakerId">
+        ${players.map(p=>`<option value="${esc(p.id)}" ${save.tactics.pkTakerId===p.id?'selected':''}>${esc(p.name)} • OVR ${esc(p.overall)}</option>`).join('')}
+      </select>
+    </div>
+    <div class="col-6">
+      <div class="label">Batedor de Falta</div>
+      <select class="input" data-action="setSetPiece" data-field="fkTakerId">
+        ${players.map(p=>`<option value="${esc(p.id)}" ${save.tactics.fkTakerId===p.id?'selected':''}>${esc(p.name)} • OVR ${esc(p.overall)}</option>`).join('')}
+      </select>
+    </div>
+    <div class="col-6">
+      <div class="label">Batedor de Escanteio</div>
+      <select class="input" data-action="setSetPiece" data-field="ckTakerId">
+        ${players.map(p=>`<option value="${esc(p.id)}" ${save.tactics.ckTakerId===p.id?'selected':''}>${esc(p.name)} • OVR ${esc(p.overall)}</option>`).join('')}
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<div class="card-mini">
   <div class="card-mini-title">Plano de Jogo</div>
   <div class="grid">
     <div class="col-6">
@@ -3277,13 +3355,48 @@ save.meta.updatedAt = nowIso();
   function teamStrength(clubId, save) {
     const club = getClub(clubId);
     let base = Number(club?.overall || 60);
+
     // Usa forma real apenas para o clube do usuário (para manter leve)
     if (clubId === save.career.clubId && Array.isArray(save.squad?.players)) {
-      const formAvg = save.squad.players.reduce((s, p) => s + (p.form || 0), 0) / Math.max(1, save.squad.players.length);
+      const players = save.squad.players;
+
+      // média de forma
+      const formAvg = players.reduce((s, p) => s + (p.form || 0), 0) / Math.max(1, players.length);
       base += formAvg;
+
+      // bônus do XI (tática)
+      const xiIds = Array.isArray(save.tactics?.startingXI) ? save.tactics.startingXI : [];
+      const xi = players.filter(p => xiIds.includes(p.id));
+      if (xi.length) {
+        const xiAvg = xi.reduce((s,p)=>s+(p.overall||0),0) / xi.length;
+        base += (xiAvg - 65) * 0.20; // escala leve
+      }
+
+      // liderança e bolas paradas
+      const captain = players.find(p => p.id === save.tactics?.captainId);
+      if (captain) base += (captain.overall || 0) * 0.01;
+
+      const pk = players.find(p => p.id === save.tactics?.pkTakerId);
+      const fk = players.find(p => p.id === save.tactics?.fkTakerId);
+      const ck = players.find(p => p.id === save.tactics?.ckTakerId);
+      const spAvg = [pk,fk,ck].filter(Boolean).reduce((s,p)=>s+(p.overall||0),0) / Math.max(1,[pk,fk,ck].filter(Boolean).length);
+      if (spAvg) base += (spAvg - 65) * 0.05;
+
+      // staff (nível) — impacto leve e cumulativo
+      try {
+        const hired = Array.isArray(save.staff?.hired) ? save.staff.hired : [];
+        const lvl = (role) => {
+          const st = hired.filter(x=>x.role===role).sort((a,b)=>(b.level||0)-(a.level||0))[0];
+          return Number(st?.level || 0);
+        };
+        base += lvl('assistant') * 0.25;
+        base += lvl('fitness') * 0.20;
+        base += lvl('analyst') * 0.15;
+      } catch(e) {}
     } else {
       base += (Math.random() * 2 - 1); // pequena variação
     }
+
     return base;
   }
 
@@ -6082,11 +6195,44 @@ if (action === 'careerContinueToClub') {
           ensureSystems(save);
           save.tactics.formation = el.value;
           save.tactics.startingXI = buildDefaultXI(save.squad.players, save.tactics.formation);
+          save.tactics.bench = buildDefaultBench(save.squad.players, save.tactics.startingXI, 7);
+          const cap = pickBestByOverall(save.squad.players, save.tactics.startingXI);
+          if (cap) {
+            save.tactics.captainId = cap.id;
+            save.tactics.pkTakerId = cap.id;
+            save.tactics.fkTakerId = cap.id;
+            save.tactics.ckTakerId = cap.id;
+          }
           save.meta.updatedAt = nowIso();
           writeSlot(state.settings.activeSlotId, save);
           route();
         });
       }
+      if (action === 'setCaptain') {
+        el.addEventListener('change', () => {
+          const save = activeSave();
+          if (!save) return;
+          ensureSystems(save);
+          save.tactics.captainId = el.value;
+          save.meta.updatedAt = nowIso();
+          writeSlot(state.settings.activeSlotId, save);
+          route();
+        });
+      }
+      if (action === 'setSetPiece') {
+        el.addEventListener('change', () => {
+          const save = activeSave();
+          if (!save) return;
+          ensureSystems(save);
+          const field = el.getAttribute('data-field');
+          if (field) save.tactics[field] = el.value;
+          save.meta.updatedAt = nowIso();
+          writeSlot(state.settings.activeSlotId, save);
+          route();
+        });
+      }
+
+
 if (action === 'setTacticParam') {
   el.addEventListener('change', () => {
     const save = activeSave();
