@@ -64,8 +64,8 @@
     }
   }
 
-  const BUILD_TAG = "v1.22.5";
-const BUILD_TIME_STR = "09/02/2026 16:51:31";
+    const BUILD_TAG = "v1.24.0";
+const BUILD_TIME_STR = "10/02/2026 12:52:04";
 
 // -----------------------------
 // Carreira (Parte 1) — Identidade do Treinador
@@ -1021,6 +1021,7 @@ function forceSyncSaveRosterFromPack(save){
     "/tactics": viewTactics,
     "/training": viewTraining,
     "/matches": viewMatches,
+    "/calendar": viewCalendar,
     "/competitions": viewCompetitions,
         "/continentals": viewContinentals,
 "/finance": viewFinance,
@@ -1044,7 +1045,7 @@ function applyBackground(path) {
 
   // Padrões: menu / lobby / cinematic
   const MENU = new Set(["/home", "/dlc", "/slots", "/career-create", "/club-pick", "/tutorial", "/admin", "/diagnostics"]);
-  const CINEMATIC = new Set(["/matches", "/competitions", "/continentals"]);
+  const CINEMATIC = new Set(["/matches", "/calendar", "/competitions", "/continentals"]);
 
   let cls = "bg-lobby";
   if (MENU.has(path)) cls = "bg-menu";
@@ -1123,17 +1124,29 @@ function applyBackground(path) {
   }
 
   /** Obtém clube pelo id a partir do pacote carregado */
-  function getClub(id) {
-    // Preferência: mundo salvo (para promoções/rebaixamentos e mudanças persistentes)
-    try {
-      const wc = state._saveCtx?.world?.clubs;
-      if (Array.isArray(wc)) {
-        const found = wc.find((c) => c.id === id);
-        if (found) return found;
-      }
-    } catch {}
-    return state.packData?.clubs?.clubs.find((c) => c.id === id) || null;
-  }
+    function getClub(id) {
+      // 1) prioridade ABSOLUTA: save ativo (mundo mutável)
+      try {
+        const s = activeSave?.() || null;
+        const wc = s?.world?.clubs;
+        if (Array.isArray(wc)) {
+          const found = wc.find(c => c.id === id);
+          if (found) return found;
+        }
+      } catch (e) {}
+
+      // 2) fallback: contexto de save (quando render usa withSave)
+      try {
+        const wc = state._saveCtx?.world?.clubs;
+        if (Array.isArray(wc)) {
+          const found = wc.find(c => c.id === id);
+          if (found) return found;
+        }
+      } catch (e) {}
+
+      // 3) último fallback: pack original (imutável)
+      return state.packData?.clubs?.clubs?.find(c => c.id === id) || null;
+    }
 
   /** Gera aleatoriamente um elenco para um clube (MVP) */
   function generateSquadForClub(clubId) {
@@ -2015,7 +2028,7 @@ function viewCareerCreate() {
     </div>
   </div>
 
-  <div class="hub-card" data-go="/matches">
+  <div class="hub-card" data-go="/calendar">
     <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
     <div class="hub-overlay"></div>
     <div class="hub-content">
@@ -3138,10 +3151,42 @@ if (userId && (m.homeId === userId || m.awayId === userId)) {
     });
   }
 
+  function applyBrazilPromotionRelegationOncePerSeason(save) {
+      ensureSystems(save);
+      ensureSeason(save);
+
+      const sid = save.season?.id || "unknown";
+
+      // trava idempotente (não aplica 2x no mesmo seasonId)
+      if (!save.progress) save.progress = {};
+      if (!save.progress.promotionRelegationApplied) save.progress.promotionRelegationApplied = {};
+      if (save.progress.promotionRelegationApplied[sid]) return false;
+
+      // garante tabelas finais consistentes (liga do usuário + liga paralela)
+      try { finalizeSeasonIfNeeded(save); } catch (e) {}
+
+      // aplica swap A<->B
+      try {
+        applyBrazilPromotionRelegation(save);
+        save.progress.promotionRelegationApplied[sid] = true;
+        save.meta.updatedAt = nowIso();
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+
+
 
   function startNewSeason(save) {
     ensureSystems(save);
     ensureSeason(save);
+
+    // ✅ FASE 1: garante promoção/rebaixamento Brasil antes de gerar a nova temporada
+    if (save.season?.completed && (save.season.leagueId === "BRA_SERIE_A" || save.season.leagueId === "BRA_SERIE_B")) {
+      applyBrazilPromotionRelegationOncePerSeason(save);
+    }
 
     // Treinador envelhece a cada nova temporada (Parte 1)
     save.career.coachAge = Math.min(80, Number(save.career.coachAge || 35) + 1);
@@ -3809,7 +3854,14 @@ function clubLogoHtml(clubId, size = 34) {
       try {
         ensureContinentalsLive(save);
         const csum = maybeAutoAdvanceContinentalsLive(save, roundIndex);
+        try { if (csum && save.season && save.season.continentalsLive) save.season.continentalsLive.lastSummary = csum; } catch(e) {}
         applyContinentalEconomy(save, csum);
+        // ✅ Fase 2: integra ao fluxo. Se o usuário jogou continental hoje, abrimos a narrativa após a rodada.
+        try {
+          if (csum && Array.isArray(csum.userMatches) && csum.userMatches.length > 0) {
+            save.season._pendingContinentalModal = csum;
+          }
+        } catch(e) {}
       } catch (e) {}
 save.season.lastRoundPlayed = roundIndex;
       // Treinos avançados: aplica fadiga do jogo e recuperação semanal / lesões
@@ -3836,6 +3888,16 @@ save.season.lastRoundPlayed = roundIndex;
       writeSlot(state.settings.activeSlotId, save);
       removeMatchdayModal();
       route();
+      try {
+        const pend = save.season._pendingContinentalModal || null;
+        if (pend) {
+          save.season._pendingContinentalModal = null;
+          writeSlot(state.settings.activeSlotId, save);
+          setTimeout(function(){
+            try { openContinentalMatchdayModal(save, pend); } catch(e) {}
+          }, 80);
+        }
+      } catch(e) {}
     });
 
     // começa a reprodução
@@ -3963,6 +4025,94 @@ save.season.lastRoundPlayed = roundIndex;
     });
   }
 
+
+
+  function viewCalendar() {
+    return requireSave((save) => {
+      ensureSystems(save);
+      ensureSeason(save);
+      let live = null;
+      try { live = ensureContinentalsLive(save); } catch (e) { live = null; }
+
+      const cur = Number(save.season.currentRound || 0);
+      const total = Number((save.season.rounds || []).length || 0);
+      const hasLeagueNext = cur < total;
+
+      const nextContAt = (live?.nextAtRoundIndex ?? null);
+      const contDueNow = (nextContAt !== null) && (Number(nextContAt) === cur) && !save.season.completed;
+
+      const nextEventLabel = contDueNow ? 'Continental (Matchday)' : (hasLeagueNext ? `Liga (Rodada ${cur+1}/${total})` : 'Temporada finalizada');
+      const nextEventPill = contDueNow ? '🌍' : (hasLeagueNext ? '⚽' : '✅');
+
+      // Preview simples dos próximos 10 "eventos"
+      const preview = [];
+      const maxItems = 10;
+      let r = cur;
+      let contAt = (nextContAt !== null) ? Number(nextContAt) : null;
+      let contPlayed = Number(live?.matchdaysPlayed || 0);
+
+      for (let i=0; i<maxItems; i++){
+        if (save.season.completed) break;
+        const isCont = (contAt !== null) && (r === contAt);
+        if (isCont){
+          preview.push({ type:'CONT', label:`Continental • Matchday ${contPlayed+1}` });
+          contAt += 2;
+          contPlayed += 1;
+        } else if (r < total){
+          preview.push({ type:'LEAGUE', label:`Liga • Rodada ${r+1}/${total}` });
+          r += 1;
+        } else {
+          preview.push({ type:'END', label:'Fim da Temporada' });
+          break;
+        }
+      }
+
+      return `
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Calendário da Temporada</div>
+              <div class="card-subtitle">Fluxo único: Liga + Continentais (sem precisar “caçar” telas)</div>
+            </div>
+            <span class="badge">${esc(save.season.id || '')}</span>
+          </div>
+          <div class="card-body">
+            <div class="kv">
+              <span class="small">Próximo evento</span>
+              <b>${esc(nextEventLabel)}</b>
+            </div>
+            <div class="sep"></div>
+
+            <div class="row">
+              <button class="btn btn-primary" type="button" data-action="playNextEvent" ${save.season.completed ? 'disabled' : ''}>${nextEventPill} Jogar Próximo Evento</button>
+              <button class="btn" type="button" data-go="/hub">Voltar ao HUB</button>
+            </div>
+
+            <div class="sep"></div>
+            <div class="card-subtitle">Próximos eventos</div>
+            <div class="list">
+              ${preview.map((it, idx)=>`
+                <div class="list-row ${idx===0?'active':''}">
+                  <div class="list-left">
+                    <div class="list-title">${esc(it.label)}</div>
+                    <div class="list-sub">${it.type==='CONT'?'Competições continentais integradas':'Competição doméstica'}</div>
+                  </div>
+                  <div class="list-right">
+                    <span class="badge">${it.type}</span>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+
+            <div class="sep"></div>
+            <div class="notice">
+              Quando houver jogo continental do seu clube, a narrativa abre automaticamente ao final da rodada doméstica.
+            </div>
+          </div>
+        </div>
+      `;
+    });
+  }
   function viewCompetitions() {
     return requireSave((save) => {
       ensureSystems(save);
@@ -6384,6 +6534,45 @@ if (action === 'rejectOfferIn') {
 }
 
 // --- Jogos
+      if (action === 'playNextEvent') {
+        el.addEventListener('click', () => {
+          const save = activeSave();
+          if (!save) return;
+          ensureSystems(save);
+          ensureSeason(save);
+          if (save.season.completed) return;
+
+          // Prioridade do calendário: se a rodada continental está marcada para este ponto, jogue antes.
+          try {
+            const live = ensureContinentalsLive(save);
+            const cur = Number(save.season.currentRound || 0);
+            const due = (live && live.nextAtRoundIndex === cur);
+            if (due) {
+              const csum = advanceOneContinentalMatchday(save, { manual: true });
+              try {
+                if (save.season && save.season.continentalsLive) save.season.continentalsLive.lastSummary = csum;
+              } catch(e) {}
+              try {
+                live.nextAtRoundIndex += 2;
+                live.lastPlayedAtRoundIndex = cur;
+                live.matchdaysPlayed += 1;
+              } catch(e) {}
+              try { applyContinentalEconomy(save, csum); } catch(e) {}
+              save.meta.updatedAt = nowIso();
+              writeSlot(state.settings.activeSlotId, save);
+              try { openContinentalMatchdayModal(save, csum); } catch(e) { route(); }
+              return;
+            }
+          } catch(e) {}
+
+          // Caso contrário: joga a próxima rodada doméstica normalmente.
+          const r = save.season.currentRound;
+          const rounds = save.season.rounds || [];
+          if (r >= rounds.length) return;
+          openMatchdayModal(save, r);
+        });
+      }
+
       if (action === 'playNextRound') {
         el.addEventListener('click', () => {
           const save = activeSave();
