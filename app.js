@@ -64,8 +64,8 @@
     }
   }
 
-    const BUILD_TAG = "v1.24.0";
-const BUILD_TIME_STR = "10/02/2026 12:52:04";
+    const BUILD_TAG = "v1.24.1_allinone";
+const BUILD_TIME_STR = "10/02/2026 11:19:48";
 
 // -----------------------------
 // Carreira (Parte 1) — Identidade do Treinador
