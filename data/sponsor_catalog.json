@@ -1,0 +1,420 @@
+{
+  "sponsors": [
+    {
+      "id": "local_market",
+      "name": "Mercado Local",
+      "cashUpfront": 800000,
+      "weekly": 60000,
+      "description": "Pequeno patrocínio de bairro.",
+      "minTier": "INICIANTE"
+    },
+    {
+      "id": "regional_bank",
+      "name": "Banco Regional",
+      "cashUpfront": 5000000,
+      "weekly": 300000,
+      "description": "Patrocínio sólido para clubes emergentes.",
+      "minTier": "INICIANTE"
+    },
+    {
+      "id": "sports_store",
+      "name": "Loja Esportiva",
+      "cashUpfront": 2500000,
+      "weekly": 180000,
+      "description": "Bônus por vitórias e boa imagem.",
+      "minTier": "INICIANTE"
+    },
+    {
+      "id": "bet_partner",
+      "name": "Casa de Apostas",
+      "cashUpfront": 7000000,
+      "weekly": 450000,
+      "description": "Grande aporte, mas exige resultados.",
+      "minTier": "PROMISSOR"
+    },
+    {
+      "id": "telecom",
+      "name": "Operadora Mobile",
+      "cashUpfront": 9000000,
+      "weekly": 550000,
+      "description": "Marca nacional, contrato estável.",
+      "minTier": "PROMISSOR"
+    },
+    {
+      "id": "energy_drink",
+      "name": "Energy Drink",
+      "cashUpfront": 6000000,
+      "weekly": 420000,
+      "description": "Bônus por performance, crescimento rápido.",
+      "minTier": "PROMISSOR"
+    },
+    {
+      "id": "airline",
+      "name": "Companhia Aérea",
+      "cashUpfront": 12000000,
+      "weekly": 700000,
+      "description": "Patrocínio forte para competições internacionais.",
+      "minTier": "RECONHECIDO"
+    },
+    {
+      "id": "global_bank",
+      "name": "Banco Global",
+      "cashUpfront": 18000000,
+      "weekly": 950000,
+      "description": "Alto aporte e exigência de títulos.",
+      "minTier": "RECONHECIDO"
+    },
+    {
+      "id": "sportswear",
+      "name": "Sportswear Premium",
+      "cashUpfront": 15000000,
+      "weekly": 850000,
+      "description": "Aumenta verba e visibilidade.",
+      "minTier": "RECONHECIDO"
+    },
+    {
+      "id": "vale",
+      "name": "Vale",
+      "cashUpfront": 20000000,
+      "weekly": 1000000,
+      "description": "Aporte inicial alto e pagamentos constantes.",
+      "minTier": "ELITE"
+    },
+    {
+      "id": "streaming",
+      "name": "Plataforma de Streaming",
+      "cashUpfront": 22000000,
+      "weekly": 1200000,
+      "description": "Patrocínio elite com bônus de mídia.",
+      "minTier": "ELITE"
+    },
+    {
+      "id": "auto",
+      "name": "Montadora",
+      "cashUpfront": 25000000,
+      "weekly": 1400000,
+      "description": "Contrato elite e longo.",
+      "minTier": "ELITE"
+    },
+    {
+      "id": "construtora_iniciante_1",
+      "name": "Construtora (Iniciante)",
+      "cashUpfront": 639052,
+      "weekly": 43695,
+      "description": "Patrocínio iniciante do setor construtora.",
+      "minTier": "INICIANTE"
+    },
+    {
+      "id": "farmácia_iniciante_2",
+      "name": "Farmácia (Iniciante)",
+      "cashUpfront": 693779,
+      "weekly": 49968,
+      "description": "Patrocínio iniciante do setor farmácia.",
+      "minTier": "INICIANTE"
+    },
+    {
+      "id": "universidade_iniciante_3",
+      "name": "Universidade (Iniciante)",
+      "cashUpfront": 609022,
+      "weekly": 48499,
+      "description": "Patrocínio iniciante do setor universidade.",
+      "minTier": "INICIANTE"
+    },
+    {
+      "id": "supermercado_iniciante_4",
+      "name": "Supermercado (Iniciante)",
+      "cashUpfront": 604013,
+      "weekly": 45728,
+      "description": "Patrocínio iniciante do setor supermercado.",
+      "minTier": "INICIANTE"
+    },
+    {
+      "id": "aplicativo_de_entregas_iniciante_5",
+      "name": "Aplicativo de Entregas (Iniciante)",
+      "cashUpfront": 620206,
+      "weekly": 48121,
+      "description": "Patrocínio iniciante do setor aplicativo de entregas.",
+      "minTier": "INICIANTE"
+    },
+    {
+      "id": "seguradora_iniciante_6",
+      "name": "Seguradora (Iniciante)",
+      "cashUpfront": 708358,
+      "weekly": 48672,
+      "description": "Patrocínio iniciante do setor seguradora.",
+      "minTier": "INICIANTE"
+    },
+    {
+      "id": "tecnologia_iniciante_7",
+      "name": "Tecnologia (Iniciante)",
+      "cashUpfront": 684289,
+      "weekly": 42276,
+      "description": "Patrocínio iniciante do setor tecnologia.",
+      "minTier": "INICIANTE"
+    },
+    {
+      "id": "bebidas_iniciante_8",
+      "name": "Bebidas (Iniciante)",
+      "cashUpfront": 721913,
+      "weekly": 41666,
+      "description": "Patrocínio iniciante do setor bebidas.",
+      "minTier": "INICIANTE"
+    },
+    {
+      "id": "hotelaria_iniciante_9",
+      "name": "Hotelaria (Iniciante)",
+      "cashUpfront": 730442,
+      "weekly": 47249,
+      "description": "Patrocínio iniciante do setor hotelaria.",
+      "minTier": "INICIANTE"
+    },
+    {
+      "id": "agro_iniciante_10",
+      "name": "Agro (Iniciante)",
+      "cashUpfront": 674509,
+      "weekly": 42706,
+      "description": "Patrocínio iniciante do setor agro.",
+      "minTier": "INICIANTE"
+    },
+    {
+      "id": "construtora_promissor_1",
+      "name": "Construtora (Promissor)",
+      "cashUpfront": 2073514,
+      "weekly": 174382,
+      "description": "Patrocínio promissor do setor construtora.",
+      "minTier": "PROMISSOR"
+    },
+    {
+      "id": "farmácia_promissor_2",
+      "name": "Farmácia (Promissor)",
+      "cashUpfront": 2302618,
+      "weekly": 167920,
+      "description": "Patrocínio promissor do setor farmácia.",
+      "minTier": "PROMISSOR"
+    },
+    {
+      "id": "universidade_promissor_3",
+      "name": "Universidade (Promissor)",
+      "cashUpfront": 2399154,
+      "weekly": 155473,
+      "description": "Patrocínio promissor do setor universidade.",
+      "minTier": "PROMISSOR"
+    },
+    {
+      "id": "supermercado_promissor_4",
+      "name": "Supermercado (Promissor)",
+      "cashUpfront": 2038565,
+      "weekly": 161100,
+      "description": "Patrocínio promissor do setor supermercado.",
+      "minTier": "PROMISSOR"
+    },
+    {
+      "id": "aplicativo_de_entregas_promissor_5",
+      "name": "Aplicativo de Entregas (Promissor)",
+      "cashUpfront": 2472727,
+      "weekly": 151137,
+      "description": "Patrocínio promissor do setor aplicativo de entregas.",
+      "minTier": "PROMISSOR"
+    },
+    {
+      "id": "seguradora_promissor_6",
+      "name": "Seguradora (Promissor)",
+      "cashUpfront": 2029078,
+      "weekly": 141430,
+      "description": "Patrocínio promissor do setor seguradora.",
+      "minTier": "PROMISSOR"
+    },
+    {
+      "id": "tecnologia_promissor_7",
+      "name": "Tecnologia (Promissor)",
+      "cashUpfront": 2479073,
+      "weekly": 147888,
+      "description": "Patrocínio promissor do setor tecnologia.",
+      "minTier": "PROMISSOR"
+    },
+    {
+      "id": "bebidas_promissor_8",
+      "name": "Bebidas (Promissor)",
+      "cashUpfront": 2326733,
+      "weekly": 155394,
+      "description": "Patrocínio promissor do setor bebidas.",
+      "minTier": "PROMISSOR"
+    },
+    {
+      "id": "hotelaria_promissor_9",
+      "name": "Hotelaria (Promissor)",
+      "cashUpfront": 2473820,
+      "weekly": 166336,
+      "description": "Patrocínio promissor do setor hotelaria.",
+      "minTier": "PROMISSOR"
+    },
+    {
+      "id": "agro_promissor_10",
+      "name": "Agro (Promissor)",
+      "cashUpfront": 2238265,
+      "weekly": 143183,
+      "description": "Patrocínio promissor do setor agro.",
+      "minTier": "PROMISSOR"
+    },
+    {
+      "id": "construtora_reconhecido_1",
+      "name": "Construtora (Reconhecido)",
+      "cashUpfront": 7182455,
+      "weekly": 396082,
+      "description": "Patrocínio reconhecido do setor construtora.",
+      "minTier": "RECONHECIDO"
+    },
+    {
+      "id": "farmácia_reconhecido_2",
+      "name": "Farmácia (Reconhecido)",
+      "cashUpfront": 6705104,
+      "weekly": 362032,
+      "description": "Patrocínio reconhecido do setor farmácia.",
+      "minTier": "RECONHECIDO"
+    },
+    {
+      "id": "universidade_reconhecido_3",
+      "name": "Universidade (Reconhecido)",
+      "cashUpfront": 6276266,
+      "weekly": 412806,
+      "description": "Patrocínio reconhecido do setor universidade.",
+      "minTier": "RECONHECIDO"
+    },
+    {
+      "id": "supermercado_reconhecido_4",
+      "name": "Supermercado (Reconhecido)",
+      "cashUpfront": 6125841,
+      "weekly": 372019,
+      "description": "Patrocínio reconhecido do setor supermercado.",
+      "minTier": "RECONHECIDO"
+    },
+    {
+      "id": "aplicativo_de_entregas_reconhecido_5",
+      "name": "Aplicativo de Entregas (Reconhecido)",
+      "cashUpfront": 6480301,
+      "weekly": 437260,
+      "description": "Patrocínio reconhecido do setor aplicativo de entregas.",
+      "minTier": "RECONHECIDO"
+    },
+    {
+      "id": "seguradora_reconhecido_6",
+      "name": "Seguradora (Reconhecido)",
+      "cashUpfront": 6485065,
+      "weekly": 430514,
+      "description": "Patrocínio reconhecido do setor seguradora.",
+      "minTier": "RECONHECIDO"
+    },
+    {
+      "id": "tecnologia_reconhecido_7",
+      "name": "Tecnologia (Reconhecido)",
+      "cashUpfront": 6645857,
+      "weekly": 431918,
+      "description": "Patrocínio reconhecido do setor tecnologia.",
+      "minTier": "RECONHECIDO"
+    },
+    {
+      "id": "bebidas_reconhecido_8",
+      "name": "Bebidas (Reconhecido)",
+      "cashUpfront": 6787904,
+      "weekly": 380955,
+      "description": "Patrocínio reconhecido do setor bebidas.",
+      "minTier": "RECONHECIDO"
+    },
+    {
+      "id": "hotelaria_reconhecido_9",
+      "name": "Hotelaria (Reconhecido)",
+      "cashUpfront": 6731925,
+      "weekly": 381435,
+      "description": "Patrocínio reconhecido do setor hotelaria.",
+      "minTier": "RECONHECIDO"
+    },
+    {
+      "id": "agro_reconhecido_10",
+      "name": "Agro (Reconhecido)",
+      "cashUpfront": 6071768,
+      "weekly": 385759,
+      "description": "Patrocínio reconhecido do setor agro.",
+      "minTier": "RECONHECIDO"
+    },
+    {
+      "id": "construtora_elite_1",
+      "name": "Construtora (Elite)",
+      "cashUpfront": 13524015,
+      "weekly": 709842,
+      "description": "Patrocínio elite do setor construtora.",
+      "minTier": "ELITE"
+    },
+    {
+      "id": "farmácia_elite_2",
+      "name": "Farmácia (Elite)",
+      "cashUpfront": 12479898,
+      "weekly": 778116,
+      "description": "Patrocínio elite do setor farmácia.",
+      "minTier": "ELITE"
+    },
+    {
+      "id": "universidade_elite_3",
+      "name": "Universidade (Elite)",
+      "cashUpfront": 13114128,
+      "weekly": 862916,
+      "description": "Patrocínio elite do setor universidade.",
+      "minTier": "ELITE"
+    },
+    {
+      "id": "supermercado_elite_4",
+      "name": "Supermercado (Elite)",
+      "cashUpfront": 13618387,
+      "weekly": 741448,
+      "description": "Patrocínio elite do setor supermercado.",
+      "minTier": "ELITE"
+    },
+    {
+      "id": "aplicativo_de_entregas_elite_5",
+      "name": "Aplicativo de Entregas (Elite)",
+      "cashUpfront": 13520777,
+      "weekly": 713091,
+      "description": "Patrocínio elite do setor aplicativo de entregas.",
+      "minTier": "ELITE"
+    },
+    {
+      "id": "seguradora_elite_6",
+      "name": "Seguradora (Elite)",
+      "cashUpfront": 14703001,
+      "weekly": 840174,
+      "description": "Patrocínio elite do setor seguradora.",
+      "minTier": "ELITE"
+    },
+    {
+      "id": "tecnologia_elite_7",
+      "name": "Tecnologia (Elite)",
+      "cashUpfront": 13092000,
+      "weekly": 730178,
+      "description": "Patrocínio elite do setor tecnologia.",
+      "minTier": "ELITE"
+    },
+    {
+      "id": "bebidas_elite_8",
+      "name": "Bebidas (Elite)",
+      "cashUpfront": 14314634,
+      "weekly": 812057,
+      "description": "Patrocínio elite do setor bebidas.",
+      "minTier": "ELITE"
+    },
+    {
+      "id": "hotelaria_elite_9",
+      "name": "Hotelaria (Elite)",
+      "cashUpfront": 14158908,
+      "weekly": 716498,
+      "description": "Patrocínio elite do setor hotelaria.",
+      "minTier": "ELITE"
+    },
+    {
+      "id": "agro_elite_10",
+      "name": "Agro (Elite)",
+      "cashUpfront": 12910935,
+      "weekly": 823565,
+      "description": "Patrocínio elite do setor agro.",
+      "minTier": "ELITE"
+    }
+  ]
+}

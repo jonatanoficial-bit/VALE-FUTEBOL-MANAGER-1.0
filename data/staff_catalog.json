@@ -1,0 +1,396 @@
+{
+  "staff": [
+    {
+      "id": "assistant_coach_iniciante",
+      "roleId": "assistant_coach",
+      "tier": "INICIANTE",
+      "name": "Assistente Técnico (Iniciante)",
+      "salary": 122856,
+      "effect": {
+        "trainingBoost": 0.06
+      },
+      "description": "Aumenta o efeito de qualquer plano de treino."
+    },
+    {
+      "id": "assistant_coach_promissor",
+      "roleId": "assistant_coach",
+      "tier": "PROMISSOR",
+      "name": "Assistente Técnico (Promissor)",
+      "salary": 275139,
+      "effect": {
+        "trainingBoost": 0.085
+      },
+      "description": "Aumenta o efeito de qualquer plano de treino."
+    },
+    {
+      "id": "assistant_coach_reconhecido",
+      "roleId": "assistant_coach",
+      "tier": "RECONHECIDO",
+      "name": "Assistente Técnico (Reconhecido)",
+      "salary": 495772,
+      "effect": {
+        "trainingBoost": 0.11
+      },
+      "description": "Aumenta o efeito de qualquer plano de treino."
+    },
+    {
+      "id": "assistant_coach_elite",
+      "roleId": "assistant_coach",
+      "tier": "ELITE",
+      "name": "Assistente Técnico (Elite)",
+      "salary": 804377,
+      "effect": {
+        "trainingBoost": 0.135
+      },
+      "description": "Aumenta o efeito de qualquer plano de treino."
+    },
+    {
+      "id": "fitness_coach_iniciante",
+      "roleId": "fitness_coach",
+      "tier": "INICIANTE",
+      "name": "Preparador Físico (Iniciante)",
+      "salary": 129744,
+      "effect": {
+        "formBoostMultiplier": 0.69,
+        "fatigueMultiplier": 0.552,
+        "recoveryBoost": 0.6
+      },
+      "description": "Reduz fadiga e melhora recuperação semanal."
+    },
+    {
+      "id": "fitness_coach_promissor",
+      "roleId": "fitness_coach",
+      "tier": "PROMISSOR",
+      "name": "Preparador Físico (Promissor)",
+      "salary": 271473,
+      "effect": {
+        "formBoostMultiplier": 0.977,
+        "fatigueMultiplier": 0.782,
+        "recoveryBoost": 0.85
+      },
+      "description": "Reduz fadiga e melhora recuperação semanal."
+    },
+    {
+      "id": "fitness_coach_reconhecido",
+      "roleId": "fitness_coach",
+      "tier": "RECONHECIDO",
+      "name": "Preparador Físico (Reconhecido)",
+      "salary": 465095,
+      "effect": {
+        "formBoostMultiplier": 1.265,
+        "fatigueMultiplier": 1.012,
+        "recoveryBoost": 1.1
+      },
+      "description": "Reduz fadiga e melhora recuperação semanal."
+    },
+    {
+      "id": "fitness_coach_elite",
+      "roleId": "fitness_coach",
+      "tier": "ELITE",
+      "name": "Preparador Físico (Elite)",
+      "salary": 880958,
+      "effect": {
+        "formBoostMultiplier": 1.552,
+        "fatigueMultiplier": 1.242,
+        "recoveryBoost": 1.35
+      },
+      "description": "Reduz fadiga e melhora recuperação semanal."
+    },
+    {
+      "id": "analyst_iniciante",
+      "roleId": "analyst",
+      "tier": "INICIANTE",
+      "name": "Analista de Desempenho (Iniciante)",
+      "salary": 133105,
+      "effect": {
+        "tacticsBonus": 0.036
+      },
+      "description": "Melhora leitura de jogo e ajustes táticos."
+    },
+    {
+      "id": "analyst_promissor",
+      "roleId": "analyst",
+      "tier": "PROMISSOR",
+      "name": "Analista de Desempenho (Promissor)",
+      "salary": 286425,
+      "effect": {
+        "tacticsBonus": 0.051
+      },
+      "description": "Melhora leitura de jogo e ajustes táticos."
+    },
+    {
+      "id": "analyst_reconhecido",
+      "roleId": "analyst",
+      "tier": "RECONHECIDO",
+      "name": "Analista de Desempenho (Reconhecido)",
+      "salary": 505560,
+      "effect": {
+        "tacticsBonus": 0.066
+      },
+      "description": "Melhora leitura de jogo e ajustes táticos."
+    },
+    {
+      "id": "analyst_elite",
+      "roleId": "analyst",
+      "tier": "ELITE",
+      "name": "Analista de Desempenho (Elite)",
+      "salary": 867518,
+      "effect": {
+        "tacticsBonus": 0.081
+      },
+      "description": "Melhora leitura de jogo e ajustes táticos."
+    },
+    {
+      "id": "head_physio_iniciante",
+      "roleId": "head_physio",
+      "tier": "INICIANTE",
+      "name": "Fisioterapeuta Chefe (Iniciante)",
+      "salary": 137026,
+      "effect": {
+        "injuryRiskMultiplier": 0.528,
+        "recoveryBoost": 0.672
+      },
+      "description": "Reduz risco de lesões e acelera retorno."
+    },
+    {
+      "id": "head_physio_promissor",
+      "roleId": "head_physio",
+      "tier": "PROMISSOR",
+      "name": "Fisioterapeuta Chefe (Promissor)",
+      "salary": 256544,
+      "effect": {
+        "injuryRiskMultiplier": 0.748,
+        "recoveryBoost": 0.952
+      },
+      "description": "Reduz risco de lesões e acelera retorno."
+    },
+    {
+      "id": "head_physio_reconhecido",
+      "roleId": "head_physio",
+      "tier": "RECONHECIDO",
+      "name": "Fisioterapeuta Chefe (Reconhecido)",
+      "salary": 456333,
+      "effect": {
+        "injuryRiskMultiplier": 0.968,
+        "recoveryBoost": 1.232
+      },
+      "description": "Reduz risco de lesões e acelera retorno."
+    },
+    {
+      "id": "head_physio_elite",
+      "roleId": "head_physio",
+      "tier": "ELITE",
+      "name": "Fisioterapeuta Chefe (Elite)",
+      "salary": 914641,
+      "effect": {
+        "injuryRiskMultiplier": 1.188,
+        "recoveryBoost": 1.512
+      },
+      "description": "Reduz risco de lesões e acelera retorno."
+    },
+    {
+      "id": "set_piece_iniciante",
+      "roleId": "set_piece",
+      "tier": "INICIANTE",
+      "name": "Especialista em Bolas Paradas (Iniciante)",
+      "salary": 137826,
+      "effect": {
+        "setPieceBoost": 0.048,
+        "matchAttackBoost": 0.012
+      },
+      "description": "Melhora chances em bolas paradas."
+    },
+    {
+      "id": "set_piece_promissor",
+      "roleId": "set_piece",
+      "tier": "PROMISSOR",
+      "name": "Especialista em Bolas Paradas (Promissor)",
+      "salary": 256732,
+      "effect": {
+        "setPieceBoost": 0.068,
+        "matchAttackBoost": 0.017
+      },
+      "description": "Melhora chances em bolas paradas."
+    },
+    {
+      "id": "set_piece_reconhecido",
+      "roleId": "set_piece",
+      "tier": "RECONHECIDO",
+      "name": "Especialista em Bolas Paradas (Reconhecido)",
+      "salary": 503865,
+      "effect": {
+        "setPieceBoost": 0.088,
+        "matchAttackBoost": 0.022
+      },
+      "description": "Melhora chances em bolas paradas."
+    },
+    {
+      "id": "set_piece_elite",
+      "roleId": "set_piece",
+      "tier": "ELITE",
+      "name": "Especialista em Bolas Paradas (Elite)",
+      "salary": 857694,
+      "effect": {
+        "setPieceBoost": 0.108,
+        "matchAttackBoost": 0.027
+      },
+      "description": "Melhora chances em bolas paradas."
+    },
+    {
+      "id": "scout_iniciante",
+      "roleId": "scout",
+      "tier": "INICIANTE",
+      "name": "Olheiro (Iniciante)",
+      "salary": 131301,
+      "effect": {
+        "scoutingQuality": 0.09,
+        "marketDiscount": 0.03
+      },
+      "description": "Melhora oportunidades e descontos no mercado."
+    },
+    {
+      "id": "scout_promissor",
+      "roleId": "scout",
+      "tier": "PROMISSOR",
+      "name": "Olheiro (Promissor)",
+      "salary": 264938,
+      "effect": {
+        "scoutingQuality": 0.128,
+        "marketDiscount": 0.043
+      },
+      "description": "Melhora oportunidades e descontos no mercado."
+    },
+    {
+      "id": "scout_reconhecido",
+      "roleId": "scout",
+      "tier": "RECONHECIDO",
+      "name": "Olheiro (Reconhecido)",
+      "salary": 511475,
+      "effect": {
+        "scoutingQuality": 0.165,
+        "marketDiscount": 0.055
+      },
+      "description": "Melhora oportunidades e descontos no mercado."
+    },
+    {
+      "id": "scout_elite",
+      "roleId": "scout",
+      "tier": "ELITE",
+      "name": "Olheiro (Elite)",
+      "salary": 846866,
+      "effect": {
+        "scoutingQuality": 0.203,
+        "marketDiscount": 0.068
+      },
+      "description": "Melhora oportunidades e descontos no mercado."
+    },
+    {
+      "id": "sports_scientist_promissor",
+      "roleId": "sports_scientist",
+      "tier": "PROMISSOR",
+      "name": "Cientista do Esporte (Promissor)",
+      "salary": 320524,
+      "effect": {
+        "fatigueMultiplier": 0.765,
+        "fitnessGainMultiplier": 0.935
+      },
+      "description": "Otimiza carga de treino e reduz queda de fitness."
+    },
+    {
+      "id": "sports_scientist_reconhecido",
+      "roleId": "sports_scientist",
+      "tier": "RECONHECIDO",
+      "name": "Cientista do Esporte (Reconhecido)",
+      "salary": 627865,
+      "effect": {
+        "fatigueMultiplier": 0.99,
+        "fitnessGainMultiplier": 1.21
+      },
+      "description": "Otimiza carga de treino e reduz queda de fitness."
+    },
+    {
+      "id": "sports_scientist_elite",
+      "roleId": "sports_scientist",
+      "tier": "ELITE",
+      "name": "Cientista do Esporte (Elite)",
+      "salary": 1095348,
+      "effect": {
+        "fatigueMultiplier": 1.215,
+        "fitnessGainMultiplier": 1.485
+      },
+      "description": "Otimiza carga de treino e reduz queda de fitness."
+    },
+    {
+      "id": "mental_coach_promissor",
+      "roleId": "mental_coach",
+      "tier": "PROMISSOR",
+      "name": "Treinador Mental (Promissor)",
+      "salary": 324403,
+      "effect": {
+        "formBoostMultiplier": 0.935,
+        "moraleStability": 0.102
+      },
+      "description": "Aumenta forma e reduz oscilação emocional."
+    },
+    {
+      "id": "mental_coach_reconhecido",
+      "roleId": "mental_coach",
+      "tier": "RECONHECIDO",
+      "name": "Treinador Mental (Reconhecido)",
+      "salary": 580608,
+      "effect": {
+        "formBoostMultiplier": 1.21,
+        "moraleStability": 0.132
+      },
+      "description": "Aumenta forma e reduz oscilação emocional."
+    },
+    {
+      "id": "mental_coach_elite",
+      "roleId": "mental_coach",
+      "tier": "ELITE",
+      "name": "Treinador Mental (Elite)",
+      "salary": 1140778,
+      "effect": {
+        "formBoostMultiplier": 1.485,
+        "moraleStability": 0.162
+      },
+      "description": "Aumenta forma e reduz oscilação emocional."
+    },
+    {
+      "id": "data_scout_promissor",
+      "roleId": "data_scout",
+      "tier": "PROMISSOR",
+      "name": "Chefe de Análise de Mercado (Promissor)",
+      "salary": 308411,
+      "effect": {
+        "scoutingQuality": 0.17,
+        "marketDiscount": 0.068
+      },
+      "description": "Aumenta alcance do scout e melhora barganhas."
+    },
+    {
+      "id": "data_scout_reconhecido",
+      "roleId": "data_scout",
+      "tier": "RECONHECIDO",
+      "name": "Chefe de Análise de Mercado (Reconhecido)",
+      "salary": 615605,
+      "effect": {
+        "scoutingQuality": 0.22,
+        "marketDiscount": 0.088
+      },
+      "description": "Aumenta alcance do scout e melhora barganhas."
+    },
+    {
+      "id": "data_scout_elite",
+      "roleId": "data_scout",
+      "tier": "ELITE",
+      "name": "Chefe de Análise de Mercado (Elite)",
+      "salary": 1137980,
+      "effect": {
+        "scoutingQuality": 0.27,
+        "marketDiscount": 0.108
+      },
+      "description": "Aumenta alcance do scout e melhora barganhas."
+    }
+  ]
+}

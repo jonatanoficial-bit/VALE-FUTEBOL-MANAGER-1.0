@@ -64,8 +64,8 @@
     }
   }
 
-    const BUILD_TAG = "v1.30.0_allinone_ph3-6";
-const BUILD_TIME_STR = "10/02/2026 16:02:58";
+    const BUILD_TAG = "v1.31.0_staff-sponsor-catalog";
+const BUILD_TIME_STR = "11/02/2026 13:38:14";
 
 // -----------------------------
 // Carreira (Parte 1) — Identidade do Treinador
@@ -166,7 +166,7 @@ function generateClubObjective(save) {
    * pagamentos semanais. Esses catálogos podem ser expandidos futuramente ou
    * carregados de um JSON externo.
    */
-  const STAFF_CATALOG = [
+  let STAFF_CATALOG = [
   {
     id: "assistant_coach",
     name: "Assistente Técnico",
@@ -211,7 +211,7 @@ function generateClubObjective(save) {
   }
 ];
 
-  const SPONSOR_CATALOG = [
+  let SPONSOR_CATALOG = [
     {
       id: "vale",
       name: "Vale",
@@ -428,6 +428,46 @@ async function loadPackData() {
     fail("Falha ao carregar dados do pacote.");
   }
 }
+
+  // -----------------------------
+  // Catálogos externos (Staff / Patrocínio)
+  // Permite evoluir conteúdo sem mexer no app.js, apenas atualizando /data/*.json
+  function tierRank(tier) {
+    const t = String(tier || 'INICIANTE').toUpperCase();
+    if (t === 'ELITE') return 3;
+    if (t === 'RECONHECIDO') return 2;
+    if (t === 'PROMISSOR') return 1;
+    return 0; // INICIANTE
+  }
+
+  async function loadExternalCatalogs() {
+    // Staff
+    try {
+      const res = await fetch(urlOf("./data/staff_catalog.json"), { cache: "no-store" });
+      if (res.ok) {
+        const js = await res.json();
+        if (Array.isArray(js?.staff) && js.staff.length) {
+          STAFF_CATALOG = js.staff;
+        }
+      }
+    } catch (e) {
+      // mantém fallback embutido
+    }
+    // Sponsors
+    try {
+      const res = await fetch(urlOf("./data/sponsor_catalog.json"), { cache: "no-store" });
+      if (res.ok) {
+        const js = await res.json();
+        if (Array.isArray(js?.sponsors) && js.sponsors.length) {
+          SPONSOR_CATALOG = js.sponsors;
+        }
+      }
+    } catch (e) {
+      // mantém fallback embutido
+    }
+  }
+
+
 
   // ---------------------------------------------------------------------------
   // Atualização Online de Elencos (custo zero) - via Wikipedia (MediaWiki API)
@@ -5554,16 +5594,24 @@ function viewFinance() {
       const currency = state.packData?.rules?.gameRules?.currency || 'BRL';
       const cashStr = (save.finance?.cash || 0).toLocaleString('pt-BR', { style: 'currency', currency });
       const hiredIds = new Set((save.staff?.hired || []).map((st) => st.id));
+      const repTier = computeReputationTier(save.career?.careerScore || 0);
+      const repRank = tierRank(repTier);
       const rows = STAFF_CATALOG.map((st) => {
         const isHired = hiredIds.has(st.id);
-        const salaryStr = (st.salary || 0).toLocaleString('pt-BR', { style: 'currency', currency });
+        const minRank = tierRank(st.minTier || st.tier || 'INICIANTE');
+        const eligible = repRank >= minRank;
+        const salary = (st.salary || 0);
+        const canPay = (save.finance?.cash || 0) >= salary;
+        const salaryStr = salary.toLocaleString('pt-BR', { style: 'currency', currency });
+        const disabled = (!isHired && (!eligible || !canPay)) ? 'disabled' : '';
+        const lockLabel = !eligible ? `Bloqueado (${esc(st.minTier || st.tier || 'INICIANTE')})` : (!canPay ? 'Sem caixa' : '');
         return `
-          <tr>
+          <tr class="${(!eligible && !isHired) ? 'muted' : ''}">
             <td>${esc(st.name)}</td>
-            <td>${esc(st.description)}</td>
+            <td>${esc(st.description)}${lockLabel ? `<div class="muted small">${lockLabel}</div>` : ''}</td>
             <td class="right">${salaryStr}</td>
             <td class="center">
-              <button class="btn ${isHired ? 'btn-danger' : 'btn-primary'}" data-action="${isHired ? 'fireStaff' : 'hireStaff'}" data-staff="${esc(st.id)}">
+              <button ${disabled} class="btn ${isHired ? 'btn-danger' : 'btn-primary'}" data-action="${isHired ? 'fireStaff' : 'hireStaff'}" data-staff="${esc(st.id)}">
                 ${isHired ? 'Demitir' : 'Contratar'}
               </button>
             </td>
@@ -5625,18 +5673,24 @@ function viewFinance() {
         `;
       }
       // Caso não haja patrocinador, lista opções disponíveis
+      const repTier = computeReputationTier(save.career?.careerScore || 0);
+      const repRank = tierRank(repTier);
       const items = SPONSOR_CATALOG.map((sp) => {
         const upfrontStr = (sp.cashUpfront || 0).toLocaleString('pt-BR', { style: 'currency', currency });
         const weeklyStr = (sp.weekly || 0).toLocaleString('pt-BR', { style: 'currency', currency });
+        const minRank = tierRank(sp.minTier || 'INICIANTE');
+        const eligible = repRank >= minRank;
+        const disabled = eligible ? '' : 'disabled';
+        const lockLabel = eligible ? '' : `Bloqueado (${esc(sp.minTier || 'INICIANTE')})`;
         return `
-          <div class="item">
+          <div class="item ${eligible ? '' : 'muted'}">
             <div class="item-left">
-              <div class="item-title">${esc(sp.name)}</div>
+              <div class="item-title">${esc(sp.name)} ${lockLabel ? `<span class="badge">${lockLabel}</span>` : ''}</div>
               <div class="item-sub">Aporte: ${upfrontStr} • Semanal: ${weeklyStr}</div>
               <div class="small">${esc(sp.description)}</div>
             </div>
             <div class="item-right">
-              <button class="btn btn-primary" data-action="signSponsor" data-sponsor="${esc(sp.id)}">Assinar</button>
+              <button ${disabled} class="btn btn-primary" data-action="signSponsor" data-sponsor="${esc(sp.id)}">Assinar</button>
             </div>
           </div>
         `;
@@ -5905,7 +5959,9 @@ function viewTransfers() {
           try {
             const save = activeSave();
             if (!save) { toast('Selecione/crie uma carreira primeiro.'); return; }
-            if (!state.packData) { await loadPackData(); }
+            if (!state.packData) { await loadPackData();
+    await loadExternalCatalogs();
+    }
             if (!state.packData) { toast('Pacote não carregado. Vá em "Dados" e selecione um pacote.'); return; }
 
             // sem confirm no mobile: só pede se desktop
