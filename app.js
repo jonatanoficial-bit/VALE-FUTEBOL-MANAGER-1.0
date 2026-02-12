@@ -1276,7 +1276,9 @@ function applyBackground(path) {
         if (byPos[pos][i]) xi.push(byPos[pos][i].id);
       }
     });
-    return x
+    // Retorna a lista de IDs do XI inicial
+    return xi;
+  }
 
   function buildDefaultBench(players, startingXI, benchSize = 7) {
     const xi = new Set(Array.isArray(startingXI) ? startingXI : []);
@@ -1292,9 +1294,7 @@ function applyBackground(path) {
     pool.sort((a,b)=> (b.overall||0)-(a.overall||0));
     return pool[0] || null;
   }
-
-i;
-  }
+ 
 
   /** Garante que a carreira tenha sistemas de elenco, tática e treinos */
   function ensureSystems(save) {

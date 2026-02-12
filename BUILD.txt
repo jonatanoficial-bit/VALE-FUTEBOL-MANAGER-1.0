@@ -1,4 +1,10 @@
 Vale Futebol Manager 2026
-BUILD: v1.32.0_part2_calendar-unified
-UTC: 2026-02-12 13:07:45
-America/Sao_Paulo: 2026-02-12 10:07:45
+BUILD: v1.33.1_part3_hotfix_career-create-fix
+UTC: 2026-02-12 13:39:42
+America/Sao_Paulo: 2026-02-12 10:39:42
+
+Hotfix (Parte 3):
+- Corrigido erro crítico na criação de carreira (ReferenceError em buildDefaultXI)
+- Corrigido retorno do XI padrão e fechamento correto de funções
+- Removidos tokens inválidos que quebravam o carregamento do app
+- Atualizado cache-bust do app.js no index.html para evitar versão antiga em GitHub Pages/Vercel
