@@ -1,10 +1,14 @@
-Vale Futebol Manager 2026
-BUILD: v1.33.1_part3_hotfix_career-create-fix
-UTC: 2026-02-12 13:39:42
-America/Sao_Paulo: 2026-02-12 10:39:42
+VALE FUTEBOL MANAGER 1.0
+Build Version: v1.34.0_part4_staff
+Build Date (UTC): 2026-02-12
+Build Time (UTC): 21:48:10
 
-Hotfix (Parte 3):
-- Corrigido erro crítico na criação de carreira (ReferenceError em buildDefaultXI)
-- Corrigido retorno do XI padrão e fechamento correto de funções
-- Removidos tokens inválidos que quebravam o carregamento do app
-- Atualizado cache-bust do app.js no index.html para evitar versão antiga em GitHub Pages/Vercel
+UPGRADE PRINCIPAL:
+- Staff agora funciona como "mercado de opções": 1 profissional por função (roleId)
+- Seleção por função com múltiplas opções (tiers e salários diferentes)
+- Contratar/Trocar substitui automaticamente o atual da função
+- Contratação agora desconta caixa (custo inicial = salário do staff)
+- Melhor feedback (toast) e regras claras na tela de Staff
+
+CACHE:
+- app.js / sw.js / index.html versionados por build (evita carregar versão antiga)

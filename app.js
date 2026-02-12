@@ -64,8 +64,8 @@
     }
   }
 
-    const BUILD_TAG = "v1.31.1_part1_promo-sync";
-const BUILD_TIME_STR = "11/02/2026 13:38:14";
+    const BUILD_TAG = "v1.34.0_part4_staff";
+const BUILD_TIME_STR = "12/02/2026 21:48:10 UTC";
 
 // -----------------------------
 // Carreira (Parte 1) — Identidade do Treinador
@@ -5706,48 +5706,115 @@ function viewFinance() {
     return requireSave((save) => {
       ensureSystems(save);
       const currency = state.packData?.rules?.gameRules?.currency || 'BRL';
-      const cashStr = (save.finance?.cash || 0).toLocaleString('pt-BR', { style: 'currency', currency });
-      const hiredIds = new Set((save.staff?.hired || []).map((st) => st.id));
+      const cash = (save.finance?.cash || 0);
+      const cashStr = cash.toLocaleString('pt-BR', { style: 'currency', currency });
+
+      // Estado atual: 1 staff por função (roleId)
+      const hired = (save.staff?.hired || []);
+      const hiredByRole = {};
+      hired.forEach((st) => { if (st?.roleId) hiredByRole[st.roleId] = st; });
+
       const repTier = computeReputationTier(save.career?.careerScore || 0);
       const repRank = tierRank(repTier);
-      const rows = STAFF_CATALOG.map((st) => {
-        const isHired = hiredIds.has(st.id);
-        const minRank = tierRank(st.minTier || st.tier || 'INICIANTE');
-        const eligible = repRank >= minRank;
-        const salary = (st.salary || 0);
-        const canPay = (save.finance?.cash || 0) >= salary;
-        const salaryStr = salary.toLocaleString('pt-BR', { style: 'currency', currency });
-        const disabled = (!isHired && (!eligible || !canPay)) ? 'disabled' : '';
-        const lockLabel = !eligible ? `Bloqueado (${esc(st.minTier || st.tier || 'INICIANTE')})` : (!canPay ? 'Sem caixa' : '');
+
+      // Mapa amigável de funções (fallback se o catálogo não tiver)
+      const ROLE_LABEL = {
+        assistant_coach: 'Assistente Técnico',
+        fitness_coach: 'Preparador Físico',
+        performance_analyst: 'Analista de Desempenho',
+        chief_physio: 'Fisioterapeuta Chefe',
+        set_piece_coach: 'Treinador de Bolas Paradas',
+        scout: 'Olheiro',
+        goalkeeping_coach: 'Treinador de Goleiros',
+        youth_coach: 'Treinador Base (Sub-20)',
+        psychologist: 'Psicólogo',
+        nutritionist: 'Nutricionista',
+      };
+
+      // Descobre roles presentes no catálogo
+      const roles = Array.from(new Set((STAFF_CATALOG || []).map(s => s.roleId).filter(Boolean)));
+
+      // Ordenação: primeiro roles conhecidos
+      const roleOrder = [
+        'assistant_coach','fitness_coach','performance_analyst','chief_physio','set_piece_coach','scout',
+        'goalkeeping_coach','youth_coach','psychologist','nutritionist'
+      ];
+      roles.sort((a,b) => (roleOrder.indexOf(a) === -1 ? 999 : roleOrder.indexOf(a)) - (roleOrder.indexOf(b) === -1 ? 999 : roleOrder.indexOf(b)));
+
+      function staffOptions(roleId) {
+        const list = (STAFF_CATALOG || [])
+          .filter(s => s.roleId === roleId)
+          .slice()
+          .sort((a,b) => (tierRank(b.tier)-tierRank(a.tier)) || ((a.salary||0)-(b.salary||0)));
+
+        const current = hiredByRole[roleId]?.id || '';
+        return list.map((st) => {
+          const minRank = tierRank(st.minTier || st.tier || 'INICIANTE');
+          const eligible = repRank >= minRank;
+          const salary = (st.salary || 0);
+          const canPay = cash >= salary;
+          const locked = !eligible ? ` • Bloq: ${esc(st.minTier || st.tier || 'INICIANTE')}` : (!canPay ? ' • Sem caixa' : '');
+          const sel = (st.id === current) ? 'selected' : '';
+          const dis = (!eligible || !canPay) ? 'disabled' : '';
+          const salaryStr = salary.toLocaleString('pt-BR', { style: 'currency', currency });
+          return `<option ${sel} ${dis} value="${esc(st.id)}">${esc(st.name)} • ${esc(st.tier || 'INICIANTE')} • ${salaryStr}${locked}</option>`;
+        }).join('');
+      }
+
+      const blocks = roles.map((roleId) => {
+        const current = hiredByRole[roleId];
+        const currentHtml = current
+          ? `<div class="muted small">Atual: <b>${esc(current.name)}</b> • ${esc(current.tier || '')}</div>`
+          : `<div class="muted small">Atual: <b>Nenhum</b></div>`;
+
+        const opts = staffOptions(roleId) || `<option value="">Sem opções</option>`;
+        const label = ROLE_LABEL[roleId] || roleId;
+
         return `
-          <tr class="${(!eligible && !isHired) ? 'muted' : ''}">
-            <td>${esc(st.name)}</td>
-            <td>${esc(st.description)}${lockLabel ? `<div class="muted small">${lockLabel}</div>` : ''}</td>
-            <td class="right">${salaryStr}</td>
-            <td class="center">
-              <button ${disabled} class="btn ${isHired ? 'btn-danger' : 'btn-primary'}" data-action="${isHired ? 'fireStaff' : 'hireStaff'}" data-staff="${esc(st.id)}">
-                ${isHired ? 'Demitir' : 'Contratar'}
-              </button>
-            </td>
-          </tr>
+          <div class="card" style="margin: 0 0 12px 0;">
+            <div class="card-body">
+              <div class="row" style="gap:12px; align-items:flex-end; flex-wrap:wrap;">
+                <div style="flex:1; min-width:240px;">
+                  <div class="small muted">Função</div>
+                  <div style="font-weight:700;">${esc(label)}</div>
+                  ${currentHtml}
+                </div>
+                <div style="flex:2; min-width:260px;">
+                  <div class="small muted">Opções disponíveis</div>
+                  <select class="input" id="staffSel_${esc(roleId)}">${opts}</select>
+                </div>
+                <div style="display:flex; gap:8px; align-items:center;">
+                  <button class="btn btn-primary" data-action="hireStaffRole" data-role="${esc(roleId)}">Contratar / Trocar</button>
+                  ${current ? `<button class="btn btn-danger" data-action="fireStaffRole" data-role="${esc(roleId)}">Demitir</button>` : ``}
+                </div>
+              </div>
+              <div class="muted small" style="margin-top:8px;">
+                Regra: <b>1 profissional por função</b>. Ao contratar, substitui automaticamente o atual (se houver).
+              </div>
+            </div>
+          </div>
         `;
       }).join('');
+
       return `
         <div class="card">
           <div class="card-header">
             <div>
               <div class="card-title">Staff</div>
-              <div class="card-subtitle">Gerencie sua equipe de suporte</div>
+              <div class="card-subtitle">Escolha 1 profissional por função (níveis e salários diferentes)</div>
             </div>
             <span class="badge">Caixa: ${cashStr}</span>
           </div>
           <div class="card-body">
-            <table class="table">
-              <thead><tr><th>Staff</th><th>Descrição</th><th class="right">Salário</th><th class="center">Ação</th></tr></thead>
-              <tbody>${rows}</tbody>
-            </table>
+            <div class="notice">
+              Reputação atual: <b>${esc(repTier)}</b>. Funções de tiers maiores podem exigir reputação.
+              <div class="muted small">Dica: se o botão estiver desativado, aumente reputação ou caixa.</div>
+            </div>
             <div class="sep"></div>
-            <button class="btn btn-primary" data-go="/hub">Voltar</button>
+            ${blocks || `<div class="muted">Catálogo de staff não carregado.</div>`}
+            <div style="margin-top: 14px;">
+              <button class="btn" data-go="/hub">Voltar</button>
+            </div>
           </div>
         </div>
       `;
@@ -6627,7 +6694,58 @@ if (action === 'applyTraining') {
         });
       }
 
-      // --- Patrocínio
+      
+      // --- Staff (por função: 1 por roleId, com seleção de opções)
+      if (action === 'hireStaffRole') {
+        el.addEventListener('click', () => {
+          const save = activeSave();
+          if (!save) return;
+          ensureSystems(save);
+          const roleId = el.getAttribute('data-role');
+          const sel = document.getElementById('staffSel_' + roleId);
+          if (!sel) return;
+          const staffId = sel.value;
+          const st = STAFF_CATALOG.find(s => s.id === staffId);
+          if (!st) { toast('Selecione uma opção válida.'); return; }
+
+          const currency = state.packData?.rules?.gameRules?.currency || 'BRL';
+          const cash = (save.finance?.cash || 0);
+          const repTier = computeReputationTier(save.career?.careerScore || 0);
+          const repRank = tierRank(repTier);
+          const minRank = tierRank(st.minTier || st.tier || 'INICIANTE');
+          if (repRank < minRank) { toast('Reputação insuficiente para este staff.'); return; }
+
+          const cost = (st.salary || 0);
+          if (cash < cost) { toast('Caixa insuficiente para contratar.'); return; }
+
+          const hired = (save.staff.hired || []);
+          const had = hired.find(x => x.roleId === roleId);
+          const filtered = hired.filter(x => x.roleId !== roleId);
+          filtered.push({ ...st });
+
+          save.staff.hired = filtered;
+          save.finance.cash = cash - cost;
+          save.meta.updatedAt = nowIso();
+          writeSlot(state.settings.activeSlotId, save);
+          toast(had ? `Trocado: ${st.name} (-${cost.toLocaleString('pt-BR',{style:'currency',currency})})` : `Contratado: ${st.name} (-${cost.toLocaleString('pt-BR',{style:'currency',currency})})`);
+          route();
+        });
+      }
+
+      if (action === 'fireStaffRole') {
+        el.addEventListener('click', () => {
+          const save = activeSave();
+          if (!save) return;
+          ensureSystems(save);
+          const roleId = el.getAttribute('data-role');
+          save.staff.hired = (save.staff.hired || []).filter(x => x.roleId !== roleId);
+          save.meta.updatedAt = nowIso();
+          writeSlot(state.settings.activeSlotId, save);
+          toast('Staff removido.');
+          route();
+        });
+      }
+// --- Patrocínio
       if (action === 'signSponsor') {
         el.addEventListener('click', () => {
           const save = activeSave();

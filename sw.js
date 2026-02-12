@@ -2,14 +2,12 @@
    Objetivo: melhorar carregamento no GitHub Pages e permitir modo offline.
 */
 
-const CACHE_NAME = 'vfm-2026-cache-v1.31.1';
+const CACHE_NAME = 'vfm-2026-cache-v1.34.0_part4_staff-2026-02-12_214810';
 const CORE_ASSETS = [
   './',
-  './index.html',
-  './styles.css',
-  './app.js',
-  './favicon.ico',
-  './manifest.json'
+  './styles.css?v=build_2026-02-12_142228_v1.33.2_part3_cachefix',
+  './manifest.json',
+  './favicon.ico'
 ];
 
 self.addEventListener('install', (event) => {
@@ -30,8 +28,31 @@ self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
 
-  // Network-first para dados JSON (atualizações de pacote)
-  if (req.url.includes('/data/') || req.url.endsWith('.json')) {
+  const url = new URL(req.url);
+  const isSameOrigin = url.origin === self.location.origin;
+
+  // Sempre tentar a rede primeiro para HTML/navegação e JS principal (evita ficar preso em versões antigas)
+  const isNav = req.mode === 'navigate' || (req.headers.get('accept') || '').includes('text/html');
+  const isCritical =
+    isNav ||
+    url.pathname.endsWith('/index.html') ||
+    url.pathname.endsWith('/app.js') ||
+    url.pathname.endsWith('/app.bundle.js') ||
+    url.pathname.endsWith('/sw.js');
+
+  if (isSameOrigin && isCritical) {
+    event.respondWith(
+      fetch(req).then((res) => {
+        const clone = res.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(req, clone));
+        return res;
+      }).catch(() => caches.match(req).then((cached) => cached || caches.match('./index.html')))
+    );
+    return;
+  }
+
+  // Network-first para JSON/dados
+  if (isSameOrigin && (url.pathname.includes('/data/') || url.pathname.endsWith('.json'))) {
     event.respondWith(
       fetch(req).then((res) => {
         const clone = res.clone();
@@ -42,12 +63,16 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Cache-first para assets estáticos
+  // Cache-first para assets estáticos (com revalidação simples)
   event.respondWith(
-    caches.match(req).then((cached) => cached || fetch(req).then((res) => {
-      const clone = res.clone();
-      caches.open(CACHE_NAME).then((cache) => cache.put(req, clone));
-      return res;
-    }))
+    caches.match(req).then((cached) => {
+      const fetchPromise = fetch(req).then((res) => {
+        const clone = res.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(req, clone));
+        return res;
+      }).catch(() => cached);
+
+      return cached || fetchPromise;
+    })
   );
 });
