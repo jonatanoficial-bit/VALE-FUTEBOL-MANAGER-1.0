@@ -6,6 +6,8 @@
   <title>Vale Futebol Manager 2026 - Premium</title>
 
   <link rel="stylesheet" href="./styles.css?v=v1.24.1_allinone" />
+  <link rel="manifest" href="./manifest.json" />
+  <meta name="theme-color" content="#0EA5E9" />
 </head>
 <body>
   <!-- Splash -->
@@ -44,7 +46,7 @@
   </div>
 
   <!-- App principal -->
-  <script src="./app.js?v=v1.30.0_allinone_ph3-6" defer></script>
+  <script src="./app.js?v=v1.31.1_part1" defer></script>
 
   <!-- Guardas de UX (não altera lógica do jogo) -->
   <script>
@@ -73,6 +75,13 @@
             '</div>';
         }
       }, 5000);
+    })();
+  </script>
+  <script>
+    (function(){
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js').catch(function(){});
+      }
     })();
   </script>
 </body>

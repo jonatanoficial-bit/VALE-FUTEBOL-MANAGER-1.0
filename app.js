@@ -64,7 +64,7 @@
     }
   }
 
-    const BUILD_TAG = "v1.31.0_staff-sponsor-catalog";
+    const BUILD_TAG = "v1.31.1_part1_promo-sync";
 const BUILD_TIME_STR = "11/02/2026 13:38:14";
 
 // -----------------------------
@@ -2855,6 +2855,12 @@ function viewCareerCreate() {
     ensureParallelBrazilLeaguesFinalized(save);
 
     const rows = sortTableRows(Object.values(save.season.table || {}));
+
+    // Snapshot da tabela final da liga do usuário (usada para promoções/rebaixamentos e histórico)
+    try {
+      const tables = ensureLeagueTableStore(save);
+      tables[save.season.leagueId] = rows.map(r => ({ ...r }));
+    } catch (e) {}
     const championId = rows[0]?.id || null;
     const userPos = rows.findIndex(x => x.id === save.career.clubId) + 1;
 
@@ -3169,16 +3175,20 @@ if (userId && (m.homeId === userId || m.awayId === userId)) {
   }
 
   function ensureParallelBrazilLeaguesFinalized(save) {
-    const other = otherBrazilLeague(save.season?.leagueId);
+    const main = save.season?.leagueId;
+    const other = otherBrazilLeague(main);
     if (!other) return;
+
+    // 1) garante que a liga "paralela" finalize (fast-forward)
     const ls = ensureParallelLeagueState(save, other);
-    // Se o usuário terminou a liga dele, garante que a outra liga também finalize (fast-forward)
     while (!ls.completed) {
       simulateParallelRound(save, other, ls.currentRound);
-      // Evita loop infinito em caso de dados ruins
-      if (ls.currentRound > 200) break;
+      if (ls.currentRound > 200) break; // evita loop infinito
     }
-    snapshotParallelLeagueToTables(save, other);
+
+    // 2) snapshot das DUAS tabelas (liga do usuário + liga paralela)
+    try { snapshotParallelLeagueToTables(save, main); } catch (e) {}
+    try { snapshotParallelLeagueToTables(save, other); } catch (e) {}
   }
 
   function ensureParallelBrazilLeaguesInitialized(save) {
@@ -4180,6 +4190,132 @@ save.season.lastRoundPlayed = roundIndex;
 
 
 
+
+  // =========================
+  // Calendário Unificado (Parte 2)
+  // =========================
+  function getUserLeagueFixtureForRound(save, roundIndex){
+    try {
+      const clubId = save?.career?.clubId;
+      const rnd = save?.season?.rounds?.[roundIndex] || [];
+      const fx = (rnd || []).find(m => m && (m.homeId === clubId || m.awayId === clubId)) || null;
+      if (!fx) return null;
+      const oppId = (fx.homeId === clubId) ? fx.awayId : fx.homeId;
+      return { ...fx, oppId };
+    } catch (e) { return null; }
+  }
+
+  function getUserContinentalFixtureNext(save){
+    try {
+      const userId = save?.career?.clubId;
+      const live = ensureContinentalsLive(save);
+      if (!live?.tournaments || !userId) return null;
+
+      const findInKnockout = (ko) => {
+        const ri = Number(ko?.roundIndex || 0);
+        const rnd = ko?.rounds?.[ri];
+        const m = (rnd?.matches || []).find(x => x && (x.homeId === userId || x.awayId === userId)) || null;
+        if (!m) return null;
+        return { homeId: m.homeId, awayId: m.awayId };
+      };
+
+      // Ordem: Libertadores, Champions, Sul-Americana, Europa
+      const lib = live.tournaments.conmebol?.libertadores;
+      if (lib) {
+        if (lib.stage === 'GROUPS') {
+          const md = Number(lib.matchdayIndex || 0);
+          for (const g of (lib.groups || [])) {
+            const fx = (g.matchdays?.[md] || []).find(x => x && (x.homeId === userId || x.awayId === userId));
+            if (fx) return { comp: 'LIB', compName: 'Libertadores', homeId: fx.homeId, awayId: fx.awayId };
+          }
+        } else if (lib.stage === 'KO' && lib.knockout) {
+          const fx = findInKnockout(lib.knockout);
+          if (fx) return { comp: 'LIB', compName: 'Libertadores', ...fx };
+        }
+      }
+
+      const ucl = live.tournaments.uefa?.champions;
+      if (ucl) {
+        if (ucl.stage === 'LEAGUE') {
+          const ri = Number(ucl.roundIndex || 0);
+          const rnd = ucl.leaguePhase?.rounds?.[ri];
+          const m = (rnd?.matches || []).find(x => x && (x.homeId === userId || x.awayId === userId));
+          if (m) return { comp: 'UCL', compName: 'Champions League', homeId: m.homeId, awayId: m.awayId };
+        } else if (ucl.stage === 'KO' && ucl.knockout) {
+          const fx = findInKnockout(ucl.knockout);
+          if (fx) return { comp: 'UCL', compName: 'Champions League', ...fx };
+        }
+      }
+
+      const sud = live.tournaments.conmebol?.sudamericana;
+      if (sud?.stage === 'KO') {
+        const fx = findInKnockout(sud);
+        if (fx) return { comp: 'SUD', compName: 'Sul-Americana', ...fx };
+      }
+
+      const uel = live.tournaments.uefa?.europa;
+      if (uel?.stage === 'KO') {
+        const fx = findInKnockout(uel);
+        if (fx) return { comp: 'UEL', compName: 'Europa League', ...fx };
+      }
+
+      return null;
+    } catch (e) { return null; }
+  }
+
+  function buildUnifiedCalendarPreview(save, maxItems = 12){
+    ensureSeason(save);
+    let live = null;
+    try { live = ensureContinentalsLive(save); } catch (e) { live = null; }
+
+    const cur = Number(save.season.currentRound || 0);
+    const total = Number((save.season.rounds || []).length || 0);
+
+    const items = [];
+    let r = cur;
+
+    // continental agenda: acontece logo APÓS certas rodadas domésticas (mesma regra do auto-advance)
+    let nextContAt = (live?.nextAtRoundIndex ?? null);
+    let contPlayed = Number(live?.matchdaysPlayed || 0);
+
+    while (items.length < maxItems && !save.season.completed) {
+      if (r < total) {
+        const fx = getUserLeagueFixtureForRound(save, r);
+        const opp = fx?.oppId ? getClub(fx.oppId) : null;
+        items.push({
+          type: 'LEAGUE',
+          roundIndex: r,
+          label: `Liga • Rodada ${r+1}/${total}`,
+          sub: fx ? `vs ${opp?.name || fx.oppId}` : 'Rodada da liga',
+          pill: '⚽'
+        });
+
+        // se após esta rodada rola matchday continental, adiciona evento
+        if (nextContAt !== null && Number(nextContAt) === r) {
+          const cfx = getUserContinentalFixtureNext(save);
+          const opp2Id = cfx ? ((cfx.homeId === save.career.clubId) ? cfx.awayId : cfx.homeId) : null;
+          const opp2 = opp2Id ? getClub(opp2Id) : null;
+          items.push({
+            type: 'CONT',
+            label: `Continental • Matchday ${contPlayed+1}`,
+            sub: cfx ? `${cfx.compName} • vs ${opp2?.name || opp2Id}` : 'Competições continentais',
+            pill: '🌍'
+          });
+          nextContAt += 2;
+          contPlayed += 1;
+        }
+
+        r += 1;
+        continue;
+      }
+
+      items.push({ type: 'END', label: 'Fim da Temporada', sub: 'Temporada finalizada', pill: '✅' });
+      break;
+    }
+
+    return items;
+  }
+
   function viewCalendar() {
     return requireSave((save) => {
       ensureSystems(save);
@@ -4191,34 +4327,13 @@ save.season.lastRoundPlayed = roundIndex;
       const total = Number((save.season.rounds || []).length || 0);
       const hasLeagueNext = cur < total;
 
-      const nextContAt = (live?.nextAtRoundIndex ?? null);
-      const contDueNow = (nextContAt !== null) && (Number(nextContAt) === cur) && !save.season.completed;
+      // Continental acontece APÓS algumas rodadas da liga (mesma regra do auto-advance)
+      const contAfterNext = (live?.nextAtRoundIndex ?? null) !== null && Number(live.nextAtRoundIndex) === cur && !save.season.completed;
 
-      const nextEventLabel = contDueNow ? 'Continental (Matchday)' : (hasLeagueNext ? `Liga (Rodada ${cur+1}/${total})` : 'Temporada finalizada');
-      const nextEventPill = contDueNow ? '🌍' : (hasLeagueNext ? '⚽' : '✅');
+      const nextEventLabel = hasLeagueNext ? `Liga (Rodada ${cur+1}/${total})` : 'Temporada finalizada';
+      const nextEventPill = hasLeagueNext ? '⚽' : '✅';
 
-      // Preview simples dos próximos 10 "eventos"
-      const preview = [];
-      const maxItems = 10;
-      let r = cur;
-      let contAt = (nextContAt !== null) ? Number(nextContAt) : null;
-      let contPlayed = Number(live?.matchdaysPlayed || 0);
-
-      for (let i=0; i<maxItems; i++){
-        if (save.season.completed) break;
-        const isCont = (contAt !== null) && (r === contAt);
-        if (isCont){
-          preview.push({ type:'CONT', label:`Continental • Matchday ${contPlayed+1}` });
-          contAt += 2;
-          contPlayed += 1;
-        } else if (r < total){
-          preview.push({ type:'LEAGUE', label:`Liga • Rodada ${r+1}/${total}` });
-          r += 1;
-        } else {
-          preview.push({ type:'END', label:'Fim da Temporada' });
-          break;
-        }
-      }
+      const preview = buildUnifiedCalendarPreview(save, 12);
 
       return `
         <div class="card">
@@ -4247,19 +4362,18 @@ save.season.lastRoundPlayed = roundIndex;
               ${preview.map((it, idx)=>`
                 <div class="list-row ${idx===0?'active':''}">
                   <div class="list-left">
-                    <div class="list-title">${esc(it.label)}</div>
-                    <div class="list-sub">${it.type==='CONT'?'Competições continentais integradas':'Competição doméstica'}</div>
+                    <div class="list-title">${esc((it.pill||'') + ' ' + it.label)}</div>
+                    <div class="list-sub">${esc(it.sub || '')}</div>
                   </div>
                   <div class="list-right">
-                    <span class="badge">${it.type}</span>
+                    <span class="badge">${esc(it.type)}</span>
                   </div>
                 </div>
-              `).join('')}
-            </div>
+              `).join('')}            </div>
 
             <div class="sep"></div>
             <div class="notice">
-              Quando houver jogo continental do seu clube, a narrativa abre automaticamente ao final da rodada doméstica.
+              Quando a rodada continental estiver agendada, ela acontece automaticamente após a rodada da liga e você vê a narrativa em seguida.
             </div>
           </div>
         </div>
@@ -6743,31 +6857,10 @@ if (action === 'rejectOfferIn') {
           ensureSystems(save);
           ensureSeason(save);
           if (save.season.completed) return;
+          // Fluxo único: o próximo evento é sempre a próxima rodada da liga.
+          // Se houver matchday continental agendado após esta rodada, ele será simulado automaticamente
+          // e a narrativa abre em seguida (ver openMatchdayModal -> maybeAutoAdvanceContinentalsLive).
 
-          // Prioridade do calendário: se a rodada continental está marcada para este ponto, jogue antes.
-          try {
-            const live = ensureContinentalsLive(save);
-            const cur = Number(save.season.currentRound || 0);
-            const due = (live && live.nextAtRoundIndex === cur);
-            if (due) {
-              const csum = advanceOneContinentalMatchday(save, { manual: true });
-              try {
-                if (save.season && save.season.continentalsLive) save.season.continentalsLive.lastSummary = csum;
-              } catch(e) {}
-              try {
-                live.nextAtRoundIndex += 2;
-                live.lastPlayedAtRoundIndex = cur;
-                live.matchdaysPlayed += 1;
-              } catch(e) {}
-              try { applyContinentalEconomy(save, csum); } catch(e) {}
-              save.meta.updatedAt = nowIso();
-              writeSlot(state.settings.activeSlotId, save);
-              try { openContinentalMatchdayModal(save, csum); } catch(e) { route(); }
-              return;
-            }
-          } catch(e) {}
-
-          // Caso contrário: joga a próxima rodada doméstica normalmente.
           const r = save.season.currentRound;
           const rounds = save.season.rounds || [];
           if (r >= rounds.length) return;

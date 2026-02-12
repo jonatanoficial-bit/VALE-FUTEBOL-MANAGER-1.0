@@ -1,2 +1,4 @@
-v1.30.0_allinone_ph3-6
-10/02/2026 16:02:58
+Vale Futebol Manager 2026
+BUILD: v1.32.0_part2_calendar-unified
+UTC: 2026-02-12 13:07:45
+America/Sao_Paulo: 2026-02-12 10:07:45

@@ -1,0 +1,12 @@
+{
+  "name": "Vale Futebol Manager 2026",
+  "short_name": "VFM 2026",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b1220",
+  "theme_color": "#0EA5E9",
+  "icons": [
+    {"src": "./favicon.ico", "sizes": "64x64 32x32 24x24 16x16", "type": "image/x-icon"}
+  ]
+}
