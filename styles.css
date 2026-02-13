@@ -851,3 +851,87 @@ body:not(.bg-menu):not(.bg-lobby):not(.bg-cinematic){
   background: rgba(255,255,255,0.03);
   padding: 4px;
 }
+/* -------------------------------------------------------------------------- */
+/* Táticas: lineup & board (2D)                                                */
+/* -------------------------------------------------------------------------- */
+.btn-small{
+  padding: 6px 10px;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.pill-mini{
+  padding: 4px 8px;
+  font-size: 10px;
+}
+
+.pill.ok{ border-color: rgba(34,197,94,.45); background: rgba(34,197,94,.10); }
+.pill.warn{ border-color: rgba(245,158,11,.45); background: rgba(245,158,11,.10); }
+
+.lineup-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+  padding: 10px 0;
+  border-bottom: 1px dashed rgba(255,255,255,.10);
+}
+.lineup-item:last-child{ border-bottom:none; }
+.lineup-left{ min-width:0; }
+.lineup-name{
+  font-weight: 800;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width: 320px;
+}
+.lineup-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+.lineup-actions{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+.tactic-board{
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 16px;
+  padding: 14px;
+  min-height: 240px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  background: radial-gradient(circle at 50% 40%, rgba(34,197,94,.16), rgba(15,23,42,.55));
+}
+.tactic-row{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.tactic-chip{
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  color: var(--text);
+  font-weight: 750;
+  font-size: 12px;
+  max-width: 160px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.tactic-chip.empty{ opacity:.55; font-weight:650; }
+
+@media(max-width: 480px){
+  .lineup-name{ max-width: 220px; }
+  .tactic-board{ min-height: 210px; }
+  .tactic-chip{ max-width: 140px; font-size: 11px; }
+}

@@ -64,8 +64,12 @@
     }
   }
 
-    const BUILD_TAG = "v1.34.0_part4_staff";
-const BUILD_TIME_STR = "12/02/2026 21:48:10 UTC";
+    const BUILD_TAG = "v1.34.1_hotfix_cont_staff_tactics";
+const BUILD_TIME_STR = "13/02/2026 17:16:40 UTC";
+
+// Ligas UEFA consideradas para preferência de continentais (evita ReferenceError no modal)
+const UEFA_LIDS = ['ENG_PREMIER','ESP_LALIGA','ITA_SERIE_A','GER_BUNDES','FRA_LIGUE_1','POR_LIGA'];
+
 
 // -----------------------------
 // Carreira (Parte 1) — Identidade do Treinador
@@ -166,52 +170,407 @@ function generateClubObjective(save) {
    * pagamentos semanais. Esses catálogos podem ser expandidos futuramente ou
    * carregados de um JSON externo.
    */
+    /**
+   * Catálogo de staff (fallback embutido)
+   * - Em produção, é sobrescrito por /data/staff_catalog.json via loadExternalCatalogs().
+   * - Mantemos um fallback completo para não quebrar offline/mobile.
+   */
   let STAFF_CATALOG = [
-  {
-    id: "assistant_coach",
-    name: "Assistente Técnico",
-    effect: { trainingBoost: 0.10 },
-    salary: 500000,
-    description: "Aumenta ligeiramente o efeito de qualquer plano de treino."
-  },
-  {
-    id: "fitness_coach",
-    name: "Preparador Físico",
-    effect: { formBoostMultiplier: 1.15, fatigueMultiplier: 0.92, recoveryBoost: 1.0 },
-    salary: 450000,
-    description: "Reduz fadiga de jogos e melhora a recuperação semanal. Mantém o elenco mais inteiro."
-  },
-  {
-    id: "analyst",
-    name: "Analista de Desempenho",
-    effect: { trainingBoost: 0.05, formBoostMultiplier: 1.05, matchAttackBoost: 0.04, matchDefenseBoost: 0.03 },
-    salary: 350000,
-    description: "Ajuda com dados: pequena melhoria de performance em jogos e otimização de treino."
-  },
-  {
-    id: "head_physio",
-    name: "Fisioterapeuta Chefe",
-    effect: { injuryRiskMultiplier: 0.75, injuryWeeksMultiplier: 0.85, recoveryBoost: 1.5 },
-    salary: 420000,
-    description: "Diminui a chance de lesões e reduz o tempo de recuperação."
-  },
-  {
-    id: "setpiece_coach",
-    name: "Treinador de Bolas Paradas",
-    effect: { setpieceBoost: 0.06, matchAttackBoost: 0.02 },
-    salary: 280000,
-    description: "Melhora ligeiramente o poder ofensivo em bolas paradas (mais gols 'achados')."
-  },
-  {
-    id: "scout",
-    name: "Olheiro",
-    effect: { scoutingQuality: 0.15, marketDiscount: 0.05 },
-    salary: 300000,
-    description: "Aumenta a qualidade das sugestões de mercado e melhora pequenas oportunidades de contratação."
-  }
-];
+    {
+      "id": "assistant_coach_iniciante",
+      "roleId": "assistant_coach",
+      "tier": "INICIANTE",
+      "name": "Assistente Técnico (Iniciante)",
+      "salary": 122856,
+      "effect": {
+        "trainingBoost": 0.06
+      },
+      "description": "Aumenta o efeito de qualquer plano de treino."
+    },
+    {
+      "id": "assistant_coach_promissor",
+      "roleId": "assistant_coach",
+      "tier": "PROMISSOR",
+      "name": "Assistente Técnico (Promissor)",
+      "salary": 275139,
+      "effect": {
+        "trainingBoost": 0.085
+      },
+      "description": "Aumenta o efeito de qualquer plano de treino."
+    },
+    {
+      "id": "assistant_coach_reconhecido",
+      "roleId": "assistant_coach",
+      "tier": "RECONHECIDO",
+      "name": "Assistente Técnico (Reconhecido)",
+      "salary": 495772,
+      "effect": {
+        "trainingBoost": 0.11
+      },
+      "description": "Aumenta o efeito de qualquer plano de treino."
+    },
+    {
+      "id": "assistant_coach_elite",
+      "roleId": "assistant_coach",
+      "tier": "ELITE",
+      "name": "Assistente Técnico (Elite)",
+      "salary": 804377,
+      "effect": {
+        "trainingBoost": 0.135
+      },
+      "description": "Aumenta o efeito de qualquer plano de treino."
+    },
+    {
+      "id": "fitness_coach_iniciante",
+      "roleId": "fitness_coach",
+      "tier": "INICIANTE",
+      "name": "Preparador Físico (Iniciante)",
+      "salary": 129744,
+      "effect": {
+        "formBoostMultiplier": 0.69,
+        "fatigueMultiplier": 0.552,
+        "recoveryBoost": 0.6
+      },
+      "description": "Reduz fadiga e melhora recuperação semanal."
+    },
+    {
+      "id": "fitness_coach_promissor",
+      "roleId": "fitness_coach",
+      "tier": "PROMISSOR",
+      "name": "Preparador Físico (Promissor)",
+      "salary": 271473,
+      "effect": {
+        "formBoostMultiplier": 0.977,
+        "fatigueMultiplier": 0.782,
+        "recoveryBoost": 0.85
+      },
+      "description": "Reduz fadiga e melhora recuperação semanal."
+    },
+    {
+      "id": "fitness_coach_reconhecido",
+      "roleId": "fitness_coach",
+      "tier": "RECONHECIDO",
+      "name": "Preparador Físico (Reconhecido)",
+      "salary": 465095,
+      "effect": {
+        "formBoostMultiplier": 1.265,
+        "fatigueMultiplier": 1.012,
+        "recoveryBoost": 1.1
+      },
+      "description": "Reduz fadiga e melhora recuperação semanal."
+    },
+    {
+      "id": "fitness_coach_elite",
+      "roleId": "fitness_coach",
+      "tier": "ELITE",
+      "name": "Preparador Físico (Elite)",
+      "salary": 880958,
+      "effect": {
+        "formBoostMultiplier": 1.552,
+        "fatigueMultiplier": 1.242,
+        "recoveryBoost": 1.35
+      },
+      "description": "Reduz fadiga e melhora recuperação semanal."
+    },
+    {
+      "id": "analyst_iniciante",
+      "roleId": "analyst",
+      "tier": "INICIANTE",
+      "name": "Analista de Desempenho (Iniciante)",
+      "salary": 133105,
+      "effect": {
+        "tacticsBonus": 0.036
+      },
+      "description": "Melhora leitura de jogo e ajustes táticos."
+    },
+    {
+      "id": "analyst_promissor",
+      "roleId": "analyst",
+      "tier": "PROMISSOR",
+      "name": "Analista de Desempenho (Promissor)",
+      "salary": 286425,
+      "effect": {
+        "tacticsBonus": 0.051
+      },
+      "description": "Melhora leitura de jogo e ajustes táticos."
+    },
+    {
+      "id": "analyst_reconhecido",
+      "roleId": "analyst",
+      "tier": "RECONHECIDO",
+      "name": "Analista de Desempenho (Reconhecido)",
+      "salary": 505560,
+      "effect": {
+        "tacticsBonus": 0.066
+      },
+      "description": "Melhora leitura de jogo e ajustes táticos."
+    },
+    {
+      "id": "analyst_elite",
+      "roleId": "analyst",
+      "tier": "ELITE",
+      "name": "Analista de Desempenho (Elite)",
+      "salary": 867518,
+      "effect": {
+        "tacticsBonus": 0.081
+      },
+      "description": "Melhora leitura de jogo e ajustes táticos."
+    },
+    {
+      "id": "head_physio_iniciante",
+      "roleId": "head_physio",
+      "tier": "INICIANTE",
+      "name": "Fisioterapeuta Chefe (Iniciante)",
+      "salary": 137026,
+      "effect": {
+        "injuryRiskMultiplier": 0.528,
+        "recoveryBoost": 0.672
+      },
+      "description": "Reduz risco de lesões e acelera retorno."
+    },
+    {
+      "id": "head_physio_promissor",
+      "roleId": "head_physio",
+      "tier": "PROMISSOR",
+      "name": "Fisioterapeuta Chefe (Promissor)",
+      "salary": 256544,
+      "effect": {
+        "injuryRiskMultiplier": 0.748,
+        "recoveryBoost": 0.952
+      },
+      "description": "Reduz risco de lesões e acelera retorno."
+    },
+    {
+      "id": "head_physio_reconhecido",
+      "roleId": "head_physio",
+      "tier": "RECONHECIDO",
+      "name": "Fisioterapeuta Chefe (Reconhecido)",
+      "salary": 456333,
+      "effect": {
+        "injuryRiskMultiplier": 0.968,
+        "recoveryBoost": 1.232
+      },
+      "description": "Reduz risco de lesões e acelera retorno."
+    },
+    {
+      "id": "head_physio_elite",
+      "roleId": "head_physio",
+      "tier": "ELITE",
+      "name": "Fisioterapeuta Chefe (Elite)",
+      "salary": 914641,
+      "effect": {
+        "injuryRiskMultiplier": 1.188,
+        "recoveryBoost": 1.512
+      },
+      "description": "Reduz risco de lesões e acelera retorno."
+    },
+    {
+      "id": "set_piece_iniciante",
+      "roleId": "set_piece",
+      "tier": "INICIANTE",
+      "name": "Especialista em Bolas Paradas (Iniciante)",
+      "salary": 137826,
+      "effect": {
+        "setPieceBoost": 0.048,
+        "matchAttackBoost": 0.012
+      },
+      "description": "Melhora chances em bolas paradas."
+    },
+    {
+      "id": "set_piece_promissor",
+      "roleId": "set_piece",
+      "tier": "PROMISSOR",
+      "name": "Especialista em Bolas Paradas (Promissor)",
+      "salary": 256732,
+      "effect": {
+        "setPieceBoost": 0.068,
+        "matchAttackBoost": 0.017
+      },
+      "description": "Melhora chances em bolas paradas."
+    },
+    {
+      "id": "set_piece_reconhecido",
+      "roleId": "set_piece",
+      "tier": "RECONHECIDO",
+      "name": "Especialista em Bolas Paradas (Reconhecido)",
+      "salary": 503865,
+      "effect": {
+        "setPieceBoost": 0.088,
+        "matchAttackBoost": 0.022
+      },
+      "description": "Melhora chances em bolas paradas."
+    },
+    {
+      "id": "set_piece_elite",
+      "roleId": "set_piece",
+      "tier": "ELITE",
+      "name": "Especialista em Bolas Paradas (Elite)",
+      "salary": 857694,
+      "effect": {
+        "setPieceBoost": 0.108,
+        "matchAttackBoost": 0.027
+      },
+      "description": "Melhora chances em bolas paradas."
+    },
+    {
+      "id": "scout_iniciante",
+      "roleId": "scout",
+      "tier": "INICIANTE",
+      "name": "Olheiro (Iniciante)",
+      "salary": 131301,
+      "effect": {
+        "scoutingQuality": 0.09,
+        "marketDiscount": 0.03
+      },
+      "description": "Melhora oportunidades e descontos no mercado."
+    },
+    {
+      "id": "scout_promissor",
+      "roleId": "scout",
+      "tier": "PROMISSOR",
+      "name": "Olheiro (Promissor)",
+      "salary": 264938,
+      "effect": {
+        "scoutingQuality": 0.128,
+        "marketDiscount": 0.043
+      },
+      "description": "Melhora oportunidades e descontos no mercado."
+    },
+    {
+      "id": "scout_reconhecido",
+      "roleId": "scout",
+      "tier": "RECONHECIDO",
+      "name": "Olheiro (Reconhecido)",
+      "salary": 511475,
+      "effect": {
+        "scoutingQuality": 0.165,
+        "marketDiscount": 0.055
+      },
+      "description": "Melhora oportunidades e descontos no mercado."
+    },
+    {
+      "id": "scout_elite",
+      "roleId": "scout",
+      "tier": "ELITE",
+      "name": "Olheiro (Elite)",
+      "salary": 846866,
+      "effect": {
+        "scoutingQuality": 0.203,
+        "marketDiscount": 0.068
+      },
+      "description": "Melhora oportunidades e descontos no mercado."
+    },
+    {
+      "id": "sports_scientist_promissor",
+      "roleId": "sports_scientist",
+      "tier": "PROMISSOR",
+      "name": "Cientista do Esporte (Promissor)",
+      "salary": 320524,
+      "effect": {
+        "fatigueMultiplier": 0.765,
+        "fitnessGainMultiplier": 0.935
+      },
+      "description": "Otimiza carga de treino e reduz queda de fitness."
+    },
+    {
+      "id": "sports_scientist_reconhecido",
+      "roleId": "sports_scientist",
+      "tier": "RECONHECIDO",
+      "name": "Cientista do Esporte (Reconhecido)",
+      "salary": 627865,
+      "effect": {
+        "fatigueMultiplier": 0.99,
+        "fitnessGainMultiplier": 1.21
+      },
+      "description": "Otimiza carga de treino e reduz queda de fitness."
+    },
+    {
+      "id": "sports_scientist_elite",
+      "roleId": "sports_scientist",
+      "tier": "ELITE",
+      "name": "Cientista do Esporte (Elite)",
+      "salary": 1095348,
+      "effect": {
+        "fatigueMultiplier": 1.215,
+        "fitnessGainMultiplier": 1.485
+      },
+      "description": "Otimiza carga de treino e reduz queda de fitness."
+    },
+    {
+      "id": "mental_coach_promissor",
+      "roleId": "mental_coach",
+      "tier": "PROMISSOR",
+      "name": "Treinador Mental (Promissor)",
+      "salary": 324403,
+      "effect": {
+        "formBoostMultiplier": 0.935,
+        "moraleStability": 0.102
+      },
+      "description": "Aumenta forma e reduz oscilação emocional."
+    },
+    {
+      "id": "mental_coach_reconhecido",
+      "roleId": "mental_coach",
+      "tier": "RECONHECIDO",
+      "name": "Treinador Mental (Reconhecido)",
+      "salary": 580608,
+      "effect": {
+        "formBoostMultiplier": 1.21,
+        "moraleStability": 0.132
+      },
+      "description": "Aumenta forma e reduz oscilação emocional."
+    },
+    {
+      "id": "mental_coach_elite",
+      "roleId": "mental_coach",
+      "tier": "ELITE",
+      "name": "Treinador Mental (Elite)",
+      "salary": 1140778,
+      "effect": {
+        "formBoostMultiplier": 1.485,
+        "moraleStability": 0.162
+      },
+      "description": "Aumenta forma e reduz oscilação emocional."
+    },
+    {
+      "id": "data_scout_promissor",
+      "roleId": "data_scout",
+      "tier": "PROMISSOR",
+      "name": "Chefe de Análise de Mercado (Promissor)",
+      "salary": 308411,
+      "effect": {
+        "scoutingQuality": 0.17,
+        "marketDiscount": 0.068
+      },
+      "description": "Aumenta alcance do scout e melhora barganhas."
+    },
+    {
+      "id": "data_scout_reconhecido",
+      "roleId": "data_scout",
+      "tier": "RECONHECIDO",
+      "name": "Chefe de Análise de Mercado (Reconhecido)",
+      "salary": 615605,
+      "effect": {
+        "scoutingQuality": 0.22,
+        "marketDiscount": 0.088
+      },
+      "description": "Aumenta alcance do scout e melhora barganhas."
+    },
+    {
+      "id": "data_scout_elite",
+      "roleId": "data_scout",
+      "tier": "ELITE",
+      "name": "Chefe de Análise de Mercado (Elite)",
+      "salary": 1137980,
+      "effect": {
+        "scoutingQuality": 0.27,
+        "marketDiscount": 0.108
+      },
+      "description": "Aumenta alcance do scout e melhora barganhas."
+    }
+  ];
 
-  let SPONSOR_CATALOG = [
+let SPONSOR_CATALOG = [
     {
       id: "vale",
       name: "Vale",
@@ -2438,174 +2797,337 @@ function viewCareerCreate() {
   }
 
   /** Tática */
-  function viewTactics() {
-    return requireSave((save) => {
-      ensureSystems(save);
-      autoSyncRosterIfNeeded(save);
-      const club = getClub(save.career.clubId);
-      const players = save.squad.players;
-      const formation = save.tactics.formation;
-      const ovr = teamOverall(players, save.tactics.startingXI);
-      // Monta XI
-      const xiSet = new Set(save.tactics.startingXI || []);
-      const xiPlayers = players.filter((p) => xiSet.has(p.id)).sort((a, b) => b.overall - a.overall);
-      const xiRows = xiPlayers.map((p) => `
-        <tr>
-          <td>${esc(p.name)}</td>
-          <td class="center">${esc(p.pos)}</td>
-          <td class="center"><b>${esc(p.overall)}</b></td>
-        </tr>
-      `).join("");
-      writeSlot(state.settings.activeSlotId, save);
-      return `
-        <div class="card">
-          <div class="card-header">
-            <div>
-              <div class="card-title">Tática</div>
-              <div class="card-subtitle">${esc(club?.name || '')} • XI & Formação</div>
+
+    function viewTactics() {
+      return requireSave((save) => {
+        ensureSystems(save);
+        autoSyncRosterIfNeeded(save);
+
+        const club = getClub(save.career.clubId);
+        const players = (save.squad?.players || []).slice();
+
+        // Lineup
+        const xiIds = Array.isArray(save.tactics.startingXI) ? save.tactics.startingXI.slice() : [];
+        const benchIds = Array.isArray(save.tactics.bench) ? save.tactics.bench.slice() : [];
+
+        const xiSet = new Set(xiIds);
+        const benchSet = new Set(benchIds);
+
+        const formation = save.tactics.formation || '4-3-3';
+        const ovr = teamOverall(players, xiIds);
+
+        const getP = (id) => players.find(p => p.id === id) || null;
+        const fmtMoney = (n) => {
+          const cur = state.packData?.rules?.gameRules?.currency || 'BRL';
+          try { return Number(n||0).toLocaleString('pt-BR', { style:'currency', currency: cur }); } catch(e){ return String(n||0); }
+        };
+
+        // Normaliza: remove duplicados e garante 11/7
+        function normalizeLineupLocal(){
+          const uniq = (arr)=> Array.from(new Set((arr||[]).filter(Boolean)));
+          save.tactics.startingXI = uniq(save.tactics.startingXI).slice(0,11);
+          save.tactics.bench = uniq(save.tactics.bench).filter(id=>!save.tactics.startingXI.includes(id)).slice(0,7);
+
+          // garante 11 titulares
+          const sorted = players.slice().sort((a,b)=>(b.overall||0)-(a.overall||0));
+          const pickFree = (pred) => {
+            for (const p of sorted) {
+              if (save.tactics.startingXI.includes(p.id) || save.tactics.bench.includes(p.id)) continue;
+              if (pred && !pred(p)) continue;
+              return p.id;
+            }
+            return null;
+          };
+
+          // pelo menos 1 GK nos titulares
+          const hasGK = save.tactics.startingXI.some(id => (getP(id)?.pos || '').toUpperCase() === 'GK');
+          if (!hasGK) {
+            const gkId = pickFree(p => (p.pos||'').toUpperCase() === 'GK');
+            if (gkId) {
+              if (save.tactics.startingXI.length >= 11) save.tactics.startingXI.pop();
+              save.tactics.startingXI.push(gkId);
+            }
+          }
+
+          while (save.tactics.startingXI.length < 11) {
+            const id = pickFree();
+            if (!id) break;
+            save.tactics.startingXI.push(id);
+          }
+          while (save.tactics.bench.length < 7) {
+            const id = pickFree();
+            if (!id) break;
+            save.tactics.bench.push(id);
+          }
+
+          // capitão / bola parada: garante que existe e (preferível) está no XI
+          if (save.tactics.captainId && !save.tactics.startingXI.includes(save.tactics.captainId)) {
+            const cap = pickBestByOverall(players, save.tactics.startingXI);
+            if (cap) save.tactics.captainId = cap.id;
+          }
+          if (!save.tactics.captainId) {
+            const cap = pickBestByOverall(players, save.tactics.startingXI);
+            if (cap) save.tactics.captainId = cap.id;
+          }
+          if (!save.tactics.pkTakerId) save.tactics.pkTakerId = save.tactics.captainId;
+          if (!save.tactics.fkTakerId) save.tactics.fkTakerId = save.tactics.captainId;
+          if (!save.tactics.ckTakerId) save.tactics.ckTakerId = save.tactics.captainId;
+        }
+
+        // aplica normalização (sem mudar a ideia do usuário)
+        try { normalizeLineupLocal(); } catch(e) {}
+
+        const xiPlayers = save.tactics.startingXI.map(getP).filter(Boolean);
+        const benchPlayers = save.tactics.bench.map(getP).filter(Boolean);
+
+        // Board simples (não-3D): GK + linhas da formação
+        function buildBoard(){
+          const mapPos = (p)=> String(p.pos||'').toUpperCase();
+          const gk = xiPlayers.find(p => mapPos(p)==='GK') || xiPlayers[0] || null;
+          const defs = xiPlayers.filter(p => mapPos(p)==='DEF');
+          const mids = xiPlayers.filter(p => mapPos(p)==='MID');
+          const atts = xiPlayers.filter(p => mapPos(p)==='ATT');
+
+          const lines = formation.split('-').map(n => Number(n||0)).filter(n=>n>0);
+          const defN = lines[0] || 4;
+          const midN = lines[1] || 3;
+          const attN = lines[2] || 3;
+
+          const take = (arr, n)=> arr.slice(0, n);
+          const rest = (arr, n)=> arr.slice(n);
+
+          let useDefs = take(defs, defN);
+          let useMids = take(mids, midN);
+          let useAtts = take(atts, attN);
+
+          // completa faltas com outros do XI
+          const pool = xiPlayers.filter(p => p !== gk && !useDefs.includes(p) && !useMids.includes(p) && !useAtts.includes(p));
+          while (useDefs.length < defN && pool.length) useDefs.push(pool.shift());
+          while (useMids.length < midN && pool.length) useMids.push(pool.shift());
+          while (useAtts.length < attN && pool.length) useAtts.push(pool.shift());
+
+          const chip = (p)=> p ? `<div class="tactic-chip" title="${esc(p.name)} • ${esc(p.pos)} • OVR ${esc(p.overall)}">${esc(p.name)}</div>` : `<div class="tactic-chip empty">—</div>`;
+
+          return `
+            <div class="tactic-board">
+              <div class="tactic-row att">${useAtts.map(chip).join('')}</div>
+              <div class="tactic-row mid">${useMids.map(chip).join('')}</div>
+              <div class="tactic-row def">${useDefs.map(chip).join('')}</div>
+              <div class="tactic-row gk">${chip(gk)}</div>
             </div>
-            <span class="badge">OVR XI: ${ovr}</span>
-          </div>
-          <div class="card-body">
-            <div class="grid">
-              <div class="col-6">
-                <div class="label">Formação</div>
-                <select class="input" data-action="setFormation">
-                  <option value="4-3-3" ${formation === '4-3-3' ? 'selected' : ''}>4-3-3</option>
-                  <option value="4-4-2" ${formation === '4-4-2' ? 'selected' : ''}>4-4-2</option>
-                </select>
+          `;
+        }
+
+        // Lista com botões de ação
+        function playerLine(p, where){
+          const inXI = save.tactics.startingXI.includes(p.id);
+          const inBench = save.tactics.bench.includes(p.id);
+
+          const wherePill = inXI ? `<span class="pill pill-mini ok">Titular</span>` : (inBench ? `<span class="pill pill-mini warn">Banco</span>` : `<span class="pill pill-mini">Fora</span>`);
+
+          const actions = inXI
+            ? `<button class="btn btn-small" data-action="tacticsMove" data-player="${esc(p.id)}" data-to="BENCH">Banco</button>
+               <button class="btn btn-small btn-danger" data-action="tacticsMove" data-player="${esc(p.id)}" data-to="OUT">Remover</button>`
+            : (inBench
+                ? `<button class="btn btn-small" data-action="tacticsMove" data-player="${esc(p.id)}" data-to="XI">Titular</button>
+                   <button class="btn btn-small btn-danger" data-action="tacticsMove" data-player="${esc(p.id)}" data-to="OUT">Remover</button>`
+                : `<button class="btn btn-small" data-action="tacticsMove" data-player="${esc(p.id)}" data-to="XI">Titular</button>
+                   <button class="btn btn-small" data-action="tacticsMove" data-player="${esc(p.id)}" data-to="BENCH">Banco</button>`
+              );
+
+          return `
+            <div class="lineup-item">
+              <div class="lineup-left">
+                <div class="lineup-name">${esc(p.name)}</div>
+                <div class="muted small">${esc(p.pos)} • OVR <b>${esc(p.overall)}</b> • ${esc(p.age)}a • Valor ~ ${esc(p.valueEurMi || p.valueMi || '')}</div>
               </div>
-              <div class="col-6">
-                <div class="label">Autoescalar</div>
-                <button class="btn btn-primary" data-action="autoPickXI">Melhor XI</button>
-              
-  <div class="hub-card" data-go="/roster-update">
-    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_staff.png')}')"></div>
-    <div class="hub-overlay"></div>
-    <div class="hub-content">
-      <div class="hub-left">
-        <div class="hub-pill">🛰️</div>
-        <div>
-          <div class="hub-title">Atualizar Elencos</div>
-          <div class="hub-desc">Buscar elencos online (Wikipedia) e recalcular OVR</div>
-        </div>
-      </div>
-      <div class="hub-right">➡️</div>
-    </div>
-  </div>
-</div>
+              <div class="lineup-right">
+                ${wherePill}
+                <div class="lineup-actions">${actions}</div>
+              </div>
             </div>
-            <div class="sep"></div>
+          `;
+        }
 
-<div class="card-mini">
-  <div class="card-mini-title">Liderança & Bola Parada</div>
-  <div class="grid">
-    <div class="col-6">
-      <div class="label">Capitão</div>
-      <select class="input" data-action="setCaptain">
-        ${players.map(p=>`<option value="${esc(p.id)}" ${save.tactics.captainId===p.id?'selected':''}>${esc(p.name)} (${esc(p.pos)})</option>`).join('')}
-      </select>
-    </div>
-    <div class="col-6">
-      <div class="label">Batedor de Pênalti</div>
-      <select class="input" data-action="setSetPiece" data-field="pkTakerId">
-        ${players.map(p=>`<option value="${esc(p.id)}" ${save.tactics.pkTakerId===p.id?'selected':''}>${esc(p.name)} • OVR ${esc(p.overall)}</option>`).join('')}
-      </select>
-    </div>
-    <div class="col-6">
-      <div class="label">Batedor de Falta</div>
-      <select class="input" data-action="setSetPiece" data-field="fkTakerId">
-        ${players.map(p=>`<option value="${esc(p.id)}" ${save.tactics.fkTakerId===p.id?'selected':''}>${esc(p.name)} • OVR ${esc(p.overall)}</option>`).join('')}
-      </select>
-    </div>
-    <div class="col-6">
-      <div class="label">Batedor de Escanteio</div>
-      <select class="input" data-action="setSetPiece" data-field="ckTakerId">
-        ${players.map(p=>`<option value="${esc(p.id)}" ${save.tactics.ckTakerId===p.id?'selected':''}>${esc(p.name)} • OVR ${esc(p.overall)}</option>`).join('')}
-      </select>
-    </div>
-  </div>
-</div>
+        const poolSorted = players.slice().sort((a,b)=>(b.overall||0)-(a.overall||0));
+        const xiHtml = xiPlayers.map(p=>playerLine(p,'XI')).join('') || `<div class="muted">XI vazio.</div>`;
+        const benchHtml = benchPlayers.map(p=>playerLine(p,'BENCH')).join('') || `<div class="muted">Banco vazio.</div>`;
+        const poolHtml = poolSorted.map(p=>playerLine(p,'POOL')).join('');
 
-<div class="sep"></div>
+        writeSlot(state.settings.activeSlotId, save);
 
-<div class="card-mini">
-  <div class="card-mini-title">Plano de Jogo</div>
-  <div class="grid">
-    <div class="col-6">
-      <div class="label">Abordagem</div>
-      <select class="input" data-action="setTacticParam" data-field="approach">
-        <option value="balanced" ${save.tactics.approach === 'balanced' ? 'selected' : ''}>Equilibrado</option>
-        <option value="possession" ${save.tactics.approach === 'possession' ? 'selected' : ''}>Posse</option>
-        <option value="direct" ${save.tactics.approach === 'direct' ? 'selected' : ''}>Direto</option>
-        <option value="counter" ${save.tactics.approach === 'counter' ? 'selected' : ''}>Contra-ataque</option>
-      </select>
-    </div>
-    <div class="col-6">
-      <div class="label">Ritmo</div>
-      <select class="input" data-action="setTacticParam" data-field="tempo">
-        <option value="slow" ${save.tactics.tempo === 'slow' ? 'selected' : ''}>Lento</option>
-        <option value="normal" ${save.tactics.tempo === 'normal' ? 'selected' : ''}>Normal</option>
-        <option value="fast" ${save.tactics.tempo === 'fast' ? 'selected' : ''}>Rápido</option>
-      </select>
-    </div>
-    <div class="col-6">
-      <div class="label">Pressão</div>
-      <select class="input" data-action="setTacticParam" data-field="pressure">
-        <option value="low" ${save.tactics.pressure === 'low' ? 'selected' : ''}>Baixa</option>
-        <option value="medium" ${save.tactics.pressure === 'medium' ? 'selected' : ''}>Média</option>
-        <option value="high" ${save.tactics.pressure === 'high' ? 'selected' : ''}>Alta</option>
-      </select>
-    </div>
-    <div class="col-6">
-      <div class="label">Linha Defensiva</div>
-      <select class="input" data-action="setTacticParam" data-field="defLine">
-        <option value="deep" ${save.tactics.defLine === 'deep' ? 'selected' : ''}>Baixa</option>
-        <option value="medium" ${save.tactics.defLine === 'medium' ? 'selected' : ''}>Média</option>
-        <option value="high" ${save.tactics.defLine === 'high' ? 'selected' : ''}>Alta</option>
-      </select>
-    </div>
-    <div class="col-6">
-      <div class="label">Amplitude</div>
-      <select class="input" data-action="setTacticParam" data-field="width">
-        <option value="narrow" ${save.tactics.width === 'narrow' ? 'selected' : ''}>Estreita</option>
-        <option value="normal" ${save.tactics.width === 'normal' ? 'selected' : ''}>Normal</option>
-        <option value="wide" ${save.tactics.width === 'wide' ? 'selected' : ''}>Larga</option>
-      </select>
-    </div>
-    <div class="col-6">
-      <div class="label">Foco</div>
-      <select class="input" data-action="setTacticParam" data-field="focus">
-        <option value="mixed" ${save.tactics.focus === 'mixed' ? 'selected' : ''}>Misto</option>
-        <option value="wings" ${save.tactics.focus === 'wings' ? 'selected' : ''}>Pelos lados</option>
-        <option value="middle" ${save.tactics.focus === 'middle' ? 'selected' : ''}>Pelo meio</option>
-      </select>
-    </div>
-  </div>
-  <div class="sep"></div>
-  <div class="mini">
-    Dica: <b>Pressão alta</b> e <b>ritmo rápido</b> criam mais chances, mas aumentam o risco defensivo.
-  </div>
-  <div class="sep"></div>
-  <button class="btn" data-action="resetTactics">Resetar Plano</button>
-</div>
-<div class="sep"></div>
-            <div class="notice">Sua escalação é salva automaticamente. Selecione jogadores no Elenco para ajustar.</div>
-            <div class="sep"></div>
-            <table class="table">
-              <thead><tr><th>Jogador</th><th class="center">Pos</th><th class="center">OVR</th></tr></thead>
-              <tbody>${xiRows || `<tr><td colspan='3' class='mini'>XI vazio. Use autoescalar.</td></tr>`}</tbody>
-            </table>
-            <div class="sep"></div>
-            <div class="row">
-              <button class="btn btn-primary" data-go="/hub">Voltar</button>
-              <button class="btn" data-go="/squad">Ir para Elenco</button>
+        return `
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Tática</div>
+                <div class="card-subtitle">${esc(club?.name || '')} • Escalação, Plano e Bola Parada</div>
+              </div>
+              <span class="badge">OVR XI: ${ovr}</span>
+            </div>
+            <div class="card-body">
+              <div class="grid">
+                <div class="col-6">
+                  <div class="label">Formação</div>
+                  <select class="input" data-action="setFormation">
+                    <option value="4-3-3" ${formation === '4-3-3' ? 'selected' : ''}>4-3-3</option>
+                    <option value="4-4-2" ${formation === '4-4-2' ? 'selected' : ''}>4-4-2</option>
+                  </select>
+                </div>
+                <div class="col-6">
+                  <div class="label">Ações rápidas</div>
+                  <div class="row" style="gap:8px; flex-wrap:wrap;">
+                    <button class="btn btn-primary" data-action="autoPickXI">Melhor XI</button>
+                    <button class="btn" data-action="autoPickBench">Auto Banco</button>
+                    <button class="btn btn-danger" data-action="resetTactics">Resetar Plano</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="sep"></div>
+
+              <div class="card-mini">
+                <div class="card-mini-title">Quadro Tático (2D)</div>
+                <div class="mini">Arraste não disponível ainda — mas você já consegue definir titulares e banco.</div>
+                <div style="margin-top:10px;">
+                  ${buildBoard()}
+                </div>
+              </div>
+
+              <div class="sep"></div>
+
+              <div class="grid">
+                <div class="col-6">
+                  <div class="card-mini">
+                    <div class="card-mini-title">Titulares (11)</div>
+                    ${xiHtml}
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="card-mini">
+                    <div class="card-mini-title">Banco (7)</div>
+                    ${benchHtml}
+                  </div>
+                </div>
+              </div>
+
+              <div class="sep"></div>
+
+              <div class="card-mini">
+                <div class="card-mini-title">Liderança & Bola Parada</div>
+                <div class="grid">
+                  <div class="col-6">
+                    <div class="label">Capitão</div>
+                    <select class="input" data-action="setCaptain">
+                      ${players.map(p=>`<option value="${esc(p.id)}" ${save.tactics.captainId===p.id?'selected':''}>${esc(p.name)} (${esc(p.pos)})</option>`).join('')}
+                    </select>
+                  </div>
+                  <div class="col-6">
+                    <div class="label">Batedor de Pênalti</div>
+                    <select class="input" data-action="setSetPiece" data-field="pkTakerId">
+                      ${players.map(p=>`<option value="${esc(p.id)}" ${save.tactics.pkTakerId===p.id?'selected':''}>${esc(p.name)} • OVR ${esc(p.overall)}</option>`).join('')}
+                    </select>
+                  </div>
+                  <div class="col-6">
+                    <div class="label">Batedor de Falta</div>
+                    <select class="input" data-action="setSetPiece" data-field="fkTakerId">
+                      ${players.map(p=>`<option value="${esc(p.id)}" ${save.tactics.fkTakerId===p.id?'selected':''}>${esc(p.name)} • OVR ${esc(p.overall)}</option>`).join('')}
+                    </select>
+                  </div>
+                  <div class="col-6">
+                    <div class="label">Batedor de Escanteio</div>
+                    <select class="input" data-action="setSetPiece" data-field="ckTakerId">
+                      ${players.map(p=>`<option value="${esc(p.id)}" ${save.tactics.ckTakerId===p.id?'selected':''}>${esc(p.name)} • OVR ${esc(p.overall)}</option>`).join('')}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="sep"></div>
+
+              <div class="card-mini">
+                <div class="card-mini-title">Plano de Jogo</div>
+                <div class="grid">
+                  <div class="col-6">
+                    <div class="label">Abordagem</div>
+                    <select class="input" data-action="setTacticParam" data-field="approach">
+                      <option value="balanced" ${save.tactics.approach === 'balanced' ? 'selected' : ''}>Equilibrado</option>
+                      <option value="possession" ${save.tactics.approach === 'possession' ? 'selected' : ''}>Posse</option>
+                      <option value="direct" ${save.tactics.approach === 'direct' ? 'selected' : ''}>Direto</option>
+                      <option value="counter" ${save.tactics.approach === 'counter' ? 'selected' : ''}>Contra-ataque</option>
+                    </select>
+                  </div>
+                  <div class="col-6">
+                    <div class="label">Ritmo</div>
+                    <select class="input" data-action="setTacticParam" data-field="tempo">
+                      <option value="slow" ${save.tactics.tempo === 'slow' ? 'selected' : ''}>Lento</option>
+                      <option value="normal" ${save.tactics.tempo === 'normal' ? 'selected' : ''}>Normal</option>
+                      <option value="fast" ${save.tactics.tempo === 'fast' ? 'selected' : ''}>Rápido</option>
+                    </select>
+                  </div>
+                  <div class="col-6">
+                    <div class="label">Pressão</div>
+                    <select class="input" data-action="setTacticParam" data-field="pressure">
+                      <option value="low" ${save.tactics.pressure === 'low' ? 'selected' : ''}>Baixa</option>
+                      <option value="medium" ${save.tactics.pressure === 'medium' ? 'selected' : ''}>Média</option>
+                      <option value="high" ${save.tactics.pressure === 'high' ? 'selected' : ''}>Alta</option>
+                    </select>
+                  </div>
+                  <div class="col-6">
+                    <div class="label">Linha Defensiva</div>
+                    <select class="input" data-action="setTacticParam" data-field="defLine">
+                      <option value="deep" ${save.tactics.defLine === 'deep' ? 'selected' : ''}>Baixa</option>
+                      <option value="medium" ${save.tactics.defLine === 'medium' ? 'selected' : ''}>Média</option>
+                      <option value="high" ${save.tactics.defLine === 'high' ? 'selected' : ''}>Alta</option>
+                    </select>
+                  </div>
+                  <div class="col-6">
+                    <div class="label">Amplitude</div>
+                    <select class="input" data-action="setTacticParam" data-field="width">
+                      <option value="narrow" ${save.tactics.width === 'narrow' ? 'selected' : ''}>Estreita</option>
+                      <option value="normal" ${save.tactics.width === 'normal' ? 'selected' : ''}>Normal</option>
+                      <option value="wide" ${save.tactics.width === 'wide' ? 'selected' : ''}>Larga</option>
+                    </select>
+                  </div>
+                  <div class="col-6">
+                    <div class="label">Foco</div>
+                    <select class="input" data-action="setTacticParam" data-field="focus">
+                      <option value="mixed" ${save.tactics.focus === 'mixed' ? 'selected' : ''}>Misto</option>
+                      <option value="wings" ${save.tactics.focus === 'wings' ? 'selected' : ''}>Pelos lados</option>
+                      <option value="middle" ${save.tactics.focus === 'middle' ? 'selected' : ''}>Pelo meio</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="sep"></div>
+                <div class="mini">
+                  Dica: <b>Pressão alta</b> e <b>ritmo rápido</b> criam mais chances, mas aumentam o risco defensivo.
+                </div>
+              </div>
+
+              <div class="sep"></div>
+
+              <div class="card-mini">
+                <div class="card-mini-title">Plantel (23)</div>
+                <div class="mini">Use os botões para mover jogadores entre Titulares, Banco e Fora.</div>
+                <div style="margin-top:10px;">
+                  ${poolHtml}
+                </div>
+              </div>
+
+              <div class="sep"></div>
+
+              <div class="row">
+                <button class="btn btn-primary" data-go="/hub">Voltar</button>
+                <button class="btn" data-go="/squad">Ver Elenco (lista)</button>
+                <button class="btn" data-go="/calendar">Calendário</button>
+              </div>
             </div>
           </div>
-        </div>
-      `;
-    });
-  }
+        `;
+      });
+    }
+
+
 
   /** Treinos */
   function viewTraining() {
@@ -4827,7 +5349,7 @@ function rankByStrength(ids){ return (ids || []).slice().filter(Boolean).sort((a
           applyGroupResult(g.tableObj, fx.homeId, fx.awayId, sim.hg, sim.ag);
           g.played.push({ matchday: md+1, homeId: fx.homeId, awayId: fx.awayId, hg: sim.hg, ag: sim.ag });
           const stats = buildMatchStats(fx.homeId, fx.awayId, sim, save);
-          const timeline = buildTimelineForMatch(fx.homeId, fx.awayId, sim, save);
+          const timeline = buildTimelineForMatch(fx.homeId, fx.awayId, sim.hg, sim.ag);
           playedMatches.push({ comp: 'LIB', homeId: fx.homeId, awayId: fx.awayId, hg: sim.hg, ag: sim.ag, stats, timeline });
         }
         g.table = sortMiniTable(Object.values(g.tableObj));
@@ -4863,7 +5385,7 @@ function rankByStrength(ids){ return (ids || []).slice().filter(Boolean).sort((a
           m.played = true; m.hg = sim.hg; m.ag = sim.ag;
           applyGroupResult(ucl.leaguePhase.tableObj, m.homeId, m.awayId, sim.hg, sim.ag);
           const stats = buildMatchStats(m.homeId, m.awayId, sim, save);
-          const timeline = buildTimelineForMatch(m.homeId, m.awayId, sim, save);
+          const timeline = buildTimelineForMatch(m.homeId, m.awayId, sim.hg, sim.ag);
           playedMatches.push({ comp: 'UCL', homeId: m.homeId, awayId: m.awayId, hg: sim.hg, ag: sim.ag, stats, timeline });
         }
         ucl.leaguePhase.table = sortMiniTable(Object.values(ucl.leaguePhase.tableObj));
@@ -4918,7 +5440,7 @@ function rankByStrength(ids){ return (ids || []).slice().filter(Boolean).sort((a
       m.hg = sim.hg; m.ag = sim.ag;
       m.winnerId = (sim.hg > sim.ag) ? m.homeId : (sim.hg < sim.ag ? m.awayId : (Math.random() < 0.5 ? m.homeId : m.awayId));
       const stats = buildMatchStats(m.homeId, m.awayId, sim, save);
-      const timeline = buildTimelineForMatch(m.homeId, m.awayId, sim, save);
+      const timeline = buildTimelineForMatch(m.homeId, m.awayId, sim.hg, sim.ag);
       playedMatches.push({ homeId: m.homeId, awayId: m.awayId, hg: sim.hg, ag: sim.ag, winnerId: m.winnerId, stats, timeline });
       winners.push(m.winnerId);
       }
@@ -6238,6 +6760,7 @@ function viewTransfers() {
           state.settings.selectedPackId = packId;
           saveSettings();
           await loadPackData();
+    await loadExternalCatalogs();
           route();
         });
       }
@@ -6503,18 +7026,143 @@ if (action === 'resetTactics') {
   });
   return;
 }
-
       if (action === 'autoPickXI') {
         el.addEventListener('click', () => {
           const save = activeSave();
           if (!save) return;
           ensureSystems(save);
           save.tactics.startingXI = buildDefaultXI(save.squad.players, save.tactics.formation);
+          save.tactics.bench = buildDefaultBench(save.squad.players, save.tactics.startingXI, 7);
+          const cap = pickBestByOverall(save.squad.players, save.tactics.startingXI);
+          if (cap) {
+            save.tactics.captainId = cap.id;
+            if (!save.tactics.pkTakerId) save.tactics.pkTakerId = cap.id;
+            if (!save.tactics.fkTakerId) save.tactics.fkTakerId = cap.id;
+            if (!save.tactics.ckTakerId) save.tactics.ckTakerId = cap.id;
+          }
           save.meta.updatedAt = nowIso();
           writeSlot(state.settings.activeSlotId, save);
           route();
         });
       }
+
+      if (action === 'autoPickBench') {
+        el.addEventListener('click', () => {
+          const save = activeSave();
+          if (!save) return;
+          ensureSystems(save);
+          save.tactics.bench = buildDefaultBench(save.squad.players, save.tactics.startingXI, 7);
+          save.meta.updatedAt = nowIso();
+          writeSlot(state.settings.activeSlotId, save);
+          route();
+        });
+      }
+
+      // Move jogador entre Titulares / Banco / Fora (tática jogável)
+      if (action === 'tacticsMove') {
+        el.addEventListener('click', () => {
+          const save = activeSave();
+          if (!save) return;
+          ensureSystems(save);
+
+          const pid = el.getAttribute('data-player');
+          const to = el.getAttribute('data-to');
+          if (!pid || !to) return;
+
+          const players = save.squad?.players || [];
+          const getOvr = (id) => (players.find(p => p.id === id)?.overall || 0);
+          const uniq = (arr) => Array.from(new Set((arr || []).filter(Boolean)));
+
+          let xi = uniq(save.tactics.startingXI);
+          let bench = uniq(save.tactics.bench).filter(id => !xi.includes(id));
+
+          // remove from current lists
+          xi = xi.filter(id => id !== pid);
+          bench = bench.filter(id => id !== pid);
+
+          const moveToBench = (id) => {
+            if (!id) return;
+            if (bench.includes(id) || xi.includes(id)) return;
+            if (bench.length >= 7) {
+              const worst = bench.reduce((w, x) => (getOvr(x) < getOvr(w) ? x : w), bench[0]);
+              bench = bench.filter(x => x !== worst);
+            }
+            bench.push(id);
+          };
+
+          if (to === 'XI') {
+            if (xi.length >= 11) {
+              const worst = xi.reduce((w, x) => (getOvr(x) < getOvr(w) ? x : w), xi[0]);
+              xi = xi.filter(x => x !== worst);
+              moveToBench(worst);
+              toast('XI cheio: substituímos automaticamente o menor OVR.');
+            }
+            xi.push(pid);
+          } else if (to === 'BENCH') {
+            if (bench.length >= 7) {
+              const worst = bench.reduce((w, x) => (getOvr(x) < getOvr(w) ? x : w), bench[0]);
+              bench = bench.filter(x => x !== worst);
+              toast('Banco cheio: removemos automaticamente o menor OVR do banco.');
+            }
+            bench.push(pid);
+          } else if (to === 'OUT') {
+            // já removido
+          }
+
+          // Normaliza e garante 11 titulares + GK
+          xi = uniq(xi).slice(0, 11);
+          bench = uniq(bench).filter(id => !xi.includes(id)).slice(0, 7);
+
+          const sorted = players.slice().sort((a,b) => (b.overall||0) - (a.overall||0));
+
+          // garante 1 GK
+          const hasGK = xi.some(id => (players.find(p => p.id === id)?.pos || '').toUpperCase() === 'GK');
+          if (!hasGK) {
+            const gk = sorted.find(p => (p.pos||'').toUpperCase() === 'GK' && !xi.includes(p.id) && !bench.includes(p.id));
+            if (gk) {
+              if (xi.length >= 11) {
+                const worst = xi.reduce((w, x) => (getOvr(x) < getOvr(w) ? x : w), xi[0]);
+                xi = xi.filter(x => x !== worst);
+                moveToBench(worst);
+              }
+              xi.push(gk.id);
+            }
+          }
+
+          // completa XI/bench com melhores disponíveis
+          for (const p of sorted) {
+            if (xi.length >= 11) break;
+            if (xi.includes(p.id) || bench.includes(p.id)) continue;
+            xi.push(p.id);
+          }
+          for (const p of sorted) {
+            if (bench.length >= 7) break;
+            if (xi.includes(p.id) || bench.includes(p.id)) continue;
+            bench.push(p.id);
+          }
+
+          save.tactics.startingXI = xi;
+          save.tactics.bench = bench;
+
+          // capitão / bola parada
+          if (save.tactics.captainId && !xi.includes(save.tactics.captainId)) {
+            const cap = pickBestByOverall(players, xi);
+            if (cap) save.tactics.captainId = cap.id;
+          }
+          if (!save.tactics.captainId) {
+            const cap = pickBestByOverall(players, xi);
+            if (cap) save.tactics.captainId = cap.id;
+          }
+          if (!save.tactics.pkTakerId) save.tactics.pkTakerId = save.tactics.captainId;
+          if (!save.tactics.fkTakerId) save.tactics.fkTakerId = save.tactics.captainId;
+          if (!save.tactics.ckTakerId) save.tactics.ckTakerId = save.tactics.captainId;
+
+          save.meta.updatedAt = nowIso();
+          writeSlot(state.settings.activeSlotId, save);
+          route();
+        });
+      }
+
       if (action === 'setTrainingPlan') {
         el.addEventListener('change', () => {
           const save = activeSave();
@@ -7152,7 +7800,7 @@ if (action === 'rejectOfferIn') {
             <div id="vfmContLog" class="vfmLog"></div>
             <div style="height:10px"></div>
             <div class="grid">
-              <div class="col-6"><div class="label">Posse</div><div><b>${(stats.possessionH ?? 50)}%</b> x <b>${(stats.possessionA ?? 50)}%</b></div></div>
+              <div class="col-6"><div class="label">Posse</div><div><b>${(stats.possH ?? stats.possessionH ?? 50)}%</b> x <b>${(stats.possA ?? stats.possessionA ?? 50)}%</b></div></div>
               <div class="col-6"><div class="label">Finalizações (no gol)</div><div><b>${stats.shotsH ?? 0}</b> (${stats.onH ?? 0}) x <b>${stats.shotsA ?? 0}</b> (${stats.onA ?? 0})</div></div>
               <div class="col-6"><div class="label">Faltas</div><div><b>${stats.foulsH ?? 0}</b> x <b>${stats.foulsA ?? 0}</b></div></div>
               <div class="col-6"><div class="label">Escanteios</div><div><b>${stats.cornersH ?? 0}</b> x <b>${stats.cornersA ?? 0}</b></div></div>
@@ -7224,6 +7872,7 @@ async function boot() {
     ensureSlots();
     await loadPacks();
     await loadPackData();
+    await loadExternalCatalogs();
     const badge = document.getElementById('buildBadge');
     if (badge) badge.textContent = `build ${BUILD_TAG}`;
     refreshFooterStatus();

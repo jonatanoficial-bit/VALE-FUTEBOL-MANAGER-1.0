@@ -1,7 +1,7 @@
 VALE FUTEBOL MANAGER 1.0
-Build Version: v1.34.0_part4_staff
-Build Date (UTC): 2026-02-12
-Build Time (UTC): 21:48:10
+Build Version: v1.34.1_hotfix_cont_staff_tactics
+Build Date (UTC): 2026-02-13
+Build Time (UTC): 17:16:40
 
 UPGRADE PRINCIPAL:
 - Staff agora funciona como "mercado de opções": 1 profissional por função (roleId)
@@ -12,3 +12,9 @@ UPGRADE PRINCIPAL:
 
 CACHE:
 - app.js / sw.js / index.html versionados por build (evita carregar versão antiga)
+HOTFIX (2026-02-13 17:16:40 UTC):
+- Continental: modal de narração agora abre corretamente (corrige ReferenceError UEFA_LIDS)
+- Continental: timeline agora respeita gols (buildTimelineForMatch com hg/ag)
+- Staff/Patrocínio: carrega catálogos externos no boot e ao trocar pacote
+- Staff: fallback embutido atualizado para o mesmo schema do /data/staff_catalog.json
+- Tática: tela agora permite mover jogadores entre Titulares/Banco/Fora e mostra quadro 2D simples
