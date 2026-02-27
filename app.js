@@ -64,8 +64,8 @@
     }
   }
 
-    const BUILD_TAG = "v1.34.1_hotfix_cont_staff_tactics";
-const BUILD_TIME_STR = "13/02/2026 17:16:40 UTC";
+    const BUILD_TAG = "v1.35.0_season_reset_champions";
+const BUILD_TIME_STR = "27/02/2026 12:44:40 UTC";
 
 // Ligas UEFA consideradas para preferência de continentais (evita ReferenceError no modal)
 const UEFA_LIDS = ['ENG_PREMIER','ESP_LALIGA','ITA_SERIE_A','GER_BUNDES','FRA_LIGUE_1','POR_LIGA'];
@@ -3247,11 +3247,12 @@ function viewCareerCreate() {
       'intercontinental': 'intercontinental'
     };
     const file = map[id] || id;
-    return `./assets/logos/competitions/${file}.png`;
+    return `assets/logos/competitions/${file}.png`;
   }
 
   function clubLogoPath(clubId) {
-    return `./assets/logos/clubs/${String(clubId || '').toUpperCase()}.png`;
+    if (!clubId) return 'assets/club_placeholder.svg';
+    return `assets/logos/${String(clubId || '').toUpperCase()}.png`;
   }
 
   function avatarPath(avatarId) {
@@ -3290,7 +3291,7 @@ function viewCareerCreate() {
               <img class="champion-logo" src="${competitionLogoPath(ev.competitionId)}" alt="${esc(compName)}"
                 onerror="this.style.display='none'"/>
               <img class="champion-logo" src="${clubLogoPath(ev.clubId)}" alt="${esc(clubName)}"
-                onerror="this.style.display='none'"/>
+                onerror="this.onerror=null;this.src='assets/club_placeholder.svg';"/>
             </div>
             <div class="champion-info">
               <div class="champion-club"><b>${esc(clubName)}</b></div>
@@ -3396,6 +3397,18 @@ function viewCareerCreate() {
       totalRounds: rounds.length
     };
 
+    // ✅ Cerimônia do campeão da liga (sempre)
+    try {
+      const league = (state.packData?.competitions?.leagues || []).find(l => l.id === save.season.leagueId);
+      enqueueChampionCeremony(save, {
+        seasonId: save.season.id,
+        competitionId: save.season.leagueId,
+        competitionName: league?.name || save.season.leagueId,
+        clubId: championId,
+        clubName: getClub(championId)?.name || championId
+      });
+    } catch (e) {}
+
     if (!save.progress) save.progress = {};
     if (!Array.isArray(save.progress.seasons)) save.progress.seasons = [];
     save.progress.seasons.push({
@@ -3466,10 +3479,22 @@ try {
       // Helper para avaliar e registrar título se o usuário foi campeão
       function maybeAwardContinental(t, compId, compName, type) {
         if (!t || !t.championId) return;
+
+        // ✅ Cerimônia sempre que a competição tiver campeão
+        try {
+          enqueueChampionCeremony(save, {
+            seasonId: sid,
+            competitionId: compId,
+            competitionName: compName,
+            clubId: t.championId,
+            clubName: t.championName || getClub(t.championId)?.name || t.championId
+          });
+        } catch (e) {}
+
+        // Pontuação/troféu apenas se for o clube do usuário
         if (t.championId !== save.career.clubId) return;
         addCareerScore(save, Number(CAREER_SCORE_RULES.CONTINENTAL_TITLE || 400), `Título: ${compName}`);
         addTrophy(save, { seasonId: sid, type, competitionId: compId, competitionName: compName, clubId: save.career.clubId });
-        enqueueChampionCeremony(save, { seasonId: sid, competitionId: compId, competitionName: compName, clubId: save.career.clubId });
       }
 
       maybeAwardContinental(cont.libertadores, 'CONMEBOL_LIB', 'CONMEBOL Libertadores', 'CONTINENTAL');
@@ -3498,10 +3523,23 @@ try {
             playedAt: nowIso()
           };
         }
+        // ✅ Cerimônia sempre (mesmo que não seja o usuário)
+        try {
+          if (cont.intercontinental?.championId) {
+            enqueueChampionCeremony(save, {
+              seasonId: sid,
+              competitionId: 'intercontinental',
+              competitionName: 'Copa Intercontinental',
+              clubId: cont.intercontinental.championId,
+              clubName: cont.intercontinental.championName || getClub(cont.intercontinental.championId)?.name || cont.intercontinental.championId
+            });
+          }
+        } catch(e) {}
+
+        // Pontuação/troféu apenas se for o clube do usuário
         if (cont.intercontinental?.championId === save.career.clubId) {
           addCareerScore(save, 600, 'Título: Copa Intercontinental');
           addTrophy(save, { seasonId: sid, type: 'INTERCONTINENTAL', competitionId: 'intercontinental', competitionName: 'Copa Intercontinental', clubId: save.career.clubId });
-          enqueueChampionCeremony(save, { seasonId: sid, competitionId: 'intercontinental', competitionName: 'Copa Intercontinental', clubId: save.career.clubId });
         }
       }
     } catch (e) {}
@@ -3519,7 +3557,7 @@ try {
 
     // Promoção/Rebaixamento Brasil (A<->B)
     if (save.season.leagueId === 'BRA_SERIE_A' || save.season.leagueId === 'BRA_SERIE_B') {
-      applyBrazilPromotionRelegation(save);
+      try { applyBrazilPromotionRelegationOncePerSeason(save); } catch(e) { try { applyBrazilPromotionRelegation(save); } catch(_) {} }
     }
 
     // Finaliza tabelas das ligas paralelas do mundo (B1) e gera torneios continentais (B1.1)
@@ -3817,7 +3855,7 @@ if (userId && (m.homeId === userId || m.awayId === userId)) {
 
       // aplica swap A<->B
       try {
-        applyBrazilPromotionRelegation(save);
+        try { applyBrazilPromotionRelegationOncePerSeason(save); } catch(e) { try { applyBrazilPromotionRelegation(save); } catch(_) {} }
         save.progress.promotionRelegationApplied[sid] = true;
         save.meta.updatedAt = nowIso();
         return true;
@@ -4178,7 +4216,8 @@ function round2(n) { return Math.round(n * 100) / 100; }
   function logoClubUrl(clubId){
     // IMPORTANT: use relative paths without './' so GitHub Pages subpaths + hash routing don't break
     if(!clubId) return 'assets/club_placeholder.svg';
-    return `assets/logos/${clubId}.png`;
+    const id = String(clubId).toUpperCase();
+    return `assets/logos/${id}.png`;
   }
 function clubLogoHtml(clubId, size = 34) {
   const c = clubId ? getClub(clubId) : null;

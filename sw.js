@@ -2,12 +2,23 @@
    Objetivo: melhorar carregamento no GitHub Pages e permitir modo offline.
 */
 
-const CACHE_NAME = 'vfm-2026-cache-v1.34.1_hotfix_cont_staff_tactics-2026-02-13_171640';
+const CACHE_NAME = 'vfm-2026-cache-v1.35.0_season_reset_champions-2026-02-27_124440';
 const CORE_ASSETS = [
   './',
-  ''./styles.css?v=build_2026-02-13_171640_v1.34.1_hotfix_cont_staff_tactics',
+  './index.html?v=build_2026-02-27_124440_v1.35.0_season_reset_champions',
+  './styles.css?v=build_2026-02-27_124440_v1.35.0_season_reset_champions',
+  './app.js?v=build_2026-02-27_124440_v1.35.0_season_reset_champions',
   './manifest.json',
-  './favicon.ico'
+  './favicon.ico',
+  './assets/club_placeholder.svg',
+  './assets/club_placeholder.png',
+  './assets/logos/competitions/brasileirao_a.png',
+  './assets/logos/competitions/brasileirao_b.png',
+  './assets/logos/competitions/libertadores.png',
+  './assets/logos/competitions/sulamericana.png',
+  './assets/logos/competitions/champions.png',
+  './assets/logos/competitions/europa_league.png',
+  './assets/logos/competitions/intercontinental.png'
 ];
 
 self.addEventListener('install', (event) => {
