@@ -2,7 +2,7 @@
    Objetivo: melhorar carregamento no GitHub Pages e permitir modo offline.
 */
 
-const CACHE_NAME = 'vfm-2026-cache-v1.35.0_season_reset_champions-2026-02-27_124440';
+const CACHE_NAME = "vfm-cache-2026-02-27_131428-v1.35.1_promo_relegation_fix";
 const CORE_ASSETS = [
   './',
   './index.html?v=build_2026-02-27_124440_v1.35.0_season_reset_champions',

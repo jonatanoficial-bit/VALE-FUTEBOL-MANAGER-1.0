@@ -1,21 +1,3 @@
-VALE FUTEBOL MANAGER 1.0
-Build Version: v1.35.0_season_reset_champions
-Build Date (UTC): 2026-02-27
-Build Time (UTC): 12:44:40
-
-UPGRADE PRINCIPAL:
-- Fim de temporada 100% estável: ao finalizar a última rodada, a temporada é marcada como concluída e a tela de encerramento aparece automaticamente.
-- Cerimônia do campeão em TODO campeonato finalizado:
-  - Liga do usuário (Série A/B ou outras)
-  - Libertadores, Sul-Americana, Champions, Europa League
-  - Copa Intercontinental
-  (Sempre com logo da competição + logo do campeão)
-- Promoção/Rebaixamento Brasil corrigido e idempotente:
-  - 4 últimos da Série A descem para Série B
-  - 4 primeiros da Série B sobem para Série A
-  - Aplicado uma vez por temporada e refletido no elenco de clubes da próxima temporada
-- Logos: corrigido caminho dos logos no overlay (clubes e competições) para funcionar no GitHub Pages/offline.
-
-CACHE:
-- index.html / app.js / styles.css / sw.js versionados por build (evita carregar versão antiga)
-- Service Worker corrigido (CORE_ASSETS com aspas corretas e cache atualizado)
+VALE FUTEBOL MANAGER 2026
+BUILD: v1.35.1_promo_relegation_fix
+DATE(UTC): 2026-02-27 13:14:28

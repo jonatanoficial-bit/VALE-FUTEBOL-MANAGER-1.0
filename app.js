@@ -64,8 +64,8 @@
     }
   }
 
-    const BUILD_TAG = "v1.35.0_season_reset_champions";
-const BUILD_TIME_STR = "27/02/2026 12:44:40 UTC";
+    const BUILD_TAG = "v1.35.1_promo_relegation_fix";
+const BUILD_TIME_STR = "2026-02-27 13:14:28 UTC";
 
 // Ligas UEFA consideradas para preferência de continentais (evita ReferenceError no modal)
 const UEFA_LIDS = ['ENG_PREMIER','ESP_LALIGA','ITA_SERIE_A','GER_BUNDES','FRA_LIGUE_1','POR_LIGA'];
@@ -3853,13 +3853,15 @@ if (userId && (m.homeId === userId || m.awayId === userId)) {
       // garante tabelas finais consistentes (liga do usuário + liga paralela)
       try { finalizeSeasonIfNeeded(save); } catch (e) {}
 
-      // aplica swap A<->B
+      // aplica swap A<->B (4 sobem / 4 descem)
       try {
-        try { applyBrazilPromotionRelegationOncePerSeason(save); } catch(e) { try { applyBrazilPromotionRelegation(save); } catch(_) {} }
+        applyBrazilPromotionRelegation(save);
         save.progress.promotionRelegationApplied[sid] = true;
+        if (!save.meta) save.meta = {};
         save.meta.updatedAt = nowIso();
         return true;
       } catch (e) {
+        console.warn("[PROMO/REBAIX] Falha ao aplicar promoção/rebaixamento:", e);
         return false;
       }
     }
