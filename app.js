@@ -64,10 +64,10 @@
     }
   }
 
-    const BUILD_TAG = "v1.36.0_foundation_stabilization";
-const BUILD_TIME_STR = "2026-03-06 19:30:51 UTC";
-  const BUILD_PHASE = "Fase 1 - Estabilizacao da Base";
-  const PROJECT_COMPLETION = "38%";
+    const BUILD_TAG = "v1.37.0_career_loop_complete";
+const BUILD_TIME_STR = "2026-03-06 19:58:00 UTC";
+  const BUILD_PHASE = "Fase 2 - Loop Jogavel Completo da Carreira";
+  const PROJECT_COMPLETION = "46%";
 
 // Ligas UEFA consideradas para preferência de continentais (evita ReferenceError no modal)
 const UEFA_LIDS = ['ENG_PREMIER','ESP_LALIGA','ITA_SERIE_A','GER_BUNDES','FRA_LIGUE_1','POR_LIGA'];
@@ -2388,12 +2388,58 @@ function viewCareerCreate() {
   }
 
   /** HUB do treinador */
+
+  function getSeasonDashboardData(save) {
+    ensureSystems(save);
+    ensureSeason(save);
+    const clubId = save?.career?.clubId;
+    const rounds = save?.season?.rounds || [];
+    const currentRound = Number(save?.season?.currentRound || 0);
+    const totalRounds = Number(rounds.length || 0);
+    const table = Array.isArray(save?.season?.table) ? save.season.table : [];
+    const sorted = [...table].sort((a,b)=> (b.pts-a.pts) || ((b.gd||0)-(a.gd||0)) || ((b.gf||0)-(a.gf||0)) || String(a.clubId).localeCompare(String(b.clubId)));
+    const userPos = Math.max(1, sorted.findIndex(r => r.clubId === clubId) + 1) || '-';
+    const nextRoundMatches = rounds[currentRound] || [];
+    const lastRoundMatches = currentRound > 0 ? (rounds[currentRound - 1] || []) : [];
+    const nextMatch = nextRoundMatches.find(m => m.homeId === clubId || m.awayId === clubId) || null;
+    const lastMatch = [...lastRoundMatches].reverse().find(m => m.homeId === clubId || m.awayId === clubId) || null;
+    const progressPct = totalRounds ? Math.max(0, Math.min(100, Math.round((currentRound / totalRounds) * 100))) : 0;
+    const league = (state.packData?.competitions?.leagues || []).find(l => l.id === save.season.leagueId) || null;
+    return { clubId, currentRound, totalRounds, table: sorted, userPos, nextMatch, lastMatch, progressPct, league };
+  }
+
+  function getFixtureSummary(match, userClubId) {
+    if (!match) return null;
+    const home = getClub(match.homeId);
+    const away = getClub(match.awayId);
+    const isHome = match.homeId === userClubId;
+    const opponent = getClub(isHome ? match.awayId : match.homeId);
+    const played = !!match.played;
+    const result = played ? `${match.hg} x ${match.ag}` : 'A jogar';
+    let outcome = 'Pendente';
+    if (played) {
+      if (match.hg === match.ag) outcome = 'Empate';
+      else {
+        const userWon = (isHome && match.hg > match.ag) || (!isHome && match.ag > match.hg);
+        outcome = userWon ? 'Vitória' : 'Derrota';
+      }
+    }
+    return {
+      played,
+      isHome,
+      homeName: home?.short || home?.name || match.homeId,
+      awayName: away?.short || away?.name || match.awayId,
+      opponentName: opponent?.name || opponent?.short || 'Adversário',
+      venue: isHome ? 'Casa' : 'Fora',
+      result,
+      outcome
+    };
+  }
+
   function viewHub() {
     return requireSave((save) => {
       ensureSystems(save);
 
-      // HUB é o lobby do usuário dentro do jogo. Se ainda não escolheu clube,
-      // força o fluxo correto: Escolha de Clube -> Tutorial -> HUB.
       if (!save?.career?.clubId) {
         return `
           <div class="card">
@@ -2417,10 +2463,39 @@ function viewCareerCreate() {
       }
 
       const club = getClub(save.career.clubId);
-      // Format cash and current sponsor for display
       const currency = state.packData?.rules?.gameRules?.currency || 'BRL';
       const cashStr = (save.finance?.cash || 0).toLocaleString('pt-BR', { style: 'currency', currency });
       const sponsorName = save.sponsorship?.current?.name || 'Nenhum';
+      const dash = getSeasonDashboardData(save);
+      const nextFx = getFixtureSummary(dash.nextMatch, save.career.clubId);
+      const lastFx = getFixtureSummary(dash.lastMatch, save.career.clubId);
+      const totalTeams = dash.table.length || 20;
+      const zoneLabel = dash.userPos <= 4 ? 'Zona alta' : dash.userPos >= Math.max(17, totalTeams - 3) ? 'Pressão' : 'Estável';
+      const nextMatchBlock = nextFx ? `
+        <div class="season-card season-card-highlight" data-go="/matches">
+          <div class="season-card-label">Próximo jogo</div>
+          <div class="season-card-value">${esc(nextFx.venue)} • vs ${esc(nextFx.opponentName)}</div>
+          <div class="season-card-meta">Rodada ${dash.currentRound + 1}/${dash.totalRounds} • ${esc(dash.league?.name || save.season.leagueId)}</div>
+          <div class="season-card-action">Ir para partida</div>
+        </div>` : `
+        <div class="season-card season-card-highlight" data-go="/matches">
+          <div class="season-card-label">Próximo jogo</div>
+          <div class="season-card-value">Temporada concluída</div>
+          <div class="season-card-meta">Prepare a próxima temporada</div>
+          <div class="season-card-action">Ver temporada</div>
+        </div>`;
+      const lastMatchBlock = lastFx ? `
+        <div class="season-card" data-go="/matches">
+          <div class="season-card-label">Último resultado</div>
+          <div class="season-card-value">${esc(lastFx.result)} • ${esc(lastFx.outcome)}</div>
+          <div class="season-card-meta">${esc(lastFx.homeName)} vs ${esc(lastFx.awayName)}</div>
+        </div>` : `
+        <div class="season-card" data-go="/matches">
+          <div class="season-card-label">Último resultado</div>
+          <div class="season-card-value">Ainda sem partidas</div>
+          <div class="season-card-meta">Use o calendário para iniciar a carreira</div>
+        </div>`;
+
       return `
         <div class="card">
           <div class="card-header">
@@ -2431,221 +2506,103 @@ function viewCareerCreate() {
             <span class="badge">Caixa: ${cashStr}</span>
           </div>
           <div class="card-body">
-            <div class="kv">
-              <span class="small">Patrocínio</span>
-              <b>${esc(sponsorName)}</b>
+            <div class="kv"><span class="small">Patrocínio</span><b>${esc(sponsorName)}</b></div>
+            <div class="kv"><span class="small">Meta da Temporada</span><b>${esc(save.career.objective?.label || '—')}</b></div>
+            <div class="kv"><span class="small">Temporada</span><b>${esc(save.season?.id || '')}</b></div>
+
+            <div class="season-overview-grid">
+              ${nextMatchBlock}
+              <div class="season-card">
+                <div class="season-card-label">Posição atual</div>
+                <div class="season-card-value">${esc(String(dash.userPos))}º / ${esc(String(totalTeams))}</div>
+                <div class="season-card-meta">${esc(zoneLabel)} • Liga em andamento</div>
+              </div>
+              <div class="season-card">
+                <div class="season-card-label">Progresso da temporada</div>
+                <div class="season-card-value">${esc(String(dash.progressPct))}%</div>
+                <div class="progress-mini"><span style="width:${dash.progressPct}%"></span></div>
+                <div class="season-card-meta">${esc(String(dash.currentRound))} rodadas concluídas de ${esc(String(dash.totalRounds))}</div>
+              </div>
+              ${lastMatchBlock}
             </div>
 
-<div class="kv">
-  <span class="small">Meta da Temporada</span>
-  <b>${esc(save.career.objective?.label || '—')}</b>
-</div>
-<div class="kv">
-  <span class="small">Temporada</span>
-  <b>${esc(save.season?.id || '')}</b>
-</div>
+            <div class="hub-quickbar">
+              <button class="btn btn-primary" data-go="/matches">Continuar Temporada</button>
+              <button class="btn" data-go="/calendar">Ver Calendário</button>
+              <button class="btn" data-go="/competitions">Tabela</button>
+              <button class="btn" data-go="/save">Salvar progresso</button>
+            </div>
 
             <div class="sep"></div>
             <div class="hub-grid">
-  <div class="hub-card" data-go="/career">
-    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
-    <div class="hub-overlay"></div>
-    <div class="hub-content">
-      <div class="hub-left">
-        <div class="hub-pill">🏆</div>
-        <div>
-          <div class="hub-title">Carreira</div>
-          <div class="hub-desc">Hall da fama, títulos e reputação</div>
-        </div>
-      </div>
-      <div class="hub-cta">Abrir</div>
-    </div>
-  </div>
-
-  <div class="hub-card" data-go="/matches">
-    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_match.png')}')"></div>
-    <div class="hub-overlay"></div>
-    <div class="hub-content">
-      <div class="hub-left">
-        <div class="hub-pill">⚽</div>
-        <div>
-          <div class="hub-title">Partida</div>
-          <div class="hub-desc">Dispute, simule e acompanhe eventos ao vivo</div>
-        </div>
-      </div>
-      <div class="hub-cta">Abrir</div>
-    </div>
-  </div>
-
-  <div class="hub-card" data-go="/calendar">
-    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
-    <div class="hub-overlay"></div>
-    <div class="hub-content">
-      <div class="hub-left">
-        <div class="hub-pill">🗓️</div>
-        <div>
-          <div class="hub-title">Calendário</div>
-          <div class="hub-desc">Próximos jogos, rodadas e agenda</div>
-        </div>
-      </div>
-      <div class="hub-cta">Ver</div>
-    </div>
-  </div>
-
-  <div class="hub-card" data-go="/competitions">
-    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_match.png')}')"></div>
-    <div class="hub-overlay"></div>
-    <div class="hub-content">
-      <div class="hub-left">
-        <div class="hub-pill">🏆</div>
-        <div>
-          <div class="hub-title">Competições</div>
-          <div class="hub-desc">Tabelas, continentais e títulos</div>
-        </div>
-      </div>
-      <div class="hub-cta">Entrar</div>
-    </div>
-  </div>
-
-  <div class="hub-card" data-go="/training">
-    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_staff.png')}')"></div>
-    <div class="hub-overlay"></div>
-    <div class="hub-content">
-      <div class="hub-left">
-        <div class="hub-pill">🏋️</div>
-        <div>
-          <div class="hub-title">Treino</div>
-          <div class="hub-desc">Evolua o elenco e ajuste intensidade</div>
-        </div>
-      </div>
-      <div class="hub-cta">Treinar</div>
-    </div>
-  </div>
-
-  <div class="hub-card" data-go="/staff">
-    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_staff.png')}')"></div>
-    <div class="hub-overlay"></div>
-    <div class="hub-content">
-      <div class="hub-left">
-        <div class="hub-pill">🎧</div>
-        <div>
-          <div class="hub-title">Staff</div>
-          <div class="hub-desc">Comissão técnica e funções do clube</div>
-        </div>
-      </div>
-      <div class="hub-cta">Abrir</div>
-    </div>
-  </div>
-
-  <div class="hub-card" data-go="/sponsorship">
-    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_sponsor.png')}')"></div>
-    <div class="hub-overlay"></div>
-    <div class="hub-content">
-      <div class="hub-left">
-        <div class="hub-pill">🤝</div>
-        <div>
-          <div class="hub-title">Patrocínio</div>
-          <div class="hub-desc">Contratos, metas e bônus financeiros</div>
-        </div>
-      </div>
-      <div class="hub-cta">Negociar</div>
-    </div>
-  </div>
-
-  <div class="hub-card" data-go="/transfers">
-    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
-    <div class="hub-overlay"></div>
-    <div class="hub-content">
-      <div class="hub-left">
-        <div class="hub-pill">🔁</div>
-        <div>
-          <div class="hub-title">Mercado</div>
-          <div class="hub-desc">Compras, vendas e empréstimos</div>
-        </div>
-      </div>
-      <div class="hub-cta">Ver</div>
-    </div>
-  </div>
-
-  <div class="hub-card" data-go="/finance">
-    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_sponsor.png')}')"></div>
-    <div class="hub-overlay"></div>
-    <div class="hub-content">
-      <div class="hub-left">
-        <div class="hub-pill">💰</div>
-        <div>
-          <div class="hub-title">Finanças</div>
-          <div class="hub-desc">Caixa, receitas, despesas e balanço</div>
-        </div>
-      </div>
-      <div class="hub-cta">Abrir</div>
-    </div>
-  </div>
-
-  <div class="hub-card" data-go="/squad">
-    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_match.png')}')"></div>
-    <div class="hub-overlay"></div>
-    <div class="hub-content">
-      <div class="hub-left">
-        <div class="hub-pill">👥</div>
-        <div>
-          <div class="hub-title">Elenco</div>
-          <div class="hub-desc">Jogadores, status e evolução</div>
-        </div>
-      </div>
-      <div class="hub-cta">Abrir</div>
-    </div>
-  </div>
-
-  <div class="hub-card" data-go="/tactics">
-    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_staff.png')}')"></div>
-    <div class="hub-overlay"></div>
-    <div class="hub-content">
-      <div class="hub-left">
-        <div class="hub-pill">📋</div>
-        <div>
-          <div class="hub-title">Tática</div>
-          <div class="hub-desc">Formação, estilo e instruções</div>
-        </div>
-      </div>
-      <div class="hub-cta">Editar</div>
-    </div>
-  </div>
-
-  <div class="hub-card" data-go="/save">
-    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
-    <div class="hub-overlay"></div>
-    <div class="hub-content">
-      <div class="hub-left">
-        <div class="hub-pill">💾</div>
-        <div>
-          <div class="hub-title">Salvar</div>
-          <div class="hub-desc">Guarde seu progresso</div>
-        </div>
-      </div>
-      <div class="hub-cta">Salvar</div>
-    </div>
-  </div>
-
-  <div class="hub-card" data-go="/slots">
-    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
-    <div class="hub-overlay"></div>
-    <div class="hub-content">
-      <div class="hub-left">
-        <div class="hub-pill">🔀</div>
-        <div>
-          <div class="hub-title">Slots</div>
-          <div class="hub-desc">Trocar e gerenciar saves</div>
-        </div>
-      </div>
-      <div class="hub-cta">Abrir</div>
-    </div>
-  </div>
-</div></div>
-            <div class="sep"></div>
-            <div class="notice">
-              Gerencie todos os aspectos do seu clube: elenco, tática, treinos, staff, patrocínio e transferências.
+              <div class="hub-card" data-go="/career">
+                <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
+                <div class="hub-overlay"></div>
+                <div class="hub-content"><div class="hub-left"><div class="hub-pill">🏆</div><div><div class="hub-title">Carreira</div><div class="hub-desc">Hall da fama, títulos e reputação</div></div></div><div class="hub-cta">Abrir</div></div>
+              </div>
+              <div class="hub-card" data-go="/matches">
+                <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_match.png')}')"></div>
+                <div class="hub-overlay"></div>
+                <div class="hub-content"><div class="hub-left"><div class="hub-pill">⚽</div><div><div class="hub-title">Partida</div><div class="hub-desc">Dispute, simule e acompanhe eventos ao vivo</div></div></div><div class="hub-cta">Abrir</div></div>
+              </div>
+              <div class="hub-card" data-go="/calendar">
+                <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
+                <div class="hub-overlay"></div>
+                <div class="hub-content"><div class="hub-left"><div class="hub-pill">🗓️</div><div><div class="hub-title">Calendário</div><div class="hub-desc">Próximos jogos, rodadas e agenda</div></div></div><div class="hub-cta">Ver</div></div>
+              </div>
+              <div class="hub-card" data-go="/competitions">
+                <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_match.png')}')"></div>
+                <div class="hub-overlay"></div>
+                <div class="hub-content"><div class="hub-left"><div class="hub-pill">🏆</div><div><div class="hub-title">Competições</div><div class="hub-desc">Tabelas, continentais e títulos</div></div></div><div class="hub-cta">Entrar</div></div>
+              </div>
+              <div class="hub-card" data-go="/training">
+                <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_staff.png')}')"></div>
+                <div class="hub-overlay"></div>
+                <div class="hub-content"><div class="hub-left"><div class="hub-pill">🏋️</div><div><div class="hub-title">Treino</div><div class="hub-desc">Evolua o elenco e ajuste intensidade</div></div></div><div class="hub-cta">Treinar</div></div>
+              </div>
+              <div class="hub-card" data-go="/staff">
+                <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_staff.png')}')"></div>
+                <div class="hub-overlay"></div>
+                <div class="hub-content"><div class="hub-left"><div class="hub-pill">🎧</div><div><div class="hub-title">Staff</div><div class="hub-desc">Comissão técnica e funções do clube</div></div></div><div class="hub-cta">Abrir</div></div>
+              </div>
+              <div class="hub-card" data-go="/sponsorship">
+                <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_sponsor.png')}')"></div>
+                <div class="hub-overlay"></div>
+                <div class="hub-content"><div class="hub-left"><div class="hub-pill">🤝</div><div><div class="hub-title">Patrocínio</div><div class="hub-desc">Contratos, metas e bônus financeiros</div></div></div><div class="hub-cta">Negociar</div></div>
+              </div>
+              <div class="hub-card" data-go="/transfers">
+                <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
+                <div class="hub-overlay"></div>
+                <div class="hub-content"><div class="hub-left"><div class="hub-pill">🔁</div><div><div class="hub-title">Mercado</div><div class="hub-desc">Compras, vendas e empréstimos</div></div></div><div class="hub-cta">Ver</div></div>
+              </div>
+              <div class="hub-card" data-go="/finance">
+                <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_sponsor.png')}')"></div>
+                <div class="hub-overlay"></div>
+                <div class="hub-content"><div class="hub-left"><div class="hub-pill">💰</div><div><div class="hub-title">Finanças</div><div class="hub-desc">Caixa, receitas, despesas e balanço</div></div></div><div class="hub-cta">Abrir</div></div>
+              </div>
+              <div class="hub-card" data-go="/squad">
+                <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_match.png')}')"></div>
+                <div class="hub-overlay"></div>
+                <div class="hub-content"><div class="hub-left"><div class="hub-pill">👥</div><div><div class="hub-title">Elenco</div><div class="hub-desc">Jogadores, status e evolução</div></div></div><div class="hub-cta">Abrir</div></div>
+              </div>
+              <div class="hub-card" data-go="/tactics">
+                <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_staff.png')}')"></div>
+                <div class="hub-overlay"></div>
+                <div class="hub-content"><div class="hub-left"><div class="hub-pill">📋</div><div><div class="hub-title">Tática</div><div class="hub-desc">Formação, estilo e instruções</div></div></div><div class="hub-cta">Editar</div></div>
+              </div>
+              <div class="hub-card" data-go="/save">
+                <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
+                <div class="hub-overlay"></div>
+                <div class="hub-content"><div class="hub-left"><div class="hub-pill">💾</div><div><div class="hub-title">Salvar</div><div class="hub-desc">Guarde seu progresso</div></div></div><div class="hub-cta">Salvar</div></div>
+              </div>
+              <div class="hub-card" data-go="/slots">
+                <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
+                <div class="hub-overlay"></div>
+                <div class="hub-content"><div class="hub-left"><div class="hub-pill">🔀</div><div><div class="hub-title">Slots</div><div class="hub-desc">Trocar e gerenciar saves</div></div></div><div class="hub-cta">Abrir</div></div>
+              </div>
             </div>
+            <div class="sep"></div>
+            <div class="notice">Loop da carreira reforçado: hub com leitura imediata da temporada, próximo jogo, último resultado e progresso de campanha.</div>
           </div>
         </div>
       `;

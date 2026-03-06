@@ -1,24 +1,26 @@
-# Fase 1 — Estabilizacao da Base
+# Fase 2 — Loop Jogavel Completo da Carreira
 
 ## Build
-- `v1.36.0_foundation_stabilization`
-- `2026-03-06 19:30:51 UTC`
+- `v1.37.0_career_loop_complete`
+- `2026-03-06 19:58:00 UTC`
 
 ## Percentual atualizado
-**38% concluido**
+**46% concluido**
 
 ## Objetivo da fase
-Consolidar a base atual sem remover recursos existentes, preparar o projeto para as proximas etapas e padronizar a entrega para equipe, GitHub e Vercel.
+Fechar melhor o loop principal da carreira: leitura imediata da temporada, acesso rapido ao proximo jogo, entendimento do progresso da campanha e continuidade mais fluida entre hub, partidas e classificacao.
 
 ## Entregas desta fase
-- build identificada em multiplos pontos do projeto
-- documentacao limpa e coerente com o jogo atual
-- cache busting alinhado
-- badge de build com build/data/fase/progresso
-- melhorias visuais seguras em botoes e painel de build
+- dashboard de temporada dentro do HUB
+- card de proximo jogo com CTA para continuar a campanha
+- leitura do ultimo resultado do usuario
+- progresso da temporada em percentual e rodadas concluidas
+- destaque de posicao atual na liga
+- barra de acoes rapidas para partida, calendario, tabela e save
+- manutencao integral do projeto existente, sem remover recursos anteriores
 
 ## Proxima fase
-**Fase 2 — Loop jogavel completo da carreira**
-- fluxo fechado de temporada
-- calendario -> partida -> classificacao -> progresso de temporada
-- mais confianca para testes internos
+**Fase 3 — Nucleo Tatico e Escalacao Real**
+- impacto tatico mais visivel no resultado
+- leitura mais forte de formacao, capitania e bolas paradas
+- consolidacao de escalação inicial e banco como centro da tomada de decisao

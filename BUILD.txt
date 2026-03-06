@@ -1,8 +1,8 @@
 VALE FUTEBOL MANAGER 2026
-BUILD: v1.36.0_foundation_stabilization
-BUILD_STAMP: BUILD_2026-03-06_19-30-51_UTC_v1.36.0_foundation_stabilization
-DATE(UTC): 2026-03-06 19:30:51
-PHASE: Fase 1 - Estabilizacao da Base
-STATUS: 38% concluido
+BUILD: v1.37.0_career_loop_complete
+BUILD_STAMP: BUILD_2026-03-06_19-58-00_UTC_v1.37.0_career_loop_complete
+DATE(UTC): 2026-03-06 19:58:00
+PHASE: Fase 2 - Loop Jogavel Completo da Carreira
+STATUS: 46% concluido
 PACKAGE: zip completo
 HOSTING: GitHub + Vercel
