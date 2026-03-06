@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.43.1_hub_hotfix
+- Corrigido crash ao abrir o HUB quando `save.season` ainda não está inicializado
+- Mantidos os cards de resumo do HUB com fallback seguro
+- Atualização de build e metadados
+
+# Changelog
+
 ## v1.43.0_full_hub_consolidation - 2026-03-06 21:35:00 UTC
 - restaurado resumo do proximo jogo no HUB
 - restaurado ultimo resultado do clube no HUB

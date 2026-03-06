@@ -1,9 +1,5 @@
-# Vale Futebol Manager 2026
+# Build Atual
 
-## Build atual
-- Build: v1.43.0_full_hub_consolidation
-- Data UTC: 2026-03-06 21:35:00 UTC
-- Progresso integrado estimado: 72%
-
-## Objetivo desta build
-Consolidar o HUB principal sem remover o jogo completo, restaurando resumo de proximo jogo, ultimo resultado, posicao na liga e progresso da temporada.
+- Build: v1.43.1_hub_hotfix
+- Data UTC: 2026-03-06 21:48:00 UTC
+- Foco: correção do HUB e prevenção de crash quando `save.season` não existe no fluxo inicial.

@@ -64,8 +64,8 @@
     }
   }
 
-    const BUILD_TAG = "v1.43.0_full_hub_consolidation";
-const BUILD_TIME_STR = "2026-03-06 21:35:00 UTC";
+    const BUILD_TAG = "v1.43.1_hub_hotfix";
+const BUILD_TIME_STR = "2026-03-06 21:48:00 UTC";
 
 // Ligas UEFA consideradas para preferência de continentais (evita ReferenceError no modal)
 const UEFA_LIDS = ['ENG_PREMIER','ESP_LALIGA','ITA_SERIE_A','GER_BUNDES','FRA_LIGUE_1','POR_LIGA'];
@@ -1772,7 +1772,7 @@ function getTransferWindow(save) {
   const total = (save.season.rounds || []).length || 38;
 
   // Se a temporada terminou, janela fechada
-  if (save.season.completed) {
+  if (save?.season?.completed) {
     return { open: false, label: 'Encerrada', round: r, total };
   }
 
@@ -2530,7 +2530,7 @@ function viewCareerCreate() {
               </div>
             </div>
             <div class="row" style="margin-top:12px; gap:8px; flex-wrap:wrap;">
-              <button class="btn btn-primary" type="button" data-action="playNextEvent" ${save.season.completed ? 'disabled' : ''}>⚽ Jogar Próximo Evento</button>
+              <button class="btn btn-primary" type="button" data-action="playNextEvent" ${save?.season?.completed ? 'disabled' : ''}>⚽ Jogar Próximo Evento</button>
               <button class="btn" type="button" data-go="/matches">Ver Rodadas</button>
               <button class="btn" type="button" data-go="/calendar">Abrir Calendário</button>
               <button class="btn" type="button" data-go="/tactics">Ajustar Tática</button>
@@ -3465,7 +3465,7 @@ function viewCareerCreate() {
   function finalizeSeasonIfNeeded(save) {
     ensureSeason(save);
     const rounds = save.season.rounds || [];
-    if (save.season.completed) return false;
+    if (save?.season?.completed) return false;
     if ((save.season.currentRound || 0) < rounds.length) return false;
 
     // Garante que ligas paralelas (Brasil A/B) tenham uma tabela final consistente
@@ -3481,7 +3481,7 @@ function viewCareerCreate() {
     const championId = rows[0]?.id || null;
     const userPos = rows.findIndex(x => x.id === save.career.clubId) + 1;
 
-    save.season.completed = true;
+    save.season = save.season || {}; save.season.completed = true;
     save.season.completedAt = nowIso();
     save.season.summary = {
       championId,
@@ -4792,7 +4792,7 @@ save.season.lastRoundPlayed = roundIndex;
             // Se chegamos no fim, fecha a temporada (caso ainda não tenha sido marcado)
             finalizeSeasonIfNeeded(save);
             const sum = save.season.summary;
-            if (!save.season.completed || !sum) {
+            if (!save?.season?.completed || !sum) {
               return `<div class="notice">Temporada encerrada.</div>`;
             }
             const champClub = getClub(sum.championId);
@@ -4809,7 +4809,7 @@ save.season.lastRoundPlayed = roundIndex;
                 <div class="card-body">
                   <div class="row" style="align-items:center; gap:10px;">
                     ${sum.championId ? clubLogoHtml(sum.championId, 40) : ''}
-                    <div class="small">Temporada concluída em ${esc(new Date(save.season.completedAt).toLocaleDateString('pt-BR'))}</div>
+                    <div class="small">Temporada concluída em ${esc(new Date(save?.season?.completedAt || Date.now()).toLocaleDateString('pt-BR'))}</div>
                   </div>
                   <div class="sep"></div>
                   <button class="btn btn-primary" data-action="startNewSeason">Iniciar Nova Temporada</button>
@@ -4935,7 +4935,7 @@ save.season.lastRoundPlayed = roundIndex;
     let nextContAt = (live?.nextAtRoundIndex ?? null);
     let contPlayed = Number(live?.matchdaysPlayed || 0);
 
-    while (items.length < maxItems && !save.season.completed) {
+    while (items.length < maxItems && !save?.season?.completed) {
       if (r < total) {
         const fx = getUserLeagueFixtureForRound(save, r);
         const opp = fx?.oppId ? getClub(fx.oppId) : null;
@@ -4985,7 +4985,7 @@ save.season.lastRoundPlayed = roundIndex;
       const hasLeagueNext = cur < total;
 
       // Continental acontece APÓS algumas rodadas da liga (mesma regra do auto-advance)
-      const contAfterNext = (live?.nextAtRoundIndex ?? null) !== null && Number(live.nextAtRoundIndex) === cur && !save.season.completed;
+      const contAfterNext = (live?.nextAtRoundIndex ?? null) !== null && Number(live.nextAtRoundIndex) === cur && !save?.season?.completed;
 
       const nextEventLabel = hasLeagueNext ? `Liga (Rodada ${cur+1}/${total})` : 'Temporada finalizada';
       const nextEventPill = hasLeagueNext ? '⚽' : '✅';
@@ -5009,7 +5009,7 @@ save.season.lastRoundPlayed = roundIndex;
             <div class="sep"></div>
 
             <div class="row">
-              <button class="btn btn-primary" type="button" data-action="playNextEvent" ${save.season.completed ? 'disabled' : ''}>${nextEventPill} Jogar Próximo Evento</button>
+              <button class="btn btn-primary" type="button" data-action="playNextEvent" ${save?.season?.completed ? 'disabled' : ''}>${nextEventPill} Jogar Próximo Evento</button>
               <button class="btn" type="button" data-go="/hub">Voltar ao HUB</button>
             </div>
 
@@ -5451,7 +5451,7 @@ function rankByStrength(ids){ return (ids || []).slice().filter(Boolean).sort((a
   function maybeAutoAdvanceContinentalsLive(save, domesticRoundIndex) {
     const live = ensureContinentalsLive(save);
     if (!live) return null;
-    if (save.season.completed) return null;
+    if (save?.season?.completed) return null;
     if (live.nextAtRoundIndex !== domesticRoundIndex) return null;
     const summary = advanceOneContinentalMatchday(save, { manual: false });
     live.nextAtRoundIndex += 2;
@@ -6209,7 +6209,7 @@ function pickBrazilQualifiers(save, leagueId, from, to) {
 
       let info = '';
       let useLive = null;
-      if (save.season.completed) {
+      if (save?.season?.completed) {
         // Gera/atualiza ao final
         try { generateContinentalCompetitionsForSeason(save); } catch (e) {}
         info = `<div class="notice success">Torneios continentais gerados para a temporada ${esc(sid)}.</div>`;
@@ -6241,7 +6241,7 @@ function pickBrazilQualifiers(save, leagueId, from, to) {
       }
 
       // Fonte dos dados: ao vivo (temporada) ou store final (pós-temporada)
-      const source = save.season.completed
+      const source = save?.season?.completed
         ? {
             lib: contStore.libertadores,
             sud: contStore.sudamericana,
@@ -6274,7 +6274,7 @@ function pickBrazilQualifiers(save, leagueId, from, to) {
               <div class="card-title">Continental</div>
               <div class="card-subtitle">CONMEBOL • UEFA • ${esc(sid)}</div>
             </div>
-            <span class="badge">${save.season.completed ? 'Concluído' : 'Em andamento'}</span>
+            <span class="badge">${save?.season?.completed ? 'Concluído' : 'Em andamento'}</span>
           </div>
           <div class="card-body">
             ${info}
@@ -7793,7 +7793,7 @@ if (action === 'rejectOfferIn') {
           ensureSeason(save);
           // só permite se a temporada atual terminou
           finalizeSeasonIfNeeded(save);
-          if (!save.season.completed) return;
+          if (!save?.season?.completed) return;
           startNewSeason(save);
           writeSlot(state.settings.activeSlotId, save);
           route();
