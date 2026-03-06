@@ -64,8 +64,10 @@
     }
   }
 
-    const BUILD_TAG = "v1.35.1_promo_relegation_fix";
-const BUILD_TIME_STR = "2026-02-27 13:14:28 UTC";
+    const BUILD_TAG = "v1.36.0_foundation_stabilization";
+const BUILD_TIME_STR = "2026-03-06 19:30:51 UTC";
+  const BUILD_PHASE = "Fase 1 - Estabilizacao da Base";
+  const PROJECT_COMPLETION = "38%";
 
 // Ligas UEFA consideradas para preferência de continentais (evita ReferenceError no modal)
 const UEFA_LIDS = ['ENG_PREMIER','ESP_LALIGA','ITA_SERIE_A','GER_BUNDES','FRA_LIGUE_1','POR_LIGA'];
@@ -1146,6 +1148,8 @@ function forceSyncSaveRosterFromPack(save){
       <div class="build-line"><b>build</b> ${BUILD_TAG}</div>
       <div class="build-line"><b>data</b> ${BUILD_TIME_STR}</div>
       <div class="build-line"><b>dados</b> ${updatedStr}</div>
+      <div class="build-line"><b>fase</b> ${BUILD_PHASE}</div>
+      <div class="build-line"><b>progresso</b> ${PROJECT_COMPLETION}</div>
     `;
   }
 

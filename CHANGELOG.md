@@ -1,13 +1,16 @@
-# Changelog (resumo)
+# Changelog
 
-- 2026-02-12 (v1.32.0_part2): Calendário unificado (Liga + Continentais) com preview mais informativo (oponente), e ajuste do fluxo do botão "Jogar Próximo Evento" para respeitar o continental após a rodada da liga.
+## v1.36.0_foundation_stabilization — 2026-03-06 19:30:51 UTC
+- Fase 1 entregue em zip completo, sem remover sistemas existentes.
+- Padronizacao da identificacao da build em index.html, app.js, service worker e BUILD.txt.
+- Correcao da documentacao que ainda citava projeto antigo.
+- Adicao de build-info.json com metadados da versao para equipe e deploy.
+- Adicao de PHASE_STATUS.md com escopo da fase, checklist e proximos passos.
+- Melhoria visual segura em botoes, badge de build e rodape para reforcar identidade premium sem alterar o loop principal.
+- Atualizacao do badge interno para exibir build, data, fase e progresso do projeto.
+- Ajuste de cache busting do CSS, JS e service worker para publicacao no GitHub/Vercel.
 
-- 2026-02-12 (v1.31.1_part1): Correção de promoção/rebaixamento (Brasil A/B) com snapshot de tabelas e finalização consistente da liga paralela.
-
-- Parte 1: Base offline + rotas + economia + save/export/import
-- Parte 2: Frota + compra/venda + manutenção + equipe
-- Parte 3: Mapa realista com cache offline + pacotes de região
-- Parte 4: Estrutura de simulação 3D (física/HUD) preparada
-- Parte 5: Estrutura de IA/mercado/eventos preparada
-- Parte 6: Estrutura de polimento (UI/áudio/tutorial/i18n) preparada
-- DLC 1: Campanhas (JSON + gerenciador)
+## Referencia da build anterior
+- 2026-02-27 (v1.35.1_promo_relegation_fix): correcao de promocao/rebaixamento.
+- 2026-02-12 (v1.32.0_part2): calendario unificado (liga + continentais).
+- 2026-02-12 (v1.31.1_part1): correcao de promocao/rebaixamento Brasil A/B.

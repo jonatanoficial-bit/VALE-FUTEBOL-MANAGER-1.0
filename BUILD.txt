@@ -1,3 +1,8 @@
 VALE FUTEBOL MANAGER 2026
-BUILD: v1.35.1_promo_relegation_fix
-DATE(UTC): 2026-02-27 13:14:28
+BUILD: v1.36.0_foundation_stabilization
+BUILD_STAMP: BUILD_2026-03-06_19-30-51_UTC_v1.36.0_foundation_stabilization
+DATE(UTC): 2026-03-06 19:30:51
+PHASE: Fase 1 - Estabilizacao da Base
+STATUS: 38% concluido
+PACKAGE: zip completo
+HOSTING: GitHub + Vercel

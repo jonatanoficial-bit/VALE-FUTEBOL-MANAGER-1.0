@@ -1,0 +1,10 @@
+{
+  "game": "Vale Futebol Manager 2026",
+  "build": "v1.36.0_foundation_stabilization",
+  "buildStamp": "BUILD_2026-03-06_19-30-51_UTC_v1.36.0_foundation_stabilization",
+  "builtAtUtc": "2026-03-06 19:30:51 UTC",
+  "phase": "Fase 1 - Estabilizacao da Base",
+  "projectCompletionPercent": 38,
+  "packageType": "zip completo",
+  "hostingTargets": ["GitHub", "Vercel"]
+}
