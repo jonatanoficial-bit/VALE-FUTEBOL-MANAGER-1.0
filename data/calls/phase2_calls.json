@@ -1,0 +1,82 @@
+{
+  "calls": [
+    {
+      "id": "br_fire_kitchen_01",
+      "region": "BR",
+      "number": "193",
+      "service": "FIRE",
+      "type": "fire",
+      "severity": "high",
+      "opening": "193, Bombeiros. Qual sua emergência? Tem fumaça saindo da cozinha do apartamento do meu vizinho! O alarme disparou e eu estou no corredor.",
+      "script": {
+        "address": "Bloco B, Apto 204, Condomínio Aurora",
+        "details": "Cheiro forte de gás e fumaça; porta quente; possível fogo em cozinha",
+        "victims": "Possível pessoa dentro (não respondeu)",
+        "instructions_ok": "Orientei evacuar e não abrir a porta quente. Mantiveram distância e avisaram outros moradores.",
+        "instructions_bad": "Orientei abrir a porta para 'confirmar o fogo' e houve explosão de fumaça." 
+      },
+      "events": [
+        {"at": 18, "text": "O alarme ficou mais forte e a fumaça aumentou no corredor."},
+        {"at": 36, "text": "Você ouve estalos; parece que o fogo está se espalhando."}
+      ]
+    },
+    {
+      "id": "us_med_choking_01",
+      "region": "US",
+      "number": "911",
+      "service": "MED",
+      "type": "medical",
+      "severity": "high",
+      "opening": "911, what's your emergency? My dad is choking! He can't breathe and he's turning red!",
+      "script": {
+        "address": "1418 Pine Street",
+        "details": "Engasgo com alimento; tosse fraca; dificuldade para falar",
+        "victims": "1 adulto",
+        "instructions_ok": "Orientei golpes nas costas e manobras abdominais; melhorou até a chegada.",
+        "instructions_bad": "Orientei dar água e deitar; piorou e perdeu consciência."
+      },
+      "events": [
+        {"at": 25, "text": "A tosse ficou mais fraca. Ele está ficando pálido."}
+      ]
+    },
+    {
+      "id": "eu_pol_robbery_01",
+      "region": "EU",
+      "number": "112",
+      "service": "POL",
+      "type": "police",
+      "severity": "high",
+      "opening": "112, emergência. Tem um assalto acontecendo aqui na loja! Eu tô escondido atrás do balcão... ele tem uma arma!",
+      "script": {
+        "address": "Rua Central, 55 (Loja de Conveniência)",
+        "details": "Suspeito armado; ameaça clientes; possível refém",
+        "victims": "3 pessoas no local",
+        "instructions_ok": "Orientei ficar escondido, silêncio e manter distância; descreveu suspeito e direção.",
+        "instructions_bad": "Orientei confrontar o suspeito; ele reagiu e feriu um cliente." 
+      },
+      "events": [
+        {"at": 20, "text": "O suspeito gritou e começou a exigir dinheiro com mais agressividade."},
+        {"at": 45, "text": "Parece que ele está indo para a porta. Pode fugir."}
+      ]
+    },
+    {
+      "id": "br_prank_01",
+      "region": "BR",
+      "number": "190",
+      "service": "POL",
+      "type": "prank",
+      "severity": "low",
+      "opening": "Alô... tem um dinossauro na minha rua! Ele tá comendo meu cachorro!",
+      "script": {
+        "address": "",
+        "details": "Inconsistências; provável trote",
+        "victims": "",
+        "instructions_ok": "Identifiquei sinais de trote, encerrei e registrei como improcedente.",
+        "instructions_bad": "Enviei viatura sem confirmar; desperdício de recurso."
+      },
+      "events": [
+        {"at": 15, "text": "Você escuta risadas ao fundo e a pessoa muda a história."}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "pt-BR": {
+    "turn": "Turno",
+    "time": "Tempo",
+    "points": "Pontos",
+    "calls": "Chamadas",
+    "rank": "Rank",
+    "call_queue": "Fila de Chamadas",
+    "no_active_call": "Nenhuma chamada ativa",
+    "select_call": "Selecione uma chamada na fila para começar.",
+    "ask_question": "Perguntar",
+    "dispatch": "Despachar",
+    "dispatch_units": "Despacho de Unidades",
+    "call_report": "Relatório da Chamada",
+    "result": "Resultado",
+    "units": "Unidades",
+    "prank_end": "Trote encerrado corretamente."
+  },
+  "en-US": {
+    "turn": "Turn",
+    "time": "Time",
+    "points": "Points",
+    "calls": "Calls",
+    "rank": "Rank",
+    "call_queue": "Call Queue",
+    "no_active_call": "No active call",
+    "select_call": "Select a call from the queue to start.",
+    "ask_question": "Ask",
+    "dispatch": "Dispatch",
+    "dispatch_units": "Dispatch Units",
+    "call_report": "Call Report",
+    "result": "Outcome",
+    "units": "Units",
+    "prank_end": "Prank ended correctly."
+  }
+}

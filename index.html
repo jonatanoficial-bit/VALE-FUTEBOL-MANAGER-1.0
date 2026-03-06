@@ -1,94 +1,238 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Vale Futebol Manager 2026 - Premium</title>
-
-  <link rel="stylesheet" href="./styles.css?v=build_2026-03-06_193051_v1.37.0_career_loop_complete" />
-  <link rel="manifest" href="./manifest.json" />
-  <meta name="theme-color" content="#0EA5E9" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>Last Call Dispatch Operator</title>
+  <link rel="icon" href="./favicon.ico" />
+  <link rel="apple-touch-icon" href="./favicon.png" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link id="appStyles" rel="stylesheet" href="styles.css?v=20260306-100500" />
+  <style id="critical-screen-css">
+    html, body { height: 100%; margin: 0; overflow: hidden !important; }
+    .app { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+    main { position: relative; flex: 1; overflow: hidden; padding-top: 104px !important; }
+    .screen { display: none !important; position: absolute !important; inset: 0 !important; overflow-y: auto !important; -webkit-overflow-scrolling: touch; opacity: 0; pointer-events: none; }
+    .screen.active { display: block !important; opacity: 1 !important; pointer-events: auto !important; }
+    .map { height: 320px; min-height: 320px; }
+    .topbar { position: fixed !important; top: 12px !important; left: 50% !important; transform: translateX(-50%) !important; width: min(1100px, calc(100% - 24px)) !important; z-index: 999999 !important; pointer-events: auto !important; }
+    .topNav, .hud, .brand { position: relative !important; z-index: 1000000 !important; pointer-events: auto !important; }
+    .leaflet-container, #map, .mapWrap, .mapCard { z-index: 0 !important; }
+    .leaflet-pane, .leaflet-control, .leaflet-top, .leaflet-bottom { z-index: 10 !important; }
+  </style>
 </head>
 <body>
-  <!-- Splash -->
-  <div class="splash" id="splash">
-    <div class="splash-logo">
-      <img src="./assets/images/vale_games_logo.png" alt="Vale Games" />
-    </div>
-  </div>
-
-  <div class="app-shell">
+  <div class="app">
     <header class="topbar">
       <div class="brand">
-        <div class="logo-badge">VFM</div>
-        <div class="brand-text">
-          <div class="brand-title">Vale Futebol Manager 2026</div>
-          <div class="brand-subtitle">Carreira • Dados • Admin</div>
+        <div class="logo"></div>
+        <div class="brandText">
+          <div class="title">Last Call Dispatch Operator</div>
+          <div class="subtitle">Simulador de Central de Emergência</div>
+          <div class="build" id="buildInfo">Build —</div>
         </div>
       </div>
-      <div class="topbar-actions">
-        <button class="btn btn-ghost" type="button" onclick="location.hash='#/home'">Início</button>
+
+      <div aria-label="Navegação" class="topNav">
+        <button class="navBtn" id="btnNavSetup" type="button">Config</button>
+        <button class="navBtn" id="btnNavLobby" type="button">Lobby</button>
+        <button class="navBtn" id="btnNavShift" type="button">Plantão</button>
+      </div>
+
+      <div class="hud">
+        <div class="hudItem"><div class="hudLabel">Turno</div><div class="hudValue" id="hudShift">—</div></div>
+        <div class="hudItem"><div class="hudLabel">Tempo</div><div class="hudValue" id="hudTime">00:00</div></div>
+        <div class="hudItem"><div class="hudLabel">Pontos</div><div class="hudValue" id="hudScore">0</div></div>
+        <div class="hudItem"><div class="hudLabel">Chamadas</div><div class="hudValue" id="hudQueue">0</div></div>
+        <div class="hudItem"><div class="hudLabel">Stress</div><div class="hudValue hudMeter" id="hudStress" style="--meter:0%">0%</div></div>
       </div>
     </header>
 
-    <main class="main">
-      <div id="view" class="view"></div>
+    <main>
+      <div class="screen grid active" id="screenSetup">
+        <section class="card">
+          <div class="cardTitle">Configuração</div>
+
+          <div class="subCard" style="margin-bottom:12px;">
+            <div class="subTitle">Build atual</div>
+            <div class="summary" id="projectStatus">Build em validação.</div>
+          </div>
+
+          <div class="formRow">
+            <label class="label">Cidade</label>
+            <select class="select" id="citySelect"></select>
+          </div>
+
+          <div class="formRow">
+            <label class="label">Agência</label>
+            <select class="select" id="agencySelect">
+              <option value="police">Polícia</option>
+              <option value="fire">Bombeiros</option>
+              <option value="ambulance">Ambulância / SAMU / EMS</option>
+            </select>
+          </div>
+
+          <div class="formRow">
+            <label class="label">Dificuldade</label>
+            <select class="select" id="difficultySelect">
+              <option value="easy">Fácil</option>
+              <option selected value="normal">Normal</option>
+              <option value="hard">Difícil</option>
+            </select>
+          </div>
+
+          <div class="btnRow">
+            <button class="btnPrimary" id="btnToLobby" type="button">Continuar</button>
+          </div>
+
+          <div class="hint">
+            Regra do jogo: você <b>atende</b>, aplica um <b>protocolo rápido</b> e depois faz o <b>despacho manual</b>.
+            Se for trote, o correto é <b>encerrar</b>. Esta build já separa <b>Polícia</b>, <b>Bombeiros</b> e <b>Ambulância/SAMU/EMS</b>.
+          </div>
+        </section>
+      </div>
+
+      <div class="screen grid" id="screenLobby">
+        <section class="card">
+          <div class="cardTitle">Lobby</div>
+          <div class="hint" id="lobbySummary">—</div>
+
+          <div class="subCard" style="margin-top:12px;">
+            <div class="subTitle">🎖️ Carreira</div>
+            <div class="pills" id="lobbyCareerPills"></div>
+            <div class="hint" id="lobbyUnlocksHint" style="margin-top:8px;">—</div>
+            <div class="btnRow" style="margin-top:10px;">
+              <button class="btnGhost" id="btnResetCareer">Resetar carreira</button>
+            </div>
+          </div>
+
+          <div class="subCard" style="margin-top:12px;">
+            <div class="subTitle">💼 Semana (Campanha)</div>
+            <div class="pills" id="lobbyCampaignPills"></div>
+            <div class="hint" id="lobbyCampaignHint" style="margin-top:8px;">—</div>
+            <div class="btnRow" style="margin-top:10px;">
+              <button class="btnGhost" id="btnResetWeek">Resetar semana</button>
+            </div>
+          </div>
+
+          <div class="subCard" style="margin-top:12px;">
+            <div class="subTitle">💰 Operação</div>
+            <div class="pills" id="lobbyEconomyPills"></div>
+            <div class="hint" id="lobbyEconomyHint" style="margin-top:8px;">—</div>
+          </div>
+
+          <div class="subCard" style="margin-top:12px;">
+            <div class="subTitle">🧩 Upgrades</div>
+            <div class="upgradeGrid" id="lobbyUpgrades">—</div>
+            <div class="hint" id="lobbyUpgradesHint" style="margin-top:8px;">Compre melhorias com o orçamento para reduzir stress, ganhar tempo e aumentar eficiência.</div>
+          </div>
+
+          <div class="subCard" style="margin-top:12px;">
+            <div class="subTitle">🎯 Objetivos do turno</div>
+            <div class="summary" id="lobbyObjectives">—</div>
+          </div>
+
+          <div class="btnRow" style="margin-top:12px;">
+            <button class="btnGhost" id="btnBackSetup" type="button">Voltar</button>
+            <button class="btnPrimary" id="btnToShift" type="button">Ir para o plantão</button>
+          </div>
+          <div class="hint" style="margin-top:10px;">Revise as unidades disponíveis antes de iniciar o turno.</div>
+        </section>
+
+        <section class="card">
+          <div class="cardTitle">Unidades</div>
+          <div class="list" id="unitsList"></div>
+          <div class="hint">Dica: cada unidade tem função (role). Enviar errado dá penalidade.</div>
+        </section>
+      </div>
+
+      <div class="screen grid" id="screenShift">
+        <section class="card">
+          <div class="cardTitle">Controles do Turno</div>
+          <div class="hint" id="shiftSummaryTop">—</div>
+          <div class="btnRow" style="margin-top:12px;">
+            <button class="btnGhost" id="btnBackLobby" type="button">Lobby</button>
+            <button class="btnPrimary" id="btnStartShift" type="button">Iniciar Turno</button>
+            <button class="btnGhost" id="btnEndShift" type="button" disabled>Encerrar Turno</button>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="cardTitle">Operação</div>
+          <div class="pills">
+            <div class="pill" id="pillStatus">Turno parado</div>
+            <div class="pill pillWarn" id="pillCallTimer">Sem chamada</div>
+          </div>
+
+          <div class="btnRow" style="margin-top:12px;">
+            <button class="btnPrimary" id="btnStartShift2" type="button">Iniciar Turno</button>
+            <button class="btnGhost" id="btnEndShift2" type="button" disabled>Encerrar Turno</button>
+          </div>
+
+          <div class="subCard">
+            <div class="subTitle">📞 Chamada Atual</div>
+            <div class="meta" id="callMeta">—</div>
+            <div class="callBox" id="callText">Inicie um turno para receber chamadas.</div>
+            <div class="btnRow">
+              <button class="btnPrimary" id="btnAnswer" type="button" disabled>Atender próxima</button>
+              <button class="btnGhost" id="btnHold" type="button" disabled>Colocar em espera</button>
+            </div>
+          </div>
+
+          <div class="subCard">
+            <div class="subTitle">🚓 Despacho Manual</div>
+            <div class="meta" id="dispatchInfo">—</div>
+            <label class="label" style="margin-top:8px;">Escolha a unidade</label>
+            <select class="select" id="dispatchUnitSelect" disabled></select>
+            <div class="btnRow" style="margin-top:8px;">
+              <button class="btnGhost" id="btnAddUnit" type="button" disabled>Adicionar unidade</button>
+              <button class="btnPrimary" id="btnDispatch" type="button" disabled>Despachar</button>
+              <button class="btnGhost" id="btnDismiss" type="button" disabled>Encerrar chamada</button>
+            </div>
+            <div class="hint" style="margin-top:10px;">
+              <b>Unidades selecionadas:</b>
+              <div class="miniList" id="dispatchSelectedList">—</div>
+              <div style="opacity:.8; margin-top:6px;">Dica: em ocorrências graves, enviar reforço tático, aéreo ou suporte médico avançado pode melhorar o resultado.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="cardTitle">Mapa Operacional</div>
+          <div class="hint">Ocorrências e unidades no mapa (OpenStreetMap).</div>
+          <div class="map" id="map"></div>
+        </section>
+
+        <section class="card">
+          <div class="cardTitle">Incidentes Ativos</div>
+          <div class="hint">Gerencie prioridades. Clique em um incidente para focar e despachar reforço.</div>
+          <div class="queue" id="incidentsList">—</div>
+        </section>
+
+        <section class="card">
+          <div class="cardTitle">Fila de Chamadas</div>
+          <div class="queue" id="queueList">—</div>
+        </section>
+
+        <section class="card">
+          <div class="cardTitle">Registro</div>
+          <pre class="log" id="log"></pre>
+        </section>
+
+        <section class="card">
+          <div class="cardTitle">Resumo do Turno</div>
+          <div class="summary" id="shiftSummary">Nenhum turno ativo.</div>
+        </section>
+      </div>
     </main>
-
-    <footer class="footer">
-      <span>© Vale Games</span>
-      <span class="dot">•</span>
-      <span>Offline • LocalStorage • Build v1.36.0 • 46%</span>
-    </footer>
-
-    <!-- Badge fixo (build + data dos dados) -->
-    <div id="buildBadge" class="build-badge" aria-label="Build"></div>
   </div>
 
-  <!-- App principal -->
-  <!-- Cache-bust: sempre atualize o parâmetro v em cada build -->
-  <script src="./app.js?v=build_2026-03-06_193051_v1.37.0_career_loop_complete" defer></script>
-
-  <!-- Guardas de UX (não altera lógica do jogo) -->
-  <script>
-    (function(){
-      // remove splash em até 2s sempre
-      setTimeout(function(){
-        var splash = document.getElementById('splash');
-        if (splash) { splash.classList.add('hidden'); splash.style.display='none'; }
-      }, 2000);
-
-      // Se depois de 5s ainda não renderizou nada, mostra uma tela de fallback
-      setTimeout(function(){
-        var viewEl = document.getElementById('view');
-        if (viewEl && !viewEl.innerHTML.trim()){
-          viewEl.innerHTML =
-            '<div class="card">' +
-              '<div class="card-header">' +
-                '<div><div class="card-title">Carregando...</div><div class="card-subtitle">O jogo está demorando para iniciar (GitHub Pages)</div></div>' +
-                '<span class="badge">VFM</span>' +
-              '</div>' +
-              '<div class="card-body">' +
-                '<div class="notice">Se ficar preso aqui, recarregue a página (Ctrl+F5).</div>' +
-                '<div class="sep"></div>' +
-                '<button class="btn btn-primary" type="button" onclick="location.reload()">Recarregar</button>' +
-              '</div>' +
-            '</div>';
-        }
-      }, 5000);
-    })();
-  </script>
-  <script>
-    (function(){
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js?v=build_2026-03-06_193051_v1.37.0_career_loop_complete').catch(function(){});
-      
-      // força recarregar quando houver nova versão do service worker
-      navigator.serviceWorker.addEventListener('controllerchange', () => {
-        window.location.reload();
-      });
-}
-    })();
-  </script>
+  <script src="./data/cities.js?v=20260306-093352"></script>
+  <script src="./data/calls.js?v=20260306-093352"></script>
+  <script defer src="./script.js?v=20260306-093352"></script>
 </body>
 </html>

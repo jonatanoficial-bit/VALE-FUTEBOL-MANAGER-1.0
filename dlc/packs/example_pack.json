@@ -1,0 +1,33 @@
+{
+  "cities": [
+    {
+      "id": "jp_tyo",
+      "name": "🇯🇵 Tokyo (DLC Exemplo)",
+      "country": "JP"
+    }
+  ],
+  "calls": [
+    {
+      "id": "dlc_demo_police_01",
+      "agency": "police",
+      "title": "Distúrbio em estação",
+      "baseSeverity": "medio",
+      "callerState": "tense",
+      "script": {
+        "opening": "Há muita gente brigando aqui!",
+        "caller": "Passageiro",
+        "location": "Estação central",
+        "detail": "Possível faca",
+        "closing": "Aguarde em local seguro."
+      },
+      "protocol": {
+        "required": ["location", "weapons"],
+        "questions": [
+          { "id": "location", "label": "Qual a estação / saída?", "tag": "required" },
+          { "id": "weapons", "label": "Alguém tem arma ou faca?", "tag": "required" },
+          { "id": "injured", "label": "Há feridos?", "tag": "optional" }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "cities": [
+    {
+      "id": "nova_aurora",
+      "name": "Nova Aurora (Simulação)",
+      "country": "BR"
+    },
+    {
+      "id": "sao_paulo",
+      "name": "São Paulo - SP",
+      "country": "BR"
+    },
+    {
+      "id": "rio_de_janeiro",
+      "name": "Rio de Janeiro - RJ",
+      "country": "BR"
+    },
+    {
+      "id": "brasilia",
+      "name": "Brasília - DF",
+      "country": "BR"
+    },
+    {
+      "id": "new_york",
+      "name": "New York City - USA",
+      "country": "US"
+    },
+    {
+      "id": "london",
+      "name": "London - UK",
+      "country": "UK"
+    }
+  ]
+}

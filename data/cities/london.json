@@ -1,0 +1,36 @@
+{
+  "id": "london",
+  "name": "London - UK",
+  "country": "UK",
+  "center": {
+    "lat": 51.5072,
+    "lng": -0.1276
+  },
+  "zoom": 12,
+  "bbox": {
+    "minLat": 51.35,
+    "minLng": -0.45,
+    "maxLat": 51.7,
+    "maxLng": 0.2
+  },
+  "bases": [
+    {
+      "id": "pol_base",
+      "type": "police",
+      "lat": 51.515,
+      "lng": -0.1
+    },
+    {
+      "id": "fire_base",
+      "type": "fire",
+      "lat": 51.507,
+      "lng": -0.09
+    },
+    {
+      "id": "med_base",
+      "type": "medical",
+      "lat": 51.501,
+      "lng": -0.12
+    }
+  ]
+}

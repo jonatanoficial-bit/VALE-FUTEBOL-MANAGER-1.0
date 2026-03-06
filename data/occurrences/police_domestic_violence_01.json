@@ -1,0 +1,37 @@
+{
+  "id": "police_domestic_violence_01",
+  "agency": "police",
+  "severity": 3,
+  "caller_state": "whispering",
+  "intro": {
+    "text": "Meu marido tá quebrando tudo… eu tô com medo.",
+    "typing_speed": 28
+  },
+  "timers": {
+    "worsen": 50,
+    "fail": 120
+  },
+  "required_info": [
+    "location"
+  ],
+  "optional_info": [
+    "weapons_present",
+    "children_in_house"
+  ],
+  "wrong_questions": [
+    "caller_name"
+  ],
+  "correct_units": [
+    "patrol"
+  ],
+  "outcomes": {
+    "success": "Agressor contido. Vítima protegida.",
+    "worsen": "Agressão continua.",
+    "fail": "Vítima gravemente ferida."
+  },
+  "score": {
+    "success": 100,
+    "worsen": -30,
+    "fail": -100
+  }
+}

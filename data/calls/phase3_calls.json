@@ -1,0 +1,119 @@
+{
+  "calls": [
+    {
+      "id": "phase3_pol_shots_fired_01",
+      "agency": "police",
+      "region": "BR/US",
+      "title": "Disparos de arma de fogo em via pública",
+      "baseSeverity": "critico",
+      "timers": { "worsen": 24, "fail": 58 },
+      "outcomes": {
+        "success": "Resposta rápida conteve a área e reduziu o risco a civis.",
+        "worsen": "Mais disparos foram ouvidos e houve pânico na região.",
+        "fail": "Ocorrência evoluiu com vítimas antes da contenção."
+      },
+      "protocol": {
+        "required": ["location", "suspects"],
+        "questions": [
+          {"id": "location", "label": "Local", "prompt": "Qual o endereço exato e ponto de referência?", "answer": "Na avenida principal, perto de uma farmácia.", "effect": {"severity": "critico"}},
+          {"id": "suspects", "label": "Suspeitos", "prompt": "Você viu quantas pessoas e se continuam armadas?", "answer": "Parece um carro escuro com dois homens armados.", "effect": {"severity": "critico"}},
+          {"id": "victims", "label": "Vítimas", "prompt": "Há alguém ferido no local?", "answer": "Tem uma pessoa caída na calçada.", "effect": {"severity": "critico"}}
+        ]
+      },
+      "dispatch": { "correctRoles": ["patrol", "tactical"] },
+      "hint": "Despache patrulha e apoio tático quando houver arma de fogo e risco ativo."
+    },
+    {
+      "id": "phase3_fire_vehicle_01",
+      "agency": "fire",
+      "region": "BR/US",
+      "title": "Incêndio em veículo com risco de propagação",
+      "baseSeverity": "grave",
+      "timers": { "worsen": 35, "fail": 75 },
+      "outcomes": {
+        "success": "O incêndio foi controlado antes de atingir outros veículos.",
+        "worsen": "As chamas se espalharam e a fumaça piorou a evacuação.",
+        "fail": "Houve propagação do fogo com danos extensos."
+      },
+      "protocol": {
+        "required": ["location", "victims"],
+        "questions": [
+          {"id": "location", "label": "Local", "prompt": "Qual o endereço e se é rua ou estacionamento?", "answer": "É no estacionamento de um mercado.", "effect": {"severity": "grave"}},
+          {"id": "victims", "label": "Vítimas", "prompt": "Há ocupantes presos ou feridos?", "answer": "Todos saíram, mas um está com queimaduras leves.", "effect": {"severity": "grave"}},
+          {"id": "fuel", "label": "Combustível", "prompt": "Você vê vazamento de combustível?", "answer": "Sim, parece escorrer no chão.", "effect": {"severity": "critico"}}
+        ]
+      },
+      "dispatch": { "correctRoles": ["engine", "rescue"] },
+      "hint": "Auto bomba e resgate são a resposta ideal quando há fogo e possível vítima."
+    },
+    {
+      "id": "phase3_fire_wildland_01",
+      "agency": "fire",
+      "region": "BR/US",
+      "title": "Incêndio florestal em expansão",
+      "baseSeverity": "critico",
+      "timers": { "worsen": 28, "fail": 65 },
+      "outcomes": {
+        "success": "Linhas de contenção reduziram o avanço do incêndio.",
+        "worsen": "O vento empurrou o fogo para uma área habitada.",
+        "fail": "O incêndio saiu de controle e atingiu estruturas próximas."
+      },
+      "protocol": {
+        "required": ["location", "wind"],
+        "questions": [
+          {"id": "location", "label": "Local", "prompt": "Qual a área atingida e por qual acesso chegar?", "answer": "Área de mata perto de um condomínio, acesso pela estrada lateral.", "effect": {"severity": "critico"}},
+          {"id": "wind", "label": "Vento", "prompt": "O vento está forte? O fogo está avançando para casas?", "answer": "Sim, está indo em direção às casas.", "effect": {"severity": "critico"}},
+          {"id": "evac", "label": "Evacuação", "prompt": "Moradores estão saindo do local?", "answer": "Alguns ainda estão tentando pegar pertences.", "effect": {"severity": "grave"}}
+        ]
+      },
+      "dispatch": { "correctRoles": ["engine", "air_support"] },
+      "hint": "Em fogo de vegetação crítico, combine combate terrestre e apoio aéreo quando disponível."
+    },
+    {
+      "id": "phase3_med_cardiac_01",
+      "agency": "ambulance",
+      "region": "BR/US",
+      "title": "Parada cardiorrespiratória em domicílio",
+      "baseSeverity": "critico",
+      "timers": { "worsen": 18, "fail": 42 },
+      "outcomes": {
+        "success": "RCP orientada por telefone manteve a vítima com chance de sobrevivência.",
+        "worsen": "A vítima ficou sem resposta e o tempo crítico avançou.",
+        "fail": "A janela de resposta foi perdida antes da chegada do suporte avançado."
+      },
+      "protocol": {
+        "required": ["location", "breathing"],
+        "questions": [
+          {"id": "location", "label": "Local", "prompt": "Qual o endereço completo e apartamento/casa?", "answer": "Rua tranquila, número 122, casa azul.", "effect": {"severity": "critico"}},
+          {"id": "breathing", "label": "Respiração", "prompt": "A vítima responde ou respira normalmente?", "answer": "Não responde e está respirando estranho.", "effect": {"severity": "critico"}},
+          {"id": "cpr", "label": "RCP", "prompt": "Há alguém apto a iniciar compressões?", "answer": "Sim, estou ao lado dele e posso tentar.", "effect": {"severity": "grave"}}
+        ]
+      },
+      "dispatch": { "correctRoles": ["als", "ambulance"] },
+      "hint": "Envie suporte avançado e ambulância imediatamente; cada segundo conta."
+    },
+    {
+      "id": "phase3_med_choking_child_01",
+      "agency": "ambulance",
+      "region": "BR/US",
+      "title": "Criança engasgada e com dificuldade respiratória",
+      "baseSeverity": "grave",
+      "timers": { "worsen": 20, "fail": 48 },
+      "outcomes": {
+        "success": "As manobras corretas foram orientadas até a chegada do socorro.",
+        "worsen": "A criança perdeu mais ar e a situação ficou crítica.",
+        "fail": "A resposta demorou demais para uma obstrução severa."
+      },
+      "protocol": {
+        "required": ["location", "breathing"],
+        "questions": [
+          {"id": "location", "label": "Local", "prompt": "Qual o endereço agora?", "answer": "Estamos em uma lanchonete perto da praça central.", "effect": {"severity": "grave"}},
+          {"id": "breathing", "label": "Respiração", "prompt": "Ela consegue tossir ou chorar?", "answer": "Não, só faz barulho fraco.", "effect": {"severity": "critico"}},
+          {"id": "age", "label": "Idade", "prompt": "Qual a idade aproximada da criança?", "answer": "Uns quatro anos.", "effect": {"severity": "grave"}}
+        ]
+      },
+      "dispatch": { "correctRoles": ["ambulance", "rescue"] },
+      "hint": "Priorize ambulância e apoio de resgate quando houver obstrução grave em criança."
+    }
+  ]
+}

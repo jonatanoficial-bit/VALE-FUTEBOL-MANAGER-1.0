@@ -1,0 +1,36 @@
+{
+  "id": "nova_aurora",
+  "name": "Nova Aurora (Simulação)",
+  "country": "BR",
+  "center": {
+    "lat": -23.55052,
+    "lng": -46.633308
+  },
+  "zoom": 12,
+  "bbox": {
+    "minLat": -23.62,
+    "minLng": -46.72,
+    "maxLat": -23.49,
+    "maxLng": -46.55
+  },
+  "bases": [
+    {
+      "id": "pol_base",
+      "type": "police",
+      "lat": -23.555,
+      "lng": -46.64
+    },
+    {
+      "id": "fire_base",
+      "type": "fire",
+      "lat": -23.545,
+      "lng": -46.61
+    },
+    {
+      "id": "med_base",
+      "type": "medical",
+      "lat": -23.56,
+      "lng": -46.6
+    }
+  ]
+}

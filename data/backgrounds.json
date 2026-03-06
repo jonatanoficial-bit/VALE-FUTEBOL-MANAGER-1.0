@@ -1,0 +1,8 @@
+{
+  "generic": "central_generic.png",
+  "br": "central_br.png",
+  "us": "central_us.png",
+  "eu": "central_eu.png",
+  "map": "map_grid.png",
+  "alert": "alert_screen.png"
+}

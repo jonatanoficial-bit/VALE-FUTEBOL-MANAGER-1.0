@@ -1,0 +1,56 @@
+[
+  {
+    "id": "sp",
+    "name": "São Paulo",
+    "country": "Brazil",
+    "region": "São Paulo",
+    "emergencyNumbers": { "police": "190", "fire": "193" },
+    "timezone": "America/Sao_Paulo",
+    "tags": ["br", "metro"]
+  },
+  {
+    "id": "nyc",
+    "name": "New York City",
+    "country": "USA",
+    "region": "New York",
+    "emergencyNumbers": { "police": "911", "fire": "911" },
+    "timezone": "America/New_York",
+    "tags": ["us", "metro"]
+  },
+  {
+    "id": "london",
+    "name": "London",
+    "country": "United Kingdom",
+    "region": "England",
+    "emergencyNumbers": { "police": "999", "fire": "999" },
+    "timezone": "Europe/London",
+    "tags": ["eu", "metro"]
+  },
+  {
+    "id": "generic_br",
+    "name": "Genérico BR",
+    "country": "Brazil",
+    "region": "Genérico",
+    "emergencyNumbers": { "police": "190", "fire": "193" },
+    "timezone": "America/Sao_Paulo",
+    "tags": ["br"]
+  },
+  {
+    "id": "generic_us",
+    "name": "Generic US",
+    "country": "USA",
+    "region": "Generic",
+    "emergencyNumbers": { "police": "911", "fire": "911" },
+    "timezone": "America/Chicago",
+    "tags": ["us"]
+  },
+  {
+    "id": "generic_eu",
+    "name": "Genérico EU",
+    "country": "EU",
+    "region": "Generic",
+    "emergencyNumbers": { "police": "112", "fire": "112" },
+    "timezone": "Europe/Brussels",
+    "tags": ["eu"]
+  }
+]

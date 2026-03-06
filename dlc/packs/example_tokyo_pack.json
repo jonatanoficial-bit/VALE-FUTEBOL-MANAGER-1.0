@@ -1,0 +1,34 @@
+{
+  "cities": [
+    {
+      "id": "jp_tyo",
+      "name": "🇯🇵 Tokyo (DLC Exemplo)",
+      "country": "JP",
+      "greetingPolice": "110, Polícia. Qual sua emergência?",
+      "greetingFire": "119, Bombeiros. Qual sua emergência?"
+    }
+  ],
+  "calls": [
+    {
+      "id": "dlc_tyo_01",
+      "agency": "police",
+      "title": "Briga em estação de metrô",
+      "baseSeverity": "medio",
+      "protocol": {
+        "required": ["location", "description"],
+        "questions": [
+          {
+            "id": "q1",
+            "text": "Quantas pessoas estão envolvidas? Há armas?",
+            "timePenaltySec": 2
+          },
+          {
+            "id": "q2",
+            "text": "Alguém está ferido ou desacordado?",
+            "timePenaltySec": 2
+          }
+        ]
+      }
+    }
+  ]
+}

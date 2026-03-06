@@ -1,0 +1,15 @@
+Last Call Dispatch Operator
+Build 1.2.1
+Phase 3.5 - Stability and Content Upgrade
+Build date: 2026-03-06 10:05:00 UTC
+Project completion: 64%
+
+Implemented in this build:
+- Added emergency queue fallback so the Answer button can recover when the queue is unexpectedly empty.
+- Added optional content pack loader for phase2_calls.json and phase3_calls.json.
+- Added five new incidents for police, fire and ambulance gameplay.
+- Added BUILD_INFO.json for team handoff and build traceability.
+- Updated front-end cache busting for styles.
+
+Recommended next phase:
+- Map with active incident layers, moving units and response time telemetry.

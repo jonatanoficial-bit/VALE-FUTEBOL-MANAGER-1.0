@@ -1,0 +1,36 @@
+{
+  "id": "sao_paulo",
+  "name": "São Paulo - SP",
+  "country": "BR",
+  "center": {
+    "lat": -23.55052,
+    "lng": -46.633308
+  },
+  "zoom": 11,
+  "bbox": {
+    "minLat": -23.75,
+    "minLng": -46.83,
+    "maxLat": -23.4,
+    "maxLng": -46.36
+  },
+  "bases": [
+    {
+      "id": "pol_base",
+      "type": "police",
+      "lat": -23.548,
+      "lng": -46.638
+    },
+    {
+      "id": "fire_base",
+      "type": "fire",
+      "lat": -23.563,
+      "lng": -46.655
+    },
+    {
+      "id": "med_base",
+      "type": "medical",
+      "lat": -23.556,
+      "lng": -46.625
+    }
+  ]
+}

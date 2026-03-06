@@ -1,0 +1,11 @@
+Last Call Dispatch Operator - Build 1.2.2
+Fase: Phase 3.6 – Dispatch and Transcript Fix
+Data e hora: 2026-03-06 19:52:00 UTC
+Conclusão do projeto: 66%
+
+Correções desta build:
+- corrigido problema em que o painel de despacho continuava aparentando indisponível após concluir as perguntas obrigatórias
+- seleção automática da primeira unidade disponível ao liberar o despacho
+- botão Despachar agora responde corretamente ao selecionar unidade
+- saudação inicial do operador não é mais repetida após cada pergunta
+- painel de despacho informa quais perguntas obrigatórias ainda faltam

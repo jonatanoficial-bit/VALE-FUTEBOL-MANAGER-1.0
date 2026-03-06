@@ -1,0 +1,36 @@
+{
+  "id": "brasilia",
+  "name": "Brasília - DF",
+  "country": "BR",
+  "center": {
+    "lat": -15.793889,
+    "lng": -47.882778
+  },
+  "zoom": 12,
+  "bbox": {
+    "minLat": -15.9,
+    "minLng": -48.1,
+    "maxLat": -15.68,
+    "maxLng": -47.7
+  },
+  "bases": [
+    {
+      "id": "pol_base",
+      "type": "police",
+      "lat": -15.793,
+      "lng": -47.88
+    },
+    {
+      "id": "fire_base",
+      "type": "fire",
+      "lat": -15.803,
+      "lng": -47.87
+    },
+    {
+      "id": "med_base",
+      "type": "medical",
+      "lat": -15.78,
+      "lng": -47.9
+    }
+  ]
+}

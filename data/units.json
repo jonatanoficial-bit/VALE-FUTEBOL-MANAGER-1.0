@@ -1,0 +1,212 @@
+[
+  {
+    "unitId": "pm_area",
+    "name": "PM Área",
+    "agency": "police",
+    "region": ["sp", "generic_br"],
+    "role": "patrol",
+    "capabilityTags": ["patrol"],
+    "cooldownSec": 60,
+    "availabilityRules": {}
+  },
+  {
+    "unitId": "rota",
+    "name": "ROTA",
+    "agency": "police",
+    "region": ["sp", "generic_br"],
+    "role": "swat",
+    "capabilityTags": ["tactical"],
+    "cooldownSec": 120,
+    "availabilityRules": {}
+  },
+  {
+    "unitId": "gate",
+    "name": "GATE",
+    "agency": "police",
+    "region": ["sp", "generic_br"],
+    "role": "special_ops",
+    "capabilityTags": ["hostage", "negotiation"],
+    "cooldownSec": 180,
+    "availabilityRules": {}
+  },
+  {
+    "unitId": "aguia",
+    "name": "Águia",
+    "agency": "police",
+    "region": ["sp", "generic_br"],
+    "role": "air_support",
+    "capabilityTags": ["air_support"],
+    "cooldownSec": 300,
+    "availabilityRules": {}
+  },
+  {
+    "unitId": "choque",
+    "name": "Choque",
+    "agency": "police",
+    "region": ["sp", "generic_br"],
+    "role": "riot_control",
+    "capabilityTags": ["riot", "crowd"],
+    "cooldownSec": 150,
+    "availabilityRules": {}
+  },
+  {
+    "unitId": "ab",
+    "name": "Auto Bomba",
+    "agency": "fire",
+    "region": ["sp", "generic_br"],
+    "role": "fire_engine",
+    "capabilityTags": ["firefighting"],
+    "cooldownSec": 180,
+    "availabilityRules": {}
+  },
+  {
+    "unitId": "ur",
+    "name": "Unidade de Resgate",
+    "agency": "fire",
+    "region": ["sp", "generic_br"],
+    "role": "ambulance",
+    "capabilityTags": ["medical"],
+    "cooldownSec": 180,
+    "availabilityRules": {}
+  },
+  {
+    "unitId": "usa",
+    "name": "Suporte Avançado",
+    "agency": "fire",
+    "region": ["sp", "generic_br"],
+    "role": "ambulance_advanced",
+    "capabilityTags": ["medical", "advanced"],
+    "cooldownSec": 240,
+    "availabilityRules": {}
+  },
+  {
+    "unitId": "hazmat_br",
+    "name": "HazMat BR",
+    "agency": "fire",
+    "region": ["sp", "generic_br"],
+    "role": "hazmat",
+    "capabilityTags": ["hazardous"],
+    "cooldownSec": 300,
+    "availabilityRules": {}
+  },
+  {
+    "unitId": "us_patrol",
+    "name": "Patrol Unit",
+    "agency": "police",
+    "region": ["nyc", "generic_us"],
+    "role": "patrol",
+    "capabilityTags": ["patrol"],
+    "cooldownSec": 60,
+    "availabilityRules": {}
+  },
+  {
+    "unitId": "swat_us",
+    "name": "SWAT",
+    "agency": "police",
+    "region": ["nyc", "generic_us"],
+    "role": "swat",
+    "capabilityTags": ["tactical"],
+    "cooldownSec": 180,
+    "availabilityRules": {}
+  },
+  {
+    "unitId": "bomb_squad_us",
+    "name": "Bomb Squad",
+    "agency": "police",
+    "region": ["nyc", "generic_us"],
+    "role": "bomb_squad",
+    "capabilityTags": ["explosive"],
+    "cooldownSec": 240,
+    "availabilityRules": {}
+  },
+  {
+    "unitId": "air_us",
+    "name": "Air Support US",
+    "agency": "police",
+    "region": ["nyc", "generic_us"],
+    "role": "air_support",
+    "capabilityTags": ["air_support"],
+    "cooldownSec": 300,
+    "availabilityRules": {}
+  },
+  {
+    "unitId": "engine_us",
+    "name": "Fire Engine US",
+    "agency": "fire",
+    "region": ["nyc", "generic_us"],
+    "role": "fire_engine",
+    "capabilityTags": ["firefighting"],
+    "cooldownSec": 180,
+    "availabilityRules": {}
+  },
+  {
+    "unitId": "ambulance_us",
+    "name": "Ambulance US",
+    "agency": "fire",
+    "region": ["nyc", "generic_us"],
+    "role": "ambulance",
+    "capabilityTags": ["medical"],
+    "cooldownSec": 180,
+    "availabilityRules": {}
+  },
+  {
+    "unitId": "hazmat_us",
+    "name": "HazMat US",
+    "agency": "fire",
+    "region": ["nyc", "generic_us"],
+    "role": "hazmat",
+    "capabilityTags": ["hazardous"],
+    "cooldownSec": 300,
+    "availabilityRules": {}
+  },
+  {
+    "unitId": "eu_patrol",
+    "name": "Patrol EU",
+    "agency": "police",
+    "region": ["london", "generic_eu"],
+    "role": "patrol",
+    "capabilityTags": ["patrol"],
+    "cooldownSec": 60,
+    "availabilityRules": {}
+  },
+  {
+    "unitId": "eu_special",
+    "name": "Special Response EU",
+    "agency": "police",
+    "region": ["london", "generic_eu"],
+    "role": "swat",
+    "capabilityTags": ["tactical"],
+    "cooldownSec": 180,
+    "availabilityRules": {}
+  },
+  {
+    "unitId": "eu_air",
+    "name": "Air Unit EU",
+    "agency": "police",
+    "region": ["london", "generic_eu"],
+    "role": "air_support",
+    "capabilityTags": ["air_support"],
+    "cooldownSec": 300,
+    "availabilityRules": {}
+  },
+  {
+    "unitId": "eu_fire",
+    "name": "Fire EU",
+    "agency": "fire",
+    "region": ["london", "generic_eu"],
+    "role": "fire_engine",
+    "capabilityTags": ["firefighting"],
+    "cooldownSec": 180,
+    "availabilityRules": {}
+  },
+  {
+    "unitId": "eu_ambulance",
+    "name": "Ambulance EU",
+    "agency": "fire",
+    "region": ["london", "generic_eu"],
+    "role": "ambulance",
+    "capabilityTags": ["medical"],
+    "cooldownSec": 180,
+    "availabilityRules": {}
+  }
+]

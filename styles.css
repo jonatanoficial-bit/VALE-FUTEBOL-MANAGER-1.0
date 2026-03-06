@@ -1,1002 +1,527 @@
-/* === VFM: Backgrounds GitHub Pages safe (paths relativos) === */
-html, body{
-  min-height: 100%;
-  background-color: #0b0f14; /* fallback se a imagem falhar */
-}
-
-/* Fundos por "tela" (o JS aplica classes no <body>) */
-body.bg-menu{
-  background:
-    radial-gradient(1200px 800px at 50% -200px, rgba(34, 197, 94, 0.22), transparent 60%),
-    radial-gradient(800px 500px at 80% 120%, rgba(220, 181, 102, 0.16), transparent 55%),
-    linear-gradient(to bottom, rgba(2,6,23,.78), rgba(2,6,23,.92)),
-    url("assets/backgrounds/bg_menu.png") center/cover no-repeat fixed;
-}
-
-body.bg-lobby{
-  background:
-    radial-gradient(1200px 800px at 50% -200px, rgba(34, 197, 94, 0.18), transparent 60%),
-    radial-gradient(800px 500px at 80% 120%, rgba(220, 181, 102, 0.12), transparent 55%),
-    linear-gradient(to bottom, rgba(2,6,23,.82), rgba(2,6,23,.94)),
-    url("assets/backgrounds/bg_lobby.png") center/cover no-repeat fixed;
-}
-
-body.bg-cinematic{
-  background:
-    linear-gradient(rgba(0,0,0,0.72), rgba(0,0,0,0.72)),
-    url("bg_cinematic.png") center/cover no-repeat fixed;
-}
-
-/* Make main containers transparent so the background can appear */
-#app, .app, .screen, .page, .container, .root, .app-shell, .main, .view{
-  background: transparent !important;
-}
-/*
- * Vale Futebol Manager 2026 - Premium
- * Estilos principais da aplicação
- *
- * A paleta foi concebida com tons escuros e destaques em verde e dourado
- * para um visual elegante. Componentes são construídos com bordas suaves,
- * sombras discretas e interações com transições suaves.
- */
-
-/* Variáveis de cor e dimensões */
-:root {
-  --bg: #0b0f14;
-  --panel: #101824;
-  --panel-alt: #0f1722;
-  --text: #e7eef8;
-  --muted: #8da1b3;
-  --line: rgba(255, 255, 255, 0.08);
-  --brand: #22c55e;
-  --accent: #dcb566;
-  --danger: #ef4444;
-  --warn: #f59e0b;
-  --radius: 16px;
-  --radius-lg: 24px;
-  --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
-  --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-}
+/* ===========================
+   Last Call Dispatch Operator
+   AAA UI Base (Mobile-first)
+   =========================== */
 
 /* Reset básico */
-* {
-  box-sizing: border-box;
-}
-html, body {
-  height: 100%;
-}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
 body {
   margin: 0;
-  font-family: var(--font);
-  color: var(--text);
-}
-
-/* Se nenhuma classe de fundo estiver aplicada, usa o padrão do menu */
-body:not(.bg-menu):not(.bg-lobby):not(.bg-cinematic){
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+  color: #e9f0ff;
+  /* The background is built from multiple layers.  At the bottom is a
+     cinematic photo chosen via the --bg-url CSS variable, which is updated
+     depending on the selected agency.  Above it we overlay several tinted
+     radial gradients and a dark linear gradient to ensure text legibility. */
   background:
-    radial-gradient(1200px 800px at 50% -200px, rgba(34, 197, 94, 0.22), transparent 60%),
-    radial-gradient(800px 500px at 80% 120%, rgba(220, 181, 102, 0.16), transparent 55%),
-    linear-gradient(to bottom, rgba(2,6,23,.78), rgba(2,6,23,.92)),
-    url("assets/backgrounds/bg_menu.png") center/cover no-repeat fixed;
+    var(--bg-url) center/cover fixed no-repeat,
+    radial-gradient(1200px 800px at 10% 10%, rgba(90,180,255,0.12), transparent 55%),
+    radial-gradient(900px 700px at 90% 20%, rgba(255,90,140,0.10), transparent 55%),
+    radial-gradient(1200px 900px at 50% 110%, rgba(80,255,210,0.08), transparent 55%),
+    linear-gradient(180deg, #070a12, #050711);
+  overflow-x: hidden;
 }
 
-
-/* Badge de build (canto inferior esquerdo) */
-.build-badge{
-  position: fixed;
-  left: 12px;
-  bottom: 12px;
-  z-index: 9999;
-  padding: 10px 12px;
-  border-radius: 12px;
-  background: rgba(0,0,0,0.65);
-  color: #fff;
-  font-size: 14px;
-  line-height: 1.2;
-  letter-spacing: .2px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-  max-width: 70vw;
-}
-.build-badge .build-line{ margin: 2px 0; }
-.build-badge b{ font-weight: 700; }
-
-/* =======================================================
-   VFM – Matchday Modal (A2)
-   Modal/tela de partida com emoção (mobile-first)
-   =======================================================*/
-.vfm-modal-overlay{
-  position:fixed; inset:0; z-index:9999;
-  background:rgba(0,0,0,.72);
-  display:flex; align-items:center; justify-content:center;
-  padding:16px;
+/* IMPORTANTÍSSIMO no mobile: remover aparência padrão de botão/select */
+button, select, input, textarea {
+  font: inherit;
+  color: inherit;
+  -webkit-appearance: none;
+  appearance: none;
+  border: 0;
+  outline: none;
+  background: transparent;
 }
 
-.vfm-modal{
-  width:min(980px, 100%);
-  max-height:92vh;
-  overflow:hidden;
-  background:rgba(15,23,42,.98);
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:18px;
-  box-shadow:0 24px 70px rgba(0,0,0,.55);
-  display:flex;
-  flex-direction:column;
+/* Links */
+a { color: inherit; text-decoration: none; }
+
+/* Variáveis de tema */
+:root{
+  --card: rgba(14, 19, 34, 0.66);
+  --card2: rgba(10, 14, 26, 0.58);
+  --stroke: rgba(210, 230, 255, 0.10);
+  --stroke2: rgba(210, 230, 255, 0.16);
+  --shadow: 0 12px 35px rgba(0,0,0,0.40);
+  --glow: 0 0 0 1px rgba(140, 190, 255, 0.10), 0 10px 30px rgba(20, 60, 120, 0.25);
+  --radius: 18px;
+  --radius2: 22px;
+
+  --textDim: rgba(233, 240, 255, 0.72);
+  --textFaint: rgba(233, 240, 255, 0.52);
+
+  --primary: rgba(70, 160, 255, 1);
+  --primary2: rgba(70, 160, 255, 0.18);
+
+  /* Shadow and border colours derived from the primary palette.  These help
+     create depth on buttons and other interactive elements.  They are
+     overridden in the agency-specific selectors to match each theme. */
+  --primary-shadow: rgba(70, 160, 255, 0.18);
+  --primary-border: rgba(120, 200, 255, 0.35);
+
+  --danger: rgba(255, 70, 110, 1);
+  --warn: rgba(255, 190, 70, 1);
+  --ok: rgba(60, 220, 160, 1);
+
+  /* Default background image url used for the cinematic backdrop.  This will be
+     overridden via data-agency attributes on the <body> element to switch
+     themes between police and fire/ambulância. */
+  --bg-url: url('./img/police_bg.png');
 }
 
-.vfm-modal-header{
-  padding:14px 14px 10px;
-  display:flex; align-items:center; justify-content:space-between;
-  gap:10px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-}
+/* Layout base (app-like: no document scroll, screens swap in-place) */
+html, body{ height: 100%; }
+body{ overflow: hidden; }
 
-.vfm-modal-title{
-  display:flex; flex-direction:column;
-  gap:2px;
-}
+/* Ensure no document scroll even if the browser applies default styles */
+html, body{ overflow: hidden !important; }
 
-.vfm-modal-title .t1{font-weight:800; letter-spacing:.2px;}
-.vfm-modal-title .t2{opacity:.75; font-size:12px;}
-
-.vfm-modal-body{
-  padding:12px 14px 14px;
-  overflow:auto;
-}
-
-.vfm-match-hero{
-  display:flex; align-items:center; justify-content:space-between;
-  gap:12px;
-  padding:10px 10px;
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:16px;
-  background:rgba(2,6,23,.35);
-}
-
-.vfm-match-side{
-  display:flex; align-items:center; gap:10px; min-width:0;
-}
-
-.vfm-match-side .nm{font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.vfm-match-mid{
-  text-align:center;
-  display:flex; flex-direction:column; gap:2px;
-}
-.vfm-score{
-  font-size:30px; font-weight:900; letter-spacing:.5px;
-}
-.vfm-clock{font-size:12px; opacity:.8;}
-
-.vfm-grid{
-  display:grid;
-  grid-template-columns: 1.35fr .65fr;
-  gap:12px;
-  margin-top:12px;
-}
-
-@media (max-width: 820px){
-  .vfm-grid{grid-template-columns:1fr;}
-}
-
-.vfm-panel{
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:16px;
-  background:rgba(2,6,23,.25);
-  overflow:hidden;
-}
-
-.vfm-panel .hd{
-  padding:10px 12px;
-  border-bottom:1px solid rgba(255,255,255,.06);
-  font-weight:800;
-  display:flex; justify-content:space-between; align-items:center;
-}
-
-.vfm-timeline{
-  padding:10px 12px;
-  max-height: 44vh;
-  overflow:auto;
-  font-size:13px;
-}
-
-.vfm-timeline .ev{padding:7px 0; border-bottom:1px dashed rgba(255,255,255,.08);}
-.vfm-timeline .ev:last-child{border-bottom:none;}
-
-.vfm-stats{
-  padding:10px 12px;
-  display:grid;
-  grid-template-columns:1fr;
-  gap:10px;
-  font-size:13px;
-}
-
-.vfm-stat-row{
-  display:flex; align-items:center; justify-content:space-between;
-  gap:10px;
-  border:1px solid rgba(255,255,255,.06);
-  border-radius:12px;
-  padding:8px 10px;
-  background:rgba(2,6,23,.18);
-}
-
-.vfm-modal-actions{
-  display:flex; gap:10px; justify-content:flex-end;
-  padding:12px 14px;
-  border-top:1px solid rgba(255,255,255,.08);
-}
-
-
-/* Splash screen com logo da produtora */
-.splash {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
+.app {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+  padding: 14px 12px 14px;
   height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  background: radial-gradient(circle, rgba(34, 197, 94, 0.15), rgba(0, 0, 0, 0.9));
-  z-index: 999;
-  opacity: 1;
-  visibility: visible;
-  transition: opacity 0.8s ease, visibility 0.8s ease;
-}
-.splash.hidden {
-  opacity: 0;
-  visibility: hidden;
-}
-.splash-logo img {
-  width: 200px;
-  max-width: 80vw;
-  animation: pulse 2.5s infinite ease-in-out;
-}
-@keyframes pulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.08); opacity: 0.85; }
+  flex-direction: column;
+  overflow: hidden;
 }
 
-/* Estrutura da aplicação */
-.app-shell {
-  min-height: 100%;
+/* Multi-screen flow (Setup -> Lobby -> Plantão)
+   Avoids the "scroll down to play" feel on mobile.
+   We keep screens mounted and use opacity/pointer-events for smoother
+   transitions (cinematic feel) without requiring heavy routing. */
+main{
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+}
+.screen{
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  display: grid;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+.screen.active{
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* Map */
+.map{
+  height: 320px;
+  min-height: 320px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--stroke);
+  background: rgba(0,0,0,0.25);
+}
+.leaflet-container{ background: rgba(0,0,0,0.25); }
+
+/* Map fallback message (when Leaflet/CDN is unavailable) */
+.mapFallback{
+  height: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 18px;
+  text-align: center;
+  background: rgba(0,0,0,0.20);
+}
+.mfTitle{ font-weight: 900; letter-spacing: 0.2px; }
+.mfText{ margin-top: 8px; font-size: 12px; color: rgba(233,240,255,0.75); line-height: 1.25rem; max-width: 46ch; }
+
+.build{ font-size: 12px; color: rgba(233,240,255,0.65); margin-top: 2px; }
+
+/* Stage 6: Upgrades / Tech cards */
+.upgradeGrid{
+  display: grid;
+  gap: 10px;
+}
+.upgradeCard{
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(8,10,20,0.45);
+  border: 1px solid var(--stroke);
+  box-shadow: 0 18px 35px rgba(0,0,0,0.18);
+}
+.upgradeTop{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+.upgradeName{ font-weight: 800; }
+.upgradeDesc{ color: var(--textDim); font-size: 13px; margin-top: 4px; line-height: 1.25rem; }
+.upgradeMeta{ display:flex; gap:8px; flex-wrap: wrap; margin-top: 10px; }
+.upgradeMeta .pill{ margin:0; }
+.upgradeActions{ margin-top: 10px; display:flex; gap:10px; }
+.btnBuy{ flex: 1; }
+.btnBuy[disabled]{ opacity: 0.55; cursor: not-allowed; }
+
+@media (min-width: 720px){
+  .upgradeGrid{ grid-template-columns: 1fr 1fr; }
 }
 
 /* Topbar */
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 20px;
-  border-bottom: 1px solid var(--line);
-  background: rgba(16, 24, 36, 0.8);
-  backdrop-filter: blur(10px);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.logo-badge {
-  width: 44px;
-  height: 44px;
-  display: grid;
-  place-items: center;
-  border-radius: var(--radius);
-  background: linear-gradient(135deg, var(--brand), var(--accent));
-  color: #0b0f14;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  box-shadow: var(--shadow);
-}
-.brand-text .brand-title {
-  font-weight: 800;
-  font-size: 15px;
-}
-.brand-text .brand-subtitle {
-  color: var(--muted);
-  font-size: 11px;
-  margin-top: 2px;
-}
-.topbar-actions .btn {
-  margin-left: 8px;
-}
-
-/* Área principal */
-.main {
-  flex: 1;
-  padding: 16px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-}
-.view {
-  width: min(1000px, 100%);
-}
-
-/* Rodapé */
-.footer {
-  padding: 10px 20px;
-  border-top: 1px solid var(--line);
-  color: var(--muted);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  background: rgba(16, 24, 36, 0.6);
-  backdrop-filter: blur(10px);
-}
-.dot {
-  opacity: 0.6;
-}
-
-/* Componentes básicos */
-.card {
-  background: linear-gradient(180deg, rgba(16, 24, 36, 0.92), rgba(12, 18, 28, 0.92));
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-  margin-bottom: 16px;
-}
-.card-header {
-  padding: 16px 20px;
-  border-bottom: 1px solid var(--line);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-}
-.card-title {
-  font-weight: 800;
-  font-size: 16px;
-}
-.card-subtitle {
-  color: var(--muted);
-  font-size: 13px;
-  margin-top: 4px;
-}
-.card-body {
-  padding: 20px;
-}
-
-/* Grid utilitário */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 16px;
-}
-.col-12 { grid-column: span 12; }
-.col-8 { grid-column: span 8; }
-.col-6 { grid-column: span 6; }
-.col-4 { grid-column: span 4; }
-.col-3 { grid-column: span 3; }
-@media (max-width: 820px) {
-  .col-8, .col-6, .col-4, .col-3 { grid-column: span 12; }
-}
-
-/* Botões */
-.btn {
-  appearance: none;
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--text);
-  padding: 10px 16px;
-  border-radius: var(--radius);
-  cursor: pointer;
-  font-weight: 700;
-  transition: background 0.15s ease, transform 0.15s ease;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-.btn:hover {
-  transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.08);
-}
-.btn:active {
-  transform: translateY(0);
-}
-.btn-primary {
-  background: linear-gradient(135deg, var(--brand), var(--accent));
-  color: #0b0f14;
-  border-color: rgba(255, 255, 255, 0.1);
-}
-.btn-primary:hover {
-  background: linear-gradient(135deg, var(--brand), var(--accent));
-  filter: brightness(1.05);
-}
-.btn-danger {
-  background: rgba(239, 68, 68, 0.15);
-  border-color: rgba(239, 68, 68, 0.35);
-}
-.btn-ghost {
-  background: transparent;
-}
-.btn-ghost:hover {
-  background: rgba(255, 255, 255, 0.05);
-}
-
-/* Inputs e selects */
-.input {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: var(--radius);
-  border: 1px solid var(--line);
-  background: rgba(0, 0, 0, 0.18);
-  color: var(--text);
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.15s ease;
-}
-.input:focus {
-  border-color: var(--brand);
-}
-.label {
-  font-size: 12px;
-  color: var(--muted);
-  margin-bottom: 6px;
-  display: block;
-}
-
-/* Listas e itens */
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px 16px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: rgba(255, 255, 255, 0.04);
-}
-.item-title {
-  font-weight: 800;
-  font-size: 14px;
-}
-.item-sub {
-  color: var(--muted);
-  font-size: 12px;
-  margin-top: 2px;
-}
-.item-left {
-  min-width: 0;
-}
-.item-right {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-
-/* Avisos e badges */
-.notice {
-  border: 1px dashed rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: var(--radius);
-  padding: 14px 16px;
-  color: var(--muted);
-  font-size: 13px;
-}
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--muted);
-  font-size: 12px;
-}
-
-/* Tabela simples */
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  overflow: hidden;
-  border-radius: var(--radius);
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.03);
-}
-.table th, .table td {
-  padding: 12px 14px;
-  border-bottom: 1px solid var(--line);
-  font-size: 13px;
-}
-.table th {
-  color: var(--muted);
-  font-weight: 800;
-  background: rgba(255, 255, 255, 0.04);
-}
-.table tr:last-child td {
-  border-bottom: none;
-}
-.center { text-align: center; }
-.right { text-align: right; }
-
-/* Outros utilitários */
-.sep {
-  height: 1px;
-  background: var(--line);
-  margin: 16px 0;
-}
-.pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--text);
-  font-size: 11px;
-  font-weight: 600;
-}
-.club-logo{width:42px;height:42px;overflow:hidden;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);display:grid;place-items:center;}
-.club-logo img{width:100%;height:100%;object-fit:contain;display:block;}
-
-
-/* --- table logo fix --- */
-.table .club-cell{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  min-width:0;
-}
-.table .club-cell .club-logo{
-  width:28px; height:28px;
-  border-radius:10px;
-}
-.table .club-cell .club-name{
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-
-
-/* --- Zonas de classificação/rebaixamento (Parte 2) --- */
-.pill.zone-lib { border-color: rgba(220,181,102,.45); background: rgba(220,181,102,.12); }
-.pill.zone-sula { border-color: rgba(245,158,11,.45); background: rgba(245,158,11,.10); }
-.pill.zone-ucl { border-color: rgba(59,130,246,.45); background: rgba(59,130,246,.10); }
-.pill.zone-uel { border-color: rgba(168,85,247,.45); background: rgba(168,85,247,.10); }
-.pill.zone-up { border-color: rgba(34,197,94,.45); background: rgba(34,197,94,.10); }
-.pill.zone-z4 { border-color: rgba(239,68,68,.45); background: rgba(239,68,68,.10); }
-
-.table tr.zone-lib td { box-shadow: inset 4px 0 0 rgba(220,181,102,.75); }
-.table tr.zone-sula td { box-shadow: inset 4px 0 0 rgba(245,158,11,.75); }
-.table tr.zone-ucl td { box-shadow: inset 4px 0 0 rgba(59,130,246,.75); }
-.table tr.zone-uel td { box-shadow: inset 4px 0 0 rgba(168,85,247,.75); }
-.table tr.zone-up td { box-shadow: inset 4px 0 0 rgba(34,197,94,.75); }
-.table tr.zone-z4 td { box-shadow: inset 4px 0 0 rgba(239,68,68,.75); }
-
-/* --- Standings polish (Parte A3) --- */
-.zone-legend{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding:10px 12px;
-  border:1px solid var(--line);
-  background: rgba(255,255,255,.04);
-  border-radius:14px;
-}
-.zone-legend-left{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
-.zone-legend-right{ color: var(--muted); font-size: 12px; line-height: 1.2; }
-.pill.pill-mini{ padding:4px 8px; font-size:10px; opacity:.9; }
-
-.table-wrap{ overflow-x:auto; border-radius:14px; border:1px solid var(--line); }
-.table-standings{ margin:0; border:0; min-width: 720px; }
-.table-standings thead th{ position: sticky; top: 0; z-index: 2; background: rgba(10, 20, 30, .92); backdrop-filter: blur(6px); }
-
-.table-standings tbody tr:nth-child(odd){ background: rgba(255,255,255,.02); }
-.table-standings tbody tr.is-user{ background: rgba(34,197,94,.08) !important; }
-.table-standings tbody tr.is-user td{ box-shadow: inset 0 0 0 1px rgba(34,197,94,.35); }
-.table-standings tbody tr.is-leader{ background: rgba(220,181,102,.08); }
-.table-standings tbody tr.is-leader td:first-child{ font-weight:800; }
-
-@media (max-width: 720px){
-  .zone-legend{ align-items:flex-start; flex-direction:column; }
-  .zone-legend-right{ width:100%; }
-}
-
-
-/* =========================
-   HUB – Cinemático (C3)
-   ========================= */
-
-.hub-hero{
-  position:relative;
-  overflow:hidden;
-  border-radius:22px;
-  padding:18px;
-  margin-bottom:14px;
-  background: radial-gradient(1200px 420px at 20% 0%, rgba(80,220,140,.18), transparent 60%),
-              radial-gradient(900px 360px at 80% 10%, rgba(120,170,255,.16), transparent 60%),
-              rgba(10,16,22,.6);
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 20px 60px rgba(0,0,0,.35);
-}
-.hub-hero .hub-hero-title{
-  font-size:18px;
-  font-weight:800;
-  letter-spacing:.3px;
-}
-.hub-hero .hub-hero-sub{
-  opacity:.9;
-  margin-top:4px;
-}
-
-.season-overview-grid{
-  display:grid;
-  grid-template-columns:repeat(12,1fr);
-  gap:12px;
-  margin:16px 0 12px;
-}
-.season-card{
-  grid-column:span 6;
-  padding:16px;
-  border-radius:18px;
-  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-  border:1px solid rgba(255,255,255,.09);
-  box-shadow:0 14px 36px rgba(0,0,0,.22);
-}
-.season-card-highlight{
-  background:radial-gradient(900px 220px at 0% 0%, rgba(34,197,94,.20), transparent 55%), linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-}
-.season-card-label{font-size:12px; text-transform:uppercase; letter-spacing:.12em; opacity:.75; margin-bottom:8px}
-.season-card-value{font-size:20px; font-weight:900; line-height:1.15}
-.season-card-meta{font-size:12px; opacity:.82; margin-top:8px}
-.season-card-action{margin-top:12px; display:inline-flex; padding:8px 12px; border-radius:999px; border:1px solid rgba(255,255,255,.10); background:rgba(255,255,255,.05); font-weight:700; font-size:12px}
-.progress-mini{margin-top:10px; height:10px; border-radius:999px; background:rgba(255,255,255,.08); overflow:hidden}
-.progress-mini span{display:block; height:100%; border-radius:999px; background:linear-gradient(90deg, rgba(34,197,94,.95), rgba(14,165,233,.95));}
-.hub-quickbar{display:flex; flex-wrap:wrap; gap:10px; margin:8px 0 4px}
-@media (min-width: 900px){
-  .season-card{grid-column:span 3}
-  .season-card-highlight{grid-column:span 3}
-}
-@media (max-width: 720px){
-  .season-card{grid-column:span 12}
-}
-
-.hub-grid{
-  display:grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap:12px;
-  margin-top:14px;
-}
-.hub-card{
-  grid-column: span 6;
-  position:relative;
-  overflow:hidden;
-  border-radius:18px;
-  min-height:120px;
-  padding:14px;
-  border:1px solid rgba(255,255,255,.09);
-  background: rgba(12,18,26,.55);
-  box-shadow:0 16px 40px rgba(0,0,0,.28);
-  cursor:pointer;
-  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, filter .18s ease;
-}
-.hub-card:hover{
-  transform: translateY(-2px);
-  border-color: rgba(120,255,190,.22);
-  box-shadow:0 22px 55px rgba(0,0,0,.34);
-  filter: saturate(1.05);
-}
-.hub-card:active{ transform: translateY(0px) scale(.99); }
-.hub-card .hub-bg{
-  position:absolute; inset:0;
-  background-size: cover;
-  background-position:center;
-  opacity:.22;
-  filter: blur(0px);
-}
-.hub-card .hub-overlay{
-  position:absolute; inset:0;
-  background: linear-gradient(90deg, rgba(8,12,18,.92), rgba(8,12,18,.60) 55%, rgba(8,12,18,.22));
-}
-.hub-card .hub-content{
-  position:relative;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-}
-.hub-card .hub-left{
-  display:flex; align-items:center; gap:12px;
-}
-.hub-pill{
-  width:44px; height:44px;
-  border-radius:14px;
-  display:flex; align-items:center; justify-content:center;
-  background: rgba(0,0,0,.35);
-  border:1px solid rgba(255,255,255,.10);
-  font-size:22px;
-}
-.hub-title{
-  font-weight:900;
-  letter-spacing:.2px;
-}
-.hub-desc{
-  opacity:.88;
-  font-size:12px;
-  margin-top:2px;
-}
-.hub-cta{
-  font-weight:800;
-  opacity:.9;
-  padding:8px 10px;
-  border-radius:12px;
-  background: rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.08);
-}
-@media (min-width: 900px){
-  .hub-card{ grid-column: span 4; min-height:140px; }
-}
-@media (max-width: 480px){
-  .hub-card{ grid-column: span 12; }
-}
-
-
-
-/* Carreira (Parte 1) */
-.chip-grid{display:flex;flex-wrap:wrap;gap:8px}
-.chip{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#fff;padding:8px 10px;border-radius:12px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
-.chip span{font-size:12px;opacity:.9}
-.chip.active{border-color:rgba(255,255,255,.45);background:rgba(255,255,255,.14)}
-.avatar-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-@media(max-width:700px){.avatar-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.avatar-tile{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#fff;padding:10px;border-radius:16px;cursor:pointer;text-align:left}
-.avatar-tile.active{border-color:rgba(255,255,255,.45);background:rgba(255,255,255,.14)}
-.avatar-img{width:52px;height:52px;border-radius:14px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.12);margin-bottom:8px;display:flex;align-items:center;justify-content:center;font-size:12px;opacity:.9}
-.avatar-label{font-size:12px;opacity:.9}
-.hint{font-size:12px;opacity:.8;margin-top:8px}
-.select{width:100%;padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.2);color:#fff}
-
-/* Mini card (tela Tática) */
-.card-mini{
-  border: 1px solid rgba(255,255,255,0.08);
-  background: rgba(255,255,255,0.03);
-  border-radius: 18px;
-  padding: 14px;
-}
-.card-mini-title{
-  font-weight: 800;
-  margin-bottom: 10px;
-  letter-spacing: .2px;
-}
-
-
-/* ---------------------------------------------------------------------------
-   Parte 6: Cerimônia de Campeão + Carreira (Hall da Fama)
---------------------------------------------------------------------------- */
-.champion-overlay{
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.72);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 14px;
-  z-index: 9999;
-}
-.champion-modal{
-  width: min(720px, 96vw);
-}
-.champion-hero{
-  display: flex;
-  gap: 14px;
-  align-items: center;
-}
-.champion-logos{
-  display:flex;
-  gap: 10px;
-  align-items:center;
-}
-.champion-logo{
-  width: 72px;
-  height: 72px;
-  object-fit: contain;
-  border-radius: 16px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  padding: 8px;
-}
-.champion-info{
-  flex: 1;
-}
-.champion-club{
-  font-size: 18px;
-}
-.champion-line{
-  opacity: .85;
-}
-.champion-avatar img{
-  width: 72px;
-  height: 72px;
-  object-fit: cover;
-  border-radius: 18px;
-  border: 1px solid rgba(255,255,255,0.08);
-  background: rgba(255,255,255,0.04);
-}
-
-.career-header{
-  display:flex;
-  gap: 12px;
-  align-items: center;
-}
-.career-avatar{
-  width: 74px;
-  height: 74px;
-  border-radius: 18px;
-  border: 1px solid rgba(255,255,255,0.08);
-  background: rgba(255,255,255,0.03);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  overflow:hidden;
-}
-.career-avatar img{
-  width: 74px;
-  height: 74px;
-  object-fit: cover;
-}
-.career-name{
-  font-size: 18px;
-  margin-bottom: 4px;
-}
-.flag-mini{
-  width: 18px;
-  height: 18px;
-  object-fit: cover;
-  border-radius: 999px;
-  vertical-align: -3px;
-  margin-right: 6px;
-  border: 1px solid rgba(255,255,255,0.1);
-}
-.trophy-item{
-  display:flex;
-  align-items:center;
-  justify-content: space-between;
-  gap: 10px;
-}
-.trophy-logos{
-  display:flex;
-  gap:8px;
-  align-items:center;
-  margin-right: 8px;
-}
-.trophy-logos img{
-  width: 34px;
-  height: 34px;
-  object-fit: contain;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.08);
-  background: rgba(255,255,255,0.03);
-  padding: 4px;
-}
-/* -------------------------------------------------------------------------- */
-/* Táticas: lineup & board (2D)                                                */
-/* -------------------------------------------------------------------------- */
-.btn-small{
-  padding: 6px 10px;
-  font-size: 12px;
-  line-height: 1;
-}
-
-.pill-mini{
-  padding: 4px 8px;
-  font-size: 10px;
-}
-
-.pill.ok{ border-color: rgba(34,197,94,.45); background: rgba(34,197,94,.10); }
-.pill.warn{ border-color: rgba(245,158,11,.45); background: rgba(245,158,11,.10); }
-
-.lineup-item{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:12px;
-  padding: 10px 0;
-  border-bottom: 1px dashed rgba(255,255,255,.10);
-}
-.lineup-item:last-child{ border-bottom:none; }
-.lineup-left{ min-width:0; }
-.lineup-name{
-  font-weight: 800;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  max-width: 320px;
-}
-.lineup-right{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content:flex-end;
-}
-.lineup-actions{
-  display:flex;
-  gap:6px;
-  flex-wrap:wrap;
-  justify-content:flex-end;
-}
-
-.tactic-board{
-  border: 1px solid rgba(255,255,255,.12);
-  border-radius: 16px;
-  padding: 14px;
-  min-height: 240px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  background: radial-gradient(circle at 50% 40%, rgba(34,197,94,.16), rgba(15,23,42,.55));
-}
-.tactic-row{
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  flex-wrap:wrap;
-}
-.tactic-chip{
-  padding: 8px 10px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.14);
-  background: rgba(255,255,255,.06);
-  color: var(--text);
-  font-weight: 750;
-  font-size: 12px;
-  max-width: 160px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-.tactic-chip.empty{ opacity:.55; font-weight:650; }
-
-@media(max-width: 480px){
-  .lineup-name{ max-width: 220px; }
-  .tactic-board{ min-height: 210px; }
-  .tactic-chip{ max-width: 140px; font-size: 11px; }
-}
-
-
-/* =======================================================
-   Build v1.36.0 — Fase 1 polish seguro
-   ======================================================= */
 .topbar{
-  backdrop-filter: blur(14px);
-  background: linear-gradient(180deg, rgba(10,14,20,.86), rgba(10,14,20,.64));
-  border-bottom: 1px solid rgba(255,255,255,.08);
-}
-.logo-badge{
-  box-shadow: 0 12px 28px rgba(34,197,94,.18), inset 0 1px 0 rgba(255,255,255,.12);
-}
-.btn {
-  min-height: 44px;
-  box-shadow: 0 10px 24px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.05);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding: 14px 14px;
+  border-radius: var(--radius2);
+  background: linear-gradient(180deg, rgba(14, 18, 34, 0.86), rgba(10, 12, 24, 0.70));
+  box-shadow: var(--shadow);
+  border: 1px solid var(--stroke);
   backdrop-filter: blur(10px);
 }
-.btn-primary {
-  box-shadow: 0 14px 30px rgba(34,197,94,.18), 0 8px 22px rgba(220,181,102,.16);
+
+/* Always-visible navigation (mobile friendly) */
+.topNav{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  margin-right:6px;
 }
-.btn-ghost {
-  border-color: rgba(255,255,255,.12);
+.navBtn{
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid var(--stroke);
+  background: rgba(0,0,0,0.22);
+  color: rgba(233,240,255,0.92);
+  font-weight: 800;
+  letter-spacing: .2px;
+  cursor:pointer;
 }
-.build-badge{
-  border:1px solid rgba(255,255,255,.10);
-  backdrop-filter: blur(12px);
+.navBtn:active{ transform: translateY(1px); }
+
+@media (max-width: 860px){
+  .topNav{ margin-right: 10px; gap:8px; }
+  .navBtn{ padding:8px 10px; font-size: 12px; border-radius: 10px; }
 }
-.footer{
-  background: linear-gradient(180deg, rgba(8,11,16,.18), rgba(8,11,16,.36));
-  border-top: 1px solid rgba(255,255,255,.06);
+
+.build{
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--textDim);
+  opacity: 0.9;
+}
+
+.brand{ display:flex; align-items:center; gap:12px; min-width: 220px; }
+.logo{
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(70,160,255,0.95), rgba(60,220,160,0.65));
+  box-shadow: 0 10px 30px rgba(70,160,255,0.20);
+}
+.brandText .title{ font-weight: 800; letter-spacing: 0.2px; }
+.brandText .subtitle{ font-size: 12px; color: var(--textFaint); margin-top: 2px; }
+
+/* HUD */
+.hud{ display:flex; gap:10px; flex-wrap: wrap; justify-content:flex-end; }
+.hudItem{
+  min-width: 86px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(8, 10, 20, 0.50);
+  border: 1px solid var(--stroke);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+.hudLabel{ font-size: 11px; color: var(--textFaint); text-transform: uppercase; letter-spacing: 0.8px; }
+.hudValue{ font-weight: 800; margin-top: 2px; }
+
+/* Stress meter (Stage 3)
+   Uses CSS variable --meter (0%..100%) to render a small bar inside the HUD.
+*/
+.hudMeter{ position: relative; padding-bottom: 8px; }
+.hudMeter::before{
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  bottom: 2px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.12);
+}
+.hudMeter::after{
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 2px;
+  height: 3px;
+  width: var(--meter, 0%);
+  border-radius: 999px;
+  background: rgba(255,190,70,0.85);
+  box-shadow: 0 8px 18px rgba(255,190,70,0.22);
+}
+
+body[data-stress="mid"] .hudMeter::after{ background: rgba(255,190,70,0.85); box-shadow: 0 8px 18px rgba(255,190,70,0.22); }
+body[data-stress="high"] .hudMeter::after{ background: rgba(255,70,110,0.9); box-shadow: 0 10px 22px rgba(255,70,110,0.28); }
+body[data-stress="low"] .hudMeter::after{ background: rgba(60,220,160,0.85); box-shadow: 0 8px 18px rgba(60,220,160,0.18); }
+
+/* Subtle cinematic tension when stress is high */
+body[data-stress="high"] .topbar{ box-shadow: 0 10px 35px rgba(255,70,110,0.10); }
+body[data-stress="high"] .card{ box-shadow: 0 18px 55px rgba(0,0,0,0.35); }
+
+/* Grid */
+.grid{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+/* Cards */
+.card{
+  border-radius: var(--radius2);
+  background: linear-gradient(180deg, var(--card), var(--card2));
+  border: 1px solid var(--stroke);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+  padding: 14px;
+}
+
+.cardTitle{
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  margin-bottom: 10px;
+}
+
+/* Form */
+.formRow{ display:flex; flex-direction:column; gap:6px; margin-bottom: 10px; }
+.label{ font-size: 12px; color: var(--textFaint); text-transform: uppercase; letter-spacing: 0.8px; }
+
+.select{
+  width: 100%;
+  padding: 12px 12px;
+  border-radius: 14px;
+  background: rgba(8, 10, 20, 0.45);
+  border: 1px solid var(--stroke2);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+/* Botões - base (IMPORTANTE: cobre botões sem classe também) */
+button{
+  border-radius: 14px;
+  padding: 12px 14px;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid var(--stroke2);
+  background: rgba(8, 10, 20, 0.35);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 10px 22px rgba(0,0,0,0.25);
+  transition: transform .10s ease, filter .15s ease, background .15s ease, border-color .15s ease;
+}
+
+button:active{ transform: scale(0.98); }
+button:hover{ filter: brightness(1.05); }
+button:disabled{
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: grayscale(0.25);
+}
+
+/* Classes de botões */
+.btnRow{ display:flex; gap:10px; flex-wrap: wrap; margin-top: 10px; }
+
+.btnPrimary{
+  /* Use the primary palette variables so the button adapts to the selected
+     agency.  The gradient transitions from the fully opaque primary colour
+     to a translucent variant stored in --primary2.  Shadow and border
+     colours are derived from dedicated variables. */
+  background: linear-gradient(180deg, var(--primary), var(--primary2));
+  border: 1px solid var(--primary-border);
+  box-shadow: 0 18px 35px var(--primary-shadow), inset 0 1px 0 rgba(255,255,255,0.08);
+  font-weight: 800;
+}
+
+.btnGhost{
+  background: rgba(8, 10, 20, 0.30);
+  border: 1px solid var(--stroke2);
+  font-weight: 700;
+}
+
+/* Garantia: mesmo se as classes sumirem, estiliza pelos IDs principais */
+#btnAnswer, #btnStartShift, #btnDispatch { font-weight: 800; }
+#btnAnswer, #btnStartShift, #btnDispatch{
+  /* Mirror the primary button styling using theme variables */
+  background: linear-gradient(180deg, var(--primary), var(--primary2));
+  border: 1px solid var(--primary-border);
+}
+#btnEndShift, #btnHold, #btnDismiss{
+  background: rgba(8, 10, 20, 0.30);
+  border: 1px solid var(--stroke2);
+}
+
+/* Hint */
+.hint{
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--textDim);
+  line-height: 1.35;
+}
+
+/* List / Queue / Log */
+.list{ display:flex; flex-direction:column; gap:10px; }
+.log{
+  margin: 0;
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(8,10,20,0.45);
+  border: 1px solid var(--stroke);
+  min-height: 120px;
+  max-height: 220px;
+  overflow: auto;
+  white-space: pre-wrap;
+  color: rgba(233,240,255,0.85);
+  line-height: 1.35;
+}
+.queue{
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(8,10,20,0.45);
+  border: 1px solid var(--stroke);
+  min-height: 90px;
+  overflow: auto;
+}
+
+/* Operação */
+.pills{ display:flex; gap:10px; flex-wrap: wrap; margin-bottom: 10px; }
+.pill{
+  padding: 9px 12px;
+  border-radius: 999px;
+  background: rgba(8,10,20,0.40);
+  border: 1px solid var(--stroke);
+  font-weight: 800;
+  font-size: 12px;
+}
+.pillWarn{
+  border-color: rgba(255,190,70,0.30);
+  box-shadow: 0 0 0 1px rgba(255,190,70,0.10);
+}
+
+/* SubCards */
+.subCard{
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 18px;
+  background: rgba(8, 10, 20, 0.35);
+  border: 1px solid var(--stroke);
+}
+.subTitle{
+  font-weight: 900;
+  letter-spacing: 0.2px;
+  margin-bottom: 6px;
+}
+.meta{
+  font-size: 12px;
+  color: var(--textDim);
+  margin-bottom: 10px;
+}
+
+/* Caixa de chamada */
+.callBox{
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(4, 6, 14, 0.55);
+  border: 1px solid rgba(210,230,255,0.12);
+  min-height: 120px;
+  white-space: pre-wrap;
+  line-height: 1.45;
+}
+
+/* Resumo */
+.summary{
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(8,10,20,0.45);
+  border: 1px solid var(--stroke);
+  color: var(--textDim);
+}
+
+/*
+ * Agency-themed overrides
+ *
+ * The UI supports multiple emergency agencies (police, fire/ambulância).  When
+ * the player selects an agency, the <body> element receives a
+ * data-agency attribute with the corresponding value.  These selectors
+ * customize the primary colour palette and background image for each
+ * agency theme.  See script.js for the code that updates the data attribute.
+ */
+body[data-agency="police"] {
+  /* Blue-toned primary colours for police mode */
+  --bg-url: url('./img/police_bg.png');
+  --primary: rgba(70, 160, 255, 1);
+  --primary2: rgba(70, 160, 255, 0.18);
+
+  /* Derived colours for shadows and borders in the police theme */
+  --primary-shadow: rgba(70, 160, 255, 0.18);
+  --primary-border: rgba(120, 200, 255, 0.35);
+}
+
+body[data-agency="fire"] {
+  /* Warm orange/red palette for fire mode */
+  --bg-url: url('./img/fire_bg.png');
+  --primary: rgba(245, 90, 75, 1);
+  --primary2: rgba(245, 90, 75, 0.18);
+
+  /* Derived colours for shadows and borders in the fire theme */
+  --primary-shadow: rgba(245, 90, 75, 0.18);
+  --primary-border: rgba(255, 140, 100, 0.35);
+}
+
+body[data-agency="ambulance"] {
+  --bg-url: url('./img/fire_bg.png');
+  --primary: rgba(50, 205, 190, 1);
+  --primary2: rgba(50, 205, 190, 0.18);
+  --primary-shadow: rgba(50, 205, 190, 0.20);
+  --primary-border: rgba(110, 235, 220, 0.35);
+}
+
+/* Desktop: 2 colunas */
+@media (min-width: 920px){
+  .grid{
+    grid-template-columns: 1.1fr 0.9fr;
+    align-items: start;
+  }
+  /* distribuição parecida com HUD/AAA */
+  .grid > section:nth-child(1){ grid-column: 1; }
+  .grid > section:nth-child(2){ grid-column: 2; }
+  .grid > section:nth-child(3){ grid-column: 2; }
+  .grid > section:nth-child(4){ grid-column: 1; }
+  .grid > section:nth-child(5){ grid-column: 1; }
+  .grid > section:nth-child(6){ grid-column: 2; }
+}
+
+/* Stage 7C */
+.miniList{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.miniItem{padding:8px 10px;border-radius:12px;background:rgba(8,10,18,0.45);border:1px solid rgba(255,255,255,0.10);font-size:12px;line-height:1.2}
+
+
+/* === FIX DEFINITIVO: NAV acima do Leaflet (cliques funcionam) === */
+.topbar{
+  position: fixed !important;
+  top: 12px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: min(1100px, calc(100% - 24px)) !important;
+  z-index: 999999 !important;
+  pointer-events: auto !important;
+}
+main{
+  padding-top: 104px !important;
+}
+.topNav, .hud, .brand{
+  position: relative !important;
+  z-index: 1000000 !important;
+  pointer-events: auto !important;
+}
+/* Leaflet sempre abaixo do header */
+.leaflet-container, #map, .mapWrap, .mapCard{
+  z-index: 0 !important;
+}
+.leaflet-pane, .leaflet-control, .leaflet-top, .leaflet-bottom{
+  z-index: 10 !important;
 }

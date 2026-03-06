@@ -1,0 +1,9 @@
+Last Call Dispatch Operator - Build 1.2.3
+Fase: Phase 3.7 – Dispatch Enable and Append-Only Transcript Fix
+Data e hora: 2026-03-06 20:05:00 UTC
+Conclusão do projeto: 67%
+
+Correções desta build:
+- corrigido o transcript para acrescentar apenas o novo texto, sem reescrever a saudação inicial do operador
+- ajustado o fluxo de renderização para que o seletor de unidade seja preenchido antes do recálculo do botão Despachar
+- reduzido o uso de renderização forçada em momentos que causavam repetição visual da chamada

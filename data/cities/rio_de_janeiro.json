@@ -1,0 +1,36 @@
+{
+  "id": "rio_de_janeiro",
+  "name": "Rio de Janeiro - RJ",
+  "country": "BR",
+  "center": {
+    "lat": -22.906847,
+    "lng": -43.172897
+  },
+  "zoom": 12,
+  "bbox": {
+    "minLat": -23.08,
+    "minLng": -43.8,
+    "maxLat": -22.76,
+    "maxLng": -43.1
+  },
+  "bases": [
+    {
+      "id": "pol_base",
+      "type": "police",
+      "lat": -22.912,
+      "lng": -43.2
+    },
+    {
+      "id": "fire_base",
+      "type": "fire",
+      "lat": -22.916,
+      "lng": -43.17
+    },
+    {
+      "id": "med_base",
+      "type": "medical",
+      "lat": -22.93,
+      "lng": -43.22
+    }
+  ]
+}

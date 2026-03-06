@@ -1,0 +1,38 @@
+{
+  "id": "fire_apartment_01",
+  "agency": "fire",
+  "severity": 5,
+  "caller_state": "crying",
+  "intro": {
+    "text": "Meu apartamento tá pegando fogo! Tem fumaça em todo lugar!",
+    "typing_speed": 30
+  },
+  "timers": {
+    "worsen": 35,
+    "fail": 80
+  },
+  "required_info": [
+    "location",
+    "victims"
+  ],
+  "optional_info": [
+    "fire_origin"
+  ],
+  "wrong_questions": [
+    "caller_name"
+  ],
+  "correct_units": [
+    "fire_engine",
+    "rescue"
+  ],
+  "outcomes": {
+    "success": "Incêndio controlado, vítimas resgatadas.",
+    "worsen": "Fogo se espalha para outros cômodos.",
+    "fail": "Explosão interna. Óbitos confirmados."
+  },
+  "score": {
+    "success": 150,
+    "worsen": -60,
+    "fail": -150
+  }
+}

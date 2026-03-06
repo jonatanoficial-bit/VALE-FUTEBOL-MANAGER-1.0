@@ -1,0 +1,36 @@
+{
+  "id": "new_york",
+  "name": "New York City - USA",
+  "country": "US",
+  "center": {
+    "lat": 40.7128,
+    "lng": -74.006
+  },
+  "zoom": 12,
+  "bbox": {
+    "minLat": 40.55,
+    "minLng": -74.25,
+    "maxLat": 40.92,
+    "maxLng": -73.7
+  },
+  "bases": [
+    {
+      "id": "pol_base",
+      "type": "police",
+      "lat": 40.73,
+      "lng": -73.995
+    },
+    {
+      "id": "fire_base",
+      "type": "fire",
+      "lat": 40.711,
+      "lng": -74.012
+    },
+    {
+      "id": "med_base",
+      "type": "medical",
+      "lat": 40.741,
+      "lng": -73.975
+    }
+  ]
+}

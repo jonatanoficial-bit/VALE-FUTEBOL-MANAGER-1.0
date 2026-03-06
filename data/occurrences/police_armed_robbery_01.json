@@ -1,0 +1,39 @@
+{
+  "id": "police_armed_robbery_01",
+  "agency": "police",
+  "severity": 4,
+  "caller_state": "panic",
+  "intro": {
+    "text": "Tem um homem armado aqui! Ele tá gritando com todo mundo!",
+    "typing_speed": 35
+  },
+  "timers": {
+    "worsen": 40,
+    "fail": 90
+  },
+  "required_info": [
+    "location",
+    "suspect_weapon"
+  ],
+  "optional_info": [
+    "number_of_suspects",
+    "hostages"
+  ],
+  "wrong_questions": [
+    "caller_name"
+  ],
+  "correct_units": [
+    "patrol",
+    "tactical"
+  ],
+  "outcomes": {
+    "success": "Suspeito contido, ninguém ferido.",
+    "worsen": "O suspeito dispara para o alto, pânico geral.",
+    "fail": "Reféns feridos. Situação fora de controle."
+  },
+  "score": {
+    "success": 120,
+    "worsen": -40,
+    "fail": -120
+  }
+}
