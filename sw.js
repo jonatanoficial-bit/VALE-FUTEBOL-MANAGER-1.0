@@ -2,12 +2,12 @@
    Objetivo: melhorar carregamento no GitHub Pages e permitir modo offline.
 */
 
-const CACHE_NAME = "vfm-cache-2026-03-06_193051-v1.36.0_foundation_stabilization";
+const CACHE_NAME = "vfm-cache-2026-03-06_211625-v1.42.0_phase6_full_realism_cachefix";
 const CORE_ASSETS = [
   './',
-  './index.html?v=build_2026-03-06_193051_v1.36.0_foundation_stabilization',
-  './styles.css?v=build_2026-03-06_193051_v1.36.0_foundation_stabilization',
-  './app.js?v=build_2026-03-06_193051_v1.36.0_foundation_stabilization',
+  './index.html?v=build_2026-03-06_211625_v1.42.0_phase6_full_realism_cachefix',
+  './styles.css?v=build_2026-03-06_211625_v1.42.0_phase6_full_realism_cachefix',
+  './app.js?v=build_2026-03-06_211625_v1.42.0_phase6_full_realism_cachefix',
   './manifest.json',
   './favicon.ico',
   './assets/club_placeholder.svg',
@@ -30,7 +30,7 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => Promise.all(
-      keys.filter((k) => k.startsWith('vfm-2026-cache-') && k !== CACHE_NAME).map((k) => caches.delete(k))
+      keys.filter((k) => k.startsWith('vfm-cache-') && k !== CACHE_NAME).map((k) => caches.delete(k))
     )).then(() => self.clients.claim())
   );
 });

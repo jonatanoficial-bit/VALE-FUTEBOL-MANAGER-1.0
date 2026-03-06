@@ -1,5 +1,5 @@
 VALE FUTEBOL MANAGER 2026
-BUILD: v1.40.0_visual_identity_AAA
-DATE(UTC): 2026-03-06 20:23:00 UTC
-PHASE: 5 - Identidade Visual AAA
-PROJECT_STATUS: 73%
+BUILD: v1.42.0_phase6_full_realism_cachefix
+DATE(UTC): 2026-03-06 21:16:25 UTC
+PHASE: 6 - Simulacao Realista + Cache Fix + Full Package
+PROJECT_STATUS: 81%

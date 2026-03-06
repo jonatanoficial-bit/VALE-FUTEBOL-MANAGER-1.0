@@ -1,10 +1,10 @@
-# README BUILD
+# Build atual
 
-- GAME: `Vale Futebol Manager 2026`
-- BUILD: `v1.38.0_tactical_core_upgrade`
-- BUILD STAMP: `BUILD_2026-03-06_20-15-00_UTC_v1.38.0_tactical_core_upgrade`
-- DATA UTC: `2026-03-06 20:15:00`
-- FASE: `Fase 3 - Nucleo Tatico e Escalacao Real`
-- PROGRESSO: `55%`
-- PACOTE: `zip completo`
-- HOSTING ALVO: `GitHub` e `Vercel`
+- Projeto: Vale Futebol Manager 2026
+- Build: v1.42.0_phase6_full_realism_cachefix
+- Data UTC: 2026-03-06 21:16:25 UTC
+- Fase: 6 - Simulacao Realista + Cache Fix + Full Package
+- Progresso: 81%
+
+## Observacao
+Esta build foi gerada em ZIP COMPLETO a partir do projeto inteiro, com correcao de cache para GitHub Pages e Vercel.

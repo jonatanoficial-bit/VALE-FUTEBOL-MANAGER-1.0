@@ -64,10 +64,8 @@
     }
   }
 
-    const BUILD_TAG = "v1.38.0_tactical_core_upgrade";
-const BUILD_TIME_STR = "2026-03-06 19:58:00 UTC";
-  const BUILD_PHASE = "Fase 3 - Nucleo Tatico e Escalacao Real";
-  const PROJECT_COMPLETION = "55%";
+    const BUILD_TAG = "v1.42.0_phase6_full_realism_cachefix";
+const BUILD_TIME_STR = "2026-03-06 21:16:25 UTC";
 
 // Ligas UEFA consideradas para preferência de continentais (evita ReferenceError no modal)
 const UEFA_LIDS = ['ENG_PREMIER','ESP_LALIGA','ITA_SERIE_A','GER_BUNDES','FRA_LIGUE_1','POR_LIGA'];
@@ -1148,8 +1146,6 @@ function forceSyncSaveRosterFromPack(save){
       <div class="build-line"><b>build</b> ${BUILD_TAG}</div>
       <div class="build-line"><b>data</b> ${BUILD_TIME_STR}</div>
       <div class="build-line"><b>dados</b> ${updatedStr}</div>
-      <div class="build-line"><b>fase</b> ${BUILD_PHASE}</div>
-      <div class="build-line"><b>progresso</b> ${PROJECT_COMPLETION}</div>
     `;
   }
 
@@ -1717,8 +1713,7 @@ function applyBackground(path) {
         const id = p.id || p.playerId || (`P${String(i+1).padStart(5,'0')}`);
         const fitness = (typeof p.fitness === "number") ? p.fitness : (92 + Math.random()*6);
         const sharp = (typeof p.sharpness === "number") ? p.sharpness : 0;
-        const morale = (typeof p.morale === "number") ? p.morale : (72 + Math.random()*20);
-        return { ...p, id, fitness: Math.round(clampFloat(fitness, 40, 100)), sharpness: Math.round(clampFloat(sharp, -5, 5)*10)/10, morale: Math.round(clampFloat(morale, 45, 100)) };
+        return { ...p, id, fitness: Math.round(clampFloat(fitness, 40, 100)), sharpness: Math.round(clampFloat(sharp, -5, 5)*10)/10 };
       });
     }
 
@@ -2389,58 +2384,12 @@ function viewCareerCreate() {
   }
 
   /** HUB do treinador */
-
-  function getSeasonDashboardData(save) {
-    ensureSystems(save);
-    ensureSeason(save);
-    const clubId = save?.career?.clubId;
-    const rounds = save?.season?.rounds || [];
-    const currentRound = Number(save?.season?.currentRound || 0);
-    const totalRounds = Number(rounds.length || 0);
-    const table = Array.isArray(save?.season?.table) ? save.season.table : [];
-    const sorted = [...table].sort((a,b)=> (b.pts-a.pts) || ((b.gd||0)-(a.gd||0)) || ((b.gf||0)-(a.gf||0)) || String(a.clubId).localeCompare(String(b.clubId)));
-    const userPos = Math.max(1, sorted.findIndex(r => r.clubId === clubId) + 1) || '-';
-    const nextRoundMatches = rounds[currentRound] || [];
-    const lastRoundMatches = currentRound > 0 ? (rounds[currentRound - 1] || []) : [];
-    const nextMatch = nextRoundMatches.find(m => m.homeId === clubId || m.awayId === clubId) || null;
-    const lastMatch = [...lastRoundMatches].reverse().find(m => m.homeId === clubId || m.awayId === clubId) || null;
-    const progressPct = totalRounds ? Math.max(0, Math.min(100, Math.round((currentRound / totalRounds) * 100))) : 0;
-    const league = (state.packData?.competitions?.leagues || []).find(l => l.id === save.season.leagueId) || null;
-    return { clubId, currentRound, totalRounds, table: sorted, userPos, nextMatch, lastMatch, progressPct, league };
-  }
-
-  function getFixtureSummary(match, userClubId) {
-    if (!match) return null;
-    const home = getClub(match.homeId);
-    const away = getClub(match.awayId);
-    const isHome = match.homeId === userClubId;
-    const opponent = getClub(isHome ? match.awayId : match.homeId);
-    const played = !!match.played;
-    const result = played ? `${match.hg} x ${match.ag}` : 'A jogar';
-    let outcome = 'Pendente';
-    if (played) {
-      if (match.hg === match.ag) outcome = 'Empate';
-      else {
-        const userWon = (isHome && match.hg > match.ag) || (!isHome && match.ag > match.hg);
-        outcome = userWon ? 'Vitória' : 'Derrota';
-      }
-    }
-    return {
-      played,
-      isHome,
-      homeName: home?.short || home?.name || match.homeId,
-      awayName: away?.short || away?.name || match.awayId,
-      opponentName: opponent?.name || opponent?.short || 'Adversário',
-      venue: isHome ? 'Casa' : 'Fora',
-      result,
-      outcome
-    };
-  }
-
   function viewHub() {
     return requireSave((save) => {
       ensureSystems(save);
 
+      // HUB é o lobby do usuário dentro do jogo. Se ainda não escolheu clube,
+      // força o fluxo correto: Escolha de Clube -> Tutorial -> HUB.
       if (!save?.career?.clubId) {
         return `
           <div class="card">
@@ -2464,39 +2413,10 @@ function viewCareerCreate() {
       }
 
       const club = getClub(save.career.clubId);
+      // Format cash and current sponsor for display
       const currency = state.packData?.rules?.gameRules?.currency || 'BRL';
       const cashStr = (save.finance?.cash || 0).toLocaleString('pt-BR', { style: 'currency', currency });
       const sponsorName = save.sponsorship?.current?.name || 'Nenhum';
-      const dash = getSeasonDashboardData(save);
-      const nextFx = getFixtureSummary(dash.nextMatch, save.career.clubId);
-      const lastFx = getFixtureSummary(dash.lastMatch, save.career.clubId);
-      const totalTeams = dash.table.length || 20;
-      const zoneLabel = dash.userPos <= 4 ? 'Zona alta' : dash.userPos >= Math.max(17, totalTeams - 3) ? 'Pressão' : 'Estável';
-      const nextMatchBlock = nextFx ? `
-        <div class="season-card season-card-highlight" data-go="/matches">
-          <div class="season-card-label">Próximo jogo</div>
-          <div class="season-card-value">${esc(nextFx.venue)} • vs ${esc(nextFx.opponentName)}</div>
-          <div class="season-card-meta">Rodada ${dash.currentRound + 1}/${dash.totalRounds} • ${esc(dash.league?.name || save.season.leagueId)}</div>
-          <div class="season-card-action">Ir para partida</div>
-        </div>` : `
-        <div class="season-card season-card-highlight" data-go="/matches">
-          <div class="season-card-label">Próximo jogo</div>
-          <div class="season-card-value">Temporada concluída</div>
-          <div class="season-card-meta">Prepare a próxima temporada</div>
-          <div class="season-card-action">Ver temporada</div>
-        </div>`;
-      const lastMatchBlock = lastFx ? `
-        <div class="season-card" data-go="/matches">
-          <div class="season-card-label">Último resultado</div>
-          <div class="season-card-value">${esc(lastFx.result)} • ${esc(lastFx.outcome)}</div>
-          <div class="season-card-meta">${esc(lastFx.homeName)} vs ${esc(lastFx.awayName)}</div>
-        </div>` : `
-        <div class="season-card" data-go="/matches">
-          <div class="season-card-label">Último resultado</div>
-          <div class="season-card-value">Ainda sem partidas</div>
-          <div class="season-card-meta">Use o calendário para iniciar a carreira</div>
-        </div>`;
-
       return `
         <div class="card">
           <div class="card-header">
@@ -2507,103 +2427,221 @@ function viewCareerCreate() {
             <span class="badge">Caixa: ${cashStr}</span>
           </div>
           <div class="card-body">
-            <div class="kv"><span class="small">Patrocínio</span><b>${esc(sponsorName)}</b></div>
-            <div class="kv"><span class="small">Meta da Temporada</span><b>${esc(save.career.objective?.label || '—')}</b></div>
-            <div class="kv"><span class="small">Temporada</span><b>${esc(save.season?.id || '')}</b></div>
-
-            <div class="season-overview-grid">
-              ${nextMatchBlock}
-              <div class="season-card">
-                <div class="season-card-label">Posição atual</div>
-                <div class="season-card-value">${esc(String(dash.userPos))}º / ${esc(String(totalTeams))}</div>
-                <div class="season-card-meta">${esc(zoneLabel)} • Liga em andamento</div>
-              </div>
-              <div class="season-card">
-                <div class="season-card-label">Progresso da temporada</div>
-                <div class="season-card-value">${esc(String(dash.progressPct))}%</div>
-                <div class="progress-mini"><span style="width:${dash.progressPct}%"></span></div>
-                <div class="season-card-meta">${esc(String(dash.currentRound))} rodadas concluídas de ${esc(String(dash.totalRounds))}</div>
-              </div>
-              ${lastMatchBlock}
+            <div class="kv">
+              <span class="small">Patrocínio</span>
+              <b>${esc(sponsorName)}</b>
             </div>
 
-            <div class="hub-quickbar">
-              <button class="btn btn-primary" data-go="/matches">Continuar Temporada</button>
-              <button class="btn" data-go="/calendar">Ver Calendário</button>
-              <button class="btn" data-go="/competitions">Tabela</button>
-              <button class="btn" data-go="/save">Salvar progresso</button>
-            </div>
+<div class="kv">
+  <span class="small">Meta da Temporada</span>
+  <b>${esc(save.career.objective?.label || '—')}</b>
+</div>
+<div class="kv">
+  <span class="small">Temporada</span>
+  <b>${esc(save.season?.id || '')}</b>
+</div>
 
             <div class="sep"></div>
             <div class="hub-grid">
-              <div class="hub-card" data-go="/career">
-                <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
-                <div class="hub-overlay"></div>
-                <div class="hub-content"><div class="hub-left"><div class="hub-pill">🏆</div><div><div class="hub-title">Carreira</div><div class="hub-desc">Hall da fama, títulos e reputação</div></div></div><div class="hub-cta">Abrir</div></div>
-              </div>
-              <div class="hub-card" data-go="/matches">
-                <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_match.png')}')"></div>
-                <div class="hub-overlay"></div>
-                <div class="hub-content"><div class="hub-left"><div class="hub-pill">⚽</div><div><div class="hub-title">Partida</div><div class="hub-desc">Dispute, simule e acompanhe eventos ao vivo</div></div></div><div class="hub-cta">Abrir</div></div>
-              </div>
-              <div class="hub-card" data-go="/calendar">
-                <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
-                <div class="hub-overlay"></div>
-                <div class="hub-content"><div class="hub-left"><div class="hub-pill">🗓️</div><div><div class="hub-title">Calendário</div><div class="hub-desc">Próximos jogos, rodadas e agenda</div></div></div><div class="hub-cta">Ver</div></div>
-              </div>
-              <div class="hub-card" data-go="/competitions">
-                <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_match.png')}')"></div>
-                <div class="hub-overlay"></div>
-                <div class="hub-content"><div class="hub-left"><div class="hub-pill">🏆</div><div><div class="hub-title">Competições</div><div class="hub-desc">Tabelas, continentais e títulos</div></div></div><div class="hub-cta">Entrar</div></div>
-              </div>
-              <div class="hub-card" data-go="/training">
-                <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_staff.png')}')"></div>
-                <div class="hub-overlay"></div>
-                <div class="hub-content"><div class="hub-left"><div class="hub-pill">🏋️</div><div><div class="hub-title">Treino</div><div class="hub-desc">Evolua o elenco e ajuste intensidade</div></div></div><div class="hub-cta">Treinar</div></div>
-              </div>
-              <div class="hub-card" data-go="/staff">
-                <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_staff.png')}')"></div>
-                <div class="hub-overlay"></div>
-                <div class="hub-content"><div class="hub-left"><div class="hub-pill">🎧</div><div><div class="hub-title">Staff</div><div class="hub-desc">Comissão técnica e funções do clube</div></div></div><div class="hub-cta">Abrir</div></div>
-              </div>
-              <div class="hub-card" data-go="/sponsorship">
-                <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_sponsor.png')}')"></div>
-                <div class="hub-overlay"></div>
-                <div class="hub-content"><div class="hub-left"><div class="hub-pill">🤝</div><div><div class="hub-title">Patrocínio</div><div class="hub-desc">Contratos, metas e bônus financeiros</div></div></div><div class="hub-cta">Negociar</div></div>
-              </div>
-              <div class="hub-card" data-go="/transfers">
-                <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
-                <div class="hub-overlay"></div>
-                <div class="hub-content"><div class="hub-left"><div class="hub-pill">🔁</div><div><div class="hub-title">Mercado</div><div class="hub-desc">Compras, vendas e empréstimos</div></div></div><div class="hub-cta">Ver</div></div>
-              </div>
-              <div class="hub-card" data-go="/finance">
-                <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_sponsor.png')}')"></div>
-                <div class="hub-overlay"></div>
-                <div class="hub-content"><div class="hub-left"><div class="hub-pill">💰</div><div><div class="hub-title">Finanças</div><div class="hub-desc">Caixa, receitas, despesas e balanço</div></div></div><div class="hub-cta">Abrir</div></div>
-              </div>
-              <div class="hub-card" data-go="/squad">
-                <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_match.png')}')"></div>
-                <div class="hub-overlay"></div>
-                <div class="hub-content"><div class="hub-left"><div class="hub-pill">👥</div><div><div class="hub-title">Elenco</div><div class="hub-desc">Jogadores, status e evolução</div></div></div><div class="hub-cta">Abrir</div></div>
-              </div>
-              <div class="hub-card" data-go="/tactics">
-                <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_staff.png')}')"></div>
-                <div class="hub-overlay"></div>
-                <div class="hub-content"><div class="hub-left"><div class="hub-pill">📋</div><div><div class="hub-title">Tática</div><div class="hub-desc">Formação, estilo e instruções</div></div></div><div class="hub-cta">Editar</div></div>
-              </div>
-              <div class="hub-card" data-go="/save">
-                <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
-                <div class="hub-overlay"></div>
-                <div class="hub-content"><div class="hub-left"><div class="hub-pill">💾</div><div><div class="hub-title">Salvar</div><div class="hub-desc">Guarde seu progresso</div></div></div><div class="hub-cta">Salvar</div></div>
-              </div>
-              <div class="hub-card" data-go="/slots">
-                <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
-                <div class="hub-overlay"></div>
-                <div class="hub-content"><div class="hub-left"><div class="hub-pill">🔀</div><div><div class="hub-title">Slots</div><div class="hub-desc">Trocar e gerenciar saves</div></div></div><div class="hub-cta">Abrir</div></div>
-              </div>
-            </div>
+  <div class="hub-card" data-go="/career">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">🏆</div>
+        <div>
+          <div class="hub-title">Carreira</div>
+          <div class="hub-desc">Hall da fama, títulos e reputação</div>
+        </div>
+      </div>
+      <div class="hub-cta">Abrir</div>
+    </div>
+  </div>
+
+  <div class="hub-card" data-go="/matches">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_match.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">⚽</div>
+        <div>
+          <div class="hub-title">Partida</div>
+          <div class="hub-desc">Dispute, simule e acompanhe eventos ao vivo</div>
+        </div>
+      </div>
+      <div class="hub-cta">Abrir</div>
+    </div>
+  </div>
+
+  <div class="hub-card" data-go="/calendar">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">🗓️</div>
+        <div>
+          <div class="hub-title">Calendário</div>
+          <div class="hub-desc">Próximos jogos, rodadas e agenda</div>
+        </div>
+      </div>
+      <div class="hub-cta">Ver</div>
+    </div>
+  </div>
+
+  <div class="hub-card" data-go="/competitions">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_match.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">🏆</div>
+        <div>
+          <div class="hub-title">Competições</div>
+          <div class="hub-desc">Tabelas, continentais e títulos</div>
+        </div>
+      </div>
+      <div class="hub-cta">Entrar</div>
+    </div>
+  </div>
+
+  <div class="hub-card" data-go="/training">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_staff.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">🏋️</div>
+        <div>
+          <div class="hub-title">Treino</div>
+          <div class="hub-desc">Evolua o elenco e ajuste intensidade</div>
+        </div>
+      </div>
+      <div class="hub-cta">Treinar</div>
+    </div>
+  </div>
+
+  <div class="hub-card" data-go="/staff">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_staff.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">🎧</div>
+        <div>
+          <div class="hub-title">Staff</div>
+          <div class="hub-desc">Comissão técnica e funções do clube</div>
+        </div>
+      </div>
+      <div class="hub-cta">Abrir</div>
+    </div>
+  </div>
+
+  <div class="hub-card" data-go="/sponsorship">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_sponsor.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">🤝</div>
+        <div>
+          <div class="hub-title">Patrocínio</div>
+          <div class="hub-desc">Contratos, metas e bônus financeiros</div>
+        </div>
+      </div>
+      <div class="hub-cta">Negociar</div>
+    </div>
+  </div>
+
+  <div class="hub-card" data-go="/transfers">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">🔁</div>
+        <div>
+          <div class="hub-title">Mercado</div>
+          <div class="hub-desc">Compras, vendas e empréstimos</div>
+        </div>
+      </div>
+      <div class="hub-cta">Ver</div>
+    </div>
+  </div>
+
+  <div class="hub-card" data-go="/finance">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_sponsor.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">💰</div>
+        <div>
+          <div class="hub-title">Finanças</div>
+          <div class="hub-desc">Caixa, receitas, despesas e balanço</div>
+        </div>
+      </div>
+      <div class="hub-cta">Abrir</div>
+    </div>
+  </div>
+
+  <div class="hub-card" data-go="/squad">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_match.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">👥</div>
+        <div>
+          <div class="hub-title">Elenco</div>
+          <div class="hub-desc">Jogadores, status e evolução</div>
+        </div>
+      </div>
+      <div class="hub-cta">Abrir</div>
+    </div>
+  </div>
+
+  <div class="hub-card" data-go="/tactics">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_staff.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">📋</div>
+        <div>
+          <div class="hub-title">Tática</div>
+          <div class="hub-desc">Formação, estilo e instruções</div>
+        </div>
+      </div>
+      <div class="hub-cta">Editar</div>
+    </div>
+  </div>
+
+  <div class="hub-card" data-go="/save">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">💾</div>
+        <div>
+          <div class="hub-title">Salvar</div>
+          <div class="hub-desc">Guarde seu progresso</div>
+        </div>
+      </div>
+      <div class="hub-cta">Salvar</div>
+    </div>
+  </div>
+
+  <div class="hub-card" data-go="/slots">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_calendar.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">🔀</div>
+        <div>
+          <div class="hub-title">Slots</div>
+          <div class="hub-desc">Trocar e gerenciar saves</div>
+        </div>
+      </div>
+      <div class="hub-cta">Abrir</div>
+    </div>
+  </div>
+</div></div>
             <div class="sep"></div>
-            <div class="notice">Loop da carreira reforçado: hub com leitura imediata da temporada, próximo jogo, último resultado e progresso de campanha.</div>
+            <div class="notice">
+              Gerencie todos os aspectos do seu clube: elenco, tática, treinos, staff, patrocínio e transferências.
+            </div>
           </div>
         </div>
       `;
@@ -2841,40 +2879,6 @@ function viewCareerCreate() {
 
         const xiPlayers = save.tactics.startingXI.map(getP).filter(Boolean);
         const benchPlayers = save.tactics.bench.map(getP).filter(Boolean);
-        const metrics = playerReadinessMetrics(save);
-
-        function statusTone(v){
-          if (v >= 86) return 'ok';
-          if (v >= 72) return 'warn';
-          return 'danger';
-        }
-
-        function metricBar(label, value, suffix='%'){
-          const tone = statusTone(value);
-          return `
-            <div class="metric-line">
-              <div class="metric-head"><span>${label}</span><b>${Math.round(value)}${suffix}</b></div>
-              <div class="metric-track"><span class="metric-fill ${tone}" style="width:${Math.max(8, Math.min(100, Math.round(value)))}%"></span></div>
-            </div>
-          `;
-        }
-
-        function fitnessPill(p){
-          const fit = Math.round(p.fitness ?? 90);
-          const mor = Math.round(p.morale ?? 75);
-          const sharp = Math.round((p.sharpness ?? 0) * 10) / 10;
-          const tone = fit >= 88 && mor >= 76 ? 'ok' : (fit >= 75 ? 'warn' : 'danger');
-          return `<span class="pill pill-mini ${tone}">FIT ${fit}% • MOR ${mor}% • RIT ${sharp}</span>`;
-        }
-
-        function playerRoleBadge(p){
-          if (!p) return '';
-          if (save.tactics.captainId === p.id) return `<span class="pill pill-mini ok">Cap</span>`;
-          if (save.tactics.pkTakerId === p.id) return `<span class="pill pill-mini">PK</span>`;
-          if (save.tactics.fkTakerId === p.id) return `<span class="pill pill-mini">FK</span>`;
-          if (save.tactics.ckTakerId === p.id) return `<span class="pill pill-mini">CK</span>`;
-          return '';
-        }
 
         // Board simples (não-3D): GK + linhas da formação
         function buildBoard(){
@@ -2890,17 +2894,19 @@ function viewCareerCreate() {
           const attN = lines[2] || 3;
 
           const take = (arr, n)=> arr.slice(0, n);
+          const rest = (arr, n)=> arr.slice(n);
 
           let useDefs = take(defs, defN);
           let useMids = take(mids, midN);
           let useAtts = take(atts, attN);
 
+          // completa faltas com outros do XI
           const pool = xiPlayers.filter(p => p !== gk && !useDefs.includes(p) && !useMids.includes(p) && !useAtts.includes(p));
           while (useDefs.length < defN && pool.length) useDefs.push(pool.shift());
           while (useMids.length < midN && pool.length) useMids.push(pool.shift());
           while (useAtts.length < attN && pool.length) useAtts.push(pool.shift());
 
-          const chip = (p)=> p ? `<div class="tactic-chip" title="${esc(p.name)} • ${esc(p.pos)} • OVR ${esc(p.overall)} • FIT ${Math.round(p.fitness||90)}% • MOR ${Math.round(p.morale||75)}%">${esc(p.name)}${playerRoleBadge(p)}</div>` : `<div class="tactic-chip empty">—</div>`;
+          const chip = (p)=> p ? `<div class="tactic-chip" title="${esc(p.name)} • ${esc(p.pos)} • OVR ${esc(p.overall)}">${esc(p.name)}</div>` : `<div class="tactic-chip empty">—</div>`;
 
           return `
             <div class="tactic-board">
@@ -2912,6 +2918,7 @@ function viewCareerCreate() {
           `;
         }
 
+        // Lista com botões de ação
         function playerLine(p, where){
           const inXI = save.tactics.startingXI.includes(p.id);
           const inBench = save.tactics.bench.includes(p.id);
@@ -2931,9 +2938,8 @@ function viewCareerCreate() {
           return `
             <div class="lineup-item">
               <div class="lineup-left">
-                <div class="lineup-name">${esc(p.name)} ${playerRoleBadge(p)}</div>
+                <div class="lineup-name">${esc(p.name)}</div>
                 <div class="muted small">${esc(p.pos)} • OVR <b>${esc(p.overall)}</b> • ${esc(p.age)}a • Valor ~ ${esc(p.valueEurMi || p.valueMi || '')}</div>
-                <div class="lineup-stats">${fitnessPill(p)}</div>
               </div>
               <div class="lineup-right">
                 ${wherePill}
@@ -2966,8 +2972,6 @@ function viewCareerCreate() {
                   <select class="input" data-action="setFormation">
                     <option value="4-3-3" ${formation === '4-3-3' ? 'selected' : ''}>4-3-3</option>
                     <option value="4-4-2" ${formation === '4-4-2' ? 'selected' : ''}>4-4-2</option>
-                    <option value="4-2-3-1" ${formation === '4-2-3-1' ? 'selected' : ''}>4-2-3-1</option>
-                    <option value="3-5-2" ${formation === '3-5-2' ? 'selected' : ''}>3-5-2</option>
                   </select>
                 </div>
                 <div class="col-6">
@@ -2976,35 +2980,6 @@ function viewCareerCreate() {
                     <button class="btn btn-primary" data-action="autoPickXI">Melhor XI</button>
                     <button class="btn" data-action="autoPickBench">Auto Banco</button>
                     <button class="btn btn-danger" data-action="resetTactics">Resetar Plano</button>
-                  </div>
-                </div>
-              </div>
-
-              <div class="sep"></div>
-
-              <div class="grid">
-                <div class="col-6">
-                  <div class="card-mini tactical-metrics">
-                    <div class="card-mini-title">Leitura do XI</div>
-                    ${metricBar('Prontidao', metrics.readiness)}
-                    ${metricBar('Quimica', metrics.chemistry)}
-                    ${metricBar('Equilibrio', metrics.balance)}
-                    ${metricBar('Fitness medio', metrics.fitness)}
-                    <div class="mini">Moral media: <b>${metrics.morale}%</b> • Ritmo medio: <b>${metrics.sharpness}</b></div>
-                  </div>
-                </div>
-                <div class="col-6">
-                  <div class="card-mini">
-                    <div class="card-mini-title">Presets Taticos</div>
-                    <div class="row" style="gap:8px; flex-wrap:wrap;">
-                      <button class="btn btn-small" data-action="applyPreset" data-preset="balanced">Equilibrado</button>
-                      <button class="btn btn-small" data-action="applyPreset" data-preset="pressing">Pressao Alta</button>
-                      <button class="btn btn-small" data-action="applyPreset" data-preset="possession">Posse</button>
-                      <button class="btn btn-small" data-action="applyPreset" data-preset="counter">Contra-ataque</button>
-                      <button class="btn btn-small" data-action="applyPreset" data-preset="direct">Jogo Direto</button>
-                    </div>
-                    <div class="sep"></div>
-                    <div class="mini">Os presets nao removem sua base atual. Eles apenas ajustam rapidamente abordagem, ritmo, pressao, linha, largura e foco.</div>
                   </div>
                 </div>
               </div>
@@ -4101,39 +4076,6 @@ save.meta.updatedAt = nowIso();
     } catch(e){}
   }
 
-function playerReadinessMetrics(save){
-  ensureSystems(save);
-  const players = Array.isArray(save?.squad?.players) ? save.squad.players : [];
-  const xiIds = Array.isArray(save?.tactics?.startingXI) ? save.tactics.startingXI : [];
-  const xiPlayers = xiIds.map(id => players.find(p => p.id === id)).filter(Boolean);
-  if (!xiPlayers.length) return { readiness: 0, chemistry: 0, balance: 0, fitness: 0, morale: 0, sharpness: 0 };
-  const avg = (fn, fb=0) => xiPlayers.reduce((s,p)=>s+(fn(p) ?? fb),0) / Math.max(1, xiPlayers.length);
-  const fitness = avg(p => p.fitness, 90);
-  const morale = avg(p => p.morale, 75);
-  const sharpness = avg(p => (p.sharpness ?? 0) * 10, 0);
-  const roles = { GK:0, DEF:0, MID:0, ATT:0 };
-  xiPlayers.forEach(p => { const k = String(p.pos||'').toUpperCase(); if (roles[k] != null) roles[k]++; });
-  const formation = String(save?.tactics?.formation || '4-3-3').split('-').map(n => Number(n||0));
-  const target = { GK:1, DEF: formation[0] || 4, MID: formation[1] || 3, ATT: formation[2] || 3 };
-  const roleDiff = Math.abs((roles.GK||0)-target.GK) + Math.abs((roles.DEF||0)-target.DEF) + Math.abs((roles.MID||0)-target.MID) + Math.abs((roles.ATT||0)-target.ATT);
-  const balance = Math.max(45, Math.min(100, 100 - roleDiff * 9));
-  const chemistryBase = 58 + (morale - 70) * 0.5 + (sharpness / 10) * 1.2;
-  const chemistry = Math.max(45, Math.min(100, chemistryBase + (balance - 70) * 0.35));
-  const readiness = Math.round(Math.max(40, Math.min(100, fitness * 0.45 + morale * 0.30 + chemistry * 0.15 + balance * 0.10 + (sharpness*0.25))));
-  return { readiness, chemistry: Math.round(chemistry), balance: Math.round(balance), fitness: Math.round(fitness), morale: Math.round(morale), sharpness: Math.round(sharpness)/10 };
-}
-
-function tacticalPresetValues(key){
-  const map = {
-    balanced: { approach:'balanced', tempo:'normal', pressure:'medium', defLine:'medium', width:'normal', focus:'mixed' },
-    pressing: { approach:'balanced', tempo:'fast', pressure:'high', defLine:'high', width:'normal', focus:'mixed' },
-    possession: { approach:'possession', tempo:'slow', pressure:'medium', defLine:'medium', width:'wide', focus:'middle' },
-    counter: { approach:'counter', tempo:'fast', pressure:'medium', defLine:'deep', width:'wide', focus:'wings' },
-    direct: { approach:'direct', tempo:'fast', pressure:'high', defLine:'medium', width:'wide', focus:'mixed' }
-  };
-  return map[key] || map.balanced;
-}
-
 function tacticEffectForClub(clubId, save){
   // Aplica apenas ao clube do usuário (leve e previsível)
   if (!save || clubId !== save.career?.clubId) return {
@@ -4145,7 +4087,6 @@ function tacticEffectForClub(clubId, save){
   let defRed = 0.0; // redução do ataque adversário
   let poss = 0;     // delta na posse (pontos percentuais)
   let chaos = 0;    // aumenta variância (0..1)
-  const metrics = playerReadinessMetrics(save);
 
   // Abordagem
   if (t.approach === 'possession') { att += 0.05; defRed += 0.05; poss += 6; chaos -= 0.08; }
@@ -7008,10 +6949,8 @@ if (action === 'careerContinueToClub') {
           if (!save) return;
           save.career.leagueFilter = el.value;
           save.career.clubSearch = '';
-          const metrics = playerReadinessMetrics(save);
           save.meta.updatedAt = nowIso();
           writeSlot(state.settings.activeSlotId, save);
-          toast('XI atualizado • Prontidao atual ' + metrics.readiness + '%');
           route();
         });
       }
@@ -7107,21 +7046,6 @@ if (action === 'setTacticParam') {
       save.meta.updatedAt = nowIso();
       writeSlot(state.settings.activeSlotId, save);
     }
-  });
-  return;
-}
-
-if (action === 'applyPreset') {
-  el.addEventListener('click', () => {
-    const save = activeSave();
-    if (!save) return;
-    ensureSystems(save);
-    const preset = el.getAttribute('data-preset') || 'balanced';
-    Object.assign(save.tactics, tacticalPresetValues(preset));
-    save.meta.updatedAt = nowIso();
-    writeSlot(state.settings.activeSlotId, save);
-    toast('Preset tatico aplicado: ' + preset + '.');
-    route();
   });
   return;
 }
@@ -7276,8 +7200,6 @@ if (action === 'resetTactics') {
 
           save.meta.updatedAt = nowIso();
           writeSlot(state.settings.activeSlotId, save);
-          const metrics = playerReadinessMetrics(save);
-          toast('XI atualizado • Prontidao atual ' + metrics.readiness + '%');
           route();
         });
       }
@@ -7993,7 +7915,7 @@ async function boot() {
     await loadPackData();
     await loadExternalCatalogs();
     const badge = document.getElementById('buildBadge');
-    if (badge) badge.textContent = `build ${BUILD_TAG}`;
+    if (badge) badge.textContent = `build ${BUILD_TAG}`; document.title = `Vale Futebol Manager 2026 - ${BUILD_TAG}`;
     refreshFooterStatus();
     if (!location.hash) location.hash = '/home';
     route();
