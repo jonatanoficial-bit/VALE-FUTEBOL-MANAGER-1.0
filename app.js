@@ -64,8 +64,8 @@
     }
   }
 
-    const BUILD_TAG = "v1.42.0_phase6_full_realism_cachefix";
-const BUILD_TIME_STR = "2026-03-06 21:16:25 UTC";
+    const BUILD_TAG = "v1.43.0_full_hub_consolidation";
+const BUILD_TIME_STR = "2026-03-06 21:35:00 UTC";
 
 // Ligas UEFA consideradas para preferência de continentais (evita ReferenceError no modal)
 const UEFA_LIDS = ['ENG_PREMIER','ESP_LALIGA','ITA_SERIE_A','GER_BUNDES','FRA_LIGUE_1','POR_LIGA'];
@@ -2383,6 +2383,64 @@ function viewCareerCreate() {
     });
   }
 
+
+  function getNextRoundUserMatch(save) {
+    try {
+      const rounds = Array.isArray(save?.season?.rounds) ? save.season.rounds : [];
+      const r = Number(save?.season?.currentRound || 0);
+      const matches = Array.isArray(rounds[r]) ? rounds[r] : [];
+      return matches.find(m => m.homeId === save.career.clubId || m.awayId === save.career.clubId) || null;
+    } catch (e) { return null; }
+  }
+
+  function getLastUserResult(save) {
+    try {
+      const matches = Array.isArray(save?.season?.lastResults) ? save.season.lastResults : [];
+      return matches.find(m => m.homeId === save.career.clubId || m.awayId === save.career.clubId) || null;
+    } catch (e) { return null; }
+  }
+
+  function getUserLeaguePosition(save) {
+    try {
+      const rows = sortTableRows(Object.values(save.season.table || {}));
+      const idx = rows.findIndex(x => x.id === save.career.clubId);
+      return idx >= 0 ? idx + 1 : null;
+    } catch (e) { return null; }
+  }
+
+  function getSeasonProgressPct(save) {
+    try {
+      const total = Number((save?.season?.rounds || []).length || 0);
+      const played = Number(save?.season?.currentRound || 0);
+      if (!total) return 0;
+      return Math.max(0, Math.min(100, Math.round((played / total) * 100)));
+    } catch (e) { return 0; }
+  }
+
+  function formatHubFixture(save, m) {
+    if (!m) return 'Sem partida agendada';
+    const hc = getClub(m.homeId);
+    const ac = getClub(m.awayId);
+    return `${hc?.short || hc?.name || m.homeId} x ${ac?.short || ac?.name || m.awayId}`;
+  }
+
+  function formatHubResult(save, m) {
+    if (!m || !m.played) return 'Nenhum resultado ainda';
+    const hc = getClub(m.homeId);
+    const ac = getClub(m.awayId);
+    return `${hc?.short || hc?.name || m.homeId} ${m.hg} x ${m.ag} ${ac?.short || ac?.name || m.awayId}`;
+  }
+
+  function getUserResultLabel(save, m) {
+    if (!m || !m.played) return 'AGUARDANDO';
+    const home = m.homeId === save.career.clubId;
+    const gf = home ? Number(m.hg || 0) : Number(m.ag || 0);
+    const ga = home ? Number(m.ag || 0) : Number(m.hg || 0);
+    if (gf > ga) return 'VITÓRIA';
+    if (gf < ga) return 'DERROTA';
+    return 'EMPATE';
+  }
+
   /** HUB do treinador */
   function viewHub() {
     return requireSave((save) => {
@@ -2417,6 +2475,12 @@ function viewCareerCreate() {
       const currency = state.packData?.rules?.gameRules?.currency || 'BRL';
       const cashStr = (save.finance?.cash || 0).toLocaleString('pt-BR', { style: 'currency', currency });
       const sponsorName = save.sponsorship?.current?.name || 'Nenhum';
+      const nextMatch = getNextRoundUserMatch(save);
+      const lastMatch = getLastUserResult(save);
+      const leaguePos = getUserLeaguePosition(save);
+      const seasonPct = getSeasonProgressPct(save);
+      const totalRounds = Number((save.season?.rounds || []).length || 0);
+      const currentRoundLabel = totalRounds ? `${Math.min(Number(save.season?.currentRound || 0) + 1, totalRounds)}/${totalRounds}` : '—';
       return `
         <div class="card">
           <div class="card-header">
@@ -2441,6 +2505,36 @@ function viewCareerCreate() {
   <b>${esc(save.season?.id || '')}</b>
 </div>
 
+            <div class="sep"></div>
+            <div class="hub-summary-grid">
+              <div class="hub-summary-card">
+                <div class="hub-summary-label">Próximo jogo</div>
+                <div class="hub-summary-value">${esc(formatHubFixture(save, nextMatch))}</div>
+                <div class="hub-summary-sub">Rodada ${esc(currentRoundLabel)}</div>
+              </div>
+              <div class="hub-summary-card">
+                <div class="hub-summary-label">Último resultado</div>
+                <div class="hub-summary-value">${esc(formatHubResult(save, lastMatch))}</div>
+                <div class="hub-summary-sub">${esc(getUserResultLabel(save, lastMatch))}</div>
+              </div>
+              <div class="hub-summary-card">
+                <div class="hub-summary-label">Posição na liga</div>
+                <div class="hub-summary-value">${leaguePos ? (leaguePos + 'º lugar') : '—'}</div>
+                <div class="hub-summary-sub">Meta: ${esc(save.career.objective?.label || '—')}</div>
+              </div>
+              <div class="hub-summary-card">
+                <div class="hub-summary-label">Progresso da temporada</div>
+                <div class="hub-summary-value">${seasonPct}%</div>
+                <div class="hub-progress"><span style="width:${seasonPct}%"></span></div>
+                <div class="hub-summary-sub">Temporada ${esc(save.season?.id || '')}</div>
+              </div>
+            </div>
+            <div class="row" style="margin-top:12px; gap:8px; flex-wrap:wrap;">
+              <button class="btn btn-primary" type="button" data-action="playNextEvent" ${save.season.completed ? 'disabled' : ''}>⚽ Jogar Próximo Evento</button>
+              <button class="btn" type="button" data-go="/matches">Ver Rodadas</button>
+              <button class="btn" type="button" data-go="/calendar">Abrir Calendário</button>
+              <button class="btn" type="button" data-go="/tactics">Ajustar Tática</button>
+            </div>
             <div class="sep"></div>
             <div class="hub-grid">
   <div class="hub-card" data-go="/career">
@@ -7915,7 +8009,7 @@ async function boot() {
     await loadPackData();
     await loadExternalCatalogs();
     const badge = document.getElementById('buildBadge');
-    if (badge) badge.textContent = `build ${BUILD_TAG}`; document.title = `Vale Futebol Manager 2026 - ${BUILD_TAG}`;
+    if (badge) badge.textContent = `build ${BUILD_TAG}`;
     refreshFooterStatus();
     if (!location.hash) location.hash = '/home';
     route();

@@ -5,12 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Vale Futebol Manager 2026 - Premium</title>
 
-  <link rel="stylesheet" href="./styles.css?v=build_2026-03-06_211625_v1.42.0_phase6_full_realism_cachefix" />
+  <link rel="stylesheet" href="./styles.css?v=build_2026-03-06_213500_v1.43.0_full_hub_consolidation" />
   <link rel="manifest" href="./manifest.json" />
   <meta name="theme-color" content="#0EA5E9" />
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
 </head>
 <body>
   <!-- Splash -->
@@ -41,7 +38,7 @@
     <footer class="footer">
       <span>© Vale Games</span>
       <span class="dot">•</span>
-      <span>Offline • LocalStorage • v1.42.0_phase6_full_realism_cachefix</span>
+      <span>Offline • LocalStorage</span>
     </footer>
 
     <!-- Badge fixo (build + data dos dados) -->
@@ -50,7 +47,7 @@
 
   <!-- App principal -->
   <!-- Cache-bust: sempre atualize o parâmetro v em cada build -->
-  <script src="./app.js?v=build_2026-03-06_211625_v1.42.0_phase6_full_realism_cachefix" defer></script>
+  <script src="./app.js?v=build_2026-03-06_213500_v1.43.0_full_hub_consolidation" defer></script>
 
   <!-- Guardas de UX (não altera lógica do jogo) -->
   <script>
@@ -84,7 +81,7 @@
   <script>
     (function(){
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js?v=build_2026-03-06_211625_v1.42.0_phase6_full_realism_cachefix').catch(function(){});
+        navigator.serviceWorker.register('./sw.js?v=build_2026-03-06_213500_v1.43.0_full_hub_consolidation').catch(function(){});
       
       // força recarregar quando houver nova versão do service worker
       navigator.serviceWorker.addEventListener('controllerchange', () => {

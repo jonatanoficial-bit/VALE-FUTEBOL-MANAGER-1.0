@@ -935,3 +935,14 @@ body:not(.bg-menu):not(.bg-lobby):not(.bg-cinematic){
   .tactic-board{ min-height: 210px; }
   .tactic-chip{ max-width: 140px; font-size: 11px; }
 }
+
+
+/* Build v1.43.0 - HUB consolidation */
+.hub-summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:8px 0 2px;}
+.hub-summary-card{position:relative;padding:14px 14px 12px;border:1px solid rgba(255,255,255,.12);border-radius:16px;background:linear-gradient(180deg,rgba(14,25,56,.76),rgba(7,15,34,.78));box-shadow:0 12px 32px rgba(0,0,0,.22);overflow:hidden}
+.hub-summary-card::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at top right,rgba(56,189,248,.12),transparent 38%);pointer-events:none}
+.hub-summary-label{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#93c5fd;margin-bottom:8px}
+.hub-summary-value{font-size:18px;font-weight:800;line-height:1.2;color:#f8fbff}
+.hub-summary-sub{margin-top:8px;font-size:12px;color:#cbd5e1}
+.hub-progress{height:8px;border-radius:999px;background:rgba(255,255,255,.08);margin-top:10px;overflow:hidden}
+.hub-progress span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#22c55e,#38bdf8)}

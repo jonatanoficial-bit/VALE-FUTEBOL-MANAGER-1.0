@@ -1,9 +1,7 @@
 {
   "project": "Vale Futebol Manager 2026",
-  "build": "v1.42.0_phase6_full_realism_cachefix",
-  "date_utc": "2026-03-06 21:16:25 UTC",
-  "phase": "6 - Simulacao Realista + Cache Fix + Full Package",
-  "progress": "81%",
-  "package_type": "full_zip",
-  "cache_stamp": "2026-03-06_211625"
+  "build": "v1.43.0_full_hub_consolidation",
+  "date_utc": "2026-03-06 21:35:00 UTC",
+  "phase": "Consolidacao do HUB",
+  "status": "72%"
 }

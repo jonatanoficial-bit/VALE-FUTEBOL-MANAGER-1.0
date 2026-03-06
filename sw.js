@@ -2,12 +2,12 @@
    Objetivo: melhorar carregamento no GitHub Pages e permitir modo offline.
 */
 
-const CACHE_NAME = "vfm-cache-2026-03-06_211625-v1.42.0_phase6_full_realism_cachefix";
+const CACHE_NAME = "vfm-cache-2026-03-06_213500-v1.43.0_full_hub_consolidation";
 const CORE_ASSETS = [
   './',
-  './index.html?v=build_2026-03-06_211625_v1.42.0_phase6_full_realism_cachefix',
-  './styles.css?v=build_2026-03-06_211625_v1.42.0_phase6_full_realism_cachefix',
-  './app.js?v=build_2026-03-06_211625_v1.42.0_phase6_full_realism_cachefix',
+  './index.html?v=build_2026-03-06_213500_v1.43.0_full_hub_consolidation',
+  './styles.css?v=build_2026-03-06_213500_v1.43.0_full_hub_consolidation',
+  './app.js?v=build_2026-03-06_213500_v1.43.0_full_hub_consolidation',
   './manifest.json',
   './favicon.ico',
   './assets/club_placeholder.svg',
