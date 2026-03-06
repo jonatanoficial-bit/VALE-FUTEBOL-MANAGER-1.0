@@ -1,13 +1,7 @@
 {
-  "game": "Vale Futebol Manager 2026",
-  "build": "v1.38.0_tactical_core_upgrade",
-  "buildStamp": "BUILD_2026-03-06_20-15-00_UTC_v1.38.0_tactical_core_upgrade",
-  "builtAtUtc": "2026-03-06 20:15:00 UTC",
-  "phase": "Fase 3 - Nucleo Tatico e Escalacao Real",
-  "projectCompletionPercent": 55,
-  "packageType": "zip completo",
-  "hostingTargets": [
-    "GitHub",
-    "Vercel"
-  ]
+  "project": "VALE FUTEBOL MANAGER 2026",
+  "build": "v1.40.0_visual_identity_AAA",
+  "date_utc": "2026-03-06 20:23:00",
+  "phase": "5 - Visual Identity AAA",
+  "progress": "73%"
 }

@@ -1,94 +1,40 @@
-<!doctype html>
-<html lang="pt-BR">
+
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Vale Futebol Manager 2026 - Premium</title>
-
-  <link rel="stylesheet" href="./styles.css?v=build_2026-03-06_201500_v1.38.0_tactical_core_upgrade" />
-  <link rel="manifest" href="./manifest.json" />
-  <meta name="theme-color" content="#0EA5E9" />
+<meta charset="UTF-8">
+<title>VALE FUTEBOL MANAGER 2026</title>
+<link rel="stylesheet" href="ui/theme.css">
 </head>
+
 <body>
-  <!-- Splash -->
-  <div class="splash" id="splash">
-    <div class="splash-logo">
-      <img src="./assets/images/vale_games_logo.png" alt="Vale Games" />
-    </div>
-  </div>
 
-  <div class="app-shell">
-    <header class="topbar">
-      <div class="brand">
-        <div class="logo-badge">VFM</div>
-        <div class="brand-text">
-          <div class="brand-title">Vale Futebol Manager 2026</div>
-          <div class="brand-subtitle">Carreira • Dados • Admin</div>
-        </div>
-      </div>
-      <div class="topbar-actions">
-        <button class="btn btn-ghost" type="button" onclick="location.hash='#/home'">Início</button>
-      </div>
-    </header>
+<div class="hud">
+<span>VALE FUTEBOL MANAGER 2026</span>
+<span>BUILD v1.40.0_visual_identity_AAA</span>
+</div>
 
-    <main class="main">
-      <div id="view" class="view"></div>
-    </main>
+<div class="dashboard">
 
-    <footer class="footer">
-      <span>© Vale Games</span>
-      <span class="dot">•</span>
-      <span>Offline • LocalStorage • Build v1.38.0 • 55%</span>
-    </footer>
+<div class="panel">
+<h2>Club Dashboard</h2>
+<p>Season progress and club status</p>
+<button class="btn-primary">Continue Career</button>
+</div>
 
-    <!-- Badge fixo (build + data dos dados) -->
-    <div id="buildBadge" class="build-badge" aria-label="Build"></div>
-  </div>
+<div class="panel">
+<h2>Squad</h2>
+<p>Manage players and tactics</p>
+<button class="btn-secondary">Open Squad</button>
+</div>
 
-  <!-- App principal -->
-  <!-- Cache-bust: sempre atualize o parâmetro v em cada build -->
-  <script src="./app.js?v=build_2026-03-06_201500_v1.38.0_tactical_core_upgrade" defer></script>
+<div class="panel">
+<h2>Finances</h2>
+<p>View club financial status</p>
+<button class="btn-secondary">Open Finances</button>
+</div>
 
-  <!-- Guardas de UX (não altera lógica do jogo) -->
-  <script>
-    (function(){
-      // remove splash em até 2s sempre
-      setTimeout(function(){
-        var splash = document.getElementById('splash');
-        if (splash) { splash.classList.add('hidden'); splash.style.display='none'; }
-      }, 2000);
+</div>
 
-      // Se depois de 5s ainda não renderizou nada, mostra uma tela de fallback
-      setTimeout(function(){
-        var viewEl = document.getElementById('view');
-        if (viewEl && !viewEl.innerHTML.trim()){
-          viewEl.innerHTML =
-            '<div class="card">' +
-              '<div class="card-header">' +
-                '<div><div class="card-title">Carregando...</div><div class="card-subtitle">O jogo está demorando para iniciar (GitHub Pages)</div></div>' +
-                '<span class="badge">VFM</span>' +
-              '</div>' +
-              '<div class="card-body">' +
-                '<div class="notice">Se ficar preso aqui, recarregue a página (Ctrl+F5).</div>' +
-                '<div class="sep"></div>' +
-                '<button class="btn btn-primary" type="button" onclick="location.reload()">Recarregar</button>' +
-              '</div>' +
-            '</div>';
-        }
-      }, 5000);
-    })();
-  </script>
-  <script>
-    (function(){
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js?v=build_2026-03-06_201500_v1.38.0_tactical_core_upgrade').catch(function(){});
-      
-      // força recarregar quando houver nova versão do service worker
-      navigator.serviceWorker.addEventListener('controllerchange', () => {
-        window.location.reload();
-      });
-}
-    })();
-  </script>
 </body>
 </html>
