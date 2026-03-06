@@ -1,26 +1,25 @@
-# Fase 2 — Loop Jogavel Completo da Carreira
+# Fase 3 — Nucleo Tatico e Escalacao Real
 
 ## Build
-- `v1.37.0_career_loop_complete`
-- `2026-03-06 19:58:00 UTC`
+- `v1.38.0_tactical_core_upgrade`
+- `2026-03-06 20:15:00 UTC`
 
 ## Percentual atualizado
-**46% concluido**
+**55% concluido**
 
 ## Objetivo da fase
-Fechar melhor o loop principal da carreira: leitura imediata da temporada, acesso rapido ao proximo jogo, entendimento do progresso da campanha e continuidade mais fluida entre hub, partidas e classificacao.
+Transformar a tela de taticas em um centro real de decisao do treinador, com leitura do XI, indicadores de prontidao e impacto mais claro de formacao, bolas paradas e preparacao fisica na simulacao.
 
 ## Entregas desta fase
-- dashboard de temporada dentro do HUB
-- card de proximo jogo com CTA para continuar a campanha
-- leitura do ultimo resultado do usuario
-- progresso da temporada em percentual e rodadas concluidas
-- destaque de posicao atual na liga
-- barra de acoes rapidas para partida, calendario, tabela e save
+- leitura do XI com prontidao, quimica, equilibrio e fitness medio
+- novos presets taticos de aplicacao rapida
+- ampliacao de formacoes disponiveis
+- indicadores individuais de fitness, moral e ritmo dos jogadores
+- destaque visual para capitao e cobradores
+- impacto da prontidao do XI no motor tatico
 - manutencao integral do projeto existente, sem remover recursos anteriores
 
 ## Proxima fase
-**Fase 3 — Nucleo Tatico e Escalacao Real**
-- impacto tatico mais visivel no resultado
-- leitura mais forte de formacao, capitania e bolas paradas
-- consolidacao de escalação inicial e banco como centro da tomada de decisao
+**Fase 4 — Gestao Esportiva e Financeira**
+- consolidar patrocinio, caixa, salarios e pressao da diretoria
+- integrar treino, lesoes e calendario ao ciclo de decisao

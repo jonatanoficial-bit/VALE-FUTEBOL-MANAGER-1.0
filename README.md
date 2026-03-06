@@ -1,30 +1,28 @@
-# Last Call Dispatch Operator — Build 1.1.0 / Stage 8A
+# Vale Futebol Manager 2026
 
-Build gerada em **2026-03-06 09:26:38 BRT**.
+Build atual: `v1.36.0_foundation_stabilization`  
+Data UTC: `2026-03-06 19:30:51 UTC`  
+Status estimado do projeto: `38% concluido`
 
-## Status atual
-- Projeto web estático (HTML/CSS/JS)
-- Compatível com GitHub Pages e Vercel
-- Base jogável com Polícia, Bombeiros e Ambulância/SAMU/EMS
-- Progressão, economia e upgrades já presentes em nível inicial
-- **Conclusão estimada do projeto:** **54%**
+## Objetivo
+Jogo/webapp de manager de futebol classico, com foco em carreira de treinador, gestao esportiva, taticas, mercado, calendario e partidas simuladas.
 
-## Arquivos de acompanhamento da equipe
-- `build-info.json`
-- `ROADMAP_ETAPAS.md`
-- `CHANGELOG_BUILD.md`
+## Regra de empacotamento
+- sempre zip completo
+- nunca zip parcial
+- build com data e hora
+- preservar o que ja funciona
+- corrigir, aprimorar e expandir por fases
 
-## Deploy
-### GitHub Pages
-- Suba a pasta inteira no repositório.
-- Mantenha o arquivo `.nojekyll`.
-- Publique a branch principal com a raiz do projeto.
+## Fase atual
+**Fase 1 — Estabilizacao da Base**
 
-### Vercel
-- Importe o repositório.
-- Framework preset: `Other`.
-- Build command: vazio.
-- Output directory: `.`
+Entregas desta fase:
+- consolidacao da identificacao da build
+- documentacao corrigida
+- cache busting alinhado para GitHub/Vercel
+- metadados para equipe
+- melhorias visuais seguras de interface
 
-## Próxima sprint sugerida
-Levar a build para **65%** com expansão de conteúdo, polimento visual e novos fluxos de despacho.
+## Publicacao
+Compativel com deploy estatico em GitHub Pages e Vercel.

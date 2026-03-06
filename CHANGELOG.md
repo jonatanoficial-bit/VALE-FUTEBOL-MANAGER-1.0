@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.38.0_tactical_core_upgrade
+- Fase 3 entregue sem remover recursos existentes
+- adicionados indicadores de prontidao, quimica, equilibrio e fitness medio na tela de taticas
+- adicionados presets taticos com aplicacao rapida
+- ampliadas formacoes disponiveis com 4-2-3-1 e 3-5-2
+- adicionados indicadores individuais de fitness, moral e ritmo dos jogadores
+- capitão e cobradores passaram a aparecer com destaque visual no quadro e na lista
+- efeito tatico do XI passou a considerar preparo fisico, moral, sharpness e encaixe posicional
+- build, data e status atualizados em arquivos de controle
+
 ## v1.37.0_career_loop_complete
 - Fase 2 entregue sem remover recursos existentes
 - HUB passou a mostrar cockpit da temporada

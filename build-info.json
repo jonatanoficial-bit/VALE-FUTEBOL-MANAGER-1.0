@@ -1,13 +1,13 @@
 {
-  "project": "Last Call Dispatch Operator",
-  "build": "1.2.3",
-  "phase": "Phase 3.7 – Dispatch Enable and Append-Only Transcript Fix",
-  "built_at": "2026-03-06 20:05:00 UTC",
-  "completion_percent": 67,
-  "changes": [
-    "Corrigido append-only real do transcript: agora só acrescenta o trecho novo",
-    "Removido retype desnecessário ao atender e ao agravar chamada",
-    "Renderização reordenada para preencher unidades antes de recalcular estado dos botões",
-    "Botão Despachar passa a refletir corretamente a unidade auto-selecionada"
+  "game": "Vale Futebol Manager 2026",
+  "build": "v1.38.0_tactical_core_upgrade",
+  "buildStamp": "BUILD_2026-03-06_20-15-00_UTC_v1.38.0_tactical_core_upgrade",
+  "builtAtUtc": "2026-03-06 20:15:00 UTC",
+  "phase": "Fase 3 - Nucleo Tatico e Escalacao Real",
+  "projectCompletionPercent": 55,
+  "packageType": "zip completo",
+  "hostingTargets": [
+    "GitHub",
+    "Vercel"
   ]
 }

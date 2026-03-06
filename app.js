@@ -64,10 +64,10 @@
     }
   }
 
-    const BUILD_TAG = "v1.37.0_career_loop_complete";
+    const BUILD_TAG = "v1.38.0_tactical_core_upgrade";
 const BUILD_TIME_STR = "2026-03-06 19:58:00 UTC";
-  const BUILD_PHASE = "Fase 2 - Loop Jogavel Completo da Carreira";
-  const PROJECT_COMPLETION = "46%";
+  const BUILD_PHASE = "Fase 3 - Nucleo Tatico e Escalacao Real";
+  const PROJECT_COMPLETION = "55%";
 
 // Ligas UEFA consideradas para preferência de continentais (evita ReferenceError no modal)
 const UEFA_LIDS = ['ENG_PREMIER','ESP_LALIGA','ITA_SERIE_A','GER_BUNDES','FRA_LIGUE_1','POR_LIGA'];
@@ -1717,7 +1717,8 @@ function applyBackground(path) {
         const id = p.id || p.playerId || (`P${String(i+1).padStart(5,'0')}`);
         const fitness = (typeof p.fitness === "number") ? p.fitness : (92 + Math.random()*6);
         const sharp = (typeof p.sharpness === "number") ? p.sharpness : 0;
-        return { ...p, id, fitness: Math.round(clampFloat(fitness, 40, 100)), sharpness: Math.round(clampFloat(sharp, -5, 5)*10)/10 };
+        const morale = (typeof p.morale === "number") ? p.morale : (72 + Math.random()*20);
+        return { ...p, id, fitness: Math.round(clampFloat(fitness, 40, 100)), sharpness: Math.round(clampFloat(sharp, -5, 5)*10)/10, morale: Math.round(clampFloat(morale, 45, 100)) };
       });
     }
 
@@ -2840,6 +2841,40 @@ function viewCareerCreate() {
 
         const xiPlayers = save.tactics.startingXI.map(getP).filter(Boolean);
         const benchPlayers = save.tactics.bench.map(getP).filter(Boolean);
+        const metrics = playerReadinessMetrics(save);
+
+        function statusTone(v){
+          if (v >= 86) return 'ok';
+          if (v >= 72) return 'warn';
+          return 'danger';
+        }
+
+        function metricBar(label, value, suffix='%'){
+          const tone = statusTone(value);
+          return `
+            <div class="metric-line">
+              <div class="metric-head"><span>${label}</span><b>${Math.round(value)}${suffix}</b></div>
+              <div class="metric-track"><span class="metric-fill ${tone}" style="width:${Math.max(8, Math.min(100, Math.round(value)))}%"></span></div>
+            </div>
+          `;
+        }
+
+        function fitnessPill(p){
+          const fit = Math.round(p.fitness ?? 90);
+          const mor = Math.round(p.morale ?? 75);
+          const sharp = Math.round((p.sharpness ?? 0) * 10) / 10;
+          const tone = fit >= 88 && mor >= 76 ? 'ok' : (fit >= 75 ? 'warn' : 'danger');
+          return `<span class="pill pill-mini ${tone}">FIT ${fit}% • MOR ${mor}% • RIT ${sharp}</span>`;
+        }
+
+        function playerRoleBadge(p){
+          if (!p) return '';
+          if (save.tactics.captainId === p.id) return `<span class="pill pill-mini ok">Cap</span>`;
+          if (save.tactics.pkTakerId === p.id) return `<span class="pill pill-mini">PK</span>`;
+          if (save.tactics.fkTakerId === p.id) return `<span class="pill pill-mini">FK</span>`;
+          if (save.tactics.ckTakerId === p.id) return `<span class="pill pill-mini">CK</span>`;
+          return '';
+        }
 
         // Board simples (não-3D): GK + linhas da formação
         function buildBoard(){
@@ -2855,19 +2890,17 @@ function viewCareerCreate() {
           const attN = lines[2] || 3;
 
           const take = (arr, n)=> arr.slice(0, n);
-          const rest = (arr, n)=> arr.slice(n);
 
           let useDefs = take(defs, defN);
           let useMids = take(mids, midN);
           let useAtts = take(atts, attN);
 
-          // completa faltas com outros do XI
           const pool = xiPlayers.filter(p => p !== gk && !useDefs.includes(p) && !useMids.includes(p) && !useAtts.includes(p));
           while (useDefs.length < defN && pool.length) useDefs.push(pool.shift());
           while (useMids.length < midN && pool.length) useMids.push(pool.shift());
           while (useAtts.length < attN && pool.length) useAtts.push(pool.shift());
 
-          const chip = (p)=> p ? `<div class="tactic-chip" title="${esc(p.name)} • ${esc(p.pos)} • OVR ${esc(p.overall)}">${esc(p.name)}</div>` : `<div class="tactic-chip empty">—</div>`;
+          const chip = (p)=> p ? `<div class="tactic-chip" title="${esc(p.name)} • ${esc(p.pos)} • OVR ${esc(p.overall)} • FIT ${Math.round(p.fitness||90)}% • MOR ${Math.round(p.morale||75)}%">${esc(p.name)}${playerRoleBadge(p)}</div>` : `<div class="tactic-chip empty">—</div>`;
 
           return `
             <div class="tactic-board">
@@ -2879,7 +2912,6 @@ function viewCareerCreate() {
           `;
         }
 
-        // Lista com botões de ação
         function playerLine(p, where){
           const inXI = save.tactics.startingXI.includes(p.id);
           const inBench = save.tactics.bench.includes(p.id);
@@ -2899,8 +2931,9 @@ function viewCareerCreate() {
           return `
             <div class="lineup-item">
               <div class="lineup-left">
-                <div class="lineup-name">${esc(p.name)}</div>
+                <div class="lineup-name">${esc(p.name)} ${playerRoleBadge(p)}</div>
                 <div class="muted small">${esc(p.pos)} • OVR <b>${esc(p.overall)}</b> • ${esc(p.age)}a • Valor ~ ${esc(p.valueEurMi || p.valueMi || '')}</div>
+                <div class="lineup-stats">${fitnessPill(p)}</div>
               </div>
               <div class="lineup-right">
                 ${wherePill}
@@ -2933,6 +2966,8 @@ function viewCareerCreate() {
                   <select class="input" data-action="setFormation">
                     <option value="4-3-3" ${formation === '4-3-3' ? 'selected' : ''}>4-3-3</option>
                     <option value="4-4-2" ${formation === '4-4-2' ? 'selected' : ''}>4-4-2</option>
+                    <option value="4-2-3-1" ${formation === '4-2-3-1' ? 'selected' : ''}>4-2-3-1</option>
+                    <option value="3-5-2" ${formation === '3-5-2' ? 'selected' : ''}>3-5-2</option>
                   </select>
                 </div>
                 <div class="col-6">
@@ -2941,6 +2976,35 @@ function viewCareerCreate() {
                     <button class="btn btn-primary" data-action="autoPickXI">Melhor XI</button>
                     <button class="btn" data-action="autoPickBench">Auto Banco</button>
                     <button class="btn btn-danger" data-action="resetTactics">Resetar Plano</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="sep"></div>
+
+              <div class="grid">
+                <div class="col-6">
+                  <div class="card-mini tactical-metrics">
+                    <div class="card-mini-title">Leitura do XI</div>
+                    ${metricBar('Prontidao', metrics.readiness)}
+                    ${metricBar('Quimica', metrics.chemistry)}
+                    ${metricBar('Equilibrio', metrics.balance)}
+                    ${metricBar('Fitness medio', metrics.fitness)}
+                    <div class="mini">Moral media: <b>${metrics.morale}%</b> • Ritmo medio: <b>${metrics.sharpness}</b></div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="card-mini">
+                    <div class="card-mini-title">Presets Taticos</div>
+                    <div class="row" style="gap:8px; flex-wrap:wrap;">
+                      <button class="btn btn-small" data-action="applyPreset" data-preset="balanced">Equilibrado</button>
+                      <button class="btn btn-small" data-action="applyPreset" data-preset="pressing">Pressao Alta</button>
+                      <button class="btn btn-small" data-action="applyPreset" data-preset="possession">Posse</button>
+                      <button class="btn btn-small" data-action="applyPreset" data-preset="counter">Contra-ataque</button>
+                      <button class="btn btn-small" data-action="applyPreset" data-preset="direct">Jogo Direto</button>
+                    </div>
+                    <div class="sep"></div>
+                    <div class="mini">Os presets nao removem sua base atual. Eles apenas ajustam rapidamente abordagem, ritmo, pressao, linha, largura e foco.</div>
                   </div>
                 </div>
               </div>
@@ -4037,6 +4101,39 @@ save.meta.updatedAt = nowIso();
     } catch(e){}
   }
 
+function playerReadinessMetrics(save){
+  ensureSystems(save);
+  const players = Array.isArray(save?.squad?.players) ? save.squad.players : [];
+  const xiIds = Array.isArray(save?.tactics?.startingXI) ? save.tactics.startingXI : [];
+  const xiPlayers = xiIds.map(id => players.find(p => p.id === id)).filter(Boolean);
+  if (!xiPlayers.length) return { readiness: 0, chemistry: 0, balance: 0, fitness: 0, morale: 0, sharpness: 0 };
+  const avg = (fn, fb=0) => xiPlayers.reduce((s,p)=>s+(fn(p) ?? fb),0) / Math.max(1, xiPlayers.length);
+  const fitness = avg(p => p.fitness, 90);
+  const morale = avg(p => p.morale, 75);
+  const sharpness = avg(p => (p.sharpness ?? 0) * 10, 0);
+  const roles = { GK:0, DEF:0, MID:0, ATT:0 };
+  xiPlayers.forEach(p => { const k = String(p.pos||'').toUpperCase(); if (roles[k] != null) roles[k]++; });
+  const formation = String(save?.tactics?.formation || '4-3-3').split('-').map(n => Number(n||0));
+  const target = { GK:1, DEF: formation[0] || 4, MID: formation[1] || 3, ATT: formation[2] || 3 };
+  const roleDiff = Math.abs((roles.GK||0)-target.GK) + Math.abs((roles.DEF||0)-target.DEF) + Math.abs((roles.MID||0)-target.MID) + Math.abs((roles.ATT||0)-target.ATT);
+  const balance = Math.max(45, Math.min(100, 100 - roleDiff * 9));
+  const chemistryBase = 58 + (morale - 70) * 0.5 + (sharpness / 10) * 1.2;
+  const chemistry = Math.max(45, Math.min(100, chemistryBase + (balance - 70) * 0.35));
+  const readiness = Math.round(Math.max(40, Math.min(100, fitness * 0.45 + morale * 0.30 + chemistry * 0.15 + balance * 0.10 + (sharpness*0.25))));
+  return { readiness, chemistry: Math.round(chemistry), balance: Math.round(balance), fitness: Math.round(fitness), morale: Math.round(morale), sharpness: Math.round(sharpness)/10 };
+}
+
+function tacticalPresetValues(key){
+  const map = {
+    balanced: { approach:'balanced', tempo:'normal', pressure:'medium', defLine:'medium', width:'normal', focus:'mixed' },
+    pressing: { approach:'balanced', tempo:'fast', pressure:'high', defLine:'high', width:'normal', focus:'mixed' },
+    possession: { approach:'possession', tempo:'slow', pressure:'medium', defLine:'medium', width:'wide', focus:'middle' },
+    counter: { approach:'counter', tempo:'fast', pressure:'medium', defLine:'deep', width:'wide', focus:'wings' },
+    direct: { approach:'direct', tempo:'fast', pressure:'high', defLine:'medium', width:'wide', focus:'mixed' }
+  };
+  return map[key] || map.balanced;
+}
+
 function tacticEffectForClub(clubId, save){
   // Aplica apenas ao clube do usuário (leve e previsível)
   if (!save || clubId !== save.career?.clubId) return {
@@ -4048,6 +4145,7 @@ function tacticEffectForClub(clubId, save){
   let defRed = 0.0; // redução do ataque adversário
   let poss = 0;     // delta na posse (pontos percentuais)
   let chaos = 0;    // aumenta variância (0..1)
+  const metrics = playerReadinessMetrics(save);
 
   // Abordagem
   if (t.approach === 'possession') { att += 0.05; defRed += 0.05; poss += 6; chaos -= 0.08; }
@@ -6910,8 +7008,10 @@ if (action === 'careerContinueToClub') {
           if (!save) return;
           save.career.leagueFilter = el.value;
           save.career.clubSearch = '';
+          const metrics = playerReadinessMetrics(save);
           save.meta.updatedAt = nowIso();
           writeSlot(state.settings.activeSlotId, save);
+          toast('XI atualizado • Prontidao atual ' + metrics.readiness + '%');
           route();
         });
       }
@@ -7007,6 +7107,21 @@ if (action === 'setTacticParam') {
       save.meta.updatedAt = nowIso();
       writeSlot(state.settings.activeSlotId, save);
     }
+  });
+  return;
+}
+
+if (action === 'applyPreset') {
+  el.addEventListener('click', () => {
+    const save = activeSave();
+    if (!save) return;
+    ensureSystems(save);
+    const preset = el.getAttribute('data-preset') || 'balanced';
+    Object.assign(save.tactics, tacticalPresetValues(preset));
+    save.meta.updatedAt = nowIso();
+    writeSlot(state.settings.activeSlotId, save);
+    toast('Preset tatico aplicado: ' + preset + '.');
+    route();
   });
   return;
 }
@@ -7161,6 +7276,8 @@ if (action === 'resetTactics') {
 
           save.meta.updatedAt = nowIso();
           writeSlot(state.settings.activeSlotId, save);
+          const metrics = playerReadinessMetrics(save);
+          toast('XI atualizado • Prontidao atual ' + metrics.readiness + '%');
           route();
         });
       }
