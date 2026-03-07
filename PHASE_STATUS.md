@@ -1,9 +1,3 @@
-# Status
-
-Build atual: v1.44.0_tactics_lineup_ui_rework
-Data UTC: 2026-03-07 13:40:13 UTC
-Progresso: 76%
-
 
 Phase 1 — Foundation stabilization ✔
 Phase 2 — Career loop ✔
@@ -13,3 +7,10 @@ Phase 5 — Visual Identity AAA ✔
 
 Next Phase:
 Phase 6 — Realistic match simulation expansion
+
+
+## v1.44.1_roster_names_tactics_fix
+- Corrigido carregamento de nomes oficiais do elenco a partir da base do pacote.
+- Corrigida sincronização do elenco salvo para substituir placeholders como "Jogador 466".
+- Melhorada a tela de táticas para exibir nomes corretos e manter a conversa entre tática e elenco.
+- Mantida a estrutura completa do projeto em zip integral.

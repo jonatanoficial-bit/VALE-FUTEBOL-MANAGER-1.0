@@ -2,12 +2,12 @@
    Objetivo: melhorar carregamento no GitHub Pages e permitir modo offline.
 */
 
-const CACHE_NAME = "vfm-cache-2026-03-07_134013-v1.44.0_tactics_lineup_ui_rework";
+const CACHE_NAME = "vfm-cache-2026-03-07_140919-v1.44.1_roster_names_tactics_fix";
 const CORE_ASSETS = [
   './',
-  './index.html?v=build_2026-03-07_134013_v1.44.0_tactics_lineup_ui_rework',
-  './styles.css?v=build_2026-03-07_134013_v1.44.0_tactics_lineup_ui_rework',
-  './app.js?v=build_2026-03-07_134013_v1.44.0_tactics_lineup_ui_rework',
+  './index.html?v=build_2026-03-07_140919_v1.44.1_roster_names_tactics_fix',
+  './styles.css?v=build_2026-03-07_140919_v1.44.1_roster_names_tactics_fix',
+  './app.js?v=build_2026-03-07_140919_v1.44.1_roster_names_tactics_fix',
   './manifest.json',
   './favicon.ico',
   './assets/club_placeholder.svg',

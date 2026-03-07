@@ -64,7 +64,7 @@
     }
   }
 
-    const BUILD_TAG = "v1.44.0_tactics_lineup_ui_rework";
+    const BUILD_TAG = "v1.44.1_roster_names_tactics_fix";
 const BUILD_TIME_STR = "2026-03-06 21:48:00 UTC";
 
 // Ligas UEFA consideradas para preferência de continentais (evita ReferenceError no modal)
@@ -927,7 +927,8 @@ async function loadPackData() {
 
       // Se mudou o roster, recria o elenco do clube atual e limpa filtros de mercado
       save.squad = save.squad || {};
-      save.squad.players = generateSquadForClub(save.career?.clubId);
+      save.squad.players = getOfficialPlayersForClub(save.career?.clubId);
+      if (!Array.isArray(save.squad.players) || save.squad.players.length === 0) save.squad.players = generateSquadForClub(save.career?.clubId);
 
       // Recria pool de mercado / remove compras pendentes para evitar IDs antigos sem lookup
       save.transfers = save.transfers || {};
@@ -1576,6 +1577,78 @@ function applyBackground(path) {
       return state.packData?.clubs?.clubs?.find(c => c.id === id) || null;
     }
 
+  function getClubAliases(clubId) {
+    const aliases = new Set();
+    const club = getClub(clubId);
+    if (clubId) aliases.add(String(clubId));
+    if (club?.id) aliases.add(String(club.id));
+    if (club?.short) aliases.add(String(club.short));
+    for (const p of state.packData?.players?.players || []) {
+      if (!p) continue;
+      if (club?.short && String(p.clubId) === String(club.short)) aliases.add(String(p.clubId));
+      if (club?.id && String(p.clubId) === String(club.id)) aliases.add(String(p.clubId));
+    }
+    return Array.from(aliases);
+  }
+
+  function getOfficialPlayersForClub(clubId) {
+    const aliases = new Set(getClubAliases(clubId));
+    const arr = state.packData?.players?.players || [];
+    const out = arr.filter(p => p && aliases.has(String(p.clubId || ''))).map((p, i) => ({
+      ...p,
+      id: String(p.id || `${clubId}_p${i+1}`),
+      clubId: String(p.clubId || clubId),
+      name: String(p.name || p.fullName || p.displayName || p.nome || '').trim(),
+      pos: String(p.pos || p.position || 'MID').toUpperCase(),
+      age: Number(p.age || p.idade || 22),
+      overall: Number(p.overall || p.ovr || 60),
+      ovr: Number(p.ovr || p.overall || 60),
+      value: Number(p.value || p.valor || 0),
+      source: p.source || 'official'
+    })).filter(p => p.name);
+    return out.sort((a,b) => (b.overall||0) - (a.overall||0));
+  }
+
+  function shouldRefreshSquadFromOfficial(save) {
+    const squad = save?.squad?.players || [];
+    if (!Array.isArray(squad) || squad.length === 0) return true;
+    const badNames = squad.filter(p => /^Jogador\s+\d+$/i.test(String(p?.name || '').trim())).length;
+    const generated = squad.filter(p => String(p?.source || '').toLowerCase() === 'generated').length;
+    return badNames >= Math.max(3, Math.floor(squad.length * 0.2)) || generated >= Math.max(3, Math.floor(squad.length * 0.2));
+  }
+
+  function rebuildSquadFromOfficial(save) {
+    const official = getOfficialPlayersForClub(save?.career?.clubId);
+    if (!official.length) return false;
+    const old = Array.isArray(save?.squad?.players) ? save.squad.players : [];
+    const oldByPos = {};
+    for (const p of old) {
+      const pos = String(p?.pos || 'MID').toUpperCase();
+      if (!oldByPos[pos]) oldByPos[pos] = [];
+      oldByPos[pos].push(p);
+    }
+    for (const arr of Object.values(oldByPos)) arr.sort((a,b) => (b.overall||b.ovr||0) - (a.overall||a.ovr||0));
+    const consume = (pos) => {
+      const arr = oldByPos[pos] || [];
+      return arr.length ? arr.shift() : null;
+    };
+    save.squad = save.squad || {};
+    save.squad.players = official.map((p) => {
+      const prev = consume(String(p.pos || 'MID').toUpperCase()) || old.find(x => String(x?.name||'').trim().toLowerCase() === String(p.name||'').trim().toLowerCase()) || null;
+      return {
+        ...p,
+        fitness: Number(prev?.fitness ?? p.fitness ?? 90),
+        morale: Number(prev?.morale ?? p.morale ?? 0),
+        sharpness: Number(prev?.sharpness ?? prev?.ritmo ?? p.sharpness ?? 0),
+        form: Number(prev?.form ?? p.form ?? 0),
+        suspension: Number(prev?.suspension ?? 0),
+        injuryDays: Number(prev?.injuryDays ?? 0),
+      };
+    });
+    save.squad.source = 'official_roster';
+    return true;
+  }
+
   /** Gera aleatoriamente um elenco para um clube (MVP) */
   function generateSquadForClub(clubId) {
     // Define base de overall conforme a liga
@@ -1684,10 +1757,17 @@ function applyBackground(path) {
     if (!save.progress.leagueTables) save.progress.leagueTables = {};
 
     if (!Array.isArray(save.squad.players) || save.squad.players.length === 0) {
-      save.squad.players = generateSquadForClub(save.career.clubId);
+      save.squad.players = getOfficialPlayersForClub(save.career.clubId);
+      if (!Array.isArray(save.squad.players) || save.squad.players.length === 0) save.squad.players = generateSquadForClub(save.career.clubId);
+    }
+    if (shouldRefreshSquadFromOfficial(save)) {
+      rebuildSquadFromOfficial(save);
     }
     // Se o roster online mudou, sincroniza o save para refletir o elenco atual
     syncSaveRosterIfNeeded(save);
+    if (shouldRefreshSquadFromOfficial(save)) {
+      rebuildSquadFromOfficial(save);
+    }
     if (!save.tactics.formation) save.tactics.formation = "4-3-3";
     if (!save.tactics.approach) save.tactics.approach = "balanced"; // balanced | possession | direct | counter
     if (!save.tactics.tempo) save.tactics.tempo = "normal";        // slow | normal | fast
@@ -2114,7 +2194,7 @@ function computeStaffMarket(save) {
       return `
         <div class="item">
           <div class="item-left">
-            <div class="item-title">${esc(p.name)}</div>
+            <div class="item-title">${esc(p.name || p.fullName || p.displayName || p.nome || ('Jogador ' + (p.id || '')))}</div>
             <div class="item-sub">v${esc(p.version || "1.0.0")} • ${esc(p.description || "")}</div>
           </div>
           <div class="item-right">
@@ -2847,7 +2927,7 @@ function viewCareerCreate() {
         .sort((a, b) => b.overall - a.overall)
         .map((p) => `
           <tr>
-            <td>${esc(p.name)}</td>
+            <td>${esc(p.name || p.fullName || p.displayName || p.nome || ('Jogador ' + (p.id || '')))}</td>
             <td class="center">${esc(p.pos)}</td>
             <td class="center">${esc(p.age)}</td>
             <td class="center"><b>${esc(p.overall)}</b></td>
@@ -2914,28 +2994,6 @@ function viewCareerCreate() {
         const fmtMoney = (n) => {
           const cur = state.packData?.rules?.gameRules?.currency || 'BRL';
           try { return Number(n||0).toLocaleString('pt-BR', { style:'currency', currency: cur }); } catch(e){ return String(n||0); }
-        };
-
-
-        const avgMetric = (arr, key, fallback = 0) => {
-          if (!arr.length) return fallback;
-          const total = arr.reduce((s,p)=> s + (typeof p?.[key] === 'number' ? p[key] : fallback), 0);
-          return Math.round(total / Math.max(1, arr.length));
-        };
-        const fitnessBadge = (p) => {
-          const n = typeof p?.fitness === 'number' ? Math.round(p.fitness) : 90;
-          const cls = n >= 90 ? 'ok' : (n >= 78 ? 'warn' : 'danger');
-          return `<span class="pill pill-mini ${cls}">FIT ${n}%</span>`;
-        };
-        const formBadge = (p) => {
-          const n = typeof p?.form === 'number' ? p.form : 0;
-          const label = n > 0 ? `Forma +${n}` : `Forma ${n}`;
-          const cls = n > 0 ? 'ok' : (n < 0 ? 'danger' : '');
-          return `<span class="pill pill-mini ${cls}">${label}</span>`;
-        };
-        const sharpBadge = (p) => {
-          const n = typeof p?.sharpness === 'number' ? p.sharpness : 0;
-          return `<span class="pill pill-mini">Ritmo ${n > 0 ? '+'+n : n}</span>`;
         };
 
         // Normaliza: remove duplicados e garante 11/7
@@ -3022,7 +3080,7 @@ function viewCareerCreate() {
           while (useMids.length < midN && pool.length) useMids.push(pool.shift());
           while (useAtts.length < attN && pool.length) useAtts.push(pool.shift());
 
-          const chip = (p)=> p ? `<div class="tactic-chip" title="${esc(p.name)} • ${esc(p.pos)} • OVR ${esc(p.overall)}">${esc(p.name)}</div>` : `<div class="tactic-chip empty">—</div>`;
+          const chip = (p)=> p ? `<div class="tactic-chip" title="${esc(p.name || p.fullName || p.displayName || p.nome || ('Jogador ' + (p.id || '')))} • ${esc(p.pos)} • OVR ${esc(p.overall)}">${esc(p.name || p.fullName || p.displayName || p.nome || ('Jogador ' + (p.id || '')))}</div>` : `<div class="tactic-chip empty">—</div>`;
 
           return `
             <div class="tactic-board">
@@ -3038,8 +3096,6 @@ function viewCareerCreate() {
         function playerLine(p, where){
           const inXI = save.tactics.startingXI.includes(p.id);
           const inBench = save.tactics.bench.includes(p.id);
-          const captain = save.tactics.captainId === p.id;
-          const setPiece = [save.tactics.pkTakerId, save.tactics.fkTakerId, save.tactics.ckTakerId].includes(p.id);
 
           const wherePill = inXI ? `<span class="pill pill-mini ok">Titular</span>` : (inBench ? `<span class="pill pill-mini warn">Banco</span>` : `<span class="pill pill-mini">Fora</span>`);
 
@@ -3047,23 +3103,20 @@ function viewCareerCreate() {
             ? `<button class="btn btn-small" data-action="tacticsMove" data-player="${esc(p.id)}" data-to="BENCH">Banco</button>
                <button class="btn btn-small btn-danger" data-action="tacticsMove" data-player="${esc(p.id)}" data-to="OUT">Remover</button>`
             : (inBench
-                ? `<button class="btn btn-small btn-primary" data-action="tacticsMove" data-player="${esc(p.id)}" data-to="XI">Titular</button>
+                ? `<button class="btn btn-small" data-action="tacticsMove" data-player="${esc(p.id)}" data-to="XI">Titular</button>
                    <button class="btn btn-small btn-danger" data-action="tacticsMove" data-player="${esc(p.id)}" data-to="OUT">Remover</button>`
-                : `<button class="btn btn-small btn-primary" data-action="tacticsMove" data-player="${esc(p.id)}" data-to="XI">Titular</button>
+                : `<button class="btn btn-small" data-action="tacticsMove" data-player="${esc(p.id)}" data-to="XI">Titular</button>
                    <button class="btn btn-small" data-action="tacticsMove" data-player="${esc(p.id)}" data-to="BENCH">Banco</button>`
               );
 
           return `
-            <div class="lineup-item ${inXI ? 'is-starter' : (inBench ? 'is-bench' : 'is-outside')}" data-player-id="${esc(p.id)}">
+            <div class="lineup-item">
               <div class="lineup-left">
-                <div class="lineup-name-row">
-                  <div class="lineup-name">${esc(p.name)}</div>
-                  <div class="lineup-role-badges">${wherePill}${captain ? `<span class="pill pill-mini">Cap</span>` : ``}${setPiece ? `<span class="pill pill-mini">BP</span>` : ``}</div>
-                </div>
+                <div class="lineup-name">${esc(p.name || p.fullName || p.displayName || p.nome || ('Jogador ' + (p.id || '')))}</div>
                 <div class="muted small">${esc(p.pos)} • OVR <b>${esc(p.overall)}</b> • ${esc(p.age)}a • Valor ~ ${esc(p.valueEurMi || p.valueMi || '')}</div>
-                <div class="lineup-stats">${fitnessBadge(p)}${formBadge(p)}${sharpBadge(p)}</div>
               </div>
               <div class="lineup-right">
+                ${wherePill}
                 <div class="lineup-actions">${actions}</div>
               </div>
             </div>
@@ -3140,25 +3193,25 @@ function viewCareerCreate() {
                   <div class="col-6">
                     <div class="label">Capitão</div>
                     <select class="input" data-action="setCaptain">
-                      ${players.map(p=>`<option value="${esc(p.id)}" ${save.tactics.captainId===p.id?'selected':''}>${esc(p.name)} (${esc(p.pos)})</option>`).join('')}
+                      ${players.map(p=>`<option value="${esc(p.id)}" ${save.tactics.captainId===p.id?'selected':''}>${esc(p.name || p.fullName || p.displayName || p.nome || ('Jogador ' + (p.id || '')))} (${esc(p.pos)})</option>`).join('')}
                     </select>
                   </div>
                   <div class="col-6">
                     <div class="label">Batedor de Pênalti</div>
                     <select class="input" data-action="setSetPiece" data-field="pkTakerId">
-                      ${players.map(p=>`<option value="${esc(p.id)}" ${save.tactics.pkTakerId===p.id?'selected':''}>${esc(p.name)} • OVR ${esc(p.overall)}</option>`).join('')}
+                      ${players.map(p=>`<option value="${esc(p.id)}" ${save.tactics.pkTakerId===p.id?'selected':''}>${esc(p.name || p.fullName || p.displayName || p.nome || ('Jogador ' + (p.id || '')))} • OVR ${esc(p.overall)}</option>`).join('')}
                     </select>
                   </div>
                   <div class="col-6">
                     <div class="label">Batedor de Falta</div>
                     <select class="input" data-action="setSetPiece" data-field="fkTakerId">
-                      ${players.map(p=>`<option value="${esc(p.id)}" ${save.tactics.fkTakerId===p.id?'selected':''}>${esc(p.name)} • OVR ${esc(p.overall)}</option>`).join('')}
+                      ${players.map(p=>`<option value="${esc(p.id)}" ${save.tactics.fkTakerId===p.id?'selected':''}>${esc(p.name || p.fullName || p.displayName || p.nome || ('Jogador ' + (p.id || '')))} • OVR ${esc(p.overall)}</option>`).join('')}
                     </select>
                   </div>
                   <div class="col-6">
                     <div class="label">Batedor de Escanteio</div>
                     <select class="input" data-action="setSetPiece" data-field="ckTakerId">
-                      ${players.map(p=>`<option value="${esc(p.id)}" ${save.tactics.ckTakerId===p.id?'selected':''}>${esc(p.name)} • OVR ${esc(p.overall)}</option>`).join('')}
+                      ${players.map(p=>`<option value="${esc(p.id)}" ${save.tactics.ckTakerId===p.id?'selected':''}>${esc(p.name || p.fullName || p.displayName || p.nome || ('Jogador ' + (p.id || '')))} • OVR ${esc(p.overall)}</option>`).join('')}
                     </select>
                   </div>
                 </div>
@@ -3228,8 +3281,8 @@ function viewCareerCreate() {
               <div class="sep"></div>
 
               <div class="card-mini">
-                <div class="card-mini-title">Plantel e Escalação</div>
-                <div class="mini">Use os botões para mover jogadores entre Titulares, Banco e Fora. O sistema evita duplicados e tenta manter 1 goleiro no XI.</div>
+                <div class="card-mini-title">Plantel (23)</div>
+                <div class="mini">Use os botões para mover jogadores entre Titulares, Banco e Fora.</div>
                 <div style="margin-top:10px;">
                   ${poolHtml}
                 </div>
@@ -6634,7 +6687,7 @@ function viewTransfers() {
         const open = win.open;
         return `
           <tr>
-            <td>${esc(p.name)}</td>
+            <td>${esc(p.name || p.fullName || p.displayName || p.nome || ('Jogador ' + (p.id || '')))}</td>
             <td class="center">${esc(p.pos)}</td>
             <td class="center">${esc(p.age)}</td>
             <td class="center">${esc(p.overall)}</td>

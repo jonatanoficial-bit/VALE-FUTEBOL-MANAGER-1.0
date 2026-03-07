@@ -1,7 +1,7 @@
 {
   "project": "VALE FUTEBOL MANAGER 2026",
-  "build": "v1.44.0_tactics_lineup_ui_rework",
-  "date_utc": "2026-03-07 13:40:13 UTC",
-  "phase": "7 - Tactics + Lineup UI Rework",
-  "progress": "76%"
+  "build": "v1.44.1_roster_names_tactics_fix",
+  "date_utc": "2026-03-07 14:09:19 UTC",
+  "phase": "Roster Names + Tactics Fix",
+  "progress": "78%"
 }

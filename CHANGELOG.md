@@ -1,10 +1,3 @@
-
-## v1.44.0_tactics_lineup_ui_rework
-- correção segura da tela de táticas em cima do pacote completo
-- melhorias visuais em titulares, banco e lista do plantel
-- resumo superior com contagem de XI, banco, fitness e forma
-- atualização de cache busting e build metadata
-
 # Changelog
 
 ## v1.43.1_hub_hotfix
@@ -23,3 +16,10 @@
 - atualizados BUILD.txt, README_BUILD.md e build-info.json
 - atualizado cache busting de index.html, app.js, styles.css e sw.js
 - corrigida limpeza de caches antigos no service worker
+
+
+## v1.44.1_roster_names_tactics_fix
+- Corrigido carregamento de nomes oficiais do elenco a partir da base do pacote.
+- Corrigida sincronização do elenco salvo para substituir placeholders como "Jogador 466".
+- Melhorada a tela de táticas para exibir nomes corretos e manter a conversa entre tática e elenco.
+- Mantida a estrutura completa do projeto em zip integral.
