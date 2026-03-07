@@ -2,7 +2,7 @@
    Objetivo: melhorar carregamento no GitHub Pages e permitir modo offline.
 */
 
-const CACHE_NAME = "vfm-cache-v1.45.0_matchday_flow_upgrade";
+const CACHE_NAME = "vfm-cache-v1.45.1_matchday_integration_fix";
 const CORE_ASSETS = [
   './',
   './index.html?v=build_2026-03-06_213500_v1.43.0_full_hub_consolidation',

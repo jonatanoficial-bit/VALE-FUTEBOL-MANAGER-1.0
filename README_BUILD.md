@@ -5,9 +5,8 @@
 - Foco: correção do HUB e prevenção de crash quando `save.season` não existe no fluxo inicial.
 
 
-## v1.45.0_matchday_flow_upgrade
-- Matchday flow upgrade
-- Pre-match summary injected on hub/match routes
-- Live event feed enriched
-- Post-match summary helper available via window.VFMCreatePostMatchCard
+## v1.45.1_matchday_integration_fix
+- Matchday integration fix
+- Pre-match card injected directly into viewMatches
+- Visible marker added: MATCHDAY FLOW ACTIVE
 - Built from the user's full uploaded zip

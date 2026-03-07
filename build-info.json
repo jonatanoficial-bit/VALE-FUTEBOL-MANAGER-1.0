@@ -1,7 +1,13 @@
 {
   "project": "VALE FUTEBOL MANAGER 2026",
-  "build": "v1.45.0_matchday_flow_upgrade",
-  "date_utc": "2026-03-07 15:02:48",
-  "phase": "Matchday Flow Upgrade",
-  "progress": "82%"
+  "build": "v1.45.1_matchday_integration_fix",
+  "date_utc": "2026-03-07 16:19:43",
+  "phase": "Matchday Integration Fix",
+  "progress": "83%",
+  "notes": [
+    "Integrated pre-match card directly into real viewMatches renderer",
+    "Added visible active badge inside Matches screen",
+    "Updated cache busting and build metadata",
+    "Built from full uploaded zip"
+  ]
 }

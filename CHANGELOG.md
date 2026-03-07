@@ -18,11 +18,11 @@
 - corrigida limpeza de caches antigos no service worker
 
 
-## v1.45.0_matchday_flow_upgrade
-Date: 2026-03-07 15:02:48 UTC
+## v1.45.1_matchday_integration_fix
+Date: 2026-03-07 16:19:43 UTC
 
-- Pre-match summary panel on hub/match routes
-- Live match event feed with richer commentary
-- Post-match summary helper for score and stats
-- Build metadata and cache version updated
+- Fixed matchday integration by patching the real viewMatches renderer
+- Added visible pre-match card on the Jogos e Calendário screen
+- Added clear build marker: MATCHDAY FLOW ACTIVE
+- Updated build metadata and cache version
 - Full package preserved from uploaded complete zip
