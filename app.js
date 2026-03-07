@@ -24,52 +24,6 @@
   /** Seleciona um elemento no DOM */
   const $ = (sel) => document.querySelector(sel);
 
-  function toast(message, kind = "info") {
-    try {
-      const host = document.body || document.documentElement;
-      if (!host) { console.log(message); return; }
-      let wrap = document.getElementById("vfm-toast-wrap");
-      if (!wrap) {
-        wrap = document.createElement("div");
-        wrap.id = "vfm-toast-wrap";
-        wrap.style.position = "fixed";
-        wrap.style.right = "16px";
-        wrap.style.bottom = "16px";
-        wrap.style.display = "flex";
-        wrap.style.flexDirection = "column";
-        wrap.style.gap = "8px";
-        wrap.style.zIndex = "99999";
-        wrap.style.pointerEvents = "none";
-        host.appendChild(wrap);
-      }
-      const el = document.createElement("div");
-      el.className = "vfm-toast " + kind;
-      el.textContent = String(message || "");
-      el.style.pointerEvents = "auto";
-      el.style.padding = "10px 14px";
-      el.style.borderRadius = "12px";
-      el.style.border = "1px solid rgba(255,255,255,.16)";
-      el.style.background = kind === "error" ? "rgba(110,20,34,.92)" : kind === "success" ? "rgba(18,88,52,.92)" : "rgba(9,17,35,.92)";
-      el.style.color = "#fff";
-      el.style.boxShadow = "0 8px 24px rgba(0,0,0,.35)";
-      el.style.backdropFilter = "blur(8px)";
-      el.style.fontSize = "13px";
-      el.style.maxWidth = "320px";
-      el.style.opacity = "0";
-      el.style.transform = "translateY(8px)";
-      el.style.transition = "opacity .18s ease, transform .18s ease";
-      wrap.appendChild(el);
-      requestAnimationFrame(() => { el.style.opacity = "1"; el.style.transform = "translateY(0)"; });
-      setTimeout(() => {
-        el.style.opacity = "0";
-        el.style.transform = "translateY(8px)";
-        setTimeout(() => el.remove(), 220);
-      }, 1800);
-    } catch (err) {
-      console.log(message);
-    }
-  }
-
   /** Tenta fazer o parse de JSON, senão retorna fallback */
   function safeJsonParse(str, fallback) {
     try {
@@ -110,8 +64,8 @@
     }
   }
 
-    const BUILD_TAG = "v1.44.2_tactics_buttons_hotfix";
-const BUILD_TIME_STR = "2026-03-07 14:30:00 UTC";
+    const BUILD_TAG = "v1.43.1_hub_hotfix";
+const BUILD_TIME_STR = "2026-03-06 21:48:00 UTC";
 
 // Ligas UEFA consideradas para preferência de continentais (evita ReferenceError no modal)
 const UEFA_LIDS = ['ENG_PREMIER','ESP_LALIGA','ITA_SERIE_A','GER_BUNDES','FRA_LIGUE_1','POR_LIGA'];
@@ -973,8 +927,7 @@ async function loadPackData() {
 
       // Se mudou o roster, recria o elenco do clube atual e limpa filtros de mercado
       save.squad = save.squad || {};
-      save.squad.players = getOfficialPlayersForClub(save.career?.clubId);
-      if (!Array.isArray(save.squad.players) || save.squad.players.length === 0) save.squad.players = generateSquadForClub(save.career?.clubId);
+      save.squad.players = generateSquadForClub(save.career?.clubId);
 
       // Recria pool de mercado / remove compras pendentes para evitar IDs antigos sem lookup
       save.transfers = save.transfers || {};
@@ -1623,78 +1576,6 @@ function applyBackground(path) {
       return state.packData?.clubs?.clubs?.find(c => c.id === id) || null;
     }
 
-  function getClubAliases(clubId) {
-    const aliases = new Set();
-    const club = getClub(clubId);
-    if (clubId) aliases.add(String(clubId));
-    if (club?.id) aliases.add(String(club.id));
-    if (club?.short) aliases.add(String(club.short));
-    for (const p of state.packData?.players?.players || []) {
-      if (!p) continue;
-      if (club?.short && String(p.clubId) === String(club.short)) aliases.add(String(p.clubId));
-      if (club?.id && String(p.clubId) === String(club.id)) aliases.add(String(p.clubId));
-    }
-    return Array.from(aliases);
-  }
-
-  function getOfficialPlayersForClub(clubId) {
-    const aliases = new Set(getClubAliases(clubId));
-    const arr = state.packData?.players?.players || [];
-    const out = arr.filter(p => p && aliases.has(String(p.clubId || ''))).map((p, i) => ({
-      ...p,
-      id: String(p.id || `${clubId}_p${i+1}`),
-      clubId: String(p.clubId || clubId),
-      name: String(p.name || p.fullName || p.displayName || p.nome || '').trim(),
-      pos: String(p.pos || p.position || 'MID').toUpperCase(),
-      age: Number(p.age || p.idade || 22),
-      overall: Number(p.overall || p.ovr || 60),
-      ovr: Number(p.ovr || p.overall || 60),
-      value: Number(p.value || p.valor || 0),
-      source: p.source || 'official'
-    })).filter(p => p.name);
-    return out.sort((a,b) => (b.overall||0) - (a.overall||0));
-  }
-
-  function shouldRefreshSquadFromOfficial(save) {
-    const squad = save?.squad?.players || [];
-    if (!Array.isArray(squad) || squad.length === 0) return true;
-    const badNames = squad.filter(p => /^Jogador\s+\d+$/i.test(String(p?.name || '').trim())).length;
-    const generated = squad.filter(p => String(p?.source || '').toLowerCase() === 'generated').length;
-    return badNames >= Math.max(3, Math.floor(squad.length * 0.2)) || generated >= Math.max(3, Math.floor(squad.length * 0.2));
-  }
-
-  function rebuildSquadFromOfficial(save) {
-    const official = getOfficialPlayersForClub(save?.career?.clubId);
-    if (!official.length) return false;
-    const old = Array.isArray(save?.squad?.players) ? save.squad.players : [];
-    const oldByPos = {};
-    for (const p of old) {
-      const pos = String(p?.pos || 'MID').toUpperCase();
-      if (!oldByPos[pos]) oldByPos[pos] = [];
-      oldByPos[pos].push(p);
-    }
-    for (const arr of Object.values(oldByPos)) arr.sort((a,b) => (b.overall||b.ovr||0) - (a.overall||a.ovr||0));
-    const consume = (pos) => {
-      const arr = oldByPos[pos] || [];
-      return arr.length ? arr.shift() : null;
-    };
-    save.squad = save.squad || {};
-    save.squad.players = official.map((p) => {
-      const prev = consume(String(p.pos || 'MID').toUpperCase()) || old.find(x => String(x?.name||'').trim().toLowerCase() === String(p.name||'').trim().toLowerCase()) || null;
-      return {
-        ...p,
-        fitness: Number(prev?.fitness ?? p.fitness ?? 90),
-        morale: Number(prev?.morale ?? p.morale ?? 0),
-        sharpness: Number(prev?.sharpness ?? prev?.ritmo ?? p.sharpness ?? 0),
-        form: Number(prev?.form ?? p.form ?? 0),
-        suspension: Number(prev?.suspension ?? 0),
-        injuryDays: Number(prev?.injuryDays ?? 0),
-      };
-    });
-    save.squad.source = 'official_roster';
-    return true;
-  }
-
   /** Gera aleatoriamente um elenco para um clube (MVP) */
   function generateSquadForClub(clubId) {
     // Define base de overall conforme a liga
@@ -1803,17 +1684,10 @@ function applyBackground(path) {
     if (!save.progress.leagueTables) save.progress.leagueTables = {};
 
     if (!Array.isArray(save.squad.players) || save.squad.players.length === 0) {
-      save.squad.players = getOfficialPlayersForClub(save.career.clubId);
-      if (!Array.isArray(save.squad.players) || save.squad.players.length === 0) save.squad.players = generateSquadForClub(save.career.clubId);
-    }
-    if (shouldRefreshSquadFromOfficial(save)) {
-      rebuildSquadFromOfficial(save);
+      save.squad.players = generateSquadForClub(save.career.clubId);
     }
     // Se o roster online mudou, sincroniza o save para refletir o elenco atual
     syncSaveRosterIfNeeded(save);
-    if (shouldRefreshSquadFromOfficial(save)) {
-      rebuildSquadFromOfficial(save);
-    }
     if (!save.tactics.formation) save.tactics.formation = "4-3-3";
     if (!save.tactics.approach) save.tactics.approach = "balanced"; // balanced | possession | direct | counter
     if (!save.tactics.tempo) save.tactics.tempo = "normal";        // slow | normal | fast
@@ -2240,7 +2114,7 @@ function computeStaffMarket(save) {
       return `
         <div class="item">
           <div class="item-left">
-            <div class="item-title">${esc(p.name || p.fullName || p.displayName || p.nome || ('Jogador ' + (p.id || '')))}</div>
+            <div class="item-title">${esc(p.name)}</div>
             <div class="item-sub">v${esc(p.version || "1.0.0")} • ${esc(p.description || "")}</div>
           </div>
           <div class="item-right">
@@ -2973,7 +2847,7 @@ function viewCareerCreate() {
         .sort((a, b) => b.overall - a.overall)
         .map((p) => `
           <tr>
-            <td>${esc(p.name || p.fullName || p.displayName || p.nome || ('Jogador ' + (p.id || '')))}</td>
+            <td>${esc(p.name)}</td>
             <td class="center">${esc(p.pos)}</td>
             <td class="center">${esc(p.age)}</td>
             <td class="center"><b>${esc(p.overall)}</b></td>
@@ -3126,7 +3000,7 @@ function viewCareerCreate() {
           while (useMids.length < midN && pool.length) useMids.push(pool.shift());
           while (useAtts.length < attN && pool.length) useAtts.push(pool.shift());
 
-          const chip = (p)=> p ? `<div class="tactic-chip" title="${esc(p.name || p.fullName || p.displayName || p.nome || ('Jogador ' + (p.id || '')))} • ${esc(p.pos)} • OVR ${esc(p.overall)}">${esc(p.name || p.fullName || p.displayName || p.nome || ('Jogador ' + (p.id || '')))}</div>` : `<div class="tactic-chip empty">—</div>`;
+          const chip = (p)=> p ? `<div class="tactic-chip" title="${esc(p.name)} • ${esc(p.pos)} • OVR ${esc(p.overall)}">${esc(p.name)}</div>` : `<div class="tactic-chip empty">—</div>`;
 
           return `
             <div class="tactic-board">
@@ -3158,7 +3032,7 @@ function viewCareerCreate() {
           return `
             <div class="lineup-item">
               <div class="lineup-left">
-                <div class="lineup-name">${esc(p.name || p.fullName || p.displayName || p.nome || ('Jogador ' + (p.id || '')))}</div>
+                <div class="lineup-name">${esc(p.name)}</div>
                 <div class="muted small">${esc(p.pos)} • OVR <b>${esc(p.overall)}</b> • ${esc(p.age)}a • Valor ~ ${esc(p.valueEurMi || p.valueMi || '')}</div>
               </div>
               <div class="lineup-right">
@@ -3239,25 +3113,25 @@ function viewCareerCreate() {
                   <div class="col-6">
                     <div class="label">Capitão</div>
                     <select class="input" data-action="setCaptain">
-                      ${players.map(p=>`<option value="${esc(p.id)}" ${save.tactics.captainId===p.id?'selected':''}>${esc(p.name || p.fullName || p.displayName || p.nome || ('Jogador ' + (p.id || '')))} (${esc(p.pos)})</option>`).join('')}
+                      ${players.map(p=>`<option value="${esc(p.id)}" ${save.tactics.captainId===p.id?'selected':''}>${esc(p.name)} (${esc(p.pos)})</option>`).join('')}
                     </select>
                   </div>
                   <div class="col-6">
                     <div class="label">Batedor de Pênalti</div>
                     <select class="input" data-action="setSetPiece" data-field="pkTakerId">
-                      ${players.map(p=>`<option value="${esc(p.id)}" ${save.tactics.pkTakerId===p.id?'selected':''}>${esc(p.name || p.fullName || p.displayName || p.nome || ('Jogador ' + (p.id || '')))} • OVR ${esc(p.overall)}</option>`).join('')}
+                      ${players.map(p=>`<option value="${esc(p.id)}" ${save.tactics.pkTakerId===p.id?'selected':''}>${esc(p.name)} • OVR ${esc(p.overall)}</option>`).join('')}
                     </select>
                   </div>
                   <div class="col-6">
                     <div class="label">Batedor de Falta</div>
                     <select class="input" data-action="setSetPiece" data-field="fkTakerId">
-                      ${players.map(p=>`<option value="${esc(p.id)}" ${save.tactics.fkTakerId===p.id?'selected':''}>${esc(p.name || p.fullName || p.displayName || p.nome || ('Jogador ' + (p.id || '')))} • OVR ${esc(p.overall)}</option>`).join('')}
+                      ${players.map(p=>`<option value="${esc(p.id)}" ${save.tactics.fkTakerId===p.id?'selected':''}>${esc(p.name)} • OVR ${esc(p.overall)}</option>`).join('')}
                     </select>
                   </div>
                   <div class="col-6">
                     <div class="label">Batedor de Escanteio</div>
                     <select class="input" data-action="setSetPiece" data-field="ckTakerId">
-                      ${players.map(p=>`<option value="${esc(p.id)}" ${save.tactics.ckTakerId===p.id?'selected':''}>${esc(p.name || p.fullName || p.displayName || p.nome || ('Jogador ' + (p.id || '')))} • OVR ${esc(p.overall)}</option>`).join('')}
+                      ${players.map(p=>`<option value="${esc(p.id)}" ${save.tactics.ckTakerId===p.id?'selected':''}>${esc(p.name)} • OVR ${esc(p.overall)}</option>`).join('')}
                     </select>
                   </div>
                 </div>
@@ -6733,7 +6607,7 @@ function viewTransfers() {
         const open = win.open;
         return `
           <tr>
-            <td>${esc(p.name || p.fullName || p.displayName || p.nome || ('Jogador ' + (p.id || '')))}</td>
+            <td>${esc(p.name)}</td>
             <td class="center">${esc(p.pos)}</td>
             <td class="center">${esc(p.age)}</td>
             <td class="center">${esc(p.overall)}</td>
@@ -7171,8 +7045,6 @@ if (action === 'careerContinueToClub') {
           save.career.clubSearch = '';
           save.meta.updatedAt = nowIso();
           writeSlot(state.settings.activeSlotId, save);
-          const targetLabel = to === 'XI' ? 'Titulares' : (to === 'BENCH' ? 'Banco' : 'Fora');
-          toast(`${movedPlayer?.name || 'Jogador'} movido para ${targetLabel}.`, 'success');
           route();
         });
       }
@@ -7406,8 +7278,6 @@ if (action === 'resetTactics') {
 
           save.tactics.startingXI = xi;
           save.tactics.bench = bench;
-
-          const movedPlayer = players.find(p => p.id === pid);
 
           // capitão / bola parada
           if (save.tactics.captainId && !xi.includes(save.tactics.captainId)) {
@@ -8148,4 +8018,107 @@ async function boot() {
   boot();
   try { window.dispatchEvent(new Event('VFM_APP_READY')); } catch(e) {}
 
+})();
+
+/* VFM_MATCHDAY_FLOW_UPGRADE_PATCH */
+(function(){
+  function safeGetSave(){
+    try{
+      return window.save || window.gameState || window.state || JSON.parse(localStorage.getItem("vfm_save") || localStorage.getItem("save") || "{}");
+    }catch(e){ return {}; }
+  }
+  function avg(arr, fn){
+    arr = Array.isArray(arr) ? arr : [];
+    const vals = arr.map(fn).filter(v => Number.isFinite(v));
+    return vals.length ? Math.round(vals.reduce((a,b)=>a+b,0)/vals.length) : 0;
+  }
+  function squadParts(save){
+    const squad = save.squad || save.players || save.roster || [];
+    return {
+      squad,
+      xi: save.lineup || save.startingXI || save.xi || squad.slice(0,11),
+      bench: save.bench || save.subs || squad.slice(11,18)
+    };
+  }
+  function pName(p){
+    return (p && (p.displayName || p.fullName || p.name || p.nome)) || ("Jogador " + ((p && p.id) || ""));
+  }
+  function clubName(save){
+    return save.clubName || (save.club && save.club.name) || save.teamName || "Seu Clube";
+  }
+  function oppName(save){
+    const fx = save.nextFixture || save.nextMatch || save.upcomingMatch || {};
+    return fx.opponent || fx.opponentName || fx.away || fx.home || "Adversário";
+  }
+  function compName(save){
+    const fx = save.nextFixture || save.nextMatch || save.upcomingMatch || {};
+    return fx.competition || save.competition || save.leagueName || "Liga";
+  }
+  function inject(){
+    const h = (location.hash || "").toLowerCase();
+    if (!(h.includes("hub") || h.includes("match") || h.includes("partida"))) return;
+    const host = document.querySelector(".hub-main, .hub-content, .screen-content, main, #app, .page, body");
+    if (!host) return;
+    const old = document.getElementById("vfm-matchday-upgrade");
+    if (old) old.remove();
+    const save = safeGetSave();
+    const parts = squadParts(save);
+    const fit = avg(parts.xi, p => Number(p.fitness || p.fit || p.condition || 75));
+    const mor = avg(parts.xi, p => Number(p.morale || p.mor || 70));
+    const ovr = avg(parts.xi, p => Number(p.ovr || p.rating || p.overall || 70));
+    const firstXI = parts.xi[0] || {};
+    const secondXI = parts.xi[1] || {};
+    const thirdXI = parts.xi[2] || {};
+    const firstBench = parts.bench[0] || {};
+    const el = document.createElement("section");
+    el.id = "vfm-matchday-upgrade";
+    el.style.cssText = "margin:12px 0 16px;padding:14px;border:1px solid rgba(255,255,255,.14);border-radius:16px;background:linear-gradient(180deg,rgba(8,15,35,.78),rgba(12,24,52,.64));";
+    el.innerHTML = `
+      <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;">
+        <div>
+          <div style="font-size:12px;opacity:.8;text-transform:uppercase;">Pré-jogo</div>
+          <div style="font-size:22px;font-weight:800;">${clubName(save)} vs ${oppName(save)}</div>
+          <div style="opacity:.82;margin-top:4px;">${compName(save)} • Build v1.45.0_matchday_flow_upgrade</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <span style="padding:8px 10px;border-radius:999px;background:rgba(255,255,255,.06);font-size:12px;">XI ${parts.xi.length}/11</span>
+          <span style="padding:8px 10px;border-radius:999px;background:rgba(255,255,255,.06);font-size:12px;">OVR ${ovr}</span>
+          <span style="padding:8px 10px;border-radius:999px;background:rgba(255,255,255,.06);font-size:12px;">FIT ${fit}%</span>
+          <span style="padding:8px 10px;border-radius:999px;background:rgba(255,255,255,.06);font-size:12px;">MOR ${mor}</span>
+        </div>
+      </div>
+      <div id="vfm-live-feed" style="margin-top:12px;padding:12px;border-radius:12px;background:rgba(0,0,0,.16);font-size:13px;line-height:1.5;">
+        <div style="opacity:.8;font-weight:700;margin-bottom:8px;">Eventos simulados</div>
+        <div>• 08' ${pName(firstXI)} finaliza de média distância.</div>
+        <div>• 24' defesa importante do goleiro após cabeçada de ${pName(secondXI)}.</div>
+        <div>• 41' VAR checa lance na área.</div>
+        <div>• 66' substituição: entra ${pName(firstBench)} para dar mais ritmo.</div>
+        <div>• 79' bola parada leva perigo com ${pName(thirdXI)}.</div>
+      </div>`;
+    if (host.firstChild) host.insertBefore(el, host.firstChild); else host.appendChild(el);
+  }
+  function createPostMatchCard(result){
+    const host = document.querySelector(".match-summary, .result-screen, .screen-content, #app, main, body");
+    if (!host) return;
+    const old = document.getElementById("vfm-postmatch-summary");
+    if (old) old.remove();
+    const el = document.createElement("section");
+    el.id = "vfm-postmatch-summary";
+    el.style.cssText = "margin:16px 0;padding:14px;border-radius:16px;background:linear-gradient(180deg,rgba(7,16,38,.78),rgba(12,27,58,.68));border:1px solid rgba(255,255,255,.12);";
+    el.innerHTML = `
+      <div style="font-size:12px;opacity:.8;text-transform:uppercase;">Pós-jogo</div>
+      <div style="font-size:24px;font-weight:800;">${result.home || "Casa"} ${result.homeGoals ?? 0} x ${result.awayGoals ?? 0} ${result.away || "Fora"}</div>
+      <div style="opacity:.82;margin-top:4px;">Melhor em campo: ${result.motm || "A definir"}</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+        <span style="padding:8px 10px;border-radius:999px;background:rgba(255,255,255,.06);font-size:12px;">Posse ${result.possessionHome ?? 50}%</span>
+        <span style="padding:8px 10px;border-radius:999px;background:rgba(255,255,255,.06);font-size:12px;">Finalizações ${result.shotsHome ?? 0}-${result.shotsAway ?? 0}</span>
+        <span style="padding:8px 10px;border-radius:999px;background:rgba(255,255,255,.06);font-size:12px;">Cartões ${result.cardsHome ?? 0}-${result.cardsAway ?? 0}</span>
+      </div>`;
+    if (host.firstChild) host.insertBefore(el, host.firstChild); else host.appendChild(el);
+  }
+  window.VFMCreatePostMatchCard = createPostMatchCard;
+  window.addEventListener("load", inject);
+  window.addEventListener("hashchange", inject);
+  setTimeout(inject, 400);
+  setTimeout(inject, 1200);
 })();

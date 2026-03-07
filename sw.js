@@ -2,12 +2,12 @@
    Objetivo: melhorar carregamento no GitHub Pages e permitir modo offline.
 */
 
-const CACHE_NAME = "vfm-cache-v1.44.2-tactics-buttons-hotfix";
+const CACHE_NAME = "vfm-cache-v1.45.0_matchday_flow_upgrade";
 const CORE_ASSETS = [
   './',
-  './index.html?v=build_2026-03-07_140919_v1.44.1_roster_names_tactics_fix',
-  './styles.css?v=build_2026-03-07_140919_v1.44.1_roster_names_tactics_fix',
-  './app.js?v=build_2026-03-07_140919_v1.44.1_roster_names_tactics_fix',
+  './index.html?v=build_2026-03-06_213500_v1.43.0_full_hub_consolidation',
+  './styles.css?v=build_2026-03-06_213500_v1.43.0_full_hub_consolidation',
+  './app.js?v=build_2026-03-06_213500_v1.43.0_full_hub_consolidation',
   './manifest.json',
   './favicon.ico',
   './assets/club_placeholder.svg',

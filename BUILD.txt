@@ -1,5 +1,5 @@
 VALE FUTEBOL MANAGER 2026
-BUILD: v1.44.2_tactics_buttons_hotfix
-DATE(UTC): 2026-03-07 14:30:00 UTC
-PHASE: Tactics Interaction Hotfix
-PROJECT_STATUS: 79%
+BUILD: v1.45.0_matchday_flow_upgrade
+DATE(UTC): 2026-03-07 15:02:48 UTC
+PHASE: Matchday Flow Upgrade
+PROJECT_STATUS: 82%

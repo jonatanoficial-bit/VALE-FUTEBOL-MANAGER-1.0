@@ -1,7 +1,7 @@
 {
   "project": "VALE FUTEBOL MANAGER 2026",
-  "build": "v1.44.2_tactics_buttons_hotfix",
-  "date_utc": "2026-03-07 14:30:00 UTC",
-  "phase": "Tactics Interaction Hotfix",
-  "progress": "79%"
+  "build": "v1.45.0_matchday_flow_upgrade",
+  "date_utc": "2026-03-07 15:02:48",
+  "phase": "Matchday Flow Upgrade",
+  "progress": "82%"
 }

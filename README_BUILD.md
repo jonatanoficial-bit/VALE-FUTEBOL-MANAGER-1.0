@@ -5,8 +5,9 @@
 - Foco: correção do HUB e prevenção de crash quando `save.season` não existe no fluxo inicial.
 
 
-## v1.44.2_tactics_buttons_hotfix
-- Corrigido carregamento de nomes oficiais do elenco a partir da base do pacote.
-- Corrigida sincronização do elenco salvo para substituir placeholders como "Jogador 466".
-- Melhorada a tela de táticas para exibir nomes corretos e manter a conversa entre tática e elenco.
-- Mantida a estrutura completa do projeto em zip integral.
+## v1.45.0_matchday_flow_upgrade
+- Matchday flow upgrade
+- Pre-match summary injected on hub/match routes
+- Live event feed enriched
+- Post-match summary helper available via window.VFMCreatePostMatchCard
+- Built from the user's full uploaded zip
