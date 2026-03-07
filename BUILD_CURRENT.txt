@@ -1,3 +1,3 @@
-BUILD v1.44.1_roster_names_tactics_fix
-DATE 2026-03-07 14:09:19 UTC
-STATUS 78%
+CURRENT BUILD
+v1.44.2_tactics_buttons_hotfix
+2026-03-07 14:30:00 UTC

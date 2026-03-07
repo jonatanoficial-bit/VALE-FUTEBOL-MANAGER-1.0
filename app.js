@@ -24,6 +24,52 @@
   /** Seleciona um elemento no DOM */
   const $ = (sel) => document.querySelector(sel);
 
+  function toast(message, kind = "info") {
+    try {
+      const host = document.body || document.documentElement;
+      if (!host) { console.log(message); return; }
+      let wrap = document.getElementById("vfm-toast-wrap");
+      if (!wrap) {
+        wrap = document.createElement("div");
+        wrap.id = "vfm-toast-wrap";
+        wrap.style.position = "fixed";
+        wrap.style.right = "16px";
+        wrap.style.bottom = "16px";
+        wrap.style.display = "flex";
+        wrap.style.flexDirection = "column";
+        wrap.style.gap = "8px";
+        wrap.style.zIndex = "99999";
+        wrap.style.pointerEvents = "none";
+        host.appendChild(wrap);
+      }
+      const el = document.createElement("div");
+      el.className = "vfm-toast " + kind;
+      el.textContent = String(message || "");
+      el.style.pointerEvents = "auto";
+      el.style.padding = "10px 14px";
+      el.style.borderRadius = "12px";
+      el.style.border = "1px solid rgba(255,255,255,.16)";
+      el.style.background = kind === "error" ? "rgba(110,20,34,.92)" : kind === "success" ? "rgba(18,88,52,.92)" : "rgba(9,17,35,.92)";
+      el.style.color = "#fff";
+      el.style.boxShadow = "0 8px 24px rgba(0,0,0,.35)";
+      el.style.backdropFilter = "blur(8px)";
+      el.style.fontSize = "13px";
+      el.style.maxWidth = "320px";
+      el.style.opacity = "0";
+      el.style.transform = "translateY(8px)";
+      el.style.transition = "opacity .18s ease, transform .18s ease";
+      wrap.appendChild(el);
+      requestAnimationFrame(() => { el.style.opacity = "1"; el.style.transform = "translateY(0)"; });
+      setTimeout(() => {
+        el.style.opacity = "0";
+        el.style.transform = "translateY(8px)";
+        setTimeout(() => el.remove(), 220);
+      }, 1800);
+    } catch (err) {
+      console.log(message);
+    }
+  }
+
   /** Tenta fazer o parse de JSON, senão retorna fallback */
   function safeJsonParse(str, fallback) {
     try {
@@ -64,8 +110,8 @@
     }
   }
 
-    const BUILD_TAG = "v1.44.1_roster_names_tactics_fix";
-const BUILD_TIME_STR = "2026-03-06 21:48:00 UTC";
+    const BUILD_TAG = "v1.44.2_tactics_buttons_hotfix";
+const BUILD_TIME_STR = "2026-03-07 14:30:00 UTC";
 
 // Ligas UEFA consideradas para preferência de continentais (evita ReferenceError no modal)
 const UEFA_LIDS = ['ENG_PREMIER','ESP_LALIGA','ITA_SERIE_A','GER_BUNDES','FRA_LIGUE_1','POR_LIGA'];
@@ -7125,6 +7171,8 @@ if (action === 'careerContinueToClub') {
           save.career.clubSearch = '';
           save.meta.updatedAt = nowIso();
           writeSlot(state.settings.activeSlotId, save);
+          const targetLabel = to === 'XI' ? 'Titulares' : (to === 'BENCH' ? 'Banco' : 'Fora');
+          toast(`${movedPlayer?.name || 'Jogador'} movido para ${targetLabel}.`, 'success');
           route();
         });
       }
@@ -7358,6 +7406,8 @@ if (action === 'resetTactics') {
 
           save.tactics.startingXI = xi;
           save.tactics.bench = bench;
+
+          const movedPlayer = players.find(p => p.id === pid);
 
           // capitão / bola parada
           if (save.tactics.captainId && !xi.includes(save.tactics.captainId)) {

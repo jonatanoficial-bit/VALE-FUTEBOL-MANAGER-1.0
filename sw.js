@@ -2,7 +2,7 @@
    Objetivo: melhorar carregamento no GitHub Pages e permitir modo offline.
 */
 
-const CACHE_NAME = "vfm-cache-2026-03-07_140919-v1.44.1_roster_names_tactics_fix";
+const CACHE_NAME = "vfm-cache-v1.44.2-tactics-buttons-hotfix";
 const CORE_ASSETS = [
   './',
   './index.html?v=build_2026-03-07_140919_v1.44.1_roster_names_tactics_fix',

@@ -5,7 +5,7 @@
 - Foco: correção do HUB e prevenção de crash quando `save.season` não existe no fluxo inicial.
 
 
-## v1.44.1_roster_names_tactics_fix
+## v1.44.2_tactics_buttons_hotfix
 - Corrigido carregamento de nomes oficiais do elenco a partir da base do pacote.
 - Corrigida sincronização do elenco salvo para substituir placeholders como "Jogador 466".
 - Melhorada a tela de táticas para exibir nomes corretos e manter a conversa entre tática e elenco.

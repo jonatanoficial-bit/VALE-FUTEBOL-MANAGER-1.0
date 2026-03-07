@@ -1,7 +1,7 @@
 {
   "project": "VALE FUTEBOL MANAGER 2026",
-  "build": "v1.44.1_roster_names_tactics_fix",
-  "date_utc": "2026-03-07 14:09:19 UTC",
-  "phase": "Roster Names + Tactics Fix",
-  "progress": "78%"
+  "build": "v1.44.2_tactics_buttons_hotfix",
+  "date_utc": "2026-03-07 14:30:00 UTC",
+  "phase": "Tactics Interaction Hotfix",
+  "progress": "79%"
 }

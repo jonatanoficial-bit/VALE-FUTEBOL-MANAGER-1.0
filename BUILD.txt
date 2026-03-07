@@ -1,5 +1,5 @@
 VALE FUTEBOL MANAGER 2026
-BUILD: v1.44.1_roster_names_tactics_fix
-DATE(UTC): 2026-03-07 14:09:19 UTC
-PHASE: Roster Names + Tactics Fix
-PROJECT_STATUS: 78%
+BUILD: v1.44.2_tactics_buttons_hotfix
+DATE(UTC): 2026-03-07 14:30:00 UTC
+PHASE: Tactics Interaction Hotfix
+PROJECT_STATUS: 79%
