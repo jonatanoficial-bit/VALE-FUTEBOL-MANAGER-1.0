@@ -1,3 +1,8 @@
+## v1.44.0_tactics_lineup_ui_rework - 2026-03-07 13:40:13 UTC
+- pacote completo
+- rework visual da tela de táticas
+- ajustes de escalação titular/banco
+
 # Changelog da Build 1.1.1 / Stage 8B
 
 **Build:** 2026-03-06 09:33:52 BRT  

@@ -1,3 +1,10 @@
+
+## v1.44.0_tactics_lineup_ui_rework
+- correção segura da tela de táticas em cima do pacote completo
+- melhorias visuais em titulares, banco e lista do plantel
+- resumo superior com contagem de XI, banco, fitness e forma
+- atualização de cache busting e build metadata
+
 # Changelog
 
 ## v1.43.1_hub_hotfix

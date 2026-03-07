@@ -1,3 +1,9 @@
+# Status
+
+Build atual: v1.44.0_tactics_lineup_ui_rework
+Data UTC: 2026-03-07 13:40:13 UTC
+Progresso: 76%
+
 
 Phase 1 — Foundation stabilization ✔
 Phase 2 — Career loop ✔

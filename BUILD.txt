@@ -1,5 +1,5 @@
 VALE FUTEBOL MANAGER 2026
-BUILD: v1.43.1_hub_hotfix
-DATE(UTC): 2026-03-06 21:48:00 UTC
-PHASE: 6 - Hub Hotfix
-PROJECT_STATUS: 72%
+BUILD: v1.44.0_tactics_lineup_ui_rework
+DATE(UTC): 2026-03-07 13:40:13 UTC
+PHASE: 7 - Tactics + Lineup UI Rework
+PROJECT_STATUS: 76%

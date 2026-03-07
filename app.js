@@ -64,7 +64,7 @@
     }
   }
 
-    const BUILD_TAG = "v1.43.1_hub_hotfix";
+    const BUILD_TAG = "v1.44.0_tactics_lineup_ui_rework";
 const BUILD_TIME_STR = "2026-03-06 21:48:00 UTC";
 
 // Ligas UEFA consideradas para preferência de continentais (evita ReferenceError no modal)
@@ -2916,6 +2916,28 @@ function viewCareerCreate() {
           try { return Number(n||0).toLocaleString('pt-BR', { style:'currency', currency: cur }); } catch(e){ return String(n||0); }
         };
 
+
+        const avgMetric = (arr, key, fallback = 0) => {
+          if (!arr.length) return fallback;
+          const total = arr.reduce((s,p)=> s + (typeof p?.[key] === 'number' ? p[key] : fallback), 0);
+          return Math.round(total / Math.max(1, arr.length));
+        };
+        const fitnessBadge = (p) => {
+          const n = typeof p?.fitness === 'number' ? Math.round(p.fitness) : 90;
+          const cls = n >= 90 ? 'ok' : (n >= 78 ? 'warn' : 'danger');
+          return `<span class="pill pill-mini ${cls}">FIT ${n}%</span>`;
+        };
+        const formBadge = (p) => {
+          const n = typeof p?.form === 'number' ? p.form : 0;
+          const label = n > 0 ? `Forma +${n}` : `Forma ${n}`;
+          const cls = n > 0 ? 'ok' : (n < 0 ? 'danger' : '');
+          return `<span class="pill pill-mini ${cls}">${label}</span>`;
+        };
+        const sharpBadge = (p) => {
+          const n = typeof p?.sharpness === 'number' ? p.sharpness : 0;
+          return `<span class="pill pill-mini">Ritmo ${n > 0 ? '+'+n : n}</span>`;
+        };
+
         // Normaliza: remove duplicados e garante 11/7
         function normalizeLineupLocal(){
           const uniq = (arr)=> Array.from(new Set((arr||[]).filter(Boolean)));
@@ -3016,6 +3038,8 @@ function viewCareerCreate() {
         function playerLine(p, where){
           const inXI = save.tactics.startingXI.includes(p.id);
           const inBench = save.tactics.bench.includes(p.id);
+          const captain = save.tactics.captainId === p.id;
+          const setPiece = [save.tactics.pkTakerId, save.tactics.fkTakerId, save.tactics.ckTakerId].includes(p.id);
 
           const wherePill = inXI ? `<span class="pill pill-mini ok">Titular</span>` : (inBench ? `<span class="pill pill-mini warn">Banco</span>` : `<span class="pill pill-mini">Fora</span>`);
 
@@ -3023,20 +3047,23 @@ function viewCareerCreate() {
             ? `<button class="btn btn-small" data-action="tacticsMove" data-player="${esc(p.id)}" data-to="BENCH">Banco</button>
                <button class="btn btn-small btn-danger" data-action="tacticsMove" data-player="${esc(p.id)}" data-to="OUT">Remover</button>`
             : (inBench
-                ? `<button class="btn btn-small" data-action="tacticsMove" data-player="${esc(p.id)}" data-to="XI">Titular</button>
+                ? `<button class="btn btn-small btn-primary" data-action="tacticsMove" data-player="${esc(p.id)}" data-to="XI">Titular</button>
                    <button class="btn btn-small btn-danger" data-action="tacticsMove" data-player="${esc(p.id)}" data-to="OUT">Remover</button>`
-                : `<button class="btn btn-small" data-action="tacticsMove" data-player="${esc(p.id)}" data-to="XI">Titular</button>
+                : `<button class="btn btn-small btn-primary" data-action="tacticsMove" data-player="${esc(p.id)}" data-to="XI">Titular</button>
                    <button class="btn btn-small" data-action="tacticsMove" data-player="${esc(p.id)}" data-to="BENCH">Banco</button>`
               );
 
           return `
-            <div class="lineup-item">
+            <div class="lineup-item ${inXI ? 'is-starter' : (inBench ? 'is-bench' : 'is-outside')}" data-player-id="${esc(p.id)}">
               <div class="lineup-left">
-                <div class="lineup-name">${esc(p.name)}</div>
+                <div class="lineup-name-row">
+                  <div class="lineup-name">${esc(p.name)}</div>
+                  <div class="lineup-role-badges">${wherePill}${captain ? `<span class="pill pill-mini">Cap</span>` : ``}${setPiece ? `<span class="pill pill-mini">BP</span>` : ``}</div>
+                </div>
                 <div class="muted small">${esc(p.pos)} • OVR <b>${esc(p.overall)}</b> • ${esc(p.age)}a • Valor ~ ${esc(p.valueEurMi || p.valueMi || '')}</div>
+                <div class="lineup-stats">${fitnessBadge(p)}${formBadge(p)}${sharpBadge(p)}</div>
               </div>
               <div class="lineup-right">
-                ${wherePill}
                 <div class="lineup-actions">${actions}</div>
               </div>
             </div>
@@ -3201,8 +3228,8 @@ function viewCareerCreate() {
               <div class="sep"></div>
 
               <div class="card-mini">
-                <div class="card-mini-title">Plantel (23)</div>
-                <div class="mini">Use os botões para mover jogadores entre Titulares, Banco e Fora.</div>
+                <div class="card-mini-title">Plantel e Escalação</div>
+                <div class="mini">Use os botões para mover jogadores entre Titulares, Banco e Fora. O sistema evita duplicados e tenta manter 1 goleiro no XI.</div>
                 <div style="margin-top:10px;">
                   ${poolHtml}
                 </div>
