@@ -1,5 +1,5 @@
 VALE FUTEBOL MANAGER 2026
-BUILD: v1.45.1_matchday_integration_fix
-DATE(UTC): 2026-03-07 16:19:43 UTC
-PHASE: Matchday Integration Fix
-PROJECT_STATUS: 83%
+BUILD: v1.46.0_intro_video_system
+DATE(UTC): 2026-03-11 21:03:18 UTC
+FEATURE: Intro video autoplay mobile ready
+PROJECT_STATUS: 85%

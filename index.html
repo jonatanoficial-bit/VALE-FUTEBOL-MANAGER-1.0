@@ -5,11 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Vale Futebol Manager 2026 - Premium</title>
 
-  <link rel="stylesheet" href="./styles.css?v=v1.45.1_matchday_integration_fix" />
+  <link rel="stylesheet" href="./styles.css?v=build_2026-03-06_213500_v1.43.0_full_hub_consolidation" />
   <link rel="manifest" href="./manifest.json" />
   <meta name="theme-color" content="#0EA5E9" />
 </head>
 <body>
+
+<div id="intro-screen" style="position:fixed;inset:0;background:#000;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;">
+<video id="intro-video" style="max-width:100%;max-height:100%;object-fit:contain;" autoplay muted playsinline>
+<source src="assets/video/intro.mp4" type="video/mp4">
+</video>
+<button id="skip-intro" style="position:absolute;bottom:30px;padding:12px 22px;font-size:16px;border-radius:10px;border:none;background:#16a34a;color:white;">Pular</button>
+</div>
+<script>
+(function(){
+const video=document.getElementById("intro-video");
+const screen=document.getElementById("intro-screen");
+const skip=document.getElementById("skip-intro");
+function closeIntro(){screen.style.display="none";}
+video.addEventListener("ended",closeIntro);
+skip.addEventListener("click",closeIntro);
+})();
+</script>
+
   <!-- Splash -->
   <div class="splash" id="splash">
     <div class="splash-logo">
@@ -47,7 +65,7 @@
 
   <!-- App principal -->
   <!-- Cache-bust: sempre atualize o parâmetro v em cada build -->
-  <script src="./app.js?v=v1.45.1_matchday_integration_fix" defer></script>
+  <script src="./app.js?v=build_2026-03-06_213500_v1.43.0_full_hub_consolidation" defer></script>
 
   <!-- Guardas de UX (não altera lógica do jogo) -->
   <script>
@@ -81,7 +99,7 @@
   <script>
     (function(){
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js?v=v1.45.1_matchday_integration_fix').catch(function(){});
+        navigator.serviceWorker.register('./sw.js?v=build_2026-03-06_213500_v1.43.0_full_hub_consolidation').catch(function(){});
       
       // força recarregar quando houver nova versão do service worker
       navigator.serviceWorker.addEventListener('controllerchange', () => {

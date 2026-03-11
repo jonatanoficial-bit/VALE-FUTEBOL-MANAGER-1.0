@@ -1,13 +1,6 @@
 {
-  "project": "VALE FUTEBOL MANAGER 2026",
-  "build": "v1.45.1_matchday_integration_fix",
-  "date_utc": "2026-03-07 16:19:43",
-  "phase": "Matchday Integration Fix",
-  "progress": "83%",
-  "notes": [
-    "Integrated pre-match card directly into real viewMatches renderer",
-    "Added visible active badge inside Matches screen",
-    "Updated cache busting and build metadata",
-    "Built from full uploaded zip"
-  ]
+  "build": "v1.46.0_intro_video_system",
+  "date": "2026-03-11 21:03:18 UTC",
+  "feature": "intro video autoplay",
+  "progress": "85%"
 }

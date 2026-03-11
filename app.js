@@ -4724,81 +4724,7 @@ save.season.lastRoundPlayed = roundIndex;
     step();
   }
 
-  
-
-  function vfmSafePlayerName(p) {
-    return esc((p && (p.displayName || p.fullName || p.name || p.nome)) || ('Jogador ' + ((p && p.id) || '')));
-  }
-
-  function vfmTeamAverageByIds(players, ids, field, fallback) {
-    const arr = (ids || []).map(id => players.find(p => p.id === id)).filter(Boolean);
-    if (!arr.length) return fallback;
-    const vals = arr.map(p => Number(p[field] ?? fallback)).filter(n => Number.isFinite(n));
-    if (!vals.length) return fallback;
-    return Math.round(vals.reduce((a,b)=>a+b,0) / vals.length);
-  }
-
-  function vfmBuildVisibleMatchdayCard(save, club, leagueName, currentRoundLabel) {
-    const players = (save?.squad?.players || []).slice();
-    const xiIds = Array.isArray(save?.tactics?.startingXI) ? save.tactics.startingXI.slice(0,11) : [];
-    const benchIds = Array.isArray(save?.tactics?.bench) ? save.tactics.bench.slice(0,7) : [];
-    const fitAvg = vfmTeamAverageByIds(players, xiIds, 'fitness', 75);
-    const morAvg = vfmTeamAverageByIds(players, xiIds, 'morale', 70);
-    const ovrAvg = teamOverall(players, xiIds);
-    const next = getNextRoundUserMatch(save);
-    const opponentId = next ? (next.homeId === save.career.clubId ? next.awayId : next.homeId) : null;
-    const opponent = opponentId ? getClub(opponentId) : null;
-    const homeAway = next ? (next.homeId === save.career.clubId ? 'CASA' : 'FORA') : '—';
-    const firstXI = players.find(p => p.id === xiIds[0]) || null;
-    const secondXI = players.find(p => p.id === xiIds[1]) || null;
-    const thirdXI = players.find(p => p.id === xiIds[2]) || null;
-    const firstBench = players.find(p => p.id === benchIds[0]) || null;
-
-    return `
-      <div class="card" style="margin-bottom:12px; border-color: rgba(14,165,233,.35); box-shadow: 0 10px 30px rgba(2,8,23,.25);">
-        <div class="card-header">
-          <div>
-            <div class="card-title">MATCHDAY FLOW ACTIVE</div>
-            <div class="card-subtitle">${esc(club?.name || '')} • ${esc(leagueName || '')} • Rodada ${esc(currentRoundLabel || '—')}</div>
-          </div>
-          <span class="badge">Build ${esc('` + build_version + `')}</span>
-        </div>
-        <div class="card-body">
-          <div class="grid cols-4">
-            <div class="stat"><div class="stat-label">Próximo jogo</div><div class="stat-value">${esc(club?.short || club?.name || '')} x ${esc(opponent?.short || opponent?.name || 'A definir')}</div></div>
-            <div class="stat"><div class="stat-label">Mandante</div><div class="stat-value">${esc(homeAway)}</div></div>
-            <div class="stat"><div class="stat-label">OVR do XI</div><div class="stat-value">${esc(String(ovrAvg || 0))}</div></div>
-            <div class="stat"><div class="stat-label">Prontidão</div><div class="stat-value">${esc(String(fitAvg))}% • Moral ${esc(String(morAvg))}</div></div>
-          </div>
-          <div class="sep"></div>
-          <div class="list">
-            <div class="item">
-              <div class="item-left"><div class="item-title">08' ${vfmSafePlayerName(firstXI)} finaliza de média distância.</div><div class="item-sub">Pressão inicial do seu time.</div></div>
-              <div class="item-right"><span class="badge">Evento</span></div>
-            </div>
-            <div class="item">
-              <div class="item-left"><div class="item-title">24' ${vfmSafePlayerName(secondXI)} leva perigo em bola aérea.</div><div class="item-sub">Defesa forte do goleiro adversário.</div></div>
-              <div class="item-right"><span class="badge">Chance</span></div>
-            </div>
-            <div class="item">
-              <div class="item-left"><div class="item-title">41' VAR em revisão na área.</div><div class="item-sub">Lance de contato em jogada rápida.</div></div>
-              <div class="item-right"><span class="badge">VAR</span></div>
-            </div>
-            <div class="item">
-              <div class="item-left"><div class="item-title">66' entra ${vfmSafePlayerName(firstBench)} para acelerar o ritmo.</div><div class="item-sub">Mudança prevista para o segundo tempo.</div></div>
-              <div class="item-right"><span class="badge">Substituição</span></div>
-            </div>
-            <div class="item">
-              <div class="item-left"><div class="item-title">79' bola parada com ${vfmSafePlayerName(thirdXI)}.</div><div class="item-sub">Boa chance de gol em jogada ensaiada.</div></div>
-              <div class="item-right"><span class="badge">Bola parada</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-function viewMatches() {
+  function viewMatches() {
     return requireSave((save) => {
       ensureSystems(save);
       ensureSeason(save);
@@ -4813,9 +4739,6 @@ function viewMatches() {
       const nextRoundMatches = save.season.rounds[r] || [];
       const lastRoundIndex = Number.isFinite(save.season.lastRoundPlayed) ? save.season.lastRoundPlayed : -1;
       const lastResults = Array.isArray(save.season.lastResults) ? save.season.lastResults : [];
-
-      const currentRoundLabel = `${Math.min(r + 1, totalRounds)}/${totalRounds}`;
-      const vfmMatchdayCard = vfmBuildVisibleMatchdayCard(save, club, (league?.name || save.season.leagueId), currentRoundLabel);
 
       function resultBadge(m) {
         const isUser = (m.homeId === save.career.clubId || m.awayId === save.career.clubId);
@@ -4914,7 +4837,6 @@ function viewMatches() {
               <button class="btn" data-go="/hub">Voltar</button>
             </div>
             <div class="sep"></div>
-                        ${vfmMatchdayCard}
             ${lastBlock}
             ${nextBlock}
           </div>
