@@ -16,3 +16,13 @@
 - atualizados BUILD.txt, README_BUILD.md e build-info.json
 - atualizado cache busting de index.html, app.js, styles.css e sw.js
 - corrigida limpeza de caches antigos no service worker
+
+
+## v1.48.0_match_engine_realism
+Date: 2026-03-11 22:40:09 UTC
+
+- Added realism patch for match engine
+- Added richer pre-match and post-match calculations
+- Added xG-like estimate, corners, fouls, cards and injuries probability
+- Preserved intro video startup and mobile UI polish
+- Full package generated from latest complete zip

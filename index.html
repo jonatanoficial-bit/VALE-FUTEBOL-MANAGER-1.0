@@ -5,13 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Vale Futebol Manager 2026 - Premium</title>
 
-  <link rel="stylesheet" href="./styles.css?v=build_2026-03-06_213500_v1.43.0_full_hub_consolidation" />
+  <link rel="stylesheet" href="./styles.css?v=v1.48.0_match_engine_realism" />
   <link rel="manifest" href="./manifest.json" />
   <meta name="theme-color" content="#0EA5E9" />
 
 <link rel="stylesheet" href="ui/mobile-ui.css">
 </head>
 <body>
+
+<div id="intro-screen" style="position:fixed;inset:0;background:#000;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;">
+  <video id="intro-video" style="max-width:100%;max-height:100%;object-fit:contain;" autoplay muted playsinline>
+    <source src="assets/video/intro.mp4" type="video/mp4">
+  </video>
+  <button id="skip-intro" style="position:absolute;bottom:30px;padding:12px 22px;font-size:16px;border-radius:10px;border:none;background:#16a34a;color:white;">Pular</button>
+</div>
+<script>
+(function(){
+  const video=document.getElementById("intro-video");
+  const screen=document.getElementById("intro-screen");
+  const skip=document.getElementById("skip-intro");
+  function closeIntro(){ if(screen) screen.style.display="none"; }
+  if(video) video.addEventListener("ended",closeIntro);
+  if(skip) skip.addEventListener("click",closeIntro);
+})();
+</script>
+
 
 <div id="main-menu" style="position:fixed;inset:0;background:#0b1220;color:white;z-index:9998;display:flex;align-items:center;justify-content:center;flex-direction:column;">
 <h1 style="font-size:32px;margin-bottom:20px;">Vale Futebol Manager 2026</h1>
@@ -61,7 +79,7 @@ function closeMenu(){document.getElementById("main-menu").style.display="none";}
 
   <!-- App principal -->
   <!-- Cache-bust: sempre atualize o parâmetro v em cada build -->
-  <script src="./app.js?v=build_2026-03-06_213500_v1.43.0_full_hub_consolidation" defer></script>
+  <script src="./app.js?v=v1.48.0_match_engine_realism" defer></script>
 
   <!-- Guardas de UX (não altera lógica do jogo) -->
   <script>
@@ -95,7 +113,7 @@ function closeMenu(){document.getElementById("main-menu").style.display="none";}
   <script>
     (function(){
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js?v=build_2026-03-06_213500_v1.43.0_full_hub_consolidation').catch(function(){});
+        navigator.serviceWorker.register('./sw.js?v=v1.48.0_match_engine_realism').catch(function(){});
       
       // força recarregar quando houver nova versão do service worker
       navigator.serviceWorker.addEventListener('controllerchange', () => {

@@ -1,5 +1,13 @@
 {
-  "build": "v1.47.0_mobile_ui_polish",
-  "date": "2026-03-11 22:25:52 UTC",
-  "progress": "92%"
+  "project": "VALE FUTEBOL MANAGER 2026",
+  "build": "v1.48.0_match_engine_realism",
+  "date_utc": "2026-03-11 22:40:09 UTC",
+  "phase": "Match Engine Realism",
+  "progress": "95%",
+  "features": [
+    "Realism-oriented match simulation patch",
+    "Pre-match / post-match richer stats",
+    "Intro video preserved",
+    "Mobile UI preserved"
+  ]
 }

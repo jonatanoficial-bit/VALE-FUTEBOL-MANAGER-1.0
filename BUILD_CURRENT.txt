@@ -1,5 +1,5 @@
 VALE FUTEBOL MANAGER 2026
-BUILD: v1.47.0_mobile_ui_polish
-DATE(UTC): 2026-03-11 22:25:52 UTC
-FEATURE: Mobile UI polish
-PROJECT_STATUS: 92%
+BUILD: v1.48.0_match_engine_realism
+DATE(UTC): 2026-03-11 22:40:09 UTC
+FEATURE: Match engine realism + intro/mobile preservation
+PROJECT_STATUS: 95%

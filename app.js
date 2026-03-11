@@ -8019,3 +8019,107 @@ async function boot() {
   try { window.dispatchEvent(new Event('VFM_APP_READY')); } catch(e) {}
 
 })();
+
+/* VFM_MATCH_ENGINE_REALISM_PATCH */
+(function(){
+  function vfmSafeSave(){
+    try{
+      return window.save || window.gameState || window.state || JSON.parse(localStorage.getItem("vfm_save") || localStorage.getItem("save") || "{}");
+    }catch(e){ return {}; }
+  }
+  function vfmNum(v, d){ v = Number(v); return Number.isFinite(v) ? v : d; }
+  function vfmName(p){
+    return (p && (p.displayName || p.fullName || p.name || p.nome)) || ("Jogador " + ((p && p.id) || ""));
+  }
+  function vfmAvg(arr, selector, fallback){
+    arr = Array.isArray(arr) ? arr : [];
+    if (!arr.length) return fallback;
+    const vals = arr.map(selector).map(v => Number(v)).filter(v => Number.isFinite(v));
+    if (!vals.length) return fallback;
+    return Math.round(vals.reduce((a,b)=>a+b,0)/vals.length);
+  }
+  function vfmSquad(save){
+    const squad = save.squad || save.players || save.roster || [];
+    return {
+      squad,
+      xi: save.lineup || save.startingXI || save.xi || (save.tactics && save.tactics.startingXIPlayers) || squad.slice(0,11),
+      bench: save.bench || save.subs || (save.tactics && save.tactics.benchPlayers) || squad.slice(11,18)
+    };
+  }
+  function vfmCalcMatch(save){
+    const parts = vfmSquad(save);
+    const xi = Array.isArray(parts.xi) ? parts.xi : [];
+    const ovr = vfmAvg(xi, p => p.ovr || p.rating || p.overall || 70, 70);
+    const fit = vfmAvg(xi, p => p.fitness || p.fit || p.condition || 78, 78);
+    const mor = vfmAvg(xi, p => p.morale || p.mor || 72, 72);
+    const tactic = vfmNum((save.tactics && save.tactics.intensity) || save.tacticalIntensity || 0, 0);
+    const homeBonus = 4;
+    const attack = Math.max(20, Math.round((ovr * 0.42) + (fit * 0.18) + (mor * 0.16) + homeBonus + tactic));
+    const defense = Math.max(18, Math.round((ovr * 0.40) + (fit * 0.20) + (mor * 0.14) + homeBonus));
+    const xg = Math.max(0.4, ((attack / 42) + (Math.random() * 0.9))).toFixed(2);
+    const shots = Math.max(4, Math.round((attack / 9) + (Math.random() * 5)));
+    const shotsOn = Math.max(1, Math.min(shots, Math.round(shots * (0.34 + Math.random() * 0.22))));
+    const possession = Math.max(38, Math.min(62, Math.round(46 + ((attack - defense) / 6))));
+    const corners = Math.max(1, Math.round(shots * 0.45));
+    const fouls = Math.max(6, Math.round(9 + Math.random() * 8));
+    const yellows = Math.max(0, Math.round((fouls / 5) + (Math.random() * 2 - 0.5)));
+    const injuryRisk = fit < 74 ? "alta" : fit < 82 ? "média" : "baixa";
+    return { ovr, fit, mor, attack, defense, xg, shots, shotsOn, possession, corners, fouls, yellows, injuryRisk, xi, bench: parts.bench || [] };
+  }
+  function vfmInjectRealismCard(){
+    const hash = (location.hash || "").toLowerCase();
+    if (!(hash.includes("hub") || hash.includes("match") || hash.includes("partida") || hash.includes("calend"))) return;
+    const host = document.querySelector(".hub-main, .hub-content, .screen-content, .page, #app, main, body");
+    if (!host) return;
+
+    const old = document.getElementById("vfm-realism-card");
+    if (old) old.remove();
+
+    const save = vfmSafeSave();
+    const m = vfmCalcMatch(save);
+    const first = m.xi[0] || {};
+    const second = m.xi[1] || {};
+    const third = m.xi[2] || {};
+    const bench = m.bench[0] || {};
+    const box = document.createElement("section");
+    box.id = "vfm-realism-card";
+    box.className = "matchday-realism-card";
+    box.style.cssText = "margin:12px 0 16px;padding:16px;border-radius:18px;border:1px solid rgba(56,189,248,.22);background:linear-gradient(180deg,rgba(7,16,38,.86),rgba(10,22,48,.72));box-shadow:0 10px 30px rgba(0,0,0,.22);";
+    box.innerHTML = `
+      <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;">
+        <div>
+          <div style="font-size:12px;opacity:.78;text-transform:uppercase;letter-spacing:.08em;">Match Engine Realism</div>
+          <div style="font-size:22px;font-weight:800;">Pré-jogo avançado ativo</div>
+          <div style="opacity:.82;margin-top:4px;">Build v1.48.0_match_engine_realism</div>
+        </div>
+        <div class="vfm-realism-badge" style="background:rgba(255,255,255,.07);">xG ${m.xg}</div>
+      </div>
+      <div class="matchday-realism-grid" style="display:grid;grid-template-columns:repeat(4,minmax(120px,1fr));gap:10px;margin-top:12px;">
+        <div style="padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.04);"><div style="font-size:12px;opacity:.7;">OVR XI</div><div style="font-weight:800;font-size:20px;">${m.ovr}</div></div>
+        <div style="padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.04);"><div style="font-size:12px;opacity:.7;">Fitness</div><div style="font-weight:800;font-size:20px;">${m.fit}%</div></div>
+        <div style="padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.04);"><div style="font-size:12px;opacity:.7;">Moral</div><div style="font-weight:800;font-size:20px;">${m.mor}</div></div>
+        <div style="padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.04);"><div style="font-size:12px;opacity:.7;">Risco de lesão</div><div style="font-weight:800;font-size:20px;text-transform:capitalize;">${m.injuryRisk}</div></div>
+      </div>
+      <div class="matchday-realism-grid" style="display:grid;grid-template-columns:repeat(4,minmax(120px,1fr));gap:10px;margin-top:10px;">
+        <div style="padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.04);"><div style="font-size:12px;opacity:.7;">Finalizações</div><div style="font-weight:700;">${m.shots}</div></div>
+        <div style="padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.04);"><div style="font-size:12px;opacity:.7;">No alvo</div><div style="font-weight:700;">${m.shotsOn}</div></div>
+        <div style="padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.04);"><div style="font-size:12px;opacity:.7;">Posse</div><div style="font-weight:700;">${m.possession}%</div></div>
+        <div style="padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.04);"><div style="font-size:12px;opacity:.7;">Escanteios</div><div style="font-weight:700;">${m.corners}</div></div>
+      </div>
+      <div style="margin-top:12px;padding:12px;border-radius:14px;background:rgba(255,255,255,.04);">
+        <div style="font-size:12px;opacity:.7;margin-bottom:8px;">Narrativa provável</div>
+        <div>• 09' ${vfmName(first)} chuta travado após boa pressão alta.</div>
+        <div>• 26' ${vfmName(second)} cria chance clara em ataque posicional.</div>
+        <div>• 54' bloco defensivo sofre com faltas: projeção de ${m.fouls} faltas e ${m.yellows} amarelos.</div>
+        <div>• 67' ${vfmName(bench)} entra para elevar intensidade e atacar profundidade.</div>
+        <div>• 81' ${vfmName(third)} participa de bola parada perigosa.</div>
+      </div>
+    `;
+    if (host.firstChild) host.insertBefore(box, host.firstChild); else host.appendChild(box);
+  }
+
+  window.addEventListener("load", vfmInjectRealismCard);
+  window.addEventListener("hashchange", vfmInjectRealismCard);
+  setTimeout(vfmInjectRealismCard, 500);
+  setTimeout(vfmInjectRealismCard, 1500);
+})();
