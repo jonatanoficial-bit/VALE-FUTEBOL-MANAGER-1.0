@@ -5,11 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Vale Futebol Manager 2026 - Premium</title>
 
-  <link rel="stylesheet" href="./styles.css?v=v1.48.0_match_engine_realism" />
+  <link rel="stylesheet" href="./styles.css?v=v1.49.0_career_depth_upgrade" />
   <link rel="manifest" href="./manifest.json" />
   <meta name="theme-color" content="#0EA5E9" />
 
 <link rel="stylesheet" href="ui/mobile-ui.css">
+
+<link rel="stylesheet" href="ui/premium-menu-v149.css">
 </head>
 <body>
 
@@ -31,16 +33,40 @@
 </script>
 
 
-<div id="main-menu" style="position:fixed;inset:0;background:#0b1220;color:white;z-index:9998;display:flex;align-items:center;justify-content:center;flex-direction:column;">
-<h1 style="font-size:32px;margin-bottom:20px;">Vale Futebol Manager 2026</h1>
-<button onclick="startGame()">Continuar Carreira</button>
-<button onclick="startGame()">Nova Carreira</button>
-<button onclick="closeMenu()">Entrar</button>
+
+<div id="main-menu" style="position:fixed;inset:0;color:white;z-index:9998;display:flex;align-items:center;justify-content:center;flex-direction:column;">
+  <div class="vfm-menu-shell">
+    <h1 class="vfm-title">Vale Futebol<br>Manager 2026</h1>
+    <div class="vfm-subtitle">Assuma o comando e leve seu time à glória!</div>
+    <div class="vfm-menu-buttons">
+      <button class="vfm-menu-btn" onclick="startGame()">Continuar Carreira</button>
+      <button class="vfm-menu-btn secondary" onclick="startGame()">Nova Carreira</button>
+      <button class="vfm-menu-btn secondary" onclick="closeMenu()">Entrar</button>
+    </div>
+    <div class="vfm-career-depth">
+      <div class="vfm-career-card">
+        <div class="vfm-label">Reputação do treinador</div>
+        <div class="vfm-value" id="vfm-menu-reputation">Iniciante</div>
+        <div class="vfm-small">Construa legado, conquistas e respeito no mercado.</div>
+      </div>
+      <div class="vfm-career-card">
+        <div class="vfm-label">Objetivo da carreira</div>
+        <div class="vfm-value" id="vfm-menu-goal">Top 6 Nacional</div>
+        <div class="vfm-small">Evolua temporada a temporada e atraia clubes maiores.</div>
+      </div>
+      <div class="vfm-career-card">
+        <div class="vfm-label">Foco da temporada</div>
+        <div class="vfm-value" id="vfm-menu-focus">Tática + Gestão</div>
+        <div class="vfm-small">Elenco, finanças, staff, treino e decisões de jogo.</div>
+      </div>
+    </div>
+  </div>
 </div>
 <script>
-function startGame(){document.getElementById("main-menu").style.display="none";}
-function closeMenu(){document.getElementById("main-menu").style.display="none";}
+function startGame(){ var x=document.getElementById("main-menu"); if(x) x.style.display="none"; }
+function closeMenu(){ var x=document.getElementById("main-menu"); if(x) x.style.display="none"; }
 </script>
+
 
   <!-- Splash -->
   <div class="splash" id="splash">
@@ -79,7 +105,7 @@ function closeMenu(){document.getElementById("main-menu").style.display="none";}
 
   <!-- App principal -->
   <!-- Cache-bust: sempre atualize o parâmetro v em cada build -->
-  <script src="./app.js?v=v1.48.0_match_engine_realism" defer></script>
+  <script src="./app.js?v=v1.49.0_career_depth_upgrade" defer></script>
 
   <!-- Guardas de UX (não altera lógica do jogo) -->
   <script>
@@ -113,7 +139,7 @@ function closeMenu(){document.getElementById("main-menu").style.display="none";}
   <script>
     (function(){
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js?v=v1.48.0_match_engine_realism').catch(function(){});
+        navigator.serviceWorker.register('./sw.js?v=v1.49.0_career_depth_upgrade').catch(function(){});
       
       // força recarregar quando houver nova versão do service worker
       navigator.serviceWorker.addEventListener('controllerchange', () => {

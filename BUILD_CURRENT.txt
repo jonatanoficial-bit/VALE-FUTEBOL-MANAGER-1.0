@@ -1,5 +1,5 @@
 VALE FUTEBOL MANAGER 2026
-BUILD: v1.48.0_match_engine_realism
-DATE(UTC): 2026-03-11 22:40:09 UTC
-FEATURE: Match engine realism + intro/mobile preservation
-PROJECT_STATUS: 95%
+BUILD: v1.49.0_career_depth_upgrade
+DATE(UTC): 2026-03-13 12:12:38 UTC
+FEATURE: Career depth upgrade + premium menu
+PROJECT_STATUS: 97%

@@ -1,0 +1,73 @@
+
+#main-menu{
+  background:
+    linear-gradient(180deg, rgba(2,10,23,.62), rgba(3,11,26,.76)),
+    url('assets/images/menu-bg-v149.png') center center / cover no-repeat !important;
+  padding:24px;
+  text-align:center;
+}
+#main-menu .vfm-menu-shell{
+  width:min(92vw, 720px);
+  padding:26px 18px 20px;
+  border-radius:28px;
+  background:linear-gradient(180deg, rgba(3,12,28,.30), rgba(7,18,40,.48));
+  backdrop-filter:blur(8px);
+  box-shadow:0 18px 60px rgba(0,0,0,.35);
+}
+#main-menu .vfm-title{
+  font-size:clamp(34px, 7vw, 64px);
+  line-height:1.02;
+  margin:0;
+  color:#fff;
+  text-shadow:0 4px 18px rgba(0,0,0,.55);
+  font-weight:900;
+}
+#main-menu .vfm-subtitle{
+  margin-top:12px;
+  color:rgba(255,255,255,.94);
+  font-size:clamp(16px, 3vw, 28px);
+}
+#main-menu .vfm-menu-buttons{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  width:min(82vw, 430px);
+  margin:26px auto 0;
+}
+#main-menu .vfm-menu-btn{
+  border:2px solid rgba(233,197,106,.95);
+  border-radius:18px;
+  min-height:58px;
+  padding:14px 22px;
+  font-size:18px;
+  font-weight:800;
+  color:#fff;
+  background:linear-gradient(180deg, rgba(16,47,90,.98), rgba(7,24,47,.98));
+  box-shadow:0 0 0 1px rgba(255,255,255,.08) inset,0 10px 22px rgba(0,0,0,.28),0 0 22px rgba(201,161,74,.12);
+}
+#main-menu .vfm-menu-btn.secondary{
+  background:linear-gradient(180deg, rgba(11,34,65,.94), rgba(6,18,37,.98));
+}
+#main-menu .vfm-career-depth{
+  margin:24px auto 0;
+  width:min(92vw, 760px);
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+}
+#main-menu .vfm-career-card{
+  text-align:left;
+  padding:14px 14px 12px;
+  border-radius:18px;
+  background:linear-gradient(180deg, rgba(6,18,38,.74), rgba(9,25,51,.82));
+  border:1px solid rgba(244,222,155,.18);
+}
+#main-menu .vfm-label{font-size:12px;text-transform:uppercase;letter-spacing:.08em;opacity:.72;color:#dce7ff;}
+#main-menu .vfm-value{margin-top:6px;color:#fff;font-size:18px;font-weight:800;}
+#main-menu .vfm-small{margin-top:6px;color:rgba(255,255,255,.80);font-size:13px;line-height:1.35;}
+@media (max-width:768px){
+  #main-menu .vfm-menu-shell{width:100%;padding:18px 12px 16px;border-radius:24px;}
+  #main-menu .vfm-menu-buttons{width:100%;}
+  #main-menu .vfm-menu-btn{min-height:56px;border-radius:16px;font-size:17px;}
+  #main-menu .vfm-career-depth{grid-template-columns:1fr;width:100%;}
+}

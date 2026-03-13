@@ -8123,3 +8123,31 @@ async function boot() {
   setTimeout(vfmInjectRealismCard, 500);
   setTimeout(vfmInjectRealismCard, 1500);
 })();
+
+
+/* VFM_CAREER_DEPTH_UPGRADE_PATCH */
+(function(){
+  function vfmCareerSave(){
+    try{
+      return window.save || window.gameState || window.state || JSON.parse(localStorage.getItem("vfm_save") || localStorage.getItem("save") || "{}");
+    }catch(e){ return {}; }
+  }
+  function vfmSetText(id, value){
+    var el = document.getElementById(id);
+    if (el) el.textContent = value;
+  }
+  function vfmCareerDepthApply(){
+    var save = vfmCareerSave();
+    var rep = (save.career && save.career.reputation) || save.reputation || "Iniciante";
+    var goal = (save.board && save.board.objective) || (save.season && save.season.goal) || "Top 6 Nacional";
+    var focus = "Tática + Gestão";
+    if (save.finances || save.finance) focus = "Elenco + Finanças";
+    if (save.staff || save.training) focus = "Treino + Staff";
+    vfmSetText("vfm-menu-reputation", rep);
+    vfmSetText("vfm-menu-goal", goal);
+    vfmSetText("vfm-menu-focus", focus);
+  }
+  window.addEventListener("load", vfmCareerDepthApply);
+  setTimeout(vfmCareerDepthApply, 300);
+  setTimeout(vfmCareerDepthApply, 1200);
+})();
