@@ -29,3 +29,12 @@ Date: 2026-04-11 13:59:52 UTC
 - Added polished dark blue and gold action buttons
 - Improved hub quick-action visual hierarchy
 - Added visible build badge update in the lobby/hub area
+
+
+## v1.49.2_ui_cleanup_and_route_fix
+Date: 2026-04-11 14:28:50 UTC
+
+- Fixed route behavior so the match realism panel no longer shows on hub/lobby
+- Kept premium menu and hub functional without removing core systems
+- Updated the visible build badge to the new build and removed duplicate overlay badge
+- Preserved intro video, career depth, mobile UI and match engine realism

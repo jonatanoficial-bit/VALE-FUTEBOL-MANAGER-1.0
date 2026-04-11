@@ -1,0 +1,32 @@
+
+/* v1.49.2 UI cleanup and route fix */
+.vfm-lobby-build-badge { display:none !important; }
+
+body.route-hub #vfm-realism-card,
+body.route-home #vfm-realism-card,
+body.route-lobby #vfm-realism-card,
+body.route-menu #vfm-realism-card {
+  display:none !important;
+}
+
+body.route-hub .vfm-hub-hero {
+  margin-top: 10px;
+}
+
+#buildBadge {
+  z-index: 9996 !important;
+  border: 1px solid rgba(215,176,91,.22);
+  background: linear-gradient(180deg, rgba(6,15,33,.92), rgba(8,20,43,.96));
+  box-shadow: 0 8px 22px rgba(0,0,0,.28);
+}
+
+#buildBadge .build-line b {
+  color: #f0deac;
+}
+
+@media (max-width:768px){
+  #buildBadge {
+    left: 10px !important;
+    bottom: 10px !important;
+  }
+}

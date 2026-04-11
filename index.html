@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Vale Futebol Manager 2026 - Premium</title>
 
-  <link rel="stylesheet" href="./styles.css?v=v1.49.1_lobby_visual_consolidation" />
+  <link rel="stylesheet" href="./styles.css?v=v1.49.2_ui_cleanup_and_route_fix" />
   <link rel="manifest" href="./manifest.json" />
   <meta name="theme-color" content="#0EA5E9" />
 
@@ -14,6 +14,8 @@
 <link rel="stylesheet" href="ui/premium-menu-v149.css">
 
 <link rel="stylesheet" href="ui/lobby-consolidation-v1491.css">
+
+<link rel="stylesheet" href="ui/route-fix-v1492.css">
 </head>
 <body>
 
@@ -109,7 +111,7 @@ function closeMenu(){ var x=document.getElementById("main-menu"); if(x) x.style.
 
   <!-- App principal -->
   <!-- Cache-bust: sempre atualize o parâmetro v em cada build -->
-  <script src="./app.js?v=v1.49.1_lobby_visual_consolidation" defer></script>
+  <script src="./app.js?v=v1.49.2_ui_cleanup_and_route_fix" defer></script>
 
   <!-- Guardas de UX (não altera lógica do jogo) -->
   <script>
@@ -143,7 +145,7 @@ function closeMenu(){ var x=document.getElementById("main-menu"); if(x) x.style.
   <script>
     (function(){
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js?v=v1.49.1_lobby_visual_consolidation').catch(function(){});
+        navigator.serviceWorker.register('./sw.js?v=v1.49.2_ui_cleanup_and_route_fix').catch(function(){});
       
       // força recarregar quando houver nova versão do service worker
       navigator.serviceWorker.addEventListener('controllerchange', () => {
@@ -153,12 +155,6 @@ function closeMenu(){ var x=document.getElementById("main-menu"); if(x) x.style.
     })();
   </script>
 
-
-<div class="vfm-lobby-build-badge" id="vfm-build-badge">
-  <strong>v1.49.1_lobby_visual_consolidation</strong>
-  <span class="small">2026-04-11 13:59:52 UTC</span>
-  <span class="small">Vale Futebol Manager 2026</span>
-</div>
-
+<!-- BUILD v1.49.2_ui_cleanup_and_route_fix 2026-04-11 14:28:50 UTC -->
 </body>
 </html>

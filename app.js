@@ -64,8 +64,8 @@
     }
   }
 
-    const BUILD_TAG = "v1.43.1_hub_hotfix";
-const BUILD_TIME_STR = "2026-03-06 21:48:00 UTC";
+    const BUILD_TAG = "v1.49.2_ui_cleanup_and_route_fix";
+const BUILD_TIME_STR = "2026-04-11 14:28:50 UTC";
 
 // Ligas UEFA consideradas para preferência de continentais (evita ReferenceError no modal)
 const UEFA_LIDS = ['ENG_PREMIER','ESP_LALIGA','ITA_SERIE_A','GER_BUNDES','FRA_LIGUE_1','POR_LIGA'];
@@ -8204,4 +8204,83 @@ async function boot() {
   window.addEventListener("hashchange", vfmInjectHubHero);
   setTimeout(function(){ vfmCareerDepthApply(); vfmInjectHubHero(); }, 400);
   setTimeout(vfmInjectHubHero, 1400);
+})();
+
+
+/* VFM_UI_CLEANUP_AND_ROUTE_FIX_PATCH */
+(function(){
+  const VFM_BUILD = "v1.49.2_ui_cleanup_and_route_fix";
+  const VFM_BUILD_TIME = "2026-04-11 14:28:50 UTC";
+
+  function vfmRouteName() {
+    const hash = (location.hash || "").toLowerCase();
+    if (hash.includes("match") || hash.includes("partida") || hash.includes("dlc")) return "match";
+    if (hash.includes("hub")) return "hub";
+    if (hash.includes("home")) return "home";
+    return "menu";
+  }
+
+  function vfmApplyBodyRouteClass() {
+    const body = document.body;
+    if (!body) return;
+    body.classList.remove("route-match","route-hub","route-home","route-menu","route-lobby");
+    const route = vfmRouteName();
+    body.classList.add("route-" + route);
+    if (route === "menu") body.classList.add("route-lobby");
+  }
+
+  function vfmFixBuildBadge() {
+    const el = document.getElementById("buildBadge");
+    if (!el) return;
+    let dataText = "nunca";
+    try {
+      const raw = el.textContent || "";
+      const match = raw.match(/dados\s*([^\n]+)/i);
+      if (match && match[1]) dataText = match[1].trim();
+    } catch(e) {}
+    el.innerHTML = `
+      <div class="build-line"><b>build</b> ${VFM_BUILD}</div>
+      <div class="build-line"><b>data</b> ${VFM_BUILD_TIME}</div>
+      <div class="build-line"><b>dados</b> ${dataText}</div>
+    `;
+  }
+
+  function vfmHideLegacyOverlayBadge() {
+    const el = document.getElementById("vfm-build-badge");
+    if (el) el.remove();
+  }
+
+  function vfmFixRealismPlacement() {
+    const realism = document.getElementById("vfm-realism-card");
+    const route = vfmRouteName();
+    if (!realism) return;
+    if (route === "hub" || route === "home" || route === "menu") {
+      realism.style.display = "none";
+    } else {
+      realism.style.display = "";
+    }
+  }
+
+  function vfmPolishQuickButtons() {
+    const labels = ["Jogar Próximo Evento", "Ver Rodadas", "Abrir Calendário", "Ajustar Tática"];
+    const buttons = Array.from(document.querySelectorAll("button, .btn"));
+    buttons.forEach(btn => {
+      const txt = (btn.textContent || "").trim();
+      if (labels.includes(txt)) btn.classList.add("vfm-premium-btn");
+    });
+  }
+
+  function vfmRunCleanup() {
+    vfmApplyBodyRouteClass();
+    vfmFixBuildBadge();
+    vfmHideLegacyOverlayBadge();
+    vfmFixRealismPlacement();
+    vfmPolishQuickButtons();
+  }
+
+  window.addEventListener("load", vfmRunCleanup);
+  window.addEventListener("hashchange", vfmRunCleanup);
+  setTimeout(vfmRunCleanup, 250);
+  setTimeout(vfmRunCleanup, 900);
+  setTimeout(vfmRunCleanup, 1800);
 })();

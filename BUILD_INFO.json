@@ -1,7 +1,14 @@
 {
   "project": "VALE FUTEBOL MANAGER 2026",
-  "build": "v1.49.1_lobby_visual_consolidation",
-  "date_utc": "2026-04-11 13:59:52 UTC",
-  "phase": "Lobby Visual Consolidation",
-  "progress": "98%"
+  "build": "v1.49.2_ui_cleanup_and_route_fix",
+  "date_utc": "2026-04-11 14:28:50 UTC",
+  "phase": "UI Cleanup and Route Fix",
+  "progress": "99%",
+  "features": [
+    "Hide match realism card on hub/lobby",
+    "Keep realism only on match-related routes",
+    "Update visible build badge to the new build",
+    "Remove duplicated overlay build badge",
+    "Preserve premium menu, intro video, career depth and hub"
+  ]
 }
