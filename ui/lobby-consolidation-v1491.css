@@ -1,0 +1,55 @@
+
+#main-menu{
+  background:
+    linear-gradient(180deg, rgba(2,10,23,.56), rgba(3,11,26,.74)),
+    url('assets/images/menu-bg-v149.png') center center / cover no-repeat !important;
+  padding:24px;
+  text-align:center;
+}
+#main-menu .vfm-menu-shell{
+  width:min(92vw, 720px);
+  padding:26px 18px 20px;
+  border-radius:28px;
+  background:linear-gradient(180deg, rgba(3,12,28,.30), rgba(7,18,40,.48));
+  backdrop-filter:blur(8px);
+  box-shadow:0 18px 60px rgba(0,0,0,.35);
+}
+#main-menu .vfm-menu-btn{
+  border:2px solid rgba(215,176,91,.96) !important;
+  border-radius:18px !important;
+  min-height:58px;
+  padding:13px 20px !important;
+  font-size:18px !important;
+  font-weight:800 !important;
+  color:#fff !important;
+  background:linear-gradient(180deg, rgba(16,47,90,.98), rgba(7,24,47,.98)) !important;
+  box-shadow:0 0 0 1px rgba(255,255,255,.08) inset,0 10px 22px rgba(0,0,0,.28),0 0 22px rgba(215,176,91,.12) !important;
+}
+#main-menu .vfm-menu-btn.secondary{
+  background:linear-gradient(180deg, rgba(11,34,65,.94), rgba(6,18,37,.98)) !important;
+}
+.vfm-lobby-build-badge{
+  position:fixed; left:14px; bottom:14px; z-index:9997;
+  padding:12px 14px; border-radius:16px;
+  background:linear-gradient(180deg, rgba(6,15,33,.92), rgba(8,20,43,.96));
+  border:1px solid rgba(215,176,91,.22); color:#fff;
+  box-shadow:0 8px 22px rgba(0,0,0,.28); font-size:13px; line-height:1.35;
+}
+.vfm-lobby-build-badge .small{display:block; opacity:.82;}
+.vfm-hub-hero{
+  margin:12px auto 16px; padding:16px; border-radius:22px;
+  background:linear-gradient(180deg, rgba(4,13,30,.76), rgba(8,18,38,.84));
+  border:1px solid rgba(215,176,91,.14); box-shadow:0 18px 50px rgba(0,0,0,.22);
+}
+.vfm-hub-hero .title{font-size:28px; font-weight:900; color:#fff; margin:0;}
+.vfm-hub-hero .subtitle{margin-top:6px; color:rgba(255,255,255,.84); font-size:14px;}
+.vfm-hub-hero .chips{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;}
+.vfm-hub-hero .chip{
+  padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.05);
+  border:1px solid rgba(215,176,91,.18); color:#fff; font-size:12px; font-weight:700;
+}
+@media (max-width:768px){
+  .vfm-lobby-build-badge{left:10px; right:10px; bottom:10px; border-radius:14px; font-size:12px;}
+  .vfm-hub-hero{padding:14px; border-radius:18px;}
+  .vfm-hub-hero .title{font-size:22px;}
+}

@@ -21,3 +21,11 @@ Date: 2026-03-13 12:12:38 UTC
 - Added sophisticated dark blue and gold buttons
 - Added career depth cards with reputation, objective and focus
 - Preserved intro video, mobile UI and match realism
+
+## v1.49.1_lobby_visual_consolidation
+Date: 2026-04-11 13:59:52 UTC
+
+- Consolidated premium lobby/menu background on the real UI
+- Added polished dark blue and gold action buttons
+- Improved hub quick-action visual hierarchy
+- Added visible build badge update in the lobby/hub area

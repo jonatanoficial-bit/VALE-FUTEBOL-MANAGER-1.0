@@ -1,5 +1,5 @@
 VALE FUTEBOL MANAGER 2026
-BUILD: v1.49.0_career_depth_upgrade
-DATE(UTC): 2026-03-13 12:12:38 UTC
-FEATURE: Career depth upgrade + premium menu
-PROJECT_STATUS: 97%
+BUILD: v1.49.1_lobby_visual_consolidation
+DATE(UTC): 2026-04-11 13:59:52 UTC
+FEATURE: Lobby visual consolidation + premium menu/hub polish
+PROJECT_STATUS: 98%

@@ -8151,3 +8151,57 @@ async function boot() {
   setTimeout(vfmCareerDepthApply, 300);
   setTimeout(vfmCareerDepthApply, 1200);
 })();
+
+
+/* VFM_LOBBY_VISUAL_CONSOLIDATION_PATCH */
+(function(){
+  function vfmSave(){
+    try{
+      return window.save || window.gameState || window.state || JSON.parse(localStorage.getItem("vfm_save") || localStorage.getItem("save") || "{}");
+    }catch(e){ return {}; }
+  }
+  function vfmSetText(id, value){
+    var el = document.getElementById(id);
+    if (el) el.textContent = value;
+  }
+  function vfmCareerDepthApply(){
+    var save = vfmSave();
+    var rep = (save.career && save.career.reputation) || save.reputation || "Iniciante";
+    var goal = (save.board && save.board.objective) || (save.season && save.season.goal) || "Top 6 Nacional";
+    var focus = "Tática + Gestão";
+    if (save.finances || save.finance) focus = "Elenco + Finanças";
+    if (save.staff || save.training) focus = "Treino + Staff";
+    vfmSetText("vfm-menu-reputation", rep);
+    vfmSetText("vfm-menu-goal", goal);
+    vfmSetText("vfm-menu-focus", focus);
+  }
+  function vfmInjectHubHero(){
+    var hash = (location.hash || "").toLowerCase();
+    if (!hash.includes("hub")) return;
+    var host = document.querySelector(".hub-main, .hub-content, .screen-content, #app, main, body");
+    if (!host) return;
+    var old = document.getElementById("vfm-hub-hero");
+    if (old) old.remove();
+    var save = vfmSave();
+    var rep = (save.career && save.career.reputation) || save.reputation || "Iniciante";
+    var goal = (save.board && save.board.objective) || (save.season && save.season.goal) || "Top 6 Nacional";
+    var club = save.clubName || (save.club && save.club.name) || save.teamName || "Seu Clube";
+    var box = document.createElement("section");
+    box.id = "vfm-hub-hero";
+    box.className = "vfm-hub-hero";
+    box.innerHTML = `
+      <div class="title">Lobby Premium Ativo</div>
+      <div class="subtitle">${club} • Build v1.49.1_lobby_visual_consolidation</div>
+      <div class="chips">
+        <div class="chip">Reputação: ${rep}</div>
+        <div class="chip">Objetivo: ${goal}</div>
+        <div class="chip">Visual AAA consolidado</div>
+      </div>
+    `;
+    if (host.firstChild) host.insertBefore(box, host.firstChild); else host.appendChild(box);
+  }
+  window.addEventListener("load", function(){ vfmCareerDepthApply(); vfmInjectHubHero(); });
+  window.addEventListener("hashchange", vfmInjectHubHero);
+  setTimeout(function(){ vfmCareerDepthApply(); vfmInjectHubHero(); }, 400);
+  setTimeout(vfmInjectHubHero, 1400);
+})();
