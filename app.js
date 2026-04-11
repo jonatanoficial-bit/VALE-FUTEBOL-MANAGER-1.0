@@ -64,8 +64,8 @@
     }
   }
 
-    const BUILD_TAG = "v1.50.0_global_database_foundation";
-const BUILD_TIME_STR = "2026-04-11 15:26:43 UTC";
+    const BUILD_TAG = "v1.51.0_match_engine_live";
+const BUILD_TIME_STR = "2026-04-11 15:40:40 UTC";
 
 // Ligas UEFA consideradas para preferência de continentais (evita ReferenceError no modal)
 const UEFA_LIDS = ['ENG_PREMIER','ESP_LALIGA','ITA_SERIE_A','GER_BUNDES','FRA_LIGUE_1','POR_LIGA'];
@@ -8514,4 +8514,269 @@ async function boot() {
   setTimeout(vfmV150Run, 300);
   setTimeout(vfmV150Run, 1000);
   setTimeout(vfmV150Run, 1800);
+})();
+
+
+/* VFM_V151_MATCH_ENGINE_LIVE_PATCH */
+(function(){
+  const V151_BUILD = "v1.51.0_match_engine_live";
+  const V151_TIME = "2026-04-11 15:40:40 UTC";
+  let v151Timer = null;
+  let v151Clock = 0;
+  let v151Home = 0;
+  let v151Away = 0;
+  let v151Momentum = 50;
+  let v151TacticMode = "Equilibrado";
+  let v151DataBound = false;
+
+  function v151Save(){
+    try {
+      return window.save || window.gameState || window.state || JSON.parse(localStorage.getItem("vfm_save") || localStorage.getItem("save") || "{}");
+    } catch(e) { return {}; }
+  }
+
+  function v151ClubName() {
+    const save = v151Save();
+    return save.clubName || (save.club && save.club.name) || save.teamName || "Seu Clube";
+  }
+
+  function v151Opponent() {
+    const save = v151Save();
+    const fx = save.nextFixture || save.nextMatch || save.upcomingMatch || {};
+    return fx.opponent || fx.opponentName || fx.away || fx.home || "Adversário";
+  }
+
+  function v151EnsureMount() {
+    const hash = (location.hash || "").toLowerCase();
+    if (!(hash.includes("match") || hash.includes("partida") || hash.includes("dlc") || hash.includes("calendar"))) return null;
+    const host = document.querySelector(".screen-content, .hub-content, #app, main, body");
+    return host || null;
+  }
+
+  function v151Markup() {
+    return `
+      <section class="vfm-live-match" id="vfm-live-match">
+        <div class="vfm-live-top">
+          <div>
+            <h2 class="vfm-live-title">Match Engine Live</h2>
+            <div class="vfm-live-subtitle">${v151ClubName()} x ${v151Opponent()} • Build $v1.51.0_match_engine_live</div>
+          </div>
+          <div class="vfm-live-scorebox">
+            <div class="vfm-live-chip" id="v151-clock">00'</div>
+            <div class="vfm-live-chip" id="v151-mode">Modo: Equilibrado</div>
+            <div class="vfm-live-score"><span id="v151-home-name">${v151ClubName()}</span><span id="v151-score">0 x 0</span><span id="v151-away-name">${v151Opponent()}</span></div>
+          </div>
+        </div>
+
+        <div class="vfm-live-grid">
+          <div>
+            <div class="vfm-pitch" id="v151-pitch">
+              <div class="vfm-pitch-line"></div>
+              <div class="vfm-area top"></div>
+              <div class="vfm-area bottom"></div>
+              <div class="vfm-player home" style="left:20%;top:76%;">GK</div>
+              <div class="vfm-player home" style="left:18%;top:58%;">CB</div>
+              <div class="vfm-player home" style="left:34%;top:58%;">CB</div>
+              <div class="vfm-player home" style="left:10%;top:38%;">LB</div>
+              <div class="vfm-player home" style="left:42%;top:38%;">RB</div>
+              <div class="vfm-player home" style="left:16%;top:22%;">CM</div>
+              <div class="vfm-player home" style="left:34%;top:22%;">CM</div>
+              <div class="vfm-player home" style="left:50%;top:36%;">AM</div>
+              <div class="vfm-player home" style="left:18%;top:8%;">LW</div>
+              <div class="vfm-player home" style="left:34%;top:8%;">ST</div>
+              <div class="vfm-player home" style="left:50%;top:8%;">RW</div>
+
+              <div class="vfm-player away" style="left:80%;top:6%;">GK</div>
+              <div class="vfm-player away" style="left:66%;top:22%;">CB</div>
+              <div class="vfm-player away" style="left:82%;top:22%;">CB</div>
+              <div class="vfm-player away" style="left:58%;top:38%;">LB</div>
+              <div class="vfm-player away" style="left:90%;top:38%;">RB</div>
+              <div class="vfm-player away" style="left:66%;top:58%;">CM</div>
+              <div class="vfm-player away" style="left:84%;top:58%;">CM</div>
+              <div class="vfm-player away" style="left:50%;top:50%;">AM</div>
+              <div class="vfm-player away" style="left:66%;top:76%;">LW</div>
+              <div class="vfm-player away" style="left:82%;top:76%;">ST</div>
+              <div class="vfm-player away" style="left:50%;top:76%;">RW</div>
+
+              <div class="vfm-ball" id="v151-ball" style="left:49%;top:49%;"></div>
+            </div>
+          </div>
+
+          <div class="vfm-live-panel">
+            <h3>Comandos do treinador</h3>
+            <div class="small">Ajuste o comportamento da equipe durante a partida sem remover o sistema atual.</div>
+            <div class="vfm-controls">
+              <button class="vfm-live-btn" data-v151-mode="Pressão Alta">Pressão Alta</button>
+              <button class="vfm-live-btn alt" data-v151-mode="Equilibrado">Equilibrado</button>
+              <button class="vfm-live-btn alt" data-v151-mode="Defensivo">Defensivo</button>
+              <button class="vfm-live-btn" data-v151-action="Substituir">Substituir</button>
+            </div>
+
+            <div class="vfm-momentum">
+              <div class="small">Momentum da partida</div>
+              <div class="vfm-momentum-bar"><div class="vfm-momentum-fill" id="v151-momentum"></div></div>
+            </div>
+
+            <div class="vfm-live-feed" id="v151-feed">
+              <div class="vfm-live-event">00' A partida vai começar. Sua equipe entra concentrada.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    `;
+  }
+
+  function v151Inject() {
+    const host = v151EnsureMount();
+    if (!host) return;
+    let el = document.getElementById("vfm-live-match");
+    if (!el) {
+      el = document.createElement("div");
+      el.innerHTML = v151Markup();
+      const node = el.firstElementChild;
+      if (host.firstChild) host.insertBefore(node, host.firstChild);
+      else host.appendChild(node);
+      v151Bind();
+      v151Start();
+    } else if (!v151DataBound) {
+      v151Bind();
+      v151Start();
+    }
+  }
+
+  function v151Bind() {
+    v151DataBound = true;
+    document.querySelectorAll("[data-v151-mode]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        v151TacticMode = btn.getAttribute("data-v151-mode");
+        const modeEl = document.getElementById("v151-mode");
+        if (modeEl) modeEl.textContent = "Modo: " + v151TacticMode;
+        if (window.toast) window.toast("Modo alterado para " + v151TacticMode, "info");
+      });
+    });
+    document.querySelectorAll("[data-v151-action]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (window.toast) window.toast("Substituição preparada para o próximo lance.", "success");
+        v151PushEvent(`${String(v151Clock).padStart(2,'0')}' Comissão técnica ajusta a equipe com substituição planejada.`);
+      });
+    });
+  }
+
+  function v151PushEvent(text) {
+    const feed = document.getElementById("v151-feed");
+    if (!feed) return;
+    const item = document.createElement("div");
+    item.className = "vfm-live-event";
+    item.textContent = text;
+    feed.prepend(item);
+    while (feed.children.length > 10) feed.removeChild(feed.lastElementChild);
+  }
+
+  function v151MoveBall() {
+    const ball = document.getElementById("v151-ball");
+    if (!ball) return;
+    const left = 8 + Math.round(Math.random() * 84);
+    const top = 8 + Math.round(Math.random() * 78);
+    ball.style.left = left + "%";
+    ball.style.top = top + "%";
+  }
+
+  function v151UpdateHUD() {
+    const clock = document.getElementById("v151-clock");
+    const score = document.getElementById("v151-score");
+    const momentum = document.getElementById("v151-momentum");
+    if (clock) clock.textContent = String(v151Clock).padStart(2,'0') + "'";
+    if (score) score.textContent = `${v151Home} x ${v151Away}`;
+    if (momentum) momentum.style.width = Math.max(8, Math.min(92, v151Momentum)) + "%";
+  }
+
+  function v151Tick() {
+    if (!document.getElementById("vfm-live-match")) return;
+    if (v151Clock >= 90) {
+      clearInterval(v151Timer);
+      v151Timer = null;
+      v151PushEvent("90' Fim de jogo. A partida foi encerrada.");
+      if (window.toast) window.toast("Fim de jogo: " + v151ClubName() + " " + v151Home + " x " + v151Away + " " + v151Opponent(), "success");
+      return;
+    }
+
+    v151Clock += Math.floor(Math.random() * 3) + 1;
+    if (v151Clock > 90) v151Clock = 90;
+
+    const roll = Math.random();
+    if (roll < 0.14) {
+      v151Momentum = Math.min(90, v151Momentum + 8);
+      v151PushEvent(`${String(v151Clock).padStart(2,'0')}' Pressão de ${v151ClubName()} no campo ofensivo.`);
+    } else if (roll < 0.28) {
+      v151Momentum = Math.max(10, v151Momentum - 8);
+      v151PushEvent(`${String(v151Clock).padStart(2,'0')}' ${v151Opponent()} responde com posse longa.`);
+    } else if (roll < 0.38) {
+      v151PushEvent(`${String(v151Clock).padStart(2,'0')}' Bola parada perigosa criada em ${v151TacticMode.toLowerCase()}.`);
+    } else if (roll < 0.46) {
+      v151PushEvent(`${String(v151Clock).padStart(2,'0')}' Defesa importante evita o gol.`);
+    }
+
+    const goalRoll = Math.random();
+    if (goalRoll < 0.09) {
+      v151Home += 1;
+      v151Momentum = Math.min(92, v151Momentum + 14);
+      v151PushEvent(`${String(v151Clock).padStart(2,'0')}' GOL de ${v151ClubName()}! Jogada concluída após pressão coordenada.`);
+      if (window.toast) window.toast("Gol de " + v151ClubName() + "!", "success");
+    } else if (goalRoll > 0.93) {
+      v151Away += 1;
+      v151Momentum = Math.max(8, v151Momentum - 14);
+      v151PushEvent(`${String(v151Clock).padStart(2,'0')}' Gol de ${v151Opponent()} em transição rápida.`);
+      if (window.toast) window.toast("Gol de " + v151Opponent() + ".", "error");
+    }
+
+    v151MoveBall();
+    v151UpdateHUD();
+  }
+
+  function v151Start() {
+    if (v151Timer) return;
+    v151Clock = 0;
+    v151Home = 0;
+    v151Away = 0;
+    v151Momentum = 50;
+    v151UpdateHUD();
+    v151MoveBall();
+    v151Timer = setInterval(v151Tick, 1800);
+  }
+
+  function v151StopIfNeeded() {
+    const hash = (location.hash || "").toLowerCase();
+    if (!(hash.includes("match") || hash.includes("partida") || hash.includes("dlc") || hash.includes("calendar"))) {
+      if (v151Timer) clearInterval(v151Timer);
+      v151Timer = null;
+    }
+  }
+
+  function v151FixBuildBadge() {
+    const el = document.getElementById("buildBadge");
+    if (!el) return;
+    let dataText = "09/02/2026, 13:10:00";
+    try {
+      const raw = el.textContent || "";
+      const match = raw.match(/dados\s*([^\n]+)/i);
+      if (match && match[1]) dataText = match[1].trim();
+    } catch(e) {}
+    el.innerHTML = `
+      <div class="build-line"><b>build</b> ${V151_BUILD}</div>
+      <div class="build-line"><b>data</b> ${V151_TIME}</div>
+      <div class="build-line"><b>dados</b> ${dataText}</div>
+    `;
+  }
+
+  function v151Run() {
+    v151FixBuildBadge();
+    v151Inject();
+    v151StopIfNeeded();
+  }
+
+  window.addEventListener("load", v151Run);
+  window.addEventListener("hashchange", v151Run);
+  setTimeout(v151Run, 350);
+  setTimeout(v151Run, 1200);
+  setTimeout(v151Run, 2200);
 })();

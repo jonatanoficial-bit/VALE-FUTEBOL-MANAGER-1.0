@@ -56,3 +56,13 @@ Date: 2026-04-11 15:26:43 UTC
 - Added National Team Mode foundation panel
 - Added hub ecosystem chips and release-grade build marker
 - Preserved premium UI, intro video, bugfixes and core systems
+
+
+## v1.51.0_match_engine_live
+Date: 2026-04-11 15:40:40 UTC
+
+- Added live match HUD with scoreboard, clock and momentum
+- Added 2D match board with player markers and ball movement
+- Added coach controls for pressure, balance, defense and substitutions
+- Added dynamic live event feed without removing existing systems
+- Preserved premium menu, intro video, route fixes, bugfixes and v1.50 foundation

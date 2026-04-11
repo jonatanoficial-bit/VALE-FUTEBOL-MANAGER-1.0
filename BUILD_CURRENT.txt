@@ -1,5 +1,5 @@
 VALE FUTEBOL MANAGER 2026
-BUILD: v1.50.0_global_database_foundation
-DATE(UTC): 2026-04-11 15:26:43 UTC
-FEATURE: Global database foundation + national team mode foundation
+BUILD: v1.51.0_match_engine_live
+DATE(UTC): 2026-04-11 15:40:40 UTC
+FEATURE: Live match engine, 2D match board and coach controls
 PROJECT_STATUS: 100%

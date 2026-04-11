@@ -1,13 +1,14 @@
 {
   "project": "VALE FUTEBOL MANAGER 2026",
-  "build": "v1.50.0_global_database_foundation",
-  "date_utc": "2026-04-11 15:26:43 UTC",
-  "phase": "Global Database Foundation",
+  "build": "v1.51.0_match_engine_live",
+  "date_utc": "2026-04-11 15:40:40 UTC",
+  "phase": "Match Engine Live",
   "progress": "100%",
   "features": [
-    "Global database foundation panel",
-    "National team mode foundation panel",
-    "Hub indicators for expanded 2026 ecosystem",
-    "Preserved premium menu, intro, hub, tactics, staff and bugfixes"
+    "Live match HUD",
+    "2D match board",
+    "Dynamic event feed",
+    "Coach controls during matches",
+    "Preserved premium menu, intro, hub and v1.50 foundation"
   ]
 }
