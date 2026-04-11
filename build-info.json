@@ -1,14 +1,14 @@
 {
   "project": "VALE FUTEBOL MANAGER 2026",
-  "build": "v1.51.0_match_engine_live",
-  "date_utc": "2026-04-11 15:40:40 UTC",
-  "phase": "Match Engine Live",
+  "build": "v1.52.0_selection_mode_alpha",
+  "date_utc": "2026-04-11 16:21:54 UTC",
+  "phase": "Selection Mode Alpha",
   "progress": "100%",
   "features": [
-    "Live match HUD",
-    "2D match board",
-    "Dynamic event feed",
-    "Coach controls during matches",
-    "Preserved premium menu, intro, hub and v1.50 foundation"
+    "National team mode alpha panel",
+    "Federation objectives",
+    "Call-up shortlist and squad slots",
+    "Club + national team dual calendar foundation",
+    "Preserved match engine live and previous systems"
   ]
 }

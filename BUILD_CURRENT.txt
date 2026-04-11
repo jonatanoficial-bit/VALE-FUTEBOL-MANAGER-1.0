@@ -1,5 +1,5 @@
 VALE FUTEBOL MANAGER 2026
-BUILD: v1.51.0_match_engine_live
-DATE(UTC): 2026-04-11 15:40:40 UTC
-FEATURE: Live match engine, 2D match board and coach controls
+BUILD: v1.52.0_selection_mode_alpha
+DATE(UTC): 2026-04-11 16:21:54 UTC
+FEATURE: National team mode alpha + federation objectives + squad call-up panel
 PROJECT_STATUS: 100%

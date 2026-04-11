@@ -64,8 +64,8 @@
     }
   }
 
-    const BUILD_TAG = "v1.51.0_match_engine_live";
-const BUILD_TIME_STR = "2026-04-11 15:40:40 UTC";
+    const BUILD_TAG = "v1.52.0_selection_mode_alpha";
+const BUILD_TIME_STR = "2026-04-11 16:21:54 UTC";
 
 // Ligas UEFA consideradas para preferência de continentais (evita ReferenceError no modal)
 const UEFA_LIDS = ['ENG_PREMIER','ESP_LALIGA','ITA_SERIE_A','GER_BUNDES','FRA_LIGUE_1','POR_LIGA'];
@@ -8779,4 +8779,92 @@ async function boot() {
   setTimeout(v151Run, 350);
   setTimeout(v151Run, 1200);
   setTimeout(v151Run, 2200);
+})();
+
+
+/* VFM_V152_SELECTION_MODE_ALPHA_PATCH */
+(function(){
+  const V152_BUILD = "v1.52.0_selection_mode_alpha";
+  const V152_TIME = "2026-04-11 16:21:54 UTC";
+
+  function v152Save(){
+    try {
+      return window.save || window.gameState || window.state || JSON.parse(localStorage.getItem("vfm_save") || localStorage.getItem("save") || "{}");
+    } catch(e) { return {}; }
+  }
+
+  function v152FixBuildBadge(){
+    const el = document.getElementById("buildBadge");
+    if (!el) return;
+    let dataText = "09/02/2026, 13:10:00";
+    try {
+      const raw = el.textContent || "";
+      const match = raw.match(/dados\s*([^\n]+)/i);
+      if (match && match[1]) dataText = match[1].trim();
+    } catch(e) {}
+    el.innerHTML = `
+      <div class="build-line"><b>build</b> ${V152_BUILD}</div>
+      <div class="build-line"><b>data</b> ${V152_TIME}</div>
+      <div class="build-line"><b>dados</b> ${dataText}</div>
+    `;
+  }
+
+  function v152SelectionMarkup(save){
+    const nation = (save.selection && save.selection.nation) || save.nationalTeam || "Brasil";
+    const rep = (save.career && save.career.reputation) || save.reputation || "Iniciante";
+    const season = (save.season && (save.season.yearLabel || save.season.label || save.season.year)) || "2025_2026";
+    return `
+      <section class="vfm-v152-panel" id="vfm-v152-panel">
+        <h2 class="vfm-v152-title">Modo Seleção Alpha</h2>
+        <div class="vfm-v152-subtitle">${nation} • Build v1.52.0_selection_mode_alpha</div>
+        <div class="vfm-v152-grid">
+          <div class="vfm-v152-card">
+            <div class="vfm-v152-label">Objetivos da federação</div>
+            <div class="vfm-v152-value">Classificar e competir forte</div>
+            <div class="vfm-v152-small">Concilie desempenho no clube e convocações da seleção sem quebrar o save principal.</div>
+            <div class="vfm-v152-list">
+              <div class="vfm-v152-row"><span>Eliminatórias</span><span class="vfm-v152-tag">Meta: Top 4</span></div>
+              <div class="vfm-v152-row"><span>Continental</span><span class="vfm-v152-tag">Meta: Semifinal</span></div>
+              <div class="vfm-v152-row"><span>Mundial</span><span class="vfm-v152-tag">Meta: Competir</span></div>
+            </div>
+          </div>
+          <div class="vfm-v152-card">
+            <div class="vfm-v152-label">Convocação inicial</div>
+            <div class="vfm-v152-value">Lista curta preparada</div>
+            <div class="vfm-v152-small">Base alpha para lista de convocados, observados e encaixe no calendário ${season}.</div>
+            <div class="vfm-v152-list">
+              <div class="vfm-v152-row"><span>Goleiros</span><span class="vfm-v152-tag">3 vagas</span></div>
+              <div class="vfm-v152-row"><span>Linha</span><span class="vfm-v152-tag">20 vagas</span></div>
+              <div class="vfm-v152-row"><span>Reputação atual</span><span class="vfm-v152-tag">${rep}</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    `;
+  }
+
+  function v152Inject(){
+    const hash = (location.hash || "").toLowerCase();
+    if (!(hash.includes("selection") || hash.includes("selecao") || hash.includes("dlc") || hash.includes("hub"))) return;
+    const host = document.querySelector(".screen-content, .hub-content, #app, main, body");
+    if (!host) return;
+    const old = document.getElementById("vfm-v152-panel");
+    if (old) old.remove();
+    const wrap = document.createElement("div");
+    wrap.innerHTML = v152SelectionMarkup(v152Save());
+    const node = wrap.firstElementChild;
+    if (host.firstChild) host.insertBefore(node, host.firstChild);
+    else host.appendChild(node);
+  }
+
+  function v152Run(){
+    v152FixBuildBadge();
+    v152Inject();
+  }
+
+  window.addEventListener("load", v152Run);
+  window.addEventListener("hashchange", v152Run);
+  setTimeout(v152Run, 300);
+  setTimeout(v152Run, 900);
+  setTimeout(v152Run, 1800);
 })();

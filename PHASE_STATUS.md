@@ -44,3 +44,12 @@ Date: 2026-04-11 15:40:40 UTC
 - Added coach controls for pressure, balance, defense and substitutions
 - Added dynamic live event feed without removing existing systems
 - Preserved premium menu, intro video, route fixes, bugfixes and v1.50 foundation
+
+
+## v1.52.0_selection_mode_alpha
+Date: 2026-04-11 16:21:54 UTC
+
+- Added Selection Mode Alpha with federation dashboard
+- Added call-up shortlist and squad slots for national team management
+- Added federation objectives and dual calendar foundation
+- Preserved premium menu, live match engine, hub systems and bugfixes

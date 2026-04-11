@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Vale Futebol Manager 2026 - Premium</title>
 
-  <link rel="stylesheet" href="./styles.css?v=v1.50.0_global_database_foundation" />
+  <link rel="stylesheet" href="./styles.css?v=v1.52.0_selection_mode_alpha" />
   <link rel="manifest" href="./manifest.json" />
   <meta name="theme-color" content="#0EA5E9" />
 
@@ -20,6 +20,8 @@
 <link rel="stylesheet" href="ui/bugfix-v1493.css">
 
 <link rel="stylesheet" href="ui/v150-foundation.css">
+
+<link rel="stylesheet" href="ui/v152-selection-alpha.css">
 </head>
 <body>
 
@@ -115,7 +117,7 @@ function closeMenu(){ var x=document.getElementById("main-menu"); if(x) x.style.
 
   <!-- App principal -->
   <!-- Cache-bust: sempre atualize o parâmetro v em cada build -->
-  <script src="./app.js?v=v1.50.0_global_database_foundation" defer></script>
+  <script src="./app.js?v=v1.52.0_selection_mode_alpha" defer></script>
 
   <!-- Guardas de UX (não altera lógica do jogo) -->
   <script>
@@ -149,7 +151,7 @@ function closeMenu(){ var x=document.getElementById("main-menu"); if(x) x.style.
   <script>
     (function(){
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js?v=v1.50.0_global_database_foundation').catch(function(){});
+        navigator.serviceWorker.register('./sw.js?v=v1.52.0_selection_mode_alpha').catch(function(){});
       
       // força recarregar quando houver nova versão do service worker
       navigator.serviceWorker.addEventListener('controllerchange', () => {
@@ -163,6 +165,8 @@ function closeMenu(){ var x=document.getElementById("main-menu"); if(x) x.style.
 
 
 
-<!-- BUILD v1.50.0_global_database_foundation 2026-04-11 15:26:43 UTC -->
+
+
+<!-- BUILD v1.52.0_selection_mode_alpha 2026-04-11 16:21:54 UTC -->
 </body>
 </html>
