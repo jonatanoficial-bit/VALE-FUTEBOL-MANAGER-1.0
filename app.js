@@ -64,8 +64,8 @@
     }
   }
 
-    const BUILD_TAG = "v1.49.2_ui_cleanup_and_route_fix";
-const BUILD_TIME_STR = "2026-04-11 14:28:50 UTC";
+    const BUILD_TAG = "v1.49.3_core_systems_bugfix";
+const BUILD_TIME_STR = "2026-04-11 14:54:02 UTC";
 
 // Ligas UEFA consideradas para preferência de continentais (evita ReferenceError no modal)
 const UEFA_LIDS = ['ENG_PREMIER','ESP_LALIGA','ITA_SERIE_A','GER_BUNDES','FRA_LIGUE_1','POR_LIGA'];
@@ -8283,4 +8283,119 @@ async function boot() {
   setTimeout(vfmRunCleanup, 250);
   setTimeout(vfmRunCleanup, 900);
   setTimeout(vfmRunCleanup, 1800);
+})();
+
+
+/* VFM_CORE_SYSTEMS_BUGFIX_PATCH */
+(function(){
+  const VFM_BUILD = "v1.49.3_core_systems_bugfix";
+  const VFM_BUILD_TIME = "2026-04-11 14:54:02 UTC";
+
+  function vfmEnsureToastHost() {
+    let host = document.getElementById("vfm-toast-host");
+    if (!host) {
+      host = document.createElement("div");
+      host.id = "vfm-toast-host";
+      document.body.appendChild(host);
+    }
+    return host;
+  }
+
+  function vfmShowToast(message, type) {
+    const host = vfmEnsureToastHost();
+    const item = document.createElement("div");
+    item.className = "vfm-toast " + (type || "info");
+    item.textContent = String(message || "Ação concluída");
+    host.appendChild(item);
+    requestAnimationFrame(() => item.classList.add("show"));
+    setTimeout(() => {
+      item.classList.remove("show");
+      setTimeout(() => item.remove(), 220);
+    }, 2200);
+  }
+
+  if (typeof window.toast !== "function") {
+    window.toast = function(message, type) {
+      try {
+        vfmShowToast(message, type);
+      } catch (e) {
+        console.log("[toast]", type || "info", message);
+      }
+    };
+  }
+
+  if (typeof window.showToast !== "function") {
+    window.showToast = function(message, type) {
+      return window.toast(message, type);
+    };
+  }
+
+  function vfmAssetSvg(label, kind) {
+    const safe = String(label || kind || "VFM").slice(0, 12);
+    const bg = kind === "flag" ? "#0d2950" : kind === "avatar" ? "#123b6e" : "#071a33";
+    const txt = kind === "flag" ? "FLAG" : kind === "avatar" ? "AV" : safe;
+    return "data:image/svg+xml;utf8," + encodeURIComponent(
+      `<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160">
+        <rect width="100%" height="100%" rx="18" fill="${bg}"/>
+        <rect x="4" y="4" width="152" height="152" rx="14" fill="none" stroke="#d7b05b" stroke-opacity=".35"/>
+        <text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle"
+          font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#ffffff">${txt}</text>
+      </svg>`
+    );
+  }
+
+  function vfmApplyImageFallbacks() {
+    document.querySelectorAll("img").forEach((img) => {
+      if (img.dataset.vfmFallbackBound === "1") return;
+      img.dataset.vfmFallbackBound = "1";
+      img.addEventListener("error", function onErr() {
+        const src = img.getAttribute("src") || "";
+        if (src.startsWith("data:image/svg+xml")) return;
+        let kind = "logo";
+        if (src.includes("/flags/")) kind = "flag";
+        if (src.includes("/avatars/")) kind = "avatar";
+        img.src = vfmAssetSvg(img.alt || kind.toUpperCase(), kind);
+        img.classList.add("vfm-fallback-" + kind);
+      });
+    });
+  }
+
+  function vfmProtectClicks() {
+    // Adds a small guard so broken feedback calls do not kill the flow
+    document.querySelectorAll("button").forEach((btn) => {
+      if (btn.dataset.vfmProtected === "1") return;
+      btn.dataset.vfmProtected = "1";
+      btn.addEventListener("click", function() {
+        setTimeout(() => vfmApplyImageFallbacks(), 50);
+      }, true);
+    });
+  }
+
+  function vfmFixBuildBadge() {
+    const el = document.getElementById("buildBadge");
+    if (!el) return;
+    let dataText = "09/02/2026, 13:10:00";
+    try {
+      const raw = el.textContent || "";
+      const match = raw.match(/dados\s*([^\n]+)/i);
+      if (match && match[1]) dataText = match[1].trim();
+    } catch(e) {}
+    el.innerHTML = `
+      <div class="build-line"><b>build</b> ${VFM_BUILD}</div>
+      <div class="build-line"><b>data</b> ${VFM_BUILD_TIME}</div>
+      <div class="build-line"><b>dados</b> ${dataText}</div>
+    `;
+  }
+
+  function vfmRunBugfix() {
+    vfmApplyImageFallbacks();
+    vfmProtectClicks();
+    vfmFixBuildBadge();
+  }
+
+  window.addEventListener("load", vfmRunBugfix);
+  window.addEventListener("hashchange", vfmRunBugfix);
+  setTimeout(vfmRunBugfix, 250);
+  setTimeout(vfmRunBugfix, 900);
+  setTimeout(vfmRunBugfix, 1800);
 })();

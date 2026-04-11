@@ -1,0 +1,41 @@
+
+/* v1.49.3 core bugfix */
+#vfm-toast-host{
+  position:fixed;
+  right:14px;
+  bottom:14px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  z-index:10000;
+  pointer-events:none;
+}
+.vfm-toast{
+  min-width:220px;
+  max-width:360px;
+  padding:12px 14px;
+  border-radius:14px;
+  color:#fff;
+  background:linear-gradient(180deg, rgba(10,23,48,.96), rgba(7,18,38,.98));
+  border:1px solid rgba(215,176,91,.22);
+  box-shadow:0 10px 24px rgba(0,0,0,.28);
+  font-size:14px;
+  line-height:1.35;
+  opacity:0;
+  transform:translateY(8px);
+  transition:opacity .18s ease, transform .18s ease;
+}
+.vfm-toast.show{
+  opacity:1;
+  transform:translateY(0);
+}
+.vfm-toast.success{ border-color: rgba(74,222,128,.35); }
+.vfm-toast.error{ border-color: rgba(248,113,113,.35); }
+.vfm-toast.info{ border-color: rgba(96,165,250,.35); }
+
+img.vfm-fallback-logo, img.vfm-fallback-flag, img.vfm-fallback-avatar{
+  object-fit:cover;
+  background:linear-gradient(180deg, rgba(11,34,65,.94), rgba(6,18,37,.98));
+  border:1px solid rgba(215,176,91,.18);
+  border-radius:12px;
+}

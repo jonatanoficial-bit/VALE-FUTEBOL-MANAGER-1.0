@@ -1,5 +1,5 @@
 VALE FUTEBOL MANAGER 2026
-BUILD: v1.49.2_ui_cleanup_and_route_fix
-DATE(UTC): 2026-04-11 14:28:50 UTC
-FEATURE: UI cleanup, route fix, premium consolidation
+BUILD: v1.49.3_core_systems_bugfix
+DATE(UTC): 2026-04-11 14:54:02 UTC
+FEATURE: Core systems bugfix for tactics, staff, transfers and asset fallbacks
 PROJECT_STATUS: 99%

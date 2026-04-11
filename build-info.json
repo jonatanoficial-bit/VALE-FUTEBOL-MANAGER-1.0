@@ -1,14 +1,13 @@
 {
   "project": "VALE FUTEBOL MANAGER 2026",
-  "build": "v1.49.2_ui_cleanup_and_route_fix",
-  "date_utc": "2026-04-11 14:28:50 UTC",
-  "phase": "UI Cleanup and Route Fix",
+  "build": "v1.49.3_core_systems_bugfix",
+  "date_utc": "2026-04-11 14:54:02 UTC",
+  "phase": "Core Systems Bugfix",
   "progress": "99%",
   "features": [
-    "Hide match realism card on hub/lobby",
-    "Keep realism only on match-related routes",
-    "Update visible build badge to the new build",
-    "Remove duplicated overlay build badge",
-    "Preserve premium menu, intro video, career depth and hub"
+    "Safe global toast fallback",
+    "Asset fallback for missing logos, flags and avatars",
+    "Reduced route-side JS breakage on tactics, staff and transfers",
+    "Preserved premium menu, intro, hub and match systems"
   ]
 }

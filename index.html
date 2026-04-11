@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Vale Futebol Manager 2026 - Premium</title>
 
-  <link rel="stylesheet" href="./styles.css?v=v1.49.2_ui_cleanup_and_route_fix" />
+  <link rel="stylesheet" href="./styles.css?v=v1.49.3_core_systems_bugfix" />
   <link rel="manifest" href="./manifest.json" />
   <meta name="theme-color" content="#0EA5E9" />
 
@@ -16,6 +16,8 @@
 <link rel="stylesheet" href="ui/lobby-consolidation-v1491.css">
 
 <link rel="stylesheet" href="ui/route-fix-v1492.css">
+
+<link rel="stylesheet" href="ui/bugfix-v1493.css">
 </head>
 <body>
 
@@ -111,7 +113,7 @@ function closeMenu(){ var x=document.getElementById("main-menu"); if(x) x.style.
 
   <!-- App principal -->
   <!-- Cache-bust: sempre atualize o parâmetro v em cada build -->
-  <script src="./app.js?v=v1.49.2_ui_cleanup_and_route_fix" defer></script>
+  <script src="./app.js?v=v1.49.3_core_systems_bugfix" defer></script>
 
   <!-- Guardas de UX (não altera lógica do jogo) -->
   <script>
@@ -145,7 +147,7 @@ function closeMenu(){ var x=document.getElementById("main-menu"); if(x) x.style.
   <script>
     (function(){
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js?v=v1.49.2_ui_cleanup_and_route_fix').catch(function(){});
+        navigator.serviceWorker.register('./sw.js?v=v1.49.3_core_systems_bugfix').catch(function(){});
       
       // força recarregar quando houver nova versão do service worker
       navigator.serviceWorker.addEventListener('controllerchange', () => {
@@ -155,6 +157,8 @@ function closeMenu(){ var x=document.getElementById("main-menu"); if(x) x.style.
     })();
   </script>
 
-<!-- BUILD v1.49.2_ui_cleanup_and_route_fix 2026-04-11 14:28:50 UTC -->
+
+
+<!-- BUILD v1.49.3_core_systems_bugfix 2026-04-11 14:54:02 UTC -->
 </body>
 </html>

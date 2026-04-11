@@ -16,3 +16,12 @@ Date: 2026-04-11 14:28:50 UTC
 - Kept premium menu and hub functional without removing core systems
 - Updated the visible build badge to the new build and removed duplicate overlay badge
 - Preserved intro video, career depth, mobile UI and match engine realism
+
+
+## v1.49.3_core_systems_bugfix
+Date: 2026-04-11 14:54:02 UTC
+
+- Added safe global toast fallback to prevent click actions from crashing
+- Added runtime image fallback for missing logos, flags and avatars
+- Reduced JS breakage on tactics, staff and transfer screens
+- Preserved premium UI, intro video and route fixes
