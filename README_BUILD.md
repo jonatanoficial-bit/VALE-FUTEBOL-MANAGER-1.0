@@ -47,3 +47,12 @@ Date: 2026-04-11 14:54:02 UTC
 - Added runtime image fallback for missing logos, flags and avatars
 - Reduced JS breakage on tactics, staff and transfer screens
 - Preserved premium UI, intro video and route fixes
+
+
+## v1.50.0_global_database_foundation
+Date: 2026-04-11 15:26:43 UTC
+
+- Added Global Database Foundation panel with South America 2026 scope
+- Added National Team Mode foundation panel
+- Added hub ecosystem chips and release-grade build marker
+- Preserved premium UI, intro video, bugfixes and core systems

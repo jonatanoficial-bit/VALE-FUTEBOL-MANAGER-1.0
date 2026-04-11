@@ -2,7 +2,7 @@
    Objetivo: melhorar carregamento no GitHub Pages e permitir modo offline.
 */
 
-const CACHE_NAME = "vfm-cache-v1.49.3_core_systems_bugfix";
+const CACHE_NAME = "vfm-cache-v1.50.0_global_database_foundation";
 const CORE_ASSETS = [
   './',
   './index.html?v=build_2026-03-06_213500_v1.43.0_full_hub_consolidation',

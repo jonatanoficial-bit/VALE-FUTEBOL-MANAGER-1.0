@@ -1,13 +1,13 @@
 {
   "project": "VALE FUTEBOL MANAGER 2026",
-  "build": "v1.49.3_core_systems_bugfix",
-  "date_utc": "2026-04-11 14:54:02 UTC",
-  "phase": "Core Systems Bugfix",
-  "progress": "99%",
+  "build": "v1.50.0_global_database_foundation",
+  "date_utc": "2026-04-11 15:26:43 UTC",
+  "phase": "Global Database Foundation",
+  "progress": "100%",
   "features": [
-    "Safe global toast fallback",
-    "Asset fallback for missing logos, flags and avatars",
-    "Reduced route-side JS breakage on tactics, staff and transfers",
-    "Preserved premium menu, intro, hub and match systems"
+    "Global database foundation panel",
+    "National team mode foundation panel",
+    "Hub indicators for expanded 2026 ecosystem",
+    "Preserved premium menu, intro, hub, tactics, staff and bugfixes"
   ]
 }

@@ -64,8 +64,8 @@
     }
   }
 
-    const BUILD_TAG = "v1.49.3_core_systems_bugfix";
-const BUILD_TIME_STR = "2026-04-11 14:54:02 UTC";
+    const BUILD_TAG = "v1.50.0_global_database_foundation";
+const BUILD_TIME_STR = "2026-04-11 15:26:43 UTC";
 
 // Ligas UEFA consideradas para preferência de continentais (evita ReferenceError no modal)
 const UEFA_LIDS = ['ENG_PREMIER','ESP_LALIGA','ITA_SERIE_A','GER_BUNDES','FRA_LIGUE_1','POR_LIGA'];
@@ -8398,4 +8398,120 @@ async function boot() {
   setTimeout(vfmRunBugfix, 250);
   setTimeout(vfmRunBugfix, 900);
   setTimeout(vfmRunBugfix, 1800);
+})();
+
+
+/* VFM_V150_GLOBAL_DATABASE_FOUNDATION_PATCH */
+(function(){
+  const VFM_V150_BUILD = "v1.50.0_global_database_foundation";
+  const VFM_V150_TIME = "2026-04-11 15:26:43 UTC";
+
+  function vfmV150Save(){
+    try {
+      return window.save || window.gameState || window.state || JSON.parse(localStorage.getItem("vfm_save") || localStorage.getItem("save") || "{}");
+    } catch(e) { return {}; }
+  }
+
+  function vfmV150FixBuildBadge(){
+    const el = document.getElementById("buildBadge");
+    if (!el) return;
+    let dataText = "09/02/2026, 13:10:00";
+    try {
+      const raw = el.textContent || "";
+      const match = raw.match(/dados\s*([^\n]+)/i);
+      if (match && match[1]) dataText = match[1].trim();
+    } catch(e) {}
+    el.innerHTML = `
+      <div class="build-line"><b>build</b> ${VFM_V150_BUILD}</div>
+      <div class="build-line"><b>data</b> ${VFM_V150_TIME}</div>
+      <div class="build-line"><b>dados</b> ${dataText}</div>
+    `;
+  }
+
+  function vfmV150InjectHubPanel(){
+    const hash = (location.hash || "").toLowerCase();
+    if (!hash.includes("hub")) return;
+    const host = document.querySelector(".hub-main, .hub-content, .screen-content, #app, main, body");
+    if (!host) return;
+
+    const old = document.getElementById("vfm-v150-panel");
+    if (old) old.remove();
+
+    const save = vfmV150Save();
+    const club = save.clubName || (save.club && save.club.name) || save.teamName || "Seu Clube";
+    const rep = (save.career && save.career.reputation) || save.reputation || "Iniciante";
+    const season = (save.season && (save.season.yearLabel || save.season.label || save.season.year)) || "2025_2026";
+
+    const panel = document.createElement("section");
+    panel.id = "vfm-v150-panel";
+    panel.className = "vfm-v150-panel";
+    panel.innerHTML = `
+      <div class="vfm-v150-title">v1.50 Foundation Ativa</div>
+      <div class="vfm-v150-subtitle">${club} • Build v1.50.0_global_database_foundation</div>
+      <div class="vfm-v150-chips">
+        <div class="vfm-v150-chip">Reputação: ${rep}</div>
+        <div class="vfm-v150-chip">Temporada: ${season}</div>
+        <div class="vfm-v150-chip">Base 2026 expandida</div>
+        <div class="vfm-v150-chip">Modo Seleção: fundação</div>
+      </div>
+      <div class="vfm-v150-grid">
+        <div class="vfm-v150-card">
+          <div class="vfm-v150-label">Global Database</div>
+          <div class="vfm-v150-value">South America 2026</div>
+          <div class="vfm-v150-small">Estrutura pronta para expansão de clubes, ligas, competições e ecossistema continental.</div>
+        </div>
+        <div class="vfm-v150-card">
+          <div class="vfm-v150-label">Modo Seleção</div>
+          <div class="vfm-v150-value">Foundation</div>
+          <div class="vfm-v150-small">Base visual e estrutural preparada para convocação, torneios e calendário paralelo clube + seleção.</div>
+        </div>
+      </div>
+    `;
+    if (host.firstChild) host.insertBefore(panel, host.firstChild);
+    else host.appendChild(panel);
+  }
+
+  function vfmV150InjectSelectionRoute(){
+    const hash = (location.hash || "").toLowerCase();
+    if (!(hash.includes("selection") || hash.includes("selecao") || hash.includes("dlc"))) return;
+    const host = document.querySelector(".screen-content, #app, main, body");
+    if (!host) return;
+
+    const old = document.getElementById("vfm-v150-selection-panel");
+    if (old) old.remove();
+
+    const panel = document.createElement("section");
+    panel.id = "vfm-v150-selection-panel";
+    panel.className = "vfm-v150-panel";
+    panel.innerHTML = `
+      <div class="vfm-v150-title">Modo Seleção • Fundação</div>
+      <div class="vfm-v150-subtitle">Convocações, objetivos da federação e torneios internacionais em preparação.</div>
+      <div class="vfm-v150-grid">
+        <div class="vfm-v150-card">
+          <div class="vfm-v150-label">Calendário paralelo</div>
+          <div class="vfm-v150-value">Clube + Seleção</div>
+          <div class="vfm-v150-small">Estrutura preparada para conviver com a temporada principal sem quebrar o save atual.</div>
+        </div>
+        <div class="vfm-v150-card">
+          <div class="vfm-v150-label">Competições</div>
+          <div class="vfm-v150-value">Eliminatórias + Continental + Mundial</div>
+          <div class="vfm-v150-small">Base pronta para evolução nas próximas builds.</div>
+        </div>
+      </div>
+    `;
+    if (host.firstChild) host.insertBefore(panel, host.firstChild);
+    else host.appendChild(panel);
+  }
+
+  function vfmV150Run(){
+    vfmV150FixBuildBadge();
+    vfmV150InjectHubPanel();
+    vfmV150InjectSelectionRoute();
+  }
+
+  window.addEventListener("load", vfmV150Run);
+  window.addEventListener("hashchange", vfmV150Run);
+  setTimeout(vfmV150Run, 300);
+  setTimeout(vfmV150Run, 1000);
+  setTimeout(vfmV150Run, 1800);
 })();
