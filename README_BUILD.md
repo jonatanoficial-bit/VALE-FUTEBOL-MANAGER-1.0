@@ -1,5 +1,19 @@
 # Build Atual
 
+- Build: v1.54.0_hub_clean_gameplay_focus
+- Data UTC: 2026-04-13 19:20:00 UTC
+- Foco: Modo Seleção progressivo com seleções destraváveis por Career Score e base mundial 2026.
+
+## v1.54.0_hub_clean_gameplay_focus
+Date: 2026-04-13 19:20:00 UTC
+
+- Added a dedicated Selection screen with world-team progression
+- Added 61 national teams organized by unlock groups
+- Added persistent current-selection status in the HUB
+- Prepared the next update layer for real 2026 call-ups and Europe roster refresh
+
+# Build Atual
+
 - Build: v1.43.1_hub_hotfix
 - Data UTC: 2026-03-06 21:48:00 UTC
 - Foco: correção do HUB e prevenção de crash quando `save.season` não existe no fluxo inicial.

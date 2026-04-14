@@ -1,0 +1,16 @@
+VALE FUTEBOL MANAGER 2026 - Build 1.53.0
+Fase: Selection Progression World 2026
+Data e hora: 2026-04-13 18:05:00 UTC
+Conclusão do projeto: 100%
+
+Entregas desta build:
+- rota jogável de Modo Seleção
+- 61 seleções com travas por Career Score
+- persistência da seleção atual no save
+- integração visual com o HUB
+- limpeza dos painéis placeholders antigos
+
+Próxima camada planejada:
+- convocações reais 2026
+- calendário internacional
+- atualização mais profunda dos elencos europeus

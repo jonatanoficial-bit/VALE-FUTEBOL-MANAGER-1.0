@@ -1,14 +1,15 @@
 {
   "project": "VALE FUTEBOL MANAGER 2026",
-  "build": "v1.52.0_selection_mode_alpha",
-  "date_utc": "2026-04-11 16:21:54 UTC",
-  "phase": "Selection Mode Alpha",
+  "build": "v1.54.0_hub_clean_gameplay_focus",
+  "date_utc": "2026-04-13 19:20:00 UTC",
+  "phase": "Selection Mode Progression World 2026",
   "progress": "100%",
   "features": [
-    "National team mode alpha panel",
-    "Federation objectives",
-    "Call-up shortlist and squad slots",
-    "Club + national team dual calendar foundation",
-    "Preserved match engine live and previous systems"
-  ]
+    "Playable Selection route linked to the save file",
+    "61 national teams mapped from April 2026 FIFA ranking basis",
+    "Unlock tiers by Career Score",
+    "Current national team persisted in HUB and career flow",
+    "Visual selection screen prepared for future real 2026 squad updates"
+  ],
+  "build_time": "2026-04-13 19:20:00 UTC"
 }

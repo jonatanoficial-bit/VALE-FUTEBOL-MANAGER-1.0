@@ -2,12 +2,12 @@
    Objetivo: melhorar carregamento no GitHub Pages e permitir modo offline.
 */
 
-const CACHE_NAME = "vfm-cache-v1.52.0_selection_mode_alpha";
+const CACHE_NAME = "vfm-cache-v1.54.0_hub_clean_gameplay_focus";
 const CORE_ASSETS = [
   './',
-  './index.html?v=build_2026-03-06_213500_v1.43.0_full_hub_consolidation',
-  './styles.css?v=build_2026-03-06_213500_v1.43.0_full_hub_consolidation',
-  './app.js?v=build_2026-03-06_213500_v1.43.0_full_hub_consolidation',
+  './index.html?v=v1.54.0_hub_clean_gameplay_focus',
+  './styles.css?v=v1.54.0_hub_clean_gameplay_focus',
+  './app.js?v=v1.54.0_hub_clean_gameplay_focus',
   './manifest.json',
   './favicon.ico',
   './assets/club_placeholder.svg',

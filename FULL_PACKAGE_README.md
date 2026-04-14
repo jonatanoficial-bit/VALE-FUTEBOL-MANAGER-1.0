@@ -1,13 +1,18 @@
-# FlySim 2026 — Pacote Completo (Jogo + Evoluções)
+# VALE FUTEBOL MANAGER 2026 — Pacote Completo
 
-Este ZIP contém o **jogo base** (Parte 6) + **DLC 1 Campanhas**.
+Este ZIP contém o projeto completo já atualizado para a build **v1.53.0_selection_progression_world_2026**.
 
-## Como rodar
-- Abra `index.html` no navegador (PC)
-- Ou hospede a pasta em um servidor local simples (recomendado)
+## Como usar
+- Descompacte o pacote inteiro
+- Suba todos os arquivos para o repositório no GitHub
+- Abra `index.html` localmente ou via GitHub Pages
 
-## Offline
-O pacote foi pensado para funcionar offline (PWA/Service Worker quando aplicável).
+## Destaques desta build
+- Modo Seleção com progressão por Career Score
+- 61 seleções organizadas por níveis de desbloqueio
+- HUB com status da seleção atual
+- Estrutura pronta para próximas atualizações de convocação real 2026
 
-## DLC
-- DLC Campanhas está em `dlc/FlySim2026_DLC_Campaigns/...`
+## Build
+- Versão: v1.53.0_selection_progression_world_2026
+- Data UTC: 2026-04-13 18:05:00 UTC

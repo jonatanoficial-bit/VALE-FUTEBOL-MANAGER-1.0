@@ -88,3 +88,20 @@ Date: 2026-04-11 16:21:54 UTC
 - Added call-up shortlist and squad slots for national team management
 - Added federation objectives and dual calendar foundation
 - Preserved premium menu, live match engine, hub systems and bugfixes
+
+
+## v1.53.0_selection_progression_world_2026
+Date: 2026-04-13 18:05:00 UTC
+
+- Added Selection Progression World 2026 route with persistent national team choice
+- Added 61 national teams with FIFA-rank-based balancing and Career Score unlock gates
+- Added HUB integration for current national team status
+- Disabled legacy selection placeholder overlays so the real route becomes the main experience
+
+
+## v1.54.0_hub_clean_gameplay_focus — 2026-04-13 19:20:00 UTC
+- limpeza do HUB com foco no fluxo principal da carreira
+- remoção/ocultação de painéis legados que poluíam a tela principal
+- bloco compacto de Seleção Nacional integrado ao HUB
+- reordenação dos cards para priorizar Partida, Calendário e Seleção
+- ajuste visual e de navegação para deixar o jogo mais intuitivo

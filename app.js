@@ -64,8 +64,8 @@
     }
   }
 
-    const BUILD_TAG = "v1.52.0_selection_mode_alpha";
-const BUILD_TIME_STR = "2026-04-11 16:21:54 UTC";
+    const BUILD_TAG = "v1.53.0_selection_progression_world_2026";
+const BUILD_TIME_STR = "2026-04-13 18:05:00 UTC";
 
 // Ligas UEFA consideradas para preferência de continentais (evita ReferenceError no modal)
 const UEFA_LIDS = ['ENG_PREMIER','ESP_LALIGA','ITA_SERIE_A','GER_BUNDES','FRA_LIGUE_1','POR_LIGA'];
@@ -102,6 +102,1349 @@ const COACH_STYLES = [
   { id: 'counter', name: 'Contra-ataque' }
 ];
 
+
+
+const SELECTION_UNLOCK_STEPS = [0, 350, 750, 1200, 1700, 2400];
+const SELECTION_UNLOCK_LABELS = {
+  0: 'Desafio Inicial',
+  350: 'Emergentes',
+  750: 'Competitivas',
+  1200: 'Tradicionais',
+  1700: 'Potências',
+  2400: 'Elite Global'
+};
+
+const NATIONAL_TEAMS_2026 = [
+  {
+    "id": "FRA",
+    "name": "França",
+    "flag": "🇫🇷",
+    "confederation": "UEFA",
+    "fifaRank": 1,
+    "overall": 88,
+    "unlockScore": 2400,
+    "unlockTier": "Elite Global",
+    "objectives": {
+      "qualifiers": "Confirmar vaga com autoridade",
+      "continental": "Ganhar o torneio continental",
+      "world": "Ser campeão mundial"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "ESP",
+    "name": "Espanha",
+    "flag": "🇪🇸",
+    "confederation": "UEFA",
+    "fifaRank": 2,
+    "overall": 88,
+    "unlockScore": 2400,
+    "unlockTier": "Elite Global",
+    "objectives": {
+      "qualifiers": "Confirmar vaga com autoridade",
+      "continental": "Ganhar o torneio continental",
+      "world": "Ser campeão mundial"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "ARG",
+    "name": "Argentina",
+    "flag": "🇦🇷",
+    "confederation": "CONMEBOL",
+    "fifaRank": 3,
+    "overall": 88,
+    "unlockScore": 2400,
+    "unlockTier": "Elite Global",
+    "objectives": {
+      "qualifiers": "Confirmar vaga com autoridade",
+      "continental": "Ganhar o torneio continental",
+      "world": "Ser campeão mundial"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "ENG",
+    "name": "Inglaterra",
+    "flag": "🏴",
+    "confederation": "UEFA",
+    "fifaRank": 4,
+    "overall": 87,
+    "unlockScore": 1700,
+    "unlockTier": "Potências",
+    "objectives": {
+      "qualifiers": "Liderar as eliminatórias",
+      "continental": "Chegar à final continental",
+      "world": "Chegar à final da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "POR",
+    "name": "Portugal",
+    "flag": "🇵🇹",
+    "confederation": "UEFA",
+    "fifaRank": 5,
+    "overall": 86,
+    "unlockScore": 1700,
+    "unlockTier": "Potências",
+    "objectives": {
+      "qualifiers": "Liderar as eliminatórias",
+      "continental": "Chegar à final continental",
+      "world": "Chegar à final da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "BRA",
+    "name": "Brasil",
+    "flag": "🇧🇷",
+    "confederation": "CONMEBOL",
+    "fifaRank": 6,
+    "overall": 87,
+    "unlockScore": 1700,
+    "unlockTier": "Potências",
+    "objectives": {
+      "qualifiers": "Liderar as eliminatórias",
+      "continental": "Chegar à final continental",
+      "world": "Chegar à final da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "NED",
+    "name": "Países Baixos",
+    "flag": "🇳🇱",
+    "confederation": "UEFA",
+    "fifaRank": 7,
+    "overall": 86,
+    "unlockScore": 1700,
+    "unlockTier": "Potências",
+    "objectives": {
+      "qualifiers": "Liderar as eliminatórias",
+      "continental": "Chegar à final continental",
+      "world": "Chegar à final da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "MAR",
+    "name": "Marrocos",
+    "flag": "🇲🇦",
+    "confederation": "CAF",
+    "fifaRank": 8,
+    "overall": 84,
+    "unlockScore": 1700,
+    "unlockTier": "Potências",
+    "objectives": {
+      "qualifiers": "Liderar as eliminatórias",
+      "continental": "Chegar à final continental",
+      "world": "Chegar à final da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "BEL",
+    "name": "Bélgica",
+    "flag": "🇧🇪",
+    "confederation": "UEFA",
+    "fifaRank": 9,
+    "overall": 84,
+    "unlockScore": 1200,
+    "unlockTier": "Tradicionais",
+    "objectives": {
+      "qualifiers": "Classificar com folga",
+      "continental": "Fazer semifinal continental",
+      "world": "Fazer semifinal da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "GER",
+    "name": "Alemanha",
+    "flag": "🇩🇪",
+    "confederation": "UEFA",
+    "fifaRank": 10,
+    "overall": 84,
+    "unlockScore": 1200,
+    "unlockTier": "Tradicionais",
+    "objectives": {
+      "qualifiers": "Classificar com folga",
+      "continental": "Fazer semifinal continental",
+      "world": "Fazer semifinal da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "CRO",
+    "name": "Croácia",
+    "flag": "🇭🇷",
+    "confederation": "UEFA",
+    "fifaRank": 11,
+    "overall": 83,
+    "unlockScore": 1200,
+    "unlockTier": "Tradicionais",
+    "objectives": {
+      "qualifiers": "Classificar com folga",
+      "continental": "Fazer semifinal continental",
+      "world": "Fazer semifinal da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "ITA",
+    "name": "Itália",
+    "flag": "🇮🇹",
+    "confederation": "UEFA",
+    "fifaRank": 12,
+    "overall": 83,
+    "unlockScore": 1200,
+    "unlockTier": "Tradicionais",
+    "objectives": {
+      "qualifiers": "Classificar com folga",
+      "continental": "Fazer semifinal continental",
+      "world": "Fazer semifinal da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "COL",
+    "name": "Colômbia",
+    "flag": "🇨🇴",
+    "confederation": "CONMEBOL",
+    "fifaRank": 13,
+    "overall": 83,
+    "unlockScore": 1200,
+    "unlockTier": "Tradicionais",
+    "objectives": {
+      "qualifiers": "Classificar com folga",
+      "continental": "Fazer semifinal continental",
+      "world": "Fazer semifinal da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "SEN",
+    "name": "Senegal",
+    "flag": "🇸🇳",
+    "confederation": "CAF",
+    "fifaRank": 14,
+    "overall": 82,
+    "unlockScore": 1200,
+    "unlockTier": "Tradicionais",
+    "objectives": {
+      "qualifiers": "Classificar com folga",
+      "continental": "Fazer semifinal continental",
+      "world": "Fazer semifinal da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "MEX",
+    "name": "México",
+    "flag": "🇲🇽",
+    "confederation": "CONCACAF",
+    "fifaRank": 15,
+    "overall": 81,
+    "unlockScore": 1200,
+    "unlockTier": "Tradicionais",
+    "objectives": {
+      "qualifiers": "Classificar com folga",
+      "continental": "Fazer semifinal continental",
+      "world": "Fazer semifinal da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "USA",
+    "name": "Estados Unidos",
+    "flag": "🇺🇸",
+    "confederation": "CONCACAF",
+    "fifaRank": 16,
+    "overall": 81,
+    "unlockScore": 750,
+    "unlockTier": "Competitivas",
+    "objectives": {
+      "qualifiers": "Classificar sem sustos",
+      "continental": "Chegar ao mata-mata principal",
+      "world": "Quartas de final da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "URU",
+    "name": "Uruguai",
+    "flag": "🇺🇾",
+    "confederation": "CONMEBOL",
+    "fifaRank": 17,
+    "overall": 82,
+    "unlockScore": 750,
+    "unlockTier": "Competitivas",
+    "objectives": {
+      "qualifiers": "Classificar sem sustos",
+      "continental": "Chegar ao mata-mata principal",
+      "world": "Quartas de final da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "JPN",
+    "name": "Japão",
+    "flag": "🇯🇵",
+    "confederation": "AFC",
+    "fifaRank": 18,
+    "overall": 81,
+    "unlockScore": 750,
+    "unlockTier": "Competitivas",
+    "objectives": {
+      "qualifiers": "Classificar sem sustos",
+      "continental": "Chegar ao mata-mata principal",
+      "world": "Quartas de final da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "SUI",
+    "name": "Suíça",
+    "flag": "🇨🇭",
+    "confederation": "UEFA",
+    "fifaRank": 19,
+    "overall": 80,
+    "unlockScore": 750,
+    "unlockTier": "Competitivas",
+    "objectives": {
+      "qualifiers": "Classificar sem sustos",
+      "continental": "Chegar ao mata-mata principal",
+      "world": "Quartas de final da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "DEN",
+    "name": "Dinamarca",
+    "flag": "🇩🇰",
+    "confederation": "UEFA",
+    "fifaRank": 20,
+    "overall": 80,
+    "unlockScore": 750,
+    "unlockTier": "Competitivas",
+    "objectives": {
+      "qualifiers": "Classificar sem sustos",
+      "continental": "Chegar ao mata-mata principal",
+      "world": "Quartas de final da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "IRN",
+    "name": "Irã",
+    "flag": "🇮🇷",
+    "confederation": "AFC",
+    "fifaRank": 21,
+    "overall": 79,
+    "unlockScore": 750,
+    "unlockTier": "Competitivas",
+    "objectives": {
+      "qualifiers": "Classificar sem sustos",
+      "continental": "Chegar ao mata-mata principal",
+      "world": "Quartas de final da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "TUR",
+    "name": "Turquia",
+    "flag": "🇹🇷",
+    "confederation": "UEFA",
+    "fifaRank": 22,
+    "overall": 79,
+    "unlockScore": 750,
+    "unlockTier": "Competitivas",
+    "objectives": {
+      "qualifiers": "Classificar sem sustos",
+      "continental": "Chegar ao mata-mata principal",
+      "world": "Quartas de final da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "ECU",
+    "name": "Equador",
+    "flag": "🇪🇨",
+    "confederation": "CONMEBOL",
+    "fifaRank": 23,
+    "overall": 79,
+    "unlockScore": 750,
+    "unlockTier": "Competitivas",
+    "objectives": {
+      "qualifiers": "Classificar sem sustos",
+      "continental": "Chegar ao mata-mata principal",
+      "world": "Quartas de final da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "AUT",
+    "name": "Áustria",
+    "flag": "🇦🇹",
+    "confederation": "UEFA",
+    "fifaRank": 24,
+    "overall": 79,
+    "unlockScore": 750,
+    "unlockTier": "Competitivas",
+    "objectives": {
+      "qualifiers": "Classificar sem sustos",
+      "continental": "Chegar ao mata-mata principal",
+      "world": "Quartas de final da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "KOR",
+    "name": "Coreia do Sul",
+    "flag": "🇰🇷",
+    "confederation": "AFC",
+    "fifaRank": 25,
+    "overall": 78,
+    "unlockScore": 350,
+    "unlockTier": "Emergentes",
+    "objectives": {
+      "qualifiers": "Brigar pela vaga",
+      "continental": "Quartas do torneio continental",
+      "world": "Chegar ao mata-mata da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "NGA",
+    "name": "Nigéria",
+    "flag": "🇳🇬",
+    "confederation": "CAF",
+    "fifaRank": 26,
+    "overall": 78,
+    "unlockScore": 350,
+    "unlockTier": "Emergentes",
+    "objectives": {
+      "qualifiers": "Brigar pela vaga",
+      "continental": "Quartas do torneio continental",
+      "world": "Chegar ao mata-mata da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "AUS",
+    "name": "Austrália",
+    "flag": "🇦🇺",
+    "confederation": "AFC",
+    "fifaRank": 27,
+    "overall": 78,
+    "unlockScore": 350,
+    "unlockTier": "Emergentes",
+    "objectives": {
+      "qualifiers": "Brigar pela vaga",
+      "continental": "Quartas do torneio continental",
+      "world": "Chegar ao mata-mata da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "ALG",
+    "name": "Argélia",
+    "flag": "🇩🇿",
+    "confederation": "CAF",
+    "fifaRank": 28,
+    "overall": 77,
+    "unlockScore": 350,
+    "unlockTier": "Emergentes",
+    "objectives": {
+      "qualifiers": "Brigar pela vaga",
+      "continental": "Quartas do torneio continental",
+      "world": "Chegar ao mata-mata da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "EGY",
+    "name": "Egito",
+    "flag": "🇪🇬",
+    "confederation": "CAF",
+    "fifaRank": 29,
+    "overall": 77,
+    "unlockScore": 350,
+    "unlockTier": "Emergentes",
+    "objectives": {
+      "qualifiers": "Brigar pela vaga",
+      "continental": "Quartas do torneio continental",
+      "world": "Chegar ao mata-mata da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "CAN",
+    "name": "Canadá",
+    "flag": "🇨🇦",
+    "confederation": "CONCACAF",
+    "fifaRank": 30,
+    "overall": 77,
+    "unlockScore": 350,
+    "unlockTier": "Emergentes",
+    "objectives": {
+      "qualifiers": "Brigar pela vaga",
+      "continental": "Quartas do torneio continental",
+      "world": "Chegar ao mata-mata da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "NOR",
+    "name": "Noruega",
+    "flag": "🇳🇴",
+    "confederation": "UEFA",
+    "fifaRank": 31,
+    "overall": 77,
+    "unlockScore": 350,
+    "unlockTier": "Emergentes",
+    "objectives": {
+      "qualifiers": "Brigar pela vaga",
+      "continental": "Quartas do torneio continental",
+      "world": "Chegar ao mata-mata da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "UKR",
+    "name": "Ucrânia",
+    "flag": "🇺🇦",
+    "confederation": "UEFA",
+    "fifaRank": 32,
+    "overall": 76,
+    "unlockScore": 350,
+    "unlockTier": "Emergentes",
+    "objectives": {
+      "qualifiers": "Brigar pela vaga",
+      "continental": "Quartas do torneio continental",
+      "world": "Chegar ao mata-mata da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "PAN",
+    "name": "Panamá",
+    "flag": "🇵🇦",
+    "confederation": "CONCACAF",
+    "fifaRank": 33,
+    "overall": 76,
+    "unlockScore": 350,
+    "unlockTier": "Emergentes",
+    "objectives": {
+      "qualifiers": "Brigar pela vaga",
+      "continental": "Quartas do torneio continental",
+      "world": "Chegar ao mata-mata da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "CIV",
+    "name": "Costa do Marfim",
+    "flag": "🇨🇮",
+    "confederation": "CAF",
+    "fifaRank": 34,
+    "overall": 76,
+    "unlockScore": 350,
+    "unlockTier": "Emergentes",
+    "objectives": {
+      "qualifiers": "Brigar pela vaga",
+      "continental": "Quartas do torneio continental",
+      "world": "Chegar ao mata-mata da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "POL",
+    "name": "Polônia",
+    "flag": "🇵🇱",
+    "confederation": "UEFA",
+    "fifaRank": 35,
+    "overall": 76,
+    "unlockScore": 350,
+    "unlockTier": "Emergentes",
+    "objectives": {
+      "qualifiers": "Brigar pela vaga",
+      "continental": "Quartas do torneio continental",
+      "world": "Chegar ao mata-mata da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "RUS",
+    "name": "Rússia",
+    "flag": "🇷🇺",
+    "confederation": "UEFA",
+    "fifaRank": 36,
+    "overall": 76,
+    "unlockScore": 350,
+    "unlockTier": "Emergentes",
+    "objectives": {
+      "qualifiers": "Brigar pela vaga",
+      "continental": "Quartas do torneio continental",
+      "world": "Chegar ao mata-mata da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "WAL",
+    "name": "País de Gales",
+    "flag": "🏴",
+    "confederation": "UEFA",
+    "fifaRank": 37,
+    "overall": 75,
+    "unlockScore": 350,
+    "unlockTier": "Emergentes",
+    "objectives": {
+      "qualifiers": "Brigar pela vaga",
+      "continental": "Quartas do torneio continental",
+      "world": "Chegar ao mata-mata da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "SWE",
+    "name": "Suécia",
+    "flag": "🇸🇪",
+    "confederation": "UEFA",
+    "fifaRank": 38,
+    "overall": 75,
+    "unlockScore": 350,
+    "unlockTier": "Emergentes",
+    "objectives": {
+      "qualifiers": "Brigar pela vaga",
+      "continental": "Quartas do torneio continental",
+      "world": "Chegar ao mata-mata da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "SRB",
+    "name": "Sérvia",
+    "flag": "🇷🇸",
+    "confederation": "UEFA",
+    "fifaRank": 39,
+    "overall": 75,
+    "unlockScore": 350,
+    "unlockTier": "Emergentes",
+    "objectives": {
+      "qualifiers": "Brigar pela vaga",
+      "continental": "Quartas do torneio continental",
+      "world": "Chegar ao mata-mata da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "PAR",
+    "name": "Paraguai",
+    "flag": "🇵🇾",
+    "confederation": "CONMEBOL",
+    "fifaRank": 40,
+    "overall": 75,
+    "unlockScore": 350,
+    "unlockTier": "Emergentes",
+    "objectives": {
+      "qualifiers": "Brigar pela vaga",
+      "continental": "Quartas do torneio continental",
+      "world": "Chegar ao mata-mata da Copa"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "CZE",
+    "name": "Tchéquia",
+    "flag": "🇨🇿",
+    "confederation": "UEFA",
+    "fifaRank": 41,
+    "overall": 74,
+    "unlockScore": 0,
+    "unlockTier": "Desafio Inicial",
+    "objectives": {
+      "qualifiers": "Buscar classificação histórica",
+      "continental": "Passar da fase de grupos",
+      "world": "Competir acima do ranking"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "HUN",
+    "name": "Hungria",
+    "flag": "🇭🇺",
+    "confederation": "UEFA",
+    "fifaRank": 42,
+    "overall": 74,
+    "unlockScore": 0,
+    "unlockTier": "Desafio Inicial",
+    "objectives": {
+      "qualifiers": "Buscar classificação histórica",
+      "continental": "Passar da fase de grupos",
+      "world": "Competir acima do ranking"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "SCO",
+    "name": "Escócia",
+    "flag": "🏴",
+    "confederation": "UEFA",
+    "fifaRank": 43,
+    "overall": 74,
+    "unlockScore": 0,
+    "unlockTier": "Desafio Inicial",
+    "objectives": {
+      "qualifiers": "Buscar classificação histórica",
+      "continental": "Passar da fase de grupos",
+      "world": "Competir acima do ranking"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "TUN",
+    "name": "Tunísia",
+    "flag": "🇹🇳",
+    "confederation": "CAF",
+    "fifaRank": 44,
+    "overall": 74,
+    "unlockScore": 0,
+    "unlockTier": "Desafio Inicial",
+    "objectives": {
+      "qualifiers": "Buscar classificação histórica",
+      "continental": "Passar da fase de grupos",
+      "world": "Competir acima do ranking"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "CMR",
+    "name": "Camarões",
+    "flag": "🇨🇲",
+    "confederation": "CAF",
+    "fifaRank": 45,
+    "overall": 74,
+    "unlockScore": 0,
+    "unlockTier": "Desafio Inicial",
+    "objectives": {
+      "qualifiers": "Buscar classificação histórica",
+      "continental": "Passar da fase de grupos",
+      "world": "Competir acima do ranking"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "COD",
+    "name": "RD Congo",
+    "flag": "🇨🇩",
+    "confederation": "CAF",
+    "fifaRank": 46,
+    "overall": 73,
+    "unlockScore": 0,
+    "unlockTier": "Desafio Inicial",
+    "objectives": {
+      "qualifiers": "Buscar classificação histórica",
+      "continental": "Passar da fase de grupos",
+      "world": "Competir acima do ranking"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "GRE",
+    "name": "Grécia",
+    "flag": "🇬🇷",
+    "confederation": "UEFA",
+    "fifaRank": 47,
+    "overall": 73,
+    "unlockScore": 0,
+    "unlockTier": "Desafio Inicial",
+    "objectives": {
+      "qualifiers": "Buscar classificação histórica",
+      "continental": "Passar da fase de grupos",
+      "world": "Competir acima do ranking"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "SVK",
+    "name": "Eslováquia",
+    "flag": "🇸🇰",
+    "confederation": "UEFA",
+    "fifaRank": 48,
+    "overall": 73,
+    "unlockScore": 0,
+    "unlockTier": "Desafio Inicial",
+    "objectives": {
+      "qualifiers": "Buscar classificação histórica",
+      "continental": "Passar da fase de grupos",
+      "world": "Competir acima do ranking"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "VEN",
+    "name": "Venezuela",
+    "flag": "🇻🇪",
+    "confederation": "CONMEBOL",
+    "fifaRank": 49,
+    "overall": 73,
+    "unlockScore": 0,
+    "unlockTier": "Desafio Inicial",
+    "objectives": {
+      "qualifiers": "Buscar classificação histórica",
+      "continental": "Passar da fase de grupos",
+      "world": "Competir acima do ranking"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "UZB",
+    "name": "Uzbequistão",
+    "flag": "🇺🇿",
+    "confederation": "AFC",
+    "fifaRank": 50,
+    "overall": 73,
+    "unlockScore": 0,
+    "unlockTier": "Desafio Inicial",
+    "objectives": {
+      "qualifiers": "Buscar classificação histórica",
+      "continental": "Passar da fase de grupos",
+      "world": "Competir acima do ranking"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "QAT",
+    "name": "Catar",
+    "flag": "🇶🇦",
+    "confederation": "AFC",
+    "fifaRank": 55,
+    "overall": 72,
+    "unlockScore": 0,
+    "unlockTier": "Desafio Inicial",
+    "objectives": {
+      "qualifiers": "Buscar classificação histórica",
+      "continental": "Passar da fase de grupos",
+      "world": "Competir acima do ranking"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "IRQ",
+    "name": "Iraque",
+    "flag": "🇮🇶",
+    "confederation": "AFC",
+    "fifaRank": 57,
+    "overall": 72,
+    "unlockScore": 0,
+    "unlockTier": "Desafio Inicial",
+    "objectives": {
+      "qualifiers": "Buscar classificação histórica",
+      "continental": "Passar da fase de grupos",
+      "world": "Competir acima do ranking"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "RSA",
+    "name": "África do Sul",
+    "flag": "🇿🇦",
+    "confederation": "CAF",
+    "fifaRank": 60,
+    "overall": 71,
+    "unlockScore": 0,
+    "unlockTier": "Desafio Inicial",
+    "objectives": {
+      "qualifiers": "Buscar classificação histórica",
+      "continental": "Passar da fase de grupos",
+      "world": "Competir acima do ranking"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "KSA",
+    "name": "Arábia Saudita",
+    "flag": "🇸🇦",
+    "confederation": "AFC",
+    "fifaRank": 61,
+    "overall": 71,
+    "unlockScore": 0,
+    "unlockTier": "Desafio Inicial",
+    "objectives": {
+      "qualifiers": "Buscar classificação histórica",
+      "continental": "Passar da fase de grupos",
+      "world": "Competir acima do ranking"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "JOR",
+    "name": "Jordânia",
+    "flag": "🇯🇴",
+    "confederation": "AFC",
+    "fifaRank": 63,
+    "overall": 70,
+    "unlockScore": 0,
+    "unlockTier": "Desafio Inicial",
+    "objectives": {
+      "qualifiers": "Buscar classificação histórica",
+      "continental": "Passar da fase de grupos",
+      "world": "Competir acima do ranking"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "BIH",
+    "name": "Bósnia e Herzegovina",
+    "flag": "🇧🇦",
+    "confederation": "UEFA",
+    "fifaRank": 65,
+    "overall": 70,
+    "unlockScore": 0,
+    "unlockTier": "Desafio Inicial",
+    "objectives": {
+      "qualifiers": "Buscar classificação histórica",
+      "continental": "Passar da fase de grupos",
+      "world": "Competir acima do ranking"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "CPV",
+    "name": "Cabo Verde",
+    "flag": "🇨🇻",
+    "confederation": "CAF",
+    "fifaRank": 69,
+    "overall": 69,
+    "unlockScore": 0,
+    "unlockTier": "Desafio Inicial",
+    "objectives": {
+      "qualifiers": "Buscar classificação histórica",
+      "continental": "Passar da fase de grupos",
+      "world": "Competir acima do ranking"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "GHA",
+    "name": "Gana",
+    "flag": "🇬🇭",
+    "confederation": "CAF",
+    "fifaRank": 74,
+    "overall": 69,
+    "unlockScore": 0,
+    "unlockTier": "Desafio Inicial",
+    "objectives": {
+      "qualifiers": "Buscar classificação histórica",
+      "continental": "Passar da fase de grupos",
+      "world": "Competir acima do ranking"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "CUW",
+    "name": "Curaçao",
+    "flag": "🇨🇼",
+    "confederation": "CONCACAF",
+    "fifaRank": 82,
+    "overall": 68,
+    "unlockScore": 0,
+    "unlockTier": "Desafio Inicial",
+    "objectives": {
+      "qualifiers": "Buscar classificação histórica",
+      "continental": "Passar da fase de grupos",
+      "world": "Competir acima do ranking"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "HTI",
+    "name": "Haiti",
+    "flag": "🇭🇹",
+    "confederation": "CONCACAF",
+    "fifaRank": 83,
+    "overall": 68,
+    "unlockScore": 0,
+    "unlockTier": "Desafio Inicial",
+    "objectives": {
+      "qualifiers": "Buscar classificação histórica",
+      "continental": "Passar da fase de grupos",
+      "world": "Competir acima do ranking"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  },
+  {
+    "id": "NZL",
+    "name": "Nova Zelândia",
+    "flag": "🇳🇿",
+    "confederation": "OFC",
+    "fifaRank": 85,
+    "overall": 67,
+    "unlockScore": 0,
+    "unlockTier": "Desafio Inicial",
+    "objectives": {
+      "qualifiers": "Buscar classificação histórica",
+      "continental": "Passar da fase de grupos",
+      "world": "Competir acima do ranking"
+    },
+    "squadSlots": {
+      "GK": 3,
+      "DEF": 8,
+      "MID": 8,
+      "ATT": 4
+    }
+  }
+];
+
+function getNationalTeamById(id) {
+  return NATIONAL_TEAMS_2026.find((team) => team.id === id) || null;
+}
+
+function isNationalTeamUnlocked(team, careerScore) {
+  return Number(careerScore || 0) >= Number(team?.unlockScore || 0);
+}
+
+function selectionTierLabelByScore(score) {
+  const s = Number(score || 0);
+  if (s >= 2400) return 'Elite Global';
+  if (s >= 1700) return 'Potências';
+  if (s >= 1200) return 'Tradicionais';
+  if (s >= 750) return 'Competitivas';
+  if (s >= 350) return 'Emergentes';
+  return 'Desafio Inicial';
+}
+
+function nextSelectionUnlock(score) {
+  const s = Number(score || 0);
+  const next = SELECTION_UNLOCK_STEPS.find((step) => step > s);
+  if (next === undefined) return null;
+  return { score: next, label: SELECTION_UNLOCK_LABELS[next] || 'Próximo nível' };
+}
+
+function unlockedNationalTeamsCount(score) {
+  return NATIONAL_TEAMS_2026.filter((team) => isNationalTeamUnlocked(team, score)).length;
+}
+
+function makeSelectionRecord(team) {
+  if (!team) return null;
+  return {
+    teamId: team.id,
+    nation: team.name,
+    flag: team.flag,
+    confederation: team.confederation,
+    fifaRank: team.fifaRank,
+    overall: team.overall,
+    unlockScore: team.unlockScore,
+    unlockTier: team.unlockTier,
+    objectives: team.objectives,
+    squadSlots: team.squadSlots,
+    appointedAt: nowIso(),
+    history: []
+  };
+}
+
 const CAREER_SCORE_RULES = {
   WIN: 10,
   DRAW: 3,
@@ -130,6 +1473,33 @@ function computeReputationTier(score) {
   if (s >= 300) return 'PROMISSOR';
   return 'INICIANTE';
 }
+
+function selectionStatusBadge(team, careerScore) {
+  if (!team) return 'Sem seleção';
+  if (isNationalTeamUnlocked(team, careerScore)) return 'Disponível';
+  const missing = Math.max(0, Number(team.unlockScore || 0) - Number(careerScore || 0));
+  return `Faltam ${missing} pontos`;
+}
+
+function renderSelectionObjectiveList(team) {
+  if (!team?.objectives) return '';
+  return `
+    <div class="vfm-selection-objectives">
+      <div class="vfm-selection-objective"><span>Eliminatórias</span><b>${esc(team.objectives.qualifiers || '—')}</b></div>
+      <div class="vfm-selection-objective"><span>Continental</span><b>${esc(team.objectives.continental || '—')}</b></div>
+      <div class="vfm-selection-objective"><span>Mundial</span><b>${esc(team.objectives.world || '—')}</b></div>
+    </div>
+  `;
+}
+
+function buildSelectionSummary(team, careerScore) {
+  if (!team) return 'Nenhuma seleção assumida';
+  const lockText = isNationalTeamUnlocked(team, careerScore)
+    ? 'Liberada na sua carreira'
+    : `Bloqueada até ${team.unlockScore} pontos`;
+  return `${team.flag} ${team.name} • FIFA #${team.fifaRank} • OVR ${team.overall} • ${lockText}`;
+}
+
 function addCareerScore(save, points, reason) {
   if (!save?.career) return;
   if (!save.career.careerScore && save.career.careerScore !== 0) save.career.careerScore = 0;
@@ -1444,6 +2814,7 @@ function forceSyncSaveRosterFromPack(save){
     "/club-pick": viewClubPick,
     "/tutorial": viewTutorial,
     "/hub": viewHub,
+    "/selection": viewSelection,
     "/roster-update": viewRosterUpdate,
     "/squad": viewSquad,
     "/tactics": viewTactics,
@@ -1682,6 +3053,22 @@ function applyBackground(path) {
     }
     if (!save.progress) save.progress = {};
     if (!save.progress.leagueTables) save.progress.leagueTables = {};
+
+    if (!save.selection) save.selection = {};
+    if (!Array.isArray(save.selection.history)) save.selection.history = [];
+    save.selection.availableTier = selectionTierLabelByScore(save.career.careerScore);
+    const currentSelection = getNationalTeamById(save.selection.teamId);
+    if (currentSelection) {
+      save.selection.nation = currentSelection.name;
+      save.selection.flag = currentSelection.flag;
+      save.selection.confederation = currentSelection.confederation;
+      save.selection.fifaRank = currentSelection.fifaRank;
+      save.selection.overall = currentSelection.overall;
+      save.selection.unlockScore = currentSelection.unlockScore;
+      save.selection.unlockTier = currentSelection.unlockTier;
+      save.selection.objectives = currentSelection.objectives;
+      save.selection.squadSlots = currentSelection.squadSlots;
+    }
 
     if (!Array.isArray(save.squad.players) || save.squad.players.length === 0) {
       save.squad.players = generateSquadForClub(save.career.clubId);
@@ -2496,6 +3883,11 @@ function viewCareerCreate() {
               <b>${esc(sponsorName)}</b>
             </div>
 
+            <div class="kv">
+              <span class="small">Seleção Atual</span>
+              <b>${esc(buildSelectionSummary(getNationalTeamById(save.selection?.teamId), save.career?.careerScore || 0))}</b>
+            </div>
+
 <div class="kv">
   <span class="small">Meta da Temporada</span>
   <b>${esc(save.career.objective?.label || '—')}</b>
@@ -2579,6 +3971,21 @@ function viewCareerCreate() {
         </div>
       </div>
       <div class="hub-cta">Ver</div>
+    </div>
+  </div>
+
+  <div class="hub-card" data-go="/selection">
+    <div class="hub-bg" style="background-image:url('${urlOf('assets/photos/photo_match.png')}')"></div>
+    <div class="hub-overlay"></div>
+    <div class="hub-content">
+      <div class="hub-left">
+        <div class="hub-pill">🌍</div>
+        <div>
+          <div class="hub-title">Modo Seleção</div>
+          <div class="hub-desc">Assuma seleções destravadas pelo seu Career Score</div>
+        </div>
+      </div>
+      <div class="hub-cta">Abrir</div>
     </div>
   </div>
 
@@ -2741,6 +4148,141 @@ function viewCareerCreate() {
       `;
     });
   }
+  function viewSelection() {
+    return requireSave((save) => {
+      ensureSystems(save);
+      const careerScore = Number(save.career?.careerScore || 0);
+      const currentTeam = getNationalTeamById(save.selection?.teamId);
+      const total = NATIONAL_TEAMS_2026.length;
+      const unlocked = NATIONAL_TEAMS_2026.filter((team) => isNationalTeamUnlocked(team, careerScore));
+      const nextUnlock = nextSelectionUnlock(careerScore);
+      const steps = SELECTION_UNLOCK_STEPS.map((step) => {
+        const active = careerScore >= step ? 'active' : '';
+        const missing = Math.max(0, step - careerScore);
+        return `
+          <div class="vfm-selection-step ${active}">
+            <div class="vfm-selection-step-score">${step}</div>
+            <div class="vfm-selection-step-label">${esc(SELECTION_UNLOCK_LABELS[step])}</div>
+            <div class="vfm-selection-step-small">${careerScore >= step ? 'Liberado' : `Faltam ${missing}`}</div>
+          </div>
+        `;
+      }).join('');
+
+      const sections = SELECTION_UNLOCK_STEPS.slice().reverse().map((unlockScore) => {
+        const teams = NATIONAL_TEAMS_2026.filter((team) => Number(team.unlockScore || 0) === Number(unlockScore));
+        if (!teams.length) return '';
+        const items = teams.map((team) => {
+          const unlockedNow = isNationalTeamUnlocked(team, careerScore);
+          const isCurrent = currentTeam && currentTeam.id === team.id;
+          const disabled = unlockedNow ? '' : 'disabled';
+          const actionLabel = isCurrent ? 'Ativa' : 'Assumir';
+          const missing = Math.max(0, Number(team.unlockScore || 0) - careerScore);
+          return `
+            <div class="vfm-selection-team ${unlockedNow ? '' : 'locked'} ${isCurrent ? 'current' : ''}">
+              <div class="vfm-selection-team-head">
+                <div class="vfm-selection-flag">${esc(team.flag)}</div>
+                <div>
+                  <div class="vfm-selection-name">${esc(team.name)}</div>
+                  <div class="vfm-selection-meta">${esc(team.confederation)} • FIFA #${esc(String(team.fifaRank))}</div>
+                </div>
+              </div>
+              <div class="vfm-selection-stats">
+                <span class="badge">OVR ${esc(String(team.overall))}</span>
+                <span class="badge">${esc(team.unlockTier)}</span>
+                <span class="badge">Libera em ${esc(String(team.unlockScore))}</span>
+              </div>
+              <div class="vfm-selection-copy">${esc(team.objectives.world || '')}</div>
+              <div class="vfm-selection-lock">${unlockedNow ? 'Disponível agora' : `Faltam ${missing} pontos`}</div>
+              <div class="vfm-selection-actions">
+                <button class="btn btn-primary" ${disabled} data-action="takeSelectionJob" data-selection="${esc(team.id)}">${actionLabel}</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+        return `
+          <section class="vfm-selection-section">
+            <div class="vfm-selection-section-head">
+              <div>
+                <div class="vfm-selection-section-title">${esc(SELECTION_UNLOCK_LABELS[unlockScore] || 'Nível')}</div>
+                <div class="vfm-selection-section-sub">Career Score mínimo: ${esc(String(unlockScore))}</div>
+              </div>
+              <span class="badge">${teams.length} seleções</span>
+            </div>
+            <div class="vfm-selection-team-grid">${items}</div>
+          </section>
+        `;
+      }).join('');
+
+      return `
+        <div class="card vfm-selection-route" data-vfm-selection-route="1">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Modo Seleção • Progressão Mundial</div>
+              <div class="card-subtitle">61 seleções organizadas por tiers de desbloqueio com base no seu Career Score.</div>
+            </div>
+            <span class="badge">Build ${BUILD_TAG}</span>
+          </div>
+          <div class="card-body">
+            <section class="vfm-selection-hero">
+              <div class="vfm-selection-hero-main">
+                <div class="vfm-selection-hero-score">
+                  <div class="vfm-selection-hero-label">Career Score</div>
+                  <div class="vfm-selection-hero-value">${esc(String(careerScore))}</div>
+                  <div class="vfm-selection-hero-sub">Tier atual: ${esc(selectionTierLabelByScore(careerScore))}</div>
+                </div>
+                <div class="vfm-selection-hero-score">
+                  <div class="vfm-selection-hero-label">Seleções liberadas</div>
+                  <div class="vfm-selection-hero-value">${esc(String(unlocked.length))}/${esc(String(total))}</div>
+                  <div class="vfm-selection-hero-sub">Próximo salto: ${nextUnlock ? `${nextUnlock.label} em ${nextUnlock.score}` : 'catálogo completo desbloqueado'}</div>
+                </div>
+              </div>
+              <div class="vfm-selection-hero-current">
+                ${currentTeam ? `
+                  <div class="vfm-selection-current-head">
+                    <div class="vfm-selection-current-flag">${esc(currentTeam.flag)}</div>
+                    <div>
+                      <div class="vfm-selection-current-name">${esc(currentTeam.name)}</div>
+                      <div class="vfm-selection-current-meta">${esc(currentTeam.confederation)} • FIFA #${esc(String(currentTeam.fifaRank))} • OVR ${esc(String(currentTeam.overall))}</div>
+                    </div>
+                  </div>
+                  ${renderSelectionObjectiveList(currentTeam)}
+                  <div class="vfm-selection-slot-row">
+                    <span class="badge">${esc(String(currentTeam.squadSlots.GK))} GKs</span>
+                    <span class="badge">${esc(String(currentTeam.squadSlots.DEF))} DEF</span>
+                    <span class="badge">${esc(String(currentTeam.squadSlots.MID))} MID</span>
+                    <span class="badge">${esc(String(currentTeam.squadSlots.ATT))} ATT</span>
+                  </div>
+                  <div class="vfm-selection-note">Nesta build o sistema já libera e persiste a seleção escolhida; a próxima etapa será preencher convocações reais 2026 e calendário internacional completo.</div>
+                  <div class="vfm-selection-actions">
+                    <button class="btn" data-action="resignSelectionJob">Sair da seleção</button>
+                  </div>
+                ` : `
+                  <div class="vfm-selection-empty">
+                    <div class="vfm-selection-current-name">Nenhuma seleção assumida</div>
+                    <div class="vfm-selection-current-meta">Escolha uma seleção liberada abaixo. As mais fortes pedem mais score acumulado na carreira.</div>
+                  </div>
+                `}
+              </div>
+            </section>
+
+            <div class="vfm-selection-steps">${steps}</div>
+
+            <div class="notice">
+              Ratings das seleções foram balanceados para gameplay usando a ordem do ranking FIFA masculino de 1º de abril de 2026 como base principal e faixas típicas de jogos de futebol para transformar ranking em overall jogável.
+            </div>
+            <div class="sep"></div>
+            ${sections}
+            <div class="sep"></div>
+            <div class="row">
+              <button class="btn" data-go="/hub">Voltar ao HUB</button>
+              <button class="btn" data-go="/career">Ver Carreira</button>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+  }
+
   function viewCareer() {
     return requireSave((save) => {
       ensureSystems(save);
@@ -7023,6 +8565,62 @@ if (action === 'setCoachStyle') {
   });
 }
 
+if (action === 'takeSelectionJob') {
+        el.addEventListener('click', () => {
+          const save = activeSave();
+          if (!save) return;
+          ensureSystems(save);
+          const teamId = el.getAttribute('data-selection');
+          const team = getNationalTeamById(teamId);
+          if (!team) return;
+          const careerScore = Number(save.career?.careerScore || 0);
+          if (!isNationalTeamUnlocked(team, careerScore)) {
+            toast(`Seleção bloqueada. Faltam ${Math.max(0, team.unlockScore - careerScore)} pontos.`);
+            return;
+          }
+          const previous = getNationalTeamById(save.selection?.teamId);
+          const history = Array.isArray(save.selection?.history) ? save.selection.history.slice() : [];
+          save.selection = Object.assign({}, save.selection || {}, makeSelectionRecord(team), { history });
+          save.selection.history.push({
+            at: nowIso(),
+            action: previous ? 'swap' : 'take',
+            from: previous ? previous.name : null,
+            to: team.name
+          });
+          if (save.selection.history.length > 20) save.selection.history = save.selection.history.slice(-20);
+          save.meta.updatedAt = nowIso();
+          writeSlot(state.settings.activeSlotId, save);
+          toast(`Agora você comanda ${team.flag} ${team.name}`);
+          route();
+        });
+      }
+
+      if (action === 'resignSelectionJob') {
+        el.addEventListener('click', () => {
+          const save = activeSave();
+          if (!save) return;
+          ensureSystems(save);
+          const previous = getNationalTeamById(save.selection?.teamId);
+          if (previous && Array.isArray(save.selection.history)) {
+            save.selection.history.push({ at: nowIso(), action: 'resign', from: previous.name, to: null });
+          }
+          save.selection.teamId = null;
+          save.selection.nation = null;
+          save.selection.flag = null;
+          save.selection.confederation = null;
+          save.selection.fifaRank = null;
+          save.selection.overall = null;
+          save.selection.unlockScore = null;
+          save.selection.unlockTier = selectionTierLabelByScore(save.career?.careerScore || 0);
+          save.selection.objectives = null;
+          save.selection.squadSlots = null;
+          save.meta.updatedAt = nowIso();
+          writeSlot(state.settings.activeSlotId, save);
+          toast('Você deixou o comando da seleção.');
+          route();
+        });
+      }
+
 if (action === 'careerContinueToClub') {
         el.addEventListener('click', () => {
           const save = activeSave();
@@ -8429,78 +10027,11 @@ async function boot() {
   }
 
   function vfmV150InjectHubPanel(){
-    const hash = (location.hash || "").toLowerCase();
-    if (!hash.includes("hub")) return;
-    const host = document.querySelector(".hub-main, .hub-content, .screen-content, #app, main, body");
-    if (!host) return;
-
-    const old = document.getElementById("vfm-v150-panel");
-    if (old) old.remove();
-
-    const save = vfmV150Save();
-    const club = save.clubName || (save.club && save.club.name) || save.teamName || "Seu Clube";
-    const rep = (save.career && save.career.reputation) || save.reputation || "Iniciante";
-    const season = (save.season && (save.season.yearLabel || save.season.label || save.season.year)) || "2025_2026";
-
-    const panel = document.createElement("section");
-    panel.id = "vfm-v150-panel";
-    panel.className = "vfm-v150-panel";
-    panel.innerHTML = `
-      <div class="vfm-v150-title">v1.50 Foundation Ativa</div>
-      <div class="vfm-v150-subtitle">${club} • Build v1.50.0_global_database_foundation</div>
-      <div class="vfm-v150-chips">
-        <div class="vfm-v150-chip">Reputação: ${rep}</div>
-        <div class="vfm-v150-chip">Temporada: ${season}</div>
-        <div class="vfm-v150-chip">Base 2026 expandida</div>
-        <div class="vfm-v150-chip">Modo Seleção: fundação</div>
-      </div>
-      <div class="vfm-v150-grid">
-        <div class="vfm-v150-card">
-          <div class="vfm-v150-label">Global Database</div>
-          <div class="vfm-v150-value">South America 2026</div>
-          <div class="vfm-v150-small">Estrutura pronta para expansão de clubes, ligas, competições e ecossistema continental.</div>
-        </div>
-        <div class="vfm-v150-card">
-          <div class="vfm-v150-label">Modo Seleção</div>
-          <div class="vfm-v150-value">Foundation</div>
-          <div class="vfm-v150-small">Base visual e estrutural preparada para convocação, torneios e calendário paralelo clube + seleção.</div>
-        </div>
-      </div>
-    `;
-    if (host.firstChild) host.insertBefore(panel, host.firstChild);
-    else host.appendChild(panel);
+    return;
   }
 
   function vfmV150InjectSelectionRoute(){
-    const hash = (location.hash || "").toLowerCase();
-    if (!(hash.includes("selection") || hash.includes("selecao") || hash.includes("dlc"))) return;
-    const host = document.querySelector(".screen-content, #app, main, body");
-    if (!host) return;
-
-    const old = document.getElementById("vfm-v150-selection-panel");
-    if (old) old.remove();
-
-    const panel = document.createElement("section");
-    panel.id = "vfm-v150-selection-panel";
-    panel.className = "vfm-v150-panel";
-    panel.innerHTML = `
-      <div class="vfm-v150-title">Modo Seleção • Fundação</div>
-      <div class="vfm-v150-subtitle">Convocações, objetivos da federação e torneios internacionais em preparação.</div>
-      <div class="vfm-v150-grid">
-        <div class="vfm-v150-card">
-          <div class="vfm-v150-label">Calendário paralelo</div>
-          <div class="vfm-v150-value">Clube + Seleção</div>
-          <div class="vfm-v150-small">Estrutura preparada para conviver com a temporada principal sem quebrar o save atual.</div>
-        </div>
-        <div class="vfm-v150-card">
-          <div class="vfm-v150-label">Competições</div>
-          <div class="vfm-v150-value">Eliminatórias + Continental + Mundial</div>
-          <div class="vfm-v150-small">Base pronta para evolução nas próximas builds.</div>
-        </div>
-      </div>
-    `;
-    if (host.firstChild) host.insertBefore(panel, host.firstChild);
-    else host.appendChild(panel);
+    return;
   }
 
   function vfmV150Run(){
@@ -8784,8 +10315,8 @@ async function boot() {
 
 /* VFM_V152_SELECTION_MODE_ALPHA_PATCH */
 (function(){
-  const V152_BUILD = "v1.52.0_selection_mode_alpha";
-  const V152_TIME = "2026-04-11 16:21:54 UTC";
+  const V152_BUILD = "v1.53.0_selection_progression_world_2026";
+  const V152_TIME = "2026-04-13 18:05:00 UTC";
 
   function v152Save(){
     try {
@@ -8816,7 +10347,7 @@ async function boot() {
     return `
       <section class="vfm-v152-panel" id="vfm-v152-panel">
         <h2 class="vfm-v152-title">Modo Seleção Alpha</h2>
-        <div class="vfm-v152-subtitle">${nation} • Build v1.52.0_selection_mode_alpha</div>
+        <div class="vfm-v152-subtitle">${nation} • Build v1.53.0_selection_progression_world_2026</div>
         <div class="vfm-v152-grid">
           <div class="vfm-v152-card">
             <div class="vfm-v152-label">Objetivos da federação</div>
@@ -8844,17 +10375,7 @@ async function boot() {
   }
 
   function v152Inject(){
-    const hash = (location.hash || "").toLowerCase();
-    if (!(hash.includes("selection") || hash.includes("selecao") || hash.includes("dlc") || hash.includes("hub"))) return;
-    const host = document.querySelector(".screen-content, .hub-content, #app, main, body");
-    if (!host) return;
-    const old = document.getElementById("vfm-v152-panel");
-    if (old) old.remove();
-    const wrap = document.createElement("div");
-    wrap.innerHTML = v152SelectionMarkup(v152Save());
-    const node = wrap.firstElementChild;
-    if (host.firstChild) host.insertBefore(node, host.firstChild);
-    else host.appendChild(node);
+    return;
   }
 
   function v152Run(){
@@ -8867,4 +10388,236 @@ async function boot() {
   setTimeout(v152Run, 300);
   setTimeout(v152Run, 900);
   setTimeout(v152Run, 1800);
+})();
+
+
+/* VFM_V154_HUB_CLEAN_GAMEPLAY_FOCUS_PATCH */
+(function(){
+  const V154_BUILD = "v1.54.0_hub_clean_gameplay_focus";
+  const V154_TIME = "2026-04-13 19:20:00 UTC";
+
+  function v154Save(){
+    try {
+      return window.save || window.gameState || window.state || JSON.parse(localStorage.getItem("vfm_save") || localStorage.getItem("save") || "{}");
+    } catch(e) { return {}; }
+  }
+
+  function v154IsHub(){
+    const hash = String(location.hash || '').toLowerCase();
+    return hash.includes('/hub') || hash === '#hub' || hash.includes('hub');
+  }
+
+  function v154FixBuildBadge(){
+    const el = document.getElementById('buildBadge');
+    if (!el) return;
+    let dataText = '09/02/2026, 13:10:00';
+    try {
+      const raw = el.textContent || '';
+      const match = raw.match(/dados\s*([^\n]+)/i);
+      if (match && match[1]) dataText = match[1].trim();
+    } catch(e) {}
+    el.innerHTML = `
+      <div class="build-line"><b>build</b> ${V154_BUILD}</div>
+      <div class="build-line"><b>data</b> ${V154_TIME}</div>
+      <div class="build-line"><b>dados</b> ${dataText}</div>
+    `;
+  }
+
+  function v154EnsureStyles(){
+    if (document.getElementById('v154-clean-hub-styles')) return;
+    const style = document.createElement('style');
+    style.id = 'v154-clean-hub-styles';
+    style.textContent = `
+      body.route-hub #vfm-hub-hero,
+      body.route-hub #vfm-v152-panel,
+      body.route-hub .vfm-hub-hero,
+      body.route-hub .vfm-v152-panel,
+      body.route-hub .vfm-v150-panel,
+      body.route-hub [data-vfm-legacy='1'] { display:none !important; }
+
+      .v154-focus-wrap{ display:grid; grid-template-columns:1.2fr .9fr; gap:14px; margin:16px 0 18px; }
+      .v154-focus-card{ border:1px solid rgba(215,176,91,.18); border-radius:18px; padding:16px; background:linear-gradient(180deg, rgba(10,28,58,.92), rgba(6,17,36,.96)); box-shadow:0 14px 36px rgba(0,0,0,.24); }
+      .v154-focus-kicker{ font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:#9fb8da; margin-bottom:6px; }
+      .v154-focus-title{ font-size:24px; font-weight:800; color:#fff; margin:0 0 4px; }
+      .v154-focus-copy{ color:#dbe7f7; opacity:.9; line-height:1.45; }
+      .v154-chip-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+      .v154-chip{ padding:8px 10px; border-radius:999px; border:1px solid rgba(215,176,91,.22); background:rgba(255,255,255,.03); color:#fff; font-size:12px; }
+      .v154-cta-row{ display:flex; flex-wrap:wrap; gap:10px; margin-top:14px; }
+      .v154-mini-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
+      .v154-mini-item{ border-radius:14px; padding:12px; background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.06); }
+      .v154-mini-label{ color:#9fb8da; font-size:11px; text-transform:uppercase; letter-spacing:.12em; margin-bottom:4px; }
+      .v154-mini-value{ color:#fff; font-weight:700; }
+      .v154-section-label{ margin:16px 0 10px; font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:#9fb8da; }
+      .v154-hub-clean .card-subtitle{ line-height:1.5; }
+      .v154-hub-clean .hub-grid{ margin-top:8px; }
+      .v154-hub-clean .hub-card{ min-height:126px; }
+      .v154-hub-clean .hub-title{ font-size:22px; }
+      .v154-hub-clean .hub-desc{ max-width:34ch; }
+      @media (max-width: 980px){ .v154-focus-wrap{ grid-template-columns:1fr; } }
+      @media (max-width: 640px){ .v154-mini-grid{ grid-template-columns:1fr; } }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function v154RemoveLegacyPanels(){
+    if (!v154IsHub()) return;
+    const badPhrases = [
+      'Modo Seleção Alpha',
+      'Lobby Premium Ativo',
+      'South America 2026',
+      'Visual AAA consolidado',
+      'Modo Seleção fundação',
+      'global_database_foundation'
+    ];
+    Array.from(document.querySelectorAll('section, .card, .panel, .vfm-panel, .screen-section, .hub-section, div')).forEach((node) => {
+      if (!node || !node.parentElement) return;
+      if (node.id === 'app' || node.id === 'root') return;
+      const txt = (node.textContent || '').replace(/\s+/g, ' ').trim();
+      if (!txt) return;
+      if (txt.includes('HUB do Treinador')) return;
+      if (txt.includes('Vale Futebol Manager 2026')) return;
+      if (badPhrases.some(p => txt.includes(p))) {
+        node.setAttribute('data-vfm-legacy', '1');
+      }
+    });
+  }
+
+  function v154SelectionStatus(save){
+    const current = (typeof getNationalTeamById === 'function') ? getNationalTeamById(save?.selection?.teamId) : null;
+    const score = Number(save?.career?.careerScore || 0);
+    const rep = save?.career?.reputationTier || 'INICIANTE';
+    if (current) {
+      return {
+        title: `${current.flag || '🌍'} ${current.name}`,
+        copy: `Seleção assumida. Nível ${current.unlockTier || 'Destravada'} • FIFA #${current.fifaRank || '-'} • OVR ${current.overall || '-'}.`,
+        meta1: 'Reputação atual', val1: rep,
+        meta2: 'Career Score', val2: String(score),
+        button: 'Gerenciar Seleção'
+      };
+    }
+    return {
+      title: 'Nenhuma seleção assumida',
+      copy: 'Assuma uma seleção liberada pelo seu Career Score. As potências mundiais só aparecem com mais títulos e pontuação.',
+      meta1: 'Reputação atual', val1: rep,
+      meta2: 'Career Score', val2: String(score),
+      button: 'Assumir Seleção'
+    };
+  }
+
+  function v154InjectFocusCards(){
+    if (!v154IsHub()) return;
+    const hubTitle = Array.from(document.querySelectorAll('.card-title')).find(el => (el.textContent || '').trim() === 'HUB do Treinador');
+    if (!hubTitle) return;
+    const card = hubTitle.closest('.card');
+    const body = card ? card.querySelector('.card-body') : null;
+    if (!card || !body) return;
+    card.classList.add('v154-hub-clean');
+
+    const old = document.getElementById('v154-focus-wrap');
+    if (old) old.remove();
+
+    const save = v154Save();
+    const selection = v154SelectionStatus(save);
+    const objective = save?.career?.objective?.label || 'Continuar evolução na carreira';
+    const nextMatchEl = Array.from(body.querySelectorAll('.hub-summary-card')).find(el => (el.textContent || '').includes('Próximo jogo'));
+    let nextMatch = 'Siga no fluxo principal do clube';
+    if (nextMatchEl) {
+      const value = nextMatchEl.querySelector('.hub-summary-value');
+      if (value && value.textContent) nextMatch = value.textContent.trim();
+    }
+
+    const wrap = document.createElement('section');
+    wrap.id = 'v154-focus-wrap';
+    wrap.className = 'v154-focus-wrap';
+    wrap.innerHTML = `
+      <div class="v154-focus-card">
+        <div class="v154-focus-kicker">Fluxo principal</div>
+        <h2 class="v154-focus-title">Carreira no clube em primeiro lugar</h2>
+        <div class="v154-focus-copy">O HUB agora prioriza o que é jogável: seu próximo evento, evolução na temporada e atalhos diretos para continuar a carreira sem distrações.</div>
+        <div class="v154-chip-row">
+          <div class="v154-chip">Próximo jogo: ${nextMatch}</div>
+          <div class="v154-chip">Meta: ${objective}</div>
+        </div>
+        <div class="v154-cta-row">
+          <button class="btn btn-primary" type="button" data-action="playNextEvent">⚽ Jogar Próximo Evento</button>
+          <button class="btn" type="button" data-go="/matches">Ver Rodadas</button>
+          <button class="btn" type="button" data-go="/calendar">Abrir Calendário</button>
+        </div>
+      </div>
+      <div class="v154-focus-card">
+        <div class="v154-focus-kicker">Seleção nacional</div>
+        <h2 class="v154-focus-title">${selection.title}</h2>
+        <div class="v154-focus-copy">${selection.copy}</div>
+        <div class="v154-mini-grid">
+          <div class="v154-mini-item"><div class="v154-mini-label">${selection.meta1}</div><div class="v154-mini-value">${selection.val1}</div></div>
+          <div class="v154-mini-item"><div class="v154-mini-label">${selection.meta2}</div><div class="v154-mini-value">${selection.val2}</div></div>
+        </div>
+        <div class="v154-cta-row">
+          <button class="btn" type="button" data-go="/selection">🌍 ${selection.button}</button>
+          <button class="btn" type="button" data-go="/career">Ver Carreira</button>
+        </div>
+      </div>
+    `;
+
+    const summary = body.querySelector('.hub-summary-grid');
+    if (summary) summary.insertAdjacentElement('afterend', wrap);
+    else body.prepend(wrap);
+
+    const quickRow = Array.from(body.querySelectorAll('.row')).find(el => (el.textContent || '').includes('Jogar Próximo Evento'));
+    if (quickRow) quickRow.style.display = 'none';
+
+    const grid = body.querySelector('.hub-grid');
+    if (grid) {
+      const order = ['Partida','Calendário','Seleção Nacional','Modo Seleção','Carreira','Competições','Mercado','Treino','Staff','Patrocínio'];
+      const cards = Array.from(grid.querySelectorAll('.hub-card'));
+      cards.sort((a,b) => {
+        const ta = (a.querySelector('.hub-title')?.textContent || '').trim();
+        const tb = (b.querySelector('.hub-title')?.textContent || '').trim();
+        const ia = order.indexOf(ta); const ib = order.indexOf(tb);
+        return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+      }).forEach(card => grid.appendChild(card));
+      cards.forEach(card => {
+        const title = (card.querySelector('.hub-title')?.textContent || '').trim();
+        const desc = card.querySelector('.hub-desc');
+        if (title === 'Modo Seleção') {
+          card.querySelector('.hub-title').textContent = 'Seleção Nacional';
+          if (desc) desc.textContent = 'Assuma e gerencie seleções destravadas pelo seu Career Score';
+          const cta = card.querySelector('.hub-cta');
+          if (cta) cta.textContent = 'Gerenciar';
+        }
+        if (title === 'Partida' && desc) desc.textContent = 'Continue o fluxo principal e dispute o próximo evento da carreira';
+      });
+      const sectionLabel = document.createElement('div');
+      sectionLabel.className = 'v154-section-label';
+      sectionLabel.textContent = 'Áreas do clube';
+      const oldLabel = body.querySelector('.v154-section-label');
+      if (oldLabel) oldLabel.remove();
+      grid.insertAdjacentElement('beforebegin', sectionLabel);
+    }
+
+    const subtitle = card.querySelector('.card-subtitle');
+    if (subtitle) {
+      const clubName = subtitle.textContent.split('•')[0].trim();
+      const rep = save?.career?.reputationTier || 'INICIANTE';
+      const score = save?.career?.careerScore || 0;
+      subtitle.innerHTML = `${clubName} • Fluxo principal do treinador • Reputação: <b>${rep}</b> • Score: <b>${score}</b>`;
+    }
+  }
+
+  function v154Run(){
+    v154FixBuildBadge();
+    v154EnsureStyles();
+    v154RemoveLegacyPanels();
+    v154InjectFocusCards();
+  }
+
+  window.addEventListener('load', v154Run);
+  window.addEventListener('hashchange', function(){ setTimeout(v154Run, 60); });
+  setTimeout(v154Run, 200);
+  setTimeout(v154Run, 800);
+  setTimeout(v154Run, 1800);
+  if (typeof MutationObserver === 'function') {
+    const observer = new MutationObserver(function(){ if (v154IsHub()) v154Run(); });
+    window.addEventListener('load', function(){ observer.observe(document.body, { childList:true, subtree:true }); });
+  }
 })();

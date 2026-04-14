@@ -1,5 +1,5 @@
 VALE FUTEBOL MANAGER 2026
-BUILD: v1.52.0_selection_mode_alpha
-DATE(UTC): 2026-04-11 16:21:54 UTC
-FEATURE: National team mode alpha + federation objectives + squad call-up panel
+BUILD: v1.54.0_hub_clean_gameplay_focus
+DATE(UTC): 2026-04-13 19:20:00 UTC
+FEATURE: World Selection progression + 61 national teams + unlock tiers by Career Score
 PROJECT_STATUS: 100%

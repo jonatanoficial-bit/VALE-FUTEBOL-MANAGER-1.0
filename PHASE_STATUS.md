@@ -53,3 +53,12 @@ Date: 2026-04-11 16:21:54 UTC
 - Added call-up shortlist and squad slots for national team management
 - Added federation objectives and dual calendar foundation
 - Preserved premium menu, live match engine, hub systems and bugfixes
+
+
+## v1.53.0_selection_progression_world_2026
+Date: 2026-04-13 18:05:00 UTC
+
+- Added a real Selection route connected to the save file
+- Added 61 national teams grouped by Career Score unlock tiers
+- Added persistent current selection summary inside the HUB
+- Removed old placeholder selection overlays in favor of the new progression screen
